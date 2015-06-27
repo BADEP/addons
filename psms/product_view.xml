@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_psms_form_view" model="ir.ui.view">
+            <field name="name">psms.product_psms_form_view</field>
+            <field name="model">product.product</field>
+            <field name="inherit_id" ref="product.product_normal_form_view" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@string='Sales']" position="after">
+					<page string="Pompes">
+	                	<field name="pumps" widget="one2many_list">
+							<tree string="Pompes" editable="bottom">
+								<field name="name" />
+								<field name="location" />
+								<field name="counter" />
+								<field name="electric_diff" />
+								<field name="electric_counter" />
+							</tree>
+						</field>
+					</page>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

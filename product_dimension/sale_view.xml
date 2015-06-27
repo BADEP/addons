@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="sale_dimension_form_view" model="ir.ui.view">
+            <field name="name">product_dimension.sale_dimension_form_view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="before">
+                	<field name="dimensions" widget="one2many_list" attrs="{'invisible': [('dimensions','=',[])]}">
+						<tree string="Dimensions" create="false" delete="false" editable="bottom">
+							<field name="dimension" readonly="True"/>
+							<field name="quantity" />
+						</tree>
+					</field>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_uom']" position="replace">
+					<field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button" />
+				</xpath>
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="replace">
+                	<field context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}" name="product_uom_qty" class="oe_inline"/>
+				</xpath>            
+			</field>
+        </record>
+    </data>
+</openerp>

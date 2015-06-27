@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="sale_force_delivery_form_view" model="ir.ui.view">
+            <field name="name">sale_force_delivery.sale_form_view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='warehouse_id']" position="after">
+					<field name="force_delivery" />
+                </xpath>           
+			</field>
+        </record>
+    </data>
+</openerp>

@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        <!-- INHERITED VIEW FOR THE OBJECT : sale_order -->
+
+        <record id="partner_warehouse_view_form" model="ir.ui.view">
+            <field name="name">partner_warehouse.view_partner_form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="stock.view_partner_property_form" />
+            <field eval="16" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                	<xpath expr="//field[@name='property_stock_supplier']" position="after">
+                		<field name="warehouse_id"/>
+                	</xpath>
+                </data>
+            </field>
+        </record>
+
+    </data>
+</openerp>

@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="fleet_vehicle_form_tms" model="ir.ui.view">
+            <field name="name">tms.fleet.vehicle.form</field>
+            <field name="model">fleet.vehicle</field>
+			<field name="inherit_id" ref="fleet.fleet_vehicle_form" />
+			<field eval="16" name="priority" />
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='fuel_type']" position="after">
+		        	<field name="mpg"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="tmsfleet_vehicle_log_fuel_form" model="ir.ui.view">
+            <field name="name">tms.fleet.vehicle.log.fuelform</field>
+            <field name="model">fleet.vehicle.log.fuel</field>
+			<field name="inherit_id" ref="fleet.fleet_vehicle_log_fuel_form" />
+			<field eval="16" name="priority" />
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='liter']" position="before">
+		        	<field name="id" string="N°"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>

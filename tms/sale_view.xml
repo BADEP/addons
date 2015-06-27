@@ -1,0 +1,145 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_order_form_tms" model="ir.ui.view">
+            <field name="name">sale.order.form.tms</field>
+            <field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+			<field eval="16" name="priority" />
+            <field name="arch" type="xml">
+				<xpath expr="//button[@name='action_button_confirm']" position="after"> 
+					<button name="%(action_make_log_fuel)d" string="Create fuel log" type="action" states="manual,progress" attrs="{'invisible': [('fuel_log', '!=', False)]}" class="oe_highlight" groups="base.group_user"/>
+				</xpath>
+				<xpath expr="//field[@name='partner_invoice_id']" position="after">
+		        	<field name="vehicle"/>
+                    <field name="driver"/>
+                    <field name="fuel_log" readonly="True"/>
+                    <field name="estimated_fuel_qty" />
+				</xpath>
+				<xpath expr="//field[@name='date_order']" position="after">
+                    <field name="date_start"/>
+                    <field name="date_end"/>
+				</xpath>
+				<!--<xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="attributes">
+					<attribute name="domain">[('city_from','in', [city_from, False]),('city_to','in', [city_to, False])]</attribute>
+				</xpath>-->
+				<xpath expr="//field[@name='order_line']/tree" position="attributes">
+					<attribute name="editable" />
+				</xpath>
+				<xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="before">
+					<field name="partner_picking_id" groups="base.group_user" context="{'default_type':'delivery', 'show_address': 1}" options="{&quot;always_reload&quot;: True}"/>
+					<field name="partner_delivery_id" groups="base.group_user" context="{'default_type':'delivery', 'show_address': 1}" options="{&quot;always_reload&quot;: True}"/>
+            		<field name="city_from" invisible="1" />
+					<field name="city_to" invisible="1" />
+				</xpath>
+				<xpath expr="//field[@name='order_line']/form//field[@name='name']" position="after">
+					<label for="cargo" />
+					<field name = "cargo">
+						<tree string="Cargo" editable="bottom">
+							<field name="product" />
+							<field name="uom" />
+							<field name="quantity" />
+							<field name="value" sum="Total Value" />
+						</tree>
+					</field>
+				</xpath>
+            </field>
+        </record>
+
+        <record id="view_order_calendar_tms" model="ir.ui.view">
+            <field name="name">sale.order.calendar.tms</field>
+            <field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_sale_order_calendar" />
+			<field eval="16" name="priority" />
+            <field name="arch" type="xml">
+				<xpath expr="//calendar[@string='Sales Orders']" position="attributes">
+					<attribute name="date_start">date_start</attribute>
+					<attribute name="date_stop">date_end</attribute>
+				</xpath>
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="vehicle" />
+				</xpath>
+            </field>
+        </record>
+
+        <record id="view_order_select_tms" model="ir.ui.view">
+            <field name="name">sale.order.select.tms</field>
+            <field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_sales_order_filter" />
+			<field eval="16" name="priority" />
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='name']" position="after">
+					<field name="vehicle" />
+				</xpath>
+            </field>
+        </record>
+
+        <record id="product_template_form_tms" model="ir.ui.view">
+            <field name="name">tms.product.template.form</field>
+            <field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_form_view" />
+			<field eval="16" name="priority" />
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='type']" position="after">
+		        	<field name="city_from"/>
+		        	<field name="city_to"/>
+                </xpath>
+            </field>
+        </record>
+
+		<record model="ir.ui.view" id="tms_employee_form_view">
+			<field name="name">tms.employee.form.view</field>
+			<field name="model">hr.employee</field>
+			<field name="inherit_id" ref="hr.view_employee_form" />
+			<field name="arch" type="xml">
+				<xpath expr="//field[@name='coach_id']"
+						position="after">
+						<field name="is_driver"/>
+				</xpath>
+			</field>
+		</record>
+
+        <record id="tms_grid_view_tree" model="ir.ui.view">
+            <field name="name">tms.grid.tree</field>
+            <field name="model">transport.grid</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="Grids">
+					<field name="name" />
+                    <field name="city_from"/>
+                    <field name="city_to"/>
+                    <field name="time"/>
+                </tree>
+            </field>
+        </record>
+
+		<record id="action_grid" model="ir.actions.act_window">
+            <field name="name">Grids</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">transport.grid</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="tms_grid_view_tree"/>
+            <field name="view_mode">tree,form,calendar,graph</field>
+        </record>
+
+        <record id="tms_grid_form_view" model="ir.ui.view">
+            <field name="name">tms.grid.form.view</field>
+            <field name="model">transport.grid</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<group>
+					<group name="col1">
+						<field name="name" />
+						<field name="time" widget="float_time"/>
+						<field name="distance" />
+					</group>
+					<group name="col2">
+						<field name="city_from" />
+						<field name="city_to" />
+					</group>
+				</group>
+			</field>
+		</record>
+    	<menuitem id="menu_grid" action="action_grid" parent="base.menu_base_config" sequence="10"/>
+    </data>
+</openerp>

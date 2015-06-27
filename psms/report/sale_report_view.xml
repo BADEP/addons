@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+     <data>
+        <record id="view_order_product_search_sale_psms_inherit" model="ir.ui.view">
+            <field name="name">sale.report.search.sale.psms</field>
+            <field name="model">sale.report</field>
+            <field name="inherit_id" ref="sale.view_order_product_search"/>
+            <field name="arch" type="xml">
+                <xpath expr="//group/filter[@string='Status']" position="after">
+                    <filter string="Session" context="{'group_by':'session'}"/>
+                    <filter string="Véhicule" context="{'group_by':'vehicle'}"/>
+                </xpath>
+            </field>
+        </record>
+     </data>
+</openerp>

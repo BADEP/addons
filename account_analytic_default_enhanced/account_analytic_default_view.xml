@@ -1,0 +1,17 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="view_account_analytic_default_form_enhanced" model="ir.ui.view">
+            <field name="name">account.analytic.default.form.enhanced</field>
+            <field name="model">account.analytic.default</field>
+            <field name="inherit_id" ref="account_analytic_default.view_account_analytic_default_form"/>
+            <field name="arch" type="xml">
+				<data>
+                    <xpath expr="//field[@name='partner_id']" position="after">	
+                        <field name="section_id"/>
+					</xpath>
+				</data>
+            </field>
+        </record>
+    </data>
+</openerp>
