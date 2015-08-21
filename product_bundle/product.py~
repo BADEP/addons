@@ -32,7 +32,7 @@ class product_item(osv.osv):
         'product_id': fields.many2one('product.product', 'Bundle Product', required=True),
         'item_id':    fields.many2one('product.product', 'Item', required=True),
         'uom_id':     fields.many2one('product.uom', 'UoM', required=True),
-        'qty_uom':    fields.float('Quantity', required=True),
+        'qty_uom':    fields.integer('Quantity', required=True),
         'revenue':    fields.float('Revenue repartition (%)', help="Define when you sell a Bundle product, how many percent of the sale price is applied to this item."),
         'editable':   fields.boolean('Allow changes in DO ?', help="Allow the user to change this item (quantity or item itself) in the Delivery Orders."),
     }

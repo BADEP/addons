@@ -23,21 +23,16 @@
 from openerp import models, fields, api
 import openerp.addons.decimal_precision as dp
 
-class procurement_order(models.Model):
-    _inherit = "procurement.order"
-    dimensions = fields.One2many('procurement.order.dimension','procurement_order')
+class mrp_production(models.Model):
+    _inherit = "mrp.production"
+    dimensions = fields.One2many('mrp.production.dimension','mrp_production')
     
-    @api.model
-    def _prepare_mo_vals(self, procurement):
-        res = super(procurement, self)._prepare_mo_vals(procurement)
-        res['dimensions'] = [(0, 0, {'dimension': x.dimension.id, 'quantity': x.quantity}) for x in procurement.dimensions]
-        return res
-procurement_order()
+mrp_production()
 
-class procurement_order_dimension(models.Model):
-    _name = "procurement.order.dimension"
+class mrp_production_dimension(models.Model):
+    _name = "mrp.production.dimension"
     dimension = fields.Many2one('product.uom.dimension', required=True, ondelete='cascade')
     quantity = fields.Float('Quantity', digits_compute= dp.get_precision('Product UoS'), required=True)
-    procurement_order = fields.Many2one('procurement.order','Procurement Order', required=True, ondelete='cascade')
+    mrp_production = fields.Many2one('mrp.production','Production Order', required=True, ondelete='cascade')
 
-procurement_order_dimension()
+mrp_production_dimension()

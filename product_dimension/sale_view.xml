@@ -19,8 +19,11 @@
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom']" position="replace">
 					<field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button" />
 				</xpath>
-                <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="replace">
-                	<field context="{'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}" name="product_uom_qty" class="oe_inline"/>
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="attributes">
+					<attribute name="invisible">1</attribute>
+				</xpath>            
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="after">
+                	<field name="product_visible_qty" class="oe_inline"/>
 				</xpath>            
 			</field>
         </record>

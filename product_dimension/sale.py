@@ -40,7 +40,16 @@ sale_order()
 class sale_order_line(models.Model):
     _inherit = "sale.order.line"
     dimensions = fields.One2many('sale.order.line.dimension','sale_order_line', readonly=True, states={'draft': [('readonly', False)]})
+    product_visible_qty=fields.Float('Quantity', digits_compute= dp.get_precision('Product UoS'), compute='get_visible_qty')
 
+    @api.depends('dimensions')
+    def get_visible_qty(self):
+        qty=1
+        for d in self.dimensions:
+            qty=qty*d.quantity
+        if qty != self.product_visible_qty:
+            self.product_visible_qty=qty
+    
     @api.returns('self')
     @api.onchange('dimensions')
     def onchange_dimensions(self):
