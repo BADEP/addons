@@ -95,8 +95,6 @@ def amount_to_text_fr(number, currency):
     final_result = start_word + ' ' + units_name + ' ' + end_word + ' ' + cents_name
     return final_result
 
-
-
 class account_invoice(osv.osv):
     _inherit = "account.invoice"
     

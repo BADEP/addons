@@ -23,9 +23,9 @@
     'name' : 'Montant en lettres en français',
     'version' : '1.0',
     'author' : 'BADEP',
-    'summary': 'Send Invoices and Track Payments',
+    'summary': 'Afficher le montant en lettre dans le bon de commande/facture.',
     'description': """
-
+    Afficher le montant en lettre dans le bon de commande/facture.
     """,
     'category': 'Localization',
     'sequence': 4,
