@@ -22,6 +22,7 @@
 
 from openerp.osv import osv
 
+
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
 
@@ -37,7 +38,7 @@ class purchase_order(osv.osv):
             'name': item.item_id.name,
             'account_id': account_id,
             'price_unit': item.item_id.standard_price or 0.0,
-            'quantity': order_line.product_qty* item.qty_uom,
+            'quantity': order_line.product_qty * item.qty_uom,
             'product_id': item.item_id.id or False,
             'uos_id': item.uom_id.id or False,
             'invoice_line_tax_id': [(6, 0, [x.id for x in item.item_id.supplier_taxes_id])],
@@ -63,8 +64,8 @@ class purchase_order(osv.osv):
         for order in self.browse(cr, uid, ids, context=context):
             context.pop('force_company', None)
             if order.company_id.id != uid_company_id:
-                #if the company of the document is different than the current user company, force the company in the context
-                #then re-do a browse to read the property fields for the good company.
+                # if the company of the document is different than the current user company, force the company in the context
+                # then re-do a browse to read the property fields for the good company.
                 context['force_company'] = order.company_id.id
                 order = self.browse(cr, uid, order.id, context=context)
             

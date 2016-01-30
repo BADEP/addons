@@ -21,13 +21,14 @@
 ##############################################################################
 from openerp import models, fields, api
 
+
 class sale_order(models.Model):
     _inherit = 'sale.order'
-    force_delivery = fields.Boolean(default = False)
+    force_delivery = fields.Boolean(default=False)
     
     @api.multi
     def action_button_confirm(self):
-        if super(sale_order,self).action_button_confirm():
+        if super(sale_order, self).action_button_confirm():
             if self.force_delivery:
                 for order in self:
                     for picking in order.picking_ids:

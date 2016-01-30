@@ -1,0 +1,73 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="sale_view_order_form_total_uom" model="ir.ui.view">
+			<field name="name">sale.view_order_form_total_uom</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+            <field name="model">sale.order</field>
+			<field eval="16" name="priority" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//group[@name='sale_total']" position="after">
+			        	<group style="width: 500px; clear: none">
+							<field name="total_uoms"/>
+						</group>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="stock_view_picking_form_total_uom" model="ir.ui.view">
+			<field name="name">total_uom.view_picking_form_total_uom</field>
+			<field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="model">stock.picking</field>
+			<field eval="16" name="priority" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='move_lines']" position="after">
+			        	<group>
+							<field name="total_uoms"/>
+						</group>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="product_uom_total_view_form" model="ir.ui.view">
+			<field name="name">total_uom.product_uom_total_view_form</field>
+            <field name="model">product.uom.total</field>
+			<field eval="16" name="priority" />
+			<field name="type">tree</field>
+			<field name="arch" type="xml">
+				<data>
+					<field name="quantity"/>
+					<field name="uom"/>
+				</data>
+			</field>
+		</record>
+
+		<record id="report_saleorder_total_uom" model="ir.ui.view">
+			<field name="name">sale.report_saleorder_document_total_uom</field>
+			<field name="inherit_id" ref="sale.report_saleorder_document" />
+			<field eval="16" name="priority" />
+			<field name="type">qweb</field>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//div[@class='col-xs-4 pull-right']" position="before">
+						<div class="col-xs-4 pull-left">
+							<h4>Total Quantités:</h4>
+					        <table class="table table-condensed">
+		                        <tr t-foreach="o.total_uoms" t-as="l" class="border-black">
+		                            <td><span t-field="l.quantity"/></td>
+		                            <td><span t-field="l.uom"/></td>
+								</tr>
+		                    </table>
+						</div>
+					</xpath>
+				</data>
+			</field>
+		</record>
+	</data>
+</openerp>

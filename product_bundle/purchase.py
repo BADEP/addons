@@ -20,8 +20,9 @@
 #
 ##############################################################################
 
-from openerp.osv import fields,osv
+from openerp.osv import fields, osv
 from openerp.tools.float_utils import float_compare
+
 
 class purchase_order(osv.osv):
     _inherit = "purchase.order"
@@ -42,7 +43,7 @@ class purchase_order(osv.osv):
                 if order_line.product_uom.id != order_line.product_id.uom_id.id:
                     price_unit *= order_line.product_uom.factor / order_line.product_id.uom_id.factor
                 if order.currency_id.id != order.company_id.currency_id.id:
-                    #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
+                    # we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
                     price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
                 res = []
                 move_template = {
@@ -52,8 +53,8 @@ class purchase_order(osv.osv):
                     'product_uos': order_line.product_uom.id,
                     'date': order.date_order,
                     'date_expected': fields.date.date_to_datetime(self, cr, uid, order_line.date_planned, context),
-                    'location_id': order.partner_id.property_stock_supplier.id if order_line.product_qty>0 else order.location_id.id,
-                    'location_dest_id': order.location_id.id if order_line.product_qty>0 else order.partner_id.property_stock_supplier.id,
+                    'location_id': order.partner_id.property_stock_supplier.id if order_line.product_qty > 0 else order.location_id.id,
+                    'location_dest_id': order.location_id.id if order_line.product_qty > 0 else order.partner_id.property_stock_supplier.id,
                     'picking_id': picking_id,
                     'partner_id': order.dest_address_id.id or order.partner_id.id,
                     'move_dest_id': False,
@@ -69,7 +70,7 @@ class purchase_order(osv.osv):
                     'warehouse_id':order.picking_type_id.warehouse_id.id,
                     'invoice_state': order.invoice_method == 'picking' and '2binvoiced' or 'none',
                 }
-                if order_line.product_qty>0:
+                if order_line.product_qty > 0:
                     diff_quantity = order_line.product_qty
                     for procurement in order_line.procurement_ids:
                         procurement_qty = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty, to_uom_id=order_line.product_uom.id)
@@ -77,16 +78,16 @@ class purchase_order(osv.osv):
                         tmp.update({
                             'product_uom_qty': min(procurement_qty, diff_quantity),
                             'product_uos_qty': min(procurement_qty, diff_quantity),
-                            'move_dest_id': procurement.move_dest_id.id,  #move destination is same as procurement destination
-                            'group_id': procurement.group_id.id or group_id,  #move group is same as group of procurements if it exists, otherwise take another group
+                            'move_dest_id': procurement.move_dest_id.id,  # move destination is same as procurement destination
+                            'group_id': procurement.group_id.id or group_id,  # move group is same as group of procurements if it exists, otherwise take another group
                             'procurement_id': procurement.id,
-                            'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state=='2binvoiced' and '2binvoiced') or (order.invoice_method == 'picking' and '2binvoiced') or 'none', #dropship case takes from sale
+                            'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state == '2binvoiced' and '2binvoiced') or (order.invoice_method == 'picking' and '2binvoiced') or 'none',  # dropship case takes from sale
                             'propagate': procurement.rule_id.propagate,
                         })
                         diff_quantity -= min(procurement_qty, diff_quantity)
                         res.append(tmp)
-                    #if the order line has a bigger quantity than the procurement it was for (manually changed or minimal quantity), then
-                    #split the future stock move in two because the route followed may be different.
+                    # if the order line has a bigger quantity than the procurement it was for (manually changed or minimal quantity), then
+                    # split the future stock move in two because the route followed may be different.
                     if float_compare(diff_quantity, 0.0, precision_rounding=order_line.product_uom.rounding) > 0:
                         move_template['product_uom_qty'] = diff_quantity
                         move_template['product_uos_qty'] = diff_quantity
@@ -105,11 +106,11 @@ class purchase_order(osv.osv):
                 return vals
             else:
                 product_uom = self.pool.get('product.uom')
-                price_unit = order_line.price_unit * (item.revenue/100)
+                price_unit = order_line.price_unit * (item.revenue / 100)
                 if order_line.product_uom.id != order_line.product_id.uom_id.id:
                     price_unit *= order_line.product_uom.factor / order_line.product_id.uom_id.factor
                 if order.currency_id.id != order.company_id.currency_id.id:
-                    #we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
+                    # we don't round the price_unit, as we may want to store the standard price with more digits than allowed by the currency
                     price_unit = self.pool.get('res.currency').compute(cr, uid, order.currency_id.id, order.company_id.currency_id.id, price_unit, round=False, context=context)
                 res = []
                 move_template = {
@@ -119,8 +120,8 @@ class purchase_order(osv.osv):
                     'product_uos': order_line.product_uom.id,
                     'date': order.date_order,
                     'date_expected': fields.date.date_to_datetime(self, cr, uid, order_line.date_planned, context),
-                    'location_id': order.partner_id.property_stock_supplier.id if order_line.product_qty>0 else order.location_id.id,
-                    'location_dest_id': order.location_id.id if order_line.product_qty>0 else order.partner_id.property_stock_supplier.id,
+                    'location_id': order.partner_id.property_stock_supplier.id if order_line.product_qty > 0 else order.location_id.id,
+                    'location_dest_id': order.location_id.id if order_line.product_qty > 0 else order.partner_id.property_stock_supplier.id,
                     'picking_id': picking_id,
                     'partner_id': order.dest_address_id.id or order.partner_id.id,
                     'move_dest_id': False,
@@ -136,24 +137,24 @@ class purchase_order(osv.osv):
                     'warehouse_id':order.picking_type_id.warehouse_id.id,
                     'invoice_state': order.invoice_method == 'picking' and '2binvoiced' or 'none',
                 }
-                if order_line.product_qty>0:
-                    diff_quantity = order_line.product_qty*item.qty_uom
+                if order_line.product_qty > 0:
+                    diff_quantity = order_line.product_qty * item.qty_uom
                     for procurement in order_line.procurement_ids:
-                        procurement_qty = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty*item.qty_uom, to_uom_id=order_line.product_uom.id)
+                        procurement_qty = product_uom._compute_qty(cr, uid, procurement.product_uom.id, procurement.product_qty * item.qty_uom, to_uom_id=order_line.product_uom.id)
                         tmp = move_template.copy()
                         tmp.update({
                             'product_uom_qty': min(procurement_qty, diff_quantity),
                             'product_uos_qty': min(procurement_qty, diff_quantity),
-                            'move_dest_id': procurement.move_dest_id.id,  #move destination is same as procurement destination
-                            'group_id': procurement.group_id.id or group_id,  #move group is same as group of procurements if it exists, otherwise take another group
+                            'move_dest_id': procurement.move_dest_id.id,  # move destination is same as procurement destination
+                            'group_id': procurement.group_id.id or group_id,  # move group is same as group of procurements if it exists, otherwise take another group
                             'procurement_id': procurement.id,
-                            'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state=='2binvoiced' and '2binvoiced') or (order.invoice_method == 'picking' and '2binvoiced') or 'none', #dropship case takes from sale
+                            'invoice_state': procurement.rule_id.invoice_state or (procurement.location_id and procurement.location_id.usage == 'customer' and procurement.invoice_state == '2binvoiced' and '2binvoiced') or (order.invoice_method == 'picking' and '2binvoiced') or 'none',  # dropship case takes from sale
                             'propagate': procurement.rule_id.propagate,
                         })
                         diff_quantity -= min(procurement_qty, diff_quantity)
                         res.append(tmp)
-                    #if the order line has a bigger quantity than the procurement it was for (manually changed or minimal quantity), then
-                    #split the future stock move in two because the route followed may be different.
+                    # if the order line has a bigger quantity than the procurement it was for (manually changed or minimal quantity), then
+                    # split the future stock move in two because the route followed may be different.
                     if float_compare(diff_quantity, 0.0, precision_rounding=order_line.product_uom.rounding) > 0:
                         move_template['product_uom_qty'] = diff_quantity
                         move_template['product_uos_qty'] = diff_quantity

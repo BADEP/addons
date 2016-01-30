@@ -30,7 +30,7 @@
     """,
     'author': 'BADEP',
     'website': 'http://www.badep.ma',
-    'depends': ['sale','stock','product','mrp'],
+    'depends': ['sale', 'stock', 'product', 'mrp', 'sale_mrp_extended'],
     'data': ['product_view.xml',
              'sale_view.xml',
              'procurement_view.xml',

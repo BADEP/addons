@@ -22,6 +22,7 @@
 
 from openerp import models, fields
 
+
 class fleet_vehicle(models.Model):
     _inherit = 'fleet.vehicle'
 

@@ -21,17 +21,17 @@
 ##############################################################################
 
 
-from openerp.osv import fields, osv
-from openerp import api
-
-from openerp.tools import float_compare
-from dateutil.relativedelta import relativedelta
 from datetime import datetime
+from dateutil.relativedelta import relativedelta
+
+from openerp import api
+from openerp.osv import fields, osv
+from openerp.tools import float_compare
+
 
 #----------------------------------------------------------
 # Stock Picking
 #----------------------------------------------------------
-
 class stock_picking(osv.osv):
     _inherit = "stock.picking"
 
@@ -53,7 +53,7 @@ class stock_picking(osv.osv):
             return location or picking.location_dest_id.id
 
         # If we encounter an UoM that is smaller than the default UoM or the one already chosen, use the new one instead.
-        product_uom = {} # Determines UoM used in pack operations
+        product_uom = {}  # Determines UoM used in pack operations
         for move in picking.move_lines:
             if not product_uom.get(move.product_id.id):
                 product_uom[move.product_id.id] = move.product_id.uom_id
@@ -64,7 +64,7 @@ class stock_picking(osv.osv):
         quant_obj = self.pool.get("stock.quant")
         vals = []
         qtys_grouped = {}
-        #for each quant of the picking, find the suggested location
+        # for each quant of the picking, find the suggested location
         quants_suggested_locations = {}
         product_putaway_strats = {}
         for quant in quants:
@@ -73,7 +73,7 @@ class stock_picking(osv.osv):
             suggested_location_id = _picking_putaway_apply(quant.product_id)
             quants_suggested_locations[quant] = suggested_location_id
 
-        #find the packages we can movei as a whole
+        # find the packages we can movei as a whole
         top_lvl_packages = self._get_top_level_packages(cr, uid, quants_suggested_locations, context=context)
         # and then create pack operations for the top-level packages found
         for pack in top_lvl_packages:
@@ -87,7 +87,7 @@ class stock_picking(osv.osv):
                     'location_dest_id': quants_suggested_locations[pack_quants[0]],
                     'owner_id': picking.owner_id.id,
                 })
-            #remove the quants inside the package so that they are excluded from the rest of the computation
+            # remove the quants inside the package so that they are excluded from the rest of the computation
             for quant in pack_quants:
                 del quants_suggested_locations[quant]
 
@@ -146,30 +146,30 @@ class stock_picking(osv.osv):
     def do_prepare_partial(self, cr, uid, picking_ids, context=None):
         context = context or {}
         pack_operation_obj = self.pool.get('stock.pack.operation')
-        #used to avoid recomputing the remaining quantities at each new pack operation created
+        # used to avoid recomputing the remaining quantities at each new pack operation created
         ctx = context.copy()
         ctx['no_recompute'] = True
 
-        #get list of existing operations and delete them
+        # get list of existing operations and delete them
         existing_package_ids = pack_operation_obj.search(cr, uid, [('picking_id', 'in', picking_ids)], context=context)
         if existing_package_ids:
             pack_operation_obj.unlink(cr, uid, existing_package_ids, context)
         for picking in self.browse(cr, uid, picking_ids, context=context):
             forced_qties = {}  # Quantity remaining after calculating reserved quants
             picking_quants = []
-            #Calculate packages, reserved quants, qtys of this picking's moves
+            # Calculate packages, reserved quants, qtys of this picking's moves
             for move in picking.move_lines:
                 if move.state not in ('assigned', 'confirmed'):
                     continue
                 move_quants = move.reserved_quant_ids
                 picking_quants += move_quants
                 forced_qty = (move.state == 'assigned') and move.product_qty - sum([x.qty for x in move_quants]) or 0
-                #if we used force_assign() on the move, or if the move is incoming, forced_qty > 0
+                # if we used force_assign() on the move, or if the move is incoming, forced_qty > 0
                 if float_compare(forced_qty, 0, precision_rounding=move.product_id.uom_id.rounding) > 0:
                     forced_qties[move] = forced_qty
             for vals in self._prepare_pack_ops(cr, uid, picking, picking_quants, forced_qties, context=context):
                 pack_operation_obj.create(cr, uid, vals, context=ctx)
-        #recompute the remaining quantities all at once
+        # recompute the remaining quantities all at once
         self.do_recompute_remaining_quantities(cr, uid, picking_ids, context=context)
         self.write(cr, uid, picking_ids, {'recompute_pack_op': False}, context=context)
 stock_picking()
@@ -190,8 +190,8 @@ class procurement_order(osv.osv):
             group_id = procurement.group_id and procurement.group_id.id or False
         elif procurement.rule_id.group_propagation_option == 'fixed':
             group_id = procurement.rule_id.group_id and procurement.rule_id.group_id.id or False
-        #it is possible that we've already got some move done, so check for the done qty and create
-        #a new move with the correct qty
+        # it is possible that we've already got some move done, so check for the done qty and create
+        # a new move with the correct qty
         already_done_qty = 0
         already_done_qty_uos = 0
         for move in procurement.move_ids:
@@ -208,8 +208,8 @@ class procurement_order(osv.osv):
             'product_uos_qty': (procurement.product_uos and qty_uos_left) or qty_left,
             'product_uos': (procurement.product_uos and procurement.product_uos.id) or procurement.product_uom.id,
             'partner_id': procurement.rule_id.partner_address_id.id or (procurement.group_id and procurement.group_id.partner_id.id) or False,
-            'location_id': procurement.rule_id.location_src_id.id if procurement.product_qty>0 else procurement.location_id.id,
-            'location_dest_id': procurement.location_id.id if procurement.product_qty>0 else procurement.rule_id.location_src_id.id,
+            'location_id': procurement.rule_id.location_src_id.id if procurement.product_qty > 0 else procurement.location_id.id,
+            'location_dest_id': procurement.location_id.id if procurement.product_qty > 0 else procurement.rule_id.location_src_id.id,
             'move_dest_id': procurement.move_dest_id and procurement.move_dest_id.id or False,
             'procurement_id': procurement.id,
             'rule_id': procurement.rule_id.id,

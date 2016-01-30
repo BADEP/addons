@@ -22,12 +22,13 @@
 
 from openerp import models, fields, api
 
+
 class account_invoice(models.Model):
     _inherit = 'account.invoice'
-    so_count = fields.Integer(compute='get_so_count',string='Nombre de bons')
+    so_count = fields.Integer(compute='get_so_count', string='Nombre de bons')
     
     @api.one
     def get_so_count(self):
-        self.so_count = self.env['sale.order'].search_count([('invoice_ids','in', self.id)])
+        self.so_count = self.env['sale.order'].search_count([('invoice_ids', 'in', self.id)])
         
 account_invoice()

@@ -20,23 +20,25 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
-from openerp import netsvc
 import copy
+
+from openerp import netsvc
 import openerp.addons.decimal_precision as dp
+from openerp.osv import fields, osv
 from openerp.tools.translate import _
+
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
-    _name    = "sale.order"
+    _name = "sale.order"
     _columns = {
-        'global_discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+        'global_discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
     }
     
     def onchange_global_discount(self, cr, uid, ids, global_discount, context):
         for order in self.browse(cr, uid, ids, context=context):
             for line in order.order_line:
-                line.discount=global_discount
+                line.discount = global_discount
         return True
 sale_order()
 

@@ -20,6 +20,7 @@
 ##############################################################################
 from datetime import date, datetime
 from dateutil import relativedelta
+
 from openerp import tools
 from openerp.osv import fields, osv
 

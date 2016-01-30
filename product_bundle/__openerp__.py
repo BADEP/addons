@@ -42,7 +42,7 @@
     """,
     'author': 'BADEP',
     'website': 'http://www.badep.ma',
-    'depends': ['sale_stock','point_of_sale'],
+    'depends': ['sale_stock', 'point_of_sale'],
     'data': [
            'product_view.xml',
     ],

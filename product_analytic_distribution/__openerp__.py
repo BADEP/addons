@@ -30,7 +30,7 @@
     """,
     'author': 'BADEP',
     'website': 'http://www.badep.ma',
-    'depends': ['sale_analytic_plans','purchase_analytic_plans','account_analytic_plans'], 
+    'depends': ['sale_analytic_plans', 'purchase_analytic_plans', 'account_analytic_plans'],
     'init_xml': [],
     'update_xml': [
            'product_view.xml',

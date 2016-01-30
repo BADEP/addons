@@ -20,4 +20,6 @@
 ##############################################################################
 
 import sale_make_log_fuel
+
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

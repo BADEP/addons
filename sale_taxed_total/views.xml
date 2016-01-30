@@ -32,8 +32,9 @@
 		<record id="account_invoice_form_with_taxes" model="ir.ui.view">
 			<field name="name">account.invoice_form_with_taxes</field>
 			<field name="inherit_id" ref="account.invoice_form" />
+            <field name="model">account.invoice</field>
 			<field eval="16" name="priority" />
-			<field name="type">qweb</field>
+			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<data>
 					<xpath expr="//field[@name='price_subtotal']" position="after">
@@ -46,8 +47,9 @@
 		<record id="sale_view_order_form_with_taxes" model="ir.ui.view">
 			<field name="name">sale.view_order_form_with_taxes</field>
 			<field name="inherit_id" ref="sale.view_order_form" />
+            <field name="model">sale.order</field>
 			<field eval="16" name="priority" />
-			<field name="type">qweb</field>
+			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<data>
 					<xpath expr="//field[@name='price_subtotal']" position="after">

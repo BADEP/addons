@@ -17,7 +17,7 @@
 						            </div>-->
 									<div class="row">
 						                <div class="col-xs-5 col-xs-offset-7">
-						                    <address t-field="o.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;name&quot;], &quot;no_marker&quot;: true}" style="font-size: 18px; font-weight: bold;"/>
+						                    <span t-field="o.partner_id.name" style="font-weight: bold; font-size: 18px;"/>
 						                    <address t-field="o.partner_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;,&quot;fields&quot;: [&quot;address&quot;], &quot;no_marker&quot;: true}"/>
 						                    <span t-field="o.partner_id.vat"/>
 						                </div>
@@ -48,56 +48,52 @@
 						                    <p t-field="o.partner_id.ref"/>
 						                </div>
 						                <div class="col-xs-3" t-if="o.so_count">
-						                    <strong>Nombre de bons:</strong>
+						                    <strong>Nombre de bons inclus:</strong>
 						                    <p t-field="o.so_count"/>
 						                </div>
 						            </div>
-						            <table class="table table-condensed" style="height: 150mm; border: 1px solid black;">
+						            <table class="table table-condensed" style="height: 170mm; border: 1px solid black;">
 						                <thead>
 						                    <tr>
-						                        <th>Description</th>
-						                        <th class="text-right">Quantity</th>
-						                        <th class="text-right">Unit Price</th>
-						                        <th class="text-right" groups="sale.group_discount_per_so_line">Discount (%)</th>
-						                        <th class="text-right">Amount</th>
+						                        <th style="border-right: 1px solid black; text-align: center; font-weight: normal;">Quantity</th>
+						                        <th style="border-right: 1px solid black; text-align: center; font-weight: normal">Description</th>
+						                        <th style="border-right: 1px solid black; text-align: center; font-weight: normal">Unit Price</th>
+						                        <th groups="sale.group_discount_per_so_line" style="border-right: 1px solid black; text-align: center; font-weight: normal">Discount (%)</th>
+						                        <th style="text-align: center; font-weight: normal">Amount</th>
 						                    </tr>
 						                </thead>
 						                <tbody class="invoice_tbody">
-						                    <tr t-foreach="o.invoice_line" t-as="l" style="height: 15px;">
-						                        <td><span t-field="l.name"/></td>
-						                        <td class="text-right">
+						                    <tr t-foreach="o.invoice_line" t-as="l" style="height: 100%;">
+						                        <td class="text-right" style="border-right: 1px solid black;">
 						                            <span t-field="l.quantity"/>
 						                            <span t-field="l.uos_id" groups="product.group_uom"/>
 						                        </td>
-						                        <td class="text-right">
-						                            <span t-field="l.price_unit"/>
+						                        <td style="border-right: 1px solid black;"><span t-field="l.name"/></td>
+						                        <td class="text-right" style="border-right: 1px solid black;">
+						                            <span t-esc="round(l.price_unit, 2)"/>
 						                        </td>
-						                        <td class="text-right" groups="sale.group_discount_per_so_line"><span t-field="l.discount"/></td>
+						                        <td class="text-right" groups="sale.group_discount_per_so_line" style="border-right: 1px solid black;"><span t-field="l.discount"/></td>
 						                        <td class="text-right">
-						                            <span t-field="l.price_total" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+						                            <span t-esc="round(l.price_total, 2)"/>
 												</td>
 						                    </tr>
+						                    <tr style="border-top: 1px solid black;">
+						                        <td colspan="2" style="border-top: 1px solid black;">
+								                <strong>ARRETEE LA PRESENTE FACTURE A LA SOMME DE:</strong>
+												</td>
+					                            <td style="border: 1px solid black;"><strong>Total</strong></td>
+					                            <td class="text-right" style="border: 1px solid black;">
+			                                		<span t-field="o.amount_total" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+					                            </td>
+						                    </tr>
 						                    <tr style="border-top: none;">
-						                        <td colspan="4" style="border-top: none;"></td>
+						                        <td colspan="2">
+						                			<span style="text-transform: uppercase;" t-field="o.amount_to_text"/>
+												</td>
+					                            <td colspan="2"/>
 						                    </tr>
 						                </tbody>
 						            </table>
-						            <div class="row">
-						                <div class="col-xs-4 pull-right">
-						                    <table class="table table-condensed">
-						                        <tr>
-						                            <td><strong>Total</strong></td>
-						                            <td class="text-right">
-						                                 <span t-field="o.amount_total" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
-						                            </td>
-						                        </tr>
-						                    </table>
-						                </div>
-						            </div>
-						            <p>
-						                <strong>ARRETEE LA PRESENTE FACTURE A LA SOMME DE:</strong>
-						                <span style="text-transform: uppercase;" t-field="o.amount_to_text"/>
-						            </p>
 						            <p t-if="o.comment">
 						                <strong>Comment:</strong>
 						                <span t-field="o.comment"/>

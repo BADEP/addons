@@ -22,15 +22,16 @@
 
 from openerp.osv import osv
 
+
 class sale_order(osv.osv):
     _inherit = "sale.order"
-    _name    = "sale.order"
+    _name = "sale.order"
     
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         val = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
         salesteam = part.section_id and part.section_id.id or False
-        val.get('value',{}).update({'section_id': salesteam})
+        val.get('value', {}).update({'section_id': salesteam})
         return val
 
 sale_order()

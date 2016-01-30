@@ -23,9 +23,10 @@
 from openerp.osv import osv
 from openerp.tools.translate import _
 
+
 class pos_order(osv.osv):
     _inherit = "pos.order"
-    _name     = "pos.order"
+    _name = "pos.order"
     def create_picking(self, cr, uid, ids, context=None):
         """Create a picking for each order and validate it."""
         picking_obj = self.pool.get('stock.picking')
@@ -39,7 +40,7 @@ class pos_order(osv.osv):
             if picking_type:
                 picking_id = picking_obj.create(cr, uid, {
                     'origin': order.name,
-                    'partner_id': addr.get('delivery',False),
+                    'partner_id': addr.get('delivery', False),
                     'picking_type_id': picking_type.id,
                     'company_id': order.company_id.id,
                     'move_type': 'direct',
@@ -82,7 +83,7 @@ class pos_order(osv.osv):
                         'product_uom': line.product_id.uom_id.id,
                         'product_uos': line.product_id.uom_id.id,
                         'picking_id': picking_id,
-                        'picking_type_id': picking_type.id, 
+                        'picking_type_id': picking_type.id,
                         'product_id': line.product_id.id,
                         'product_uos_qty': abs(line.qty),
                         'product_uom_qty': abs(line.qty),
@@ -92,23 +93,23 @@ class pos_order(osv.osv):
                     }, context=context))
             if picking_id:
                 picking_obj.action_confirm(cr, uid, [picking_id], context=context)
-                #picking_obj.force_assign(cr, uid, [picking_id], context=context)
-                #picking_obj.action_done(cr, uid, [picking_id], context=context)
+                # picking_obj.force_assign(cr, uid, [picking_id], context=context)
+                # picking_obj.action_done(cr, uid, [picking_id], context=context)
             elif move_list:
                 move_obj.action_confirm(cr, uid, move_list, context=context)
-                #move_obj.force_assign(cr, uid, move_list, context=context)
-                #move_obj.action_done(cr, uid, move_list, context=context)
+                # move_obj.force_assign(cr, uid, move_list, context=context)
+                # move_obj.action_done(cr, uid, move_list, context=context)
         return True
 pos_order()
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
-    _name    = "sale.order"
+    _name = "sale.order"
 
     def _prepare_order_line_procurement(self, cr, uid, order, line, item=False, group_id=False, context=None):
         vals = []
         if item == False:
-            if line.product_id.bundle==True:
+            if line.product_id.bundle == True:
                 for item in line.product_id.item_ids:
                     return_vals = self._prepare_order_line_procurement(cr, uid, order, line, item, group_id, context)
                     for return_val in return_vals:
@@ -135,7 +136,7 @@ class sale_order(osv.osv):
                 }
                 vals.append(val)
         else:
-            if item.item_id.bundle==True:
+            if item.item_id.bundle == True:
                 for child_item in item.item_id.item_ids:
                     return_vals = self._prepare_order_line_procurement(cr, uid, order, line, child_item, group_id, context)
                     for return_val in return_vals:
@@ -180,12 +181,12 @@ class sale_order(osv.osv):
                 order.write({'procurement_group_id': group_id})
 
             for line in order.order_line:
-                #Try to fix exception procurement (possible when after a shipping exception the user choose to recreate)
+                # Try to fix exception procurement (possible when after a shipping exception the user choose to recreate)
                 if line.procurement_ids:
-                    #first check them to see if they are in exception or not (one of the related moves is cancelled)
+                    # first check them to see if they are in exception or not (one of the related moves is cancelled)
                     procurement_obj.check(cr, uid, [x.id for x in line.procurement_ids if x.state not in ['cancel', 'done']])
                     line.refresh()
-                    #run again procurement that are in exception in order to trigger another move
+                    # run again procurement that are in exception in order to trigger another move
                     proc_ids += [x.id for x in line.procurement_ids if x.state in ('exception', 'cancel')]
                     procurement_obj.reset_to_confirmed(cr, uid, proc_ids, context=context)
                 elif sale_line_obj.need_procurement(cr, uid, [line.id], context=context):
@@ -194,11 +195,11 @@ class sale_order(osv.osv):
                     for val in self._prepare_order_line_procurement(cr, uid, order, line, group_id=order.procurement_group_id.id, context=context):
                         proc_id = procurement_obj.create(cr, uid, val, context=context)
                         proc_ids.append(proc_id)
-            #Confirm procurement order such that rules will be applied on it
-            #note that the workflow normally ensure proc_ids isn't an empty list
+            # Confirm procurement order such that rules will be applied on it
+            # note that the workflow normally ensure proc_ids isn't an empty list
             procurement_obj.run(cr, uid, proc_ids, context=context)
 
-            #if shipping was in exception and the user choose to recreate the delivery order, write the new status of SO
+            # if shipping was in exception and the user choose to recreate the delivery order, write the new status of SO
             if order.state == 'shipping_except':
                 val = {'state': 'progress', 'shipped': False}
 

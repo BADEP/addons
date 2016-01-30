@@ -1,0 +1,174 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="res_partner_code_form" model="ir.ui.view">
+            <field name="name">sale_delivery_cost.res_partner_code_form</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='country_id']" position="before">
+					<field name="code" placeholder="Code DT"/>
+                </xpath>
+                <xpath expr="//field[@name='child_ids']/form//field[@name='country_id']" position="before">
+					<field name="code" placeholder="Code DT"/>
+                </xpath>
+			</field>
+        </record>
+
+        <record id="product_template_delivery_costs" model="ir.ui.view">
+            <field name="name">sale_delivery_cost.product_template_form_view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//page[@name='sales']" position="after">
+                    <page string="Delivery Costs" attrs="{'invisible':[('sale_ok','=',False)]}" name="delivery_costs">
+						<field name="delivery_costs">
+							<tree string="Delivery Costs" editable="bottom">
+								<field name="code" />
+								<field name="price" />
+							</tree>
+						</field>
+                    </page>
+                </xpath>
+			</field>
+        </record>
+
+        <record id="picking_delivery_cost_form_view" model="ir.ui.view">
+            <field name="name">sale_delivery_cost.stock_picking_form_view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='partner_id']" position="after">
+		        	<field name="vehicle"/>
+		        	<field name="driver"/>
+                    <field name="driver_cost"/>
+				</xpath>
+			</field>
+        </record>
+
+        <record id="delivery_cost_report_picking" model="ir.ui.view">
+            <field name="name">sale_delivery_cost.report_picking</field>
+            <field name="inherit_id" ref="stock.report_picking" />
+            <field eval="17" name="priority"/>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <xpath expr="//th[@name='td_sched_date_h']" position="after">
+		        	<th>Chauffeur</th>
+				</xpath>
+                <xpath expr="//td[@name='td_sched_date']" position="after">
+	                <td>
+	                    <span t-field="o.driver"/>
+	                </td>
+				</xpath>
+			</field>
+        </record>
+
+        <record id="sale_delivery_cost_form_view" model="ir.ui.view">
+            <field name="name">sale_delivery_cost.sale_order_form_view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="attributes">
+					<attribute name="context">{'partner_shipping_id':parent.partner_shipping_id, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
+				</xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="attributes">
+					<attribute name="context">{'partner_shipping_id':parent.partner_shipping_id, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
+				</xpath>
+                <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="attributes">
+					<attribute name="context">{'partner_shipping_id':parent.partner_shipping_id, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
+				</xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="attributes">
+					<attribute name="context">{'partner_shipping_id':parent.partner_shipping_id, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
+				</xpath>
+                <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="before">
+                	<field name="price_base" groups="base.grou_user"/>
+                	<field name="cost_unit" groups="base.group_user"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="before">
+                	<field name="price_base" groups="base.group_user"/>
+                	<field name="cost_unit" groups="base.group_user"/>
+                </xpath>
+				<xpath expr="//field[@name='partner_shipping_id']" position="after">
+		        	<field name="driver" groups="base.group_user"/>
+                    <field name="driver_cost" groups="base.group_user"/>
+				</xpath>
+				<xpath expr="//field[@name='amount_untaxed']" position="before">
+					<field name="delivery_cost" groups="base.group_user" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+				</xpath>
+			</field>
+        </record>
+
+        <record id="sale_delivery_cost_tree_view" model="ir.ui.view">
+            <field name="name">sale_delivery_cost.sale_order_tree_view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='amount_total']" position="before">
+					<field name="driver"/>
+					<field name="driver_cost" sum="Total" groups="base.group_user"/>
+				</xpath>
+			</field>
+        </record>
+
+        <record id="sale_delivery_cost_filter_view" model="ir.ui.view">
+            <field name="name">sale_delivery_cost.sale_order_fliter_view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter" />
+            <field eval="17" name="priority"/>
+            <field name="arch" type="xml">
+				<xpath expr="//filter[@string='Customer']" position="after">
+					<filter string="driver" domain="[]" context="{'group_by':'driver'}"/>
+				</xpath>
+			</field>
+        </record>
+
+        <record id="code_view_tree" model="ir.ui.view">
+            <field name="name">product.delivery.code.tree</field>
+            <field name="model">product.delivery.code</field>
+            <field name="priority">4</field>
+            <field name="arch" type="xml">
+                <tree string="Codes">
+					<field name="name" />
+                </tree>
+            </field>
+        </record>
+
+		<record id="action_code" model="ir.actions.act_window">
+            <field name="name">Codes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.delivery.code</field>
+            <field name="view_type">form</field>
+            <field name="view_id" ref="sale_delivery_cost.code_view_tree"/>
+            <field name="view_mode">tree,form,calendar,graph</field>
+        </record>
+
+		<record id="view_code_form" model="ir.ui.view">
+            <field name="name">product.delivery.code.form</field>
+            <field name="model">product.delivery.code</field>
+            <field name="arch" type="xml">
+                <form string="Code">
+					<field name="name" />
+					<field name="partners" widget="many2many" />
+					<field name="delivery_costs">
+						<tree string="Costs" editable="bottom">
+		                    <field name="product"/>
+		                    <field name="price"/>
+                        </tree>
+					</field>
+				</form>
+            </field>
+        </record>
+		<menuitem id="menu_code" action="action_code" parent="base.menu_base_config" sequence="10"/>
+   
+    </data>
+</openerp>

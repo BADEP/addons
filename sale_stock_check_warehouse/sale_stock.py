@@ -21,6 +21,7 @@
 ##############################################################################
 from openerp.osv import osv
 
+
 class sale_order_line(osv.osv):
     _inherit = 'sale.order.line'
 
@@ -32,6 +33,6 @@ class sale_order_line(osv.osv):
             warehouse = warehouse_obj.browse(cr, uid, warehouse_id, context=context)
             context = dict(context or {})
             context.update({'location': warehouse.view_location_id.id})
-        return super(sale_order_line,self).product_id_change_with_wh(cr, uid, ids, pricelist, product, qty,
+        return super(sale_order_line, self).product_id_change_with_wh(cr, uid, ids, pricelist, product, qty,
             uom, qty_uos, uos, name, partner_id,
             lang, update_tax, date_order, packaging, fiscal_position, flag, warehouse_id, context)

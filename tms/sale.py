@@ -19,9 +19,11 @@
 #
 ##############################################################################
 
+from datetime import timedelta
+
 from openerp import fields, models, api
 import openerp.addons.decimal_precision as dp
-from datetime import timedelta
+
 
 class sale_order(models.Model):
     _inherit = 'sale.order'
@@ -29,7 +31,7 @@ class sale_order(models.Model):
     date_start = fields.Datetime(string='Date Start', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}, copy=False, default=fields.Datetime.now())
     date_end = fields.Datetime('Date End', required=True, readonly=True, select=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)], 'log_progress': [('readonly', False)]}, copy=False)
     vehicle = fields.Many2one('fleet.vehicle', string='Véhicule', readonly=True, required=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
-    driver = fields.Many2one('hr.employee', related='vehicle.driver_id', store = True, readonly=True)
+    driver = fields.Many2one('hr.employee', related='vehicle.driver_id', store=True, readonly=True)
     fuel_log = fields.Many2one('fleet.vehicle.log.fuel', string='Bon de carburant', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]},)
     estimated_fuel_qty = fields.Float(compute='get_fuel_qty')
     state = fields.Selection([
@@ -62,7 +64,7 @@ class sale_order(models.Model):
         date_end = fields.Datetime.from_string(self.date_start)
         for line in self.order_line:
             if line.partner_picking_id and line.partner_delivery_id:
-                grid = self.env['transport.grid'].search([('city_from','=',line.partner_picking_id.city.id), ('city_to','=', line.partner_delivery_id.city.id)])
+                grid = self.env['transport.grid'].search([('city_from', '=', line.partner_picking_id.city.id), ('city_to', '=', line.partner_delivery_id.city.id)])
                 if grid:
                     date_end += timedelta(hours=grid.time)
         self.date_end = date_end
@@ -80,10 +82,10 @@ class sale_order_line(models.Model):
     cargo = fields.One2many('sale.order.line.cargo', 'order_line')
     
     @api.one
-    @api.depends('partner_picking_id','partner_delivery_id')
+    @api.depends('partner_picking_id', 'partner_delivery_id')
     def get_fuel_qty(self):
         if self.partner_picking_id and self.partner_delivery_id:
-            grid = self.env['transport.grid'].search([('city_from','=',self.partner_picking_id.city.id), ('city_to','=', self.partner_delivery_id.city.id)])
+            grid = self.env['transport.grid'].search([('city_from', '=', self.partner_picking_id.city.id), ('city_to', '=', self.partner_delivery_id.city.id)])
             if grid:
                 self.estimated_fuel_qty = grid.distance * self.order_id.vehicle.mpg / 100
     
@@ -100,7 +102,7 @@ class sale_order_line_cargo(models.Model):
     order_line = fields.Many2one('sale.order.line', required=True, ondelete='cascade')
     product = fields.Many2one('product.product', required=True)
     quantity = fields.Float(digits_compute=dp.get_precision('Product UoS'), required=True)
-    uom = fields.Many2one('product.uom', required = True, string="Unité de mesure")
-    value = fields.Float(digits_compute= dp.get_precision('Product Price'))
+    uom = fields.Many2one('product.uom', required=True, string="Unité de mesure")
+    value = fields.Float(digits_compute=dp.get_precision('Product Price'))
 
 sale_order_line_cargo()

@@ -23,16 +23,47 @@
 from openerp import models, fields, api
 import openerp.addons.decimal_precision as dp
 
+
 class mrp_production(models.Model):
     _inherit = "mrp.production"
     dimensions = fields.One2many('mrp.production.dimension','mrp_production')
+    product_dimension_qty = fields.Integer('Quantité', required=True, default=0)
+    dimensions_label = fields.Char('Qté. produite', compute='get_dimensions_label')
+    sale_dimensions_label = fields.Char('Description', compute='get_sale_dimensions_label')
+    
+    @api.one
+    def get_dimensions_label(self):
+        str_dim = (str(self.product_dimension_qty) + ' - ') if self.product_dimension_qty != 0 else ''
+        for d in self.dimensions:
+            str_dim += str(d.extrapolated_qty) + '*'
+        str_dim = str_dim[:-1]
+        self.dimensions_label = str_dim
+
+    @api.one
+    def get_sale_dimensions_label(self):
+        if self.dimensions:
+            str_dim = (str(self.product_dimension_qty) if self.product_dimension_qty != 0 else '') + ' ' + self.product_id.name + ' '
+            for d in self.dimensions:
+                str_dim += str(d.quantity) + '*'
+            str_dim = str_dim[:-1]
+            self.sale_dimensions_label = str_dim
+        else:
+            self.sale_dimensions_label = self.product_id.name
     
 mrp_production()
 
 class mrp_production_dimension(models.Model):
     _name = "mrp.production.dimension"
     dimension = fields.Many2one('product.uom.dimension', required=True, ondelete='cascade')
-    quantity = fields.Float('Quantity', digits_compute= dp.get_precision('Product UoS'), required=True)
-    mrp_production = fields.Many2one('mrp.production','Production Order', required=True, ondelete='cascade')
-
+    quantity = fields.Float('Quantité', digits_compute= dp.get_precision('Product UoS'), required=True)
+    mrp_production = fields.Many2one('mrp.production', required=True, ondelete='cascade')
+    extrapolated_qty = fields.Integer(string='Quantité extrapolée', compute='get_extrapolated_qty')
+    
+    @api.one
+    @api.depends('dimension', 'quantity')
+    def get_extrapolated_qty(self):
+        if self.dimension.rounding!=0:
+            self.extrapolated_qty = round(self.quantity / self.dimension.rounding)
+        else:
+            self.extrapolated_qty = self.quantity + self.dimension.offset
 mrp_production_dimension()

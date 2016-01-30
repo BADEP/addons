@@ -41,7 +41,7 @@ class invoice_merge(models.TransientModel):
             for d in invs:
                 if d['state'] != 'draft':
                     raise exceptions.Warning(
-                        _('At least one of the selected invoices is %s!') %
+                        _('At least one of the selected invoices is %s!') % 
                         d['state'])
                 if d['account_id'] != invs[0]['account_id']:
                     raise exceptions.Warning(

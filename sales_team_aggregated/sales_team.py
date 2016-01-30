@@ -40,7 +40,7 @@ class crm_case_section(osv.osv):
         res = {}
         for id in ids:
             res[id] = {}
-            created_domain = [('section_id', 'child_of', id), ('state', 'in', ['draft','sent']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
+            created_domain = [('section_id', 'child_of', id), ('state', 'in', ['draft', 'sent']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
             validated_domain = [('section_id', 'child_of', id), ('state', 'not in', ['draft', 'sent', 'cancel']), ('date_order', '>=', date_begin), ('date_order', '<=', date_end)]
             res[id]['monthly_quoted'] = json.dumps(self.__get_bar_values(cr, uid, obj, created_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context))
             res[id]['monthly_confirmed'] = json.dumps(self.__get_bar_values(cr, uid, obj, validated_domain, ['amount_total', 'date_order'], 'amount_total', 'date_order', context=context))

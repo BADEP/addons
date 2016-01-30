@@ -20,15 +20,17 @@
 #
 ##############################################################################
 
-from openerp.osv import fields, osv
-from openerp import netsvc
 import copy
+
+from openerp import netsvc
 import openerp.addons.decimal_precision as dp
+from openerp.osv import fields, osv
 from openerp.tools.translate import _
+
 
 class res_partner(osv.osv):
     _inherit = "res.partner"
-    _name    = "res.partner"
+    _name = "res.partner"
     _columns = {
         'warehouse_id': fields.many2one('stock.warehouse', 'Warehouse'),
     }
@@ -36,19 +38,19 @@ res_partner()
 
 class sale_order(osv.osv):
     _inherit = "sale.order"
-    _name    = "sale.order"
+    _name = "sale.order"
     _columns = {
-        'global_discount': fields.float('Discount (%)', digits_compute= dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
+        'global_discount': fields.float('Discount (%)', digits_compute=dp.get_precision('Discount'), readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]}),
     }
     
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
         if not part:
-            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False,  'payment_term': False, 'fiscal_position': False}}
+            return {'value': {'partner_invoice_id': False, 'partner_shipping_id': False, 'payment_term': False, 'fiscal_position': False}}
         
         val = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
         part = self.pool.get('res.partner').browse(cr, uid, part, context=context)
         warehouse = part.warehouse_id and part.warehouse_id.id or False
-        val.get('value',{}).update({'warehouse_id': warehouse})
+        val.get('value', {}).update({'warehouse_id': warehouse})
         return val
 
 sale_order()

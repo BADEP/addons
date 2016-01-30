@@ -29,8 +29,8 @@
     """,
     'author': 'BADEP',
     'website': 'http://www.badep.ma',
-    'depends': ['sale','account'],
-    'demo_xml': [],
+    'depends': ['sale', 'account'],
+    'data': ['views.xml'],
     'installable': True,
 }
 

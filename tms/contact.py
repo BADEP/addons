@@ -1,5 +1,6 @@
 from openerp import fields, models, api
 
+
 class res_country_state_city(models.Model):
     _name = 'res.country.state.city'
     

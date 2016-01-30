@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_location_pump,stock.location.pump,model_stock_location_pump,base.group_user,1,1,1,1
+access_sale_session,sale.session,model_sale_session,base.group_user,1,1,1,1
+access_sale_session_line,sale.session.line,model_sale_session_line,base.group_user,1,1,1,1
+access_sale_session_client_line,sale.session.client_line,model_sale_session_client_line,base.group_user,1,1,1,1
+access_sale_session_log,sale.session.log,model_sale_session_log,base.group_user,1,1,1,1
+access_sale_order_voucher,sale.order.voucher,model_sale_order_voucher,base.group_user,1,1,1,1

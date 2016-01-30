@@ -21,11 +21,12 @@
 
 from openerp import fields, api, models
 
+
 class sale_make_log_fuel(models.TransientModel):
     _name = 'sale.make.log.fuel'
     
     quantity = fields.Float(required=True, string='Quantité')
-    supplier = fields.Many2one('res.partner', domain=[('supplier','=',True)], string='Fournisseur')
+    supplier = fields.Many2one('res.partner', domain=[('supplier', '=', True)], string='Fournisseur')
     odometer = fields.Float(string='Kilométrage')
     date = fields.Datetime()
     
@@ -35,7 +36,7 @@ class sale_make_log_fuel(models.TransientModel):
         active_model = self.env.context.get('active_model')
         assert active_model in ('sale.order'), 'Bad context propagation'
         order = self.env['sale.order'].browse(self.env.context.get(('active_ids'), []))
-        if not order or len(order)!=1:
+        if not order or len(order) != 1:
             return res
         res.update({'quantity': order.estimated_fuel_qty, 'date': order.date_start})
         return res

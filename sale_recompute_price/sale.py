@@ -22,10 +22,11 @@
 
 from openerp.osv import osv
 
+
 class sale_order(osv.osv):
     _inherit = "sale.order"
     
-    def action_recompute(self, cr, uid, ids, context = None):
+    def action_recompute(self, cr, uid, ids, context=None):
         context = context or {}
         for order in self.browse(cr, uid, ids, context=context):
             pricelist_id = order.pricelist_id.id

@@ -23,6 +23,7 @@
 from openerp import models, api
 from openerp.osv.orm import browse_record, browse_null
 
+
 INVOICE_LINE_KEY_COLS = ['discount', 'invoice_line_tax_id',
                         'price_unit', 'product_id',
                         'account_id', 'account_analytic_id']
@@ -41,10 +42,10 @@ class account_invoice(models.Model):
                                                       ('discount', '=', line.discount),
                                                       ('invoice_line_tax_id', '=', line.invoice_line_tax_id.id),
                                                       ('price_unit', '=', line.price_unit),
-                                                      ('product_id', '=', line.product_id.id), 
+                                                      ('product_id', '=', line.product_id.id),
                                                       ('account_id', '=', line.account_id.id),
-                                                      ('account_analytic_id','=', line.account_analytic_id.id),
-                                                      ('id','not in', itered)], limit=1)
+                                                      ('account_analytic_id', '=', line.account_analytic_id.id),
+                                                      ('id', 'not in', itered)], limit=1)
             if line_to_merge:
                 to_delete.append(line.id)
                 line_to_merge.write({'quantity': line_to_merge.quantity + line.quantity,

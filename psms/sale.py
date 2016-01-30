@@ -21,8 +21,9 @@
 ##############################################################################
 
 from openerp import models, fields, api, exceptions
-from openerp.osv import osv, fields as oldfields
 import openerp.addons.decimal_precision as dp
+from openerp.osv import osv, fields as oldfields
+
 
 class sale_session(models.Model):
     _name = 'sale.session'
@@ -43,12 +44,12 @@ class sale_session(models.Model):
         return self.env.user.company_id.warehouse_ids[0].id if self.env.user.company_id.warehouse_ids else False
         
     date = fields.Date(default=fields.Date.today(), readonly=True, states={'draft': [('readonly', False)]})    
-    sale_orders = fields.One2many('sale.order','session', readonly=True, states={'draft': [('readonly', False)]},string="Bons de commande")
+    sale_orders = fields.One2many('sale.order', 'session', readonly=True, states={'draft': [('readonly', False)]}, string="Bons de commande")
     name = fields.Char(string='Code', compute='get_name')
-    responsable = fields.Many2one('hr.employee', required = True, domain="[('responsable','=','True')]", readonly=True, states={'draft': [('readonly', False)]})
-    logs = fields.One2many('sale.session.log','session', readonly=True, states={'draft': [('readonly', False)]})
-    state = fields.Selection([('draft','Draft'), ('except','Exception'), ('done','Done')], 'Etat', readonly=True, copy=False, select=True, default='draft')
-    lines = fields.One2many('sale.session.line', 'session', string="Lignes de carburant")
+    responsable = fields.Many2one('hr.employee', required=True, domain="[('responsable','=','True')]", readonly=True, states={'draft': [('readonly', False)]})
+    logs = fields.One2many('sale.session.log', 'session', readonly=True, states={'draft': [('readonly', False)]})
+    state = fields.Selection([('draft', 'Draft'), ('except', 'Exception'), ('done', 'Done')], 'Etat', readonly=True, copy=False, select=True, default='draft')
+    lines = fields.One2many('sale.session.line', 'session', string='Lignes de carburant')
     client_lines = fields.One2many('sale.session.client_line', 'session', string="Lignes par client")
     total_sales = fields.Float(digits_compute=dp.get_precision('Product Price'), compute='get_sales', string="Total des ventes")
     fuel_sales = fields.Float(digits_compute=dp.get_precision('Product Price'), compute='get_sales', string="Ventes carburant")
@@ -58,7 +59,7 @@ class sale_session(models.Model):
 
     @api.one
     def action_confirm(self):
-        count = self.search_count([('state','!=','done'),('date','<',self.date)])
+        count = self.search_count([('state', '!=', 'done'), ('date', '<', self.date)])
         if count > 0:
             raise exceptions.except_orm(('Error!'), ('Une session antérieure est encore ouverte'))
         for log in self.logs:
@@ -66,7 +67,7 @@ class sale_session(models.Model):
                 raise exceptions.except_orm(('Error!'), ('Log cannot be of a negative value'))
         for line in self.lines:
             if abs(line.diff_qty) > 1:
-                self.state='except'
+                self.state = 'except'
                 return False
         self.action_force()
         
@@ -81,25 +82,15 @@ class sale_session(models.Model):
                 picking.action_done()
         for log in self.logs:
             log.pump.counter = log.new_counter
-        self.state='done'
+        self.state = 'done'
 
-    @api.onchange('logs')
-    @api.one
-    def get_lines(self):
-        self.lines = []
-        products = self.logs.mapped('pump.product')
-        for product in products:
-            new_line =self.lines.new({'product': product.id, 'session': self.id})
-            self.lines = self.lines | new_line
-    
-    @api.onchange('sale_orders')
+    @api.depends('sale_orders')
     @api.one
     def get_client_lines(self):
-        self.client_lines = []
+        self.client_lines.unlink()
         partners = self.sale_orders.mapped('partner_id')
         for partner in partners:
-            new_line =self.client_lines.new({'partner': partner.id, 'session': self.id})
-            self.client_lines = self.client_lines | new_line
+            self.client_lines |= self.env['sale.session.client_line'].create({'partner': partner.id, 'session': self.id})
 
     @api.one
     @api.depends('sale_orders')
@@ -120,15 +111,15 @@ class sale_session(models.Model):
 
     @api.one
     def action_import_data(self):
-        count = self.search_count([('state','!=','done'),('date','<',self.date)])
+        count = self.search_count([('state', '!=', 'done'), ('date', '<', self.date)])
         if count > 0:
             raise exceptions.except_orm(('Error!'), ('Une session antérieure est encore ouverte'))
         self.logs.unlink()
-        self.write({'logs': [(0, 0,{'session': self.id, 'pump': x.id, 'old_counter': x.counter}) for x in self.env['stock.location.pump'].search([('location','child_of', self.warehouse.view_location_id.id)])]})
+        self.write({'logs': [(0, 0, {'session': self.id, 'pump': x.id, 'old_counter': x.counter}) for x in self.env['stock.location.pump'].search([('location', 'child_of', self.warehouse.view_location_id.id)])]})
         self.sale_orders.write({'session': False})
-        sale_orders = self.env['sale.order'].search([('session','=', False),('date_order','>=',self.date)])
+        sale_orders = self.env['sale.order'].search([('session', '=', False), ('date_order', '>=', self.date)])
         self.write({'sale_orders': [(4, x.id) for x in sale_orders]})
-        products=self.logs.mapped('pump.product')
+        products = self.logs.mapped('pump.product')
         self.lines.unlink()
         self.write({'lines': [(0, 0, {'product': x.id, 'session': self.id}) for x in products]})
     
@@ -138,43 +129,40 @@ class sale_session(models.Model):
         self.lines.unlink()
         self.logs.unlink()
         self.sale_orders.unlink()
-sale_session()
 
 class sale_session_line(models.Model):
     _name = 'sale.session.line'
     _description = 'Ligne de carurant'
     
     product = fields.Many2one('product.product', readonly=True, string="Article")
-    log_qty = fields.Float(digits_compute= dp.get_precision('Product UoS'), compute='get_log', string="Variance compteur")
-    sale_qty = fields.Float(digits_compute= dp.get_precision('Product UoS'), compute='get_sales', string="Ventes")
-    diff_qty = fields.Float(digits_compute= dp.get_precision('Product UoS'), compute='get_diff', string="Difference")
+    log_qty = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_log', string="Variance compteur")
+    sale_qty = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_sales', string="Ventes")
+    diff_qty = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_diff', string="Difference")
     session = fields.Many2one('sale.session', ondelete='cascade')
     
     @api.one
     @api.depends('session.sale_orders')
     def get_sales(self):
-        sales=0
+        sales = 0
         for order in self.session.sale_orders:
             for line in order.order_line:
                 if line.product_id.id == self.product.id:
-                    sales+=line.product_uom_qty 
+                    sales += line.product_uom_qty 
         self.sale_qty = sales
     
     @api.one
-    @api.depends('log_qty','sale_qty')
+    @api.depends('log_qty', 'sale_qty')
     def get_diff(self):
-        self.diff_qty =  self.log_qty - self.sale_qty
+        self.diff_qty = self.log_qty - self.sale_qty
     
     @api.one
     @api.depends('session.logs')
     def get_log(self):
-        log_qty=0
+        log_qty = 0
         for log in self.session.logs:
             if log.pump.product.id == self.product.id:
                 log_qty += log.diff
         self.log_qty = log_qty
-
-sale_session_line()
 
 class sale_session_client_line(models.Model):
     _name = 'sale.session.client_line'
@@ -182,47 +170,31 @@ class sale_session_client_line(models.Model):
     
     partner = fields.Many2one('res.partner', readonly=True, string="Client")
     order_count = fields.Integer(compute='get_sales_and_count', string="Nombre de commandes")
-    sale_qty = fields.Float(digits_compute= dp.get_precision('Product UoS'), compute='get_sales_and_count', string="Ventes")
+    sale_qty = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_sales_and_count', string="Ventes")
     session = fields.Many2one('sale.session', ondelete='cascade')
     
     @api.one
     @api.depends('session.sale_orders')
     def get_sales_and_count(self):
-        sales=0
-        count=0
+        sales = 0
+        count = 0
         for order in self.session.sale_orders:
             if order.partner_id.id == self.partner.id:
                 sales += order.amount_total
-                count+=1
+                count += 1
         self.sale_qty = sales
-        self.order_count=count
-    
-    @api.one
-    @api.depends('log_qty','sale_qty')
-    def get_diff(self):
-        self.diff_qty =  self.log_qty - self.sale_qty
-    
-    @api.one
-    @api.depends('session.logs')
-    def get_log(self):
-        log_qty=0
-        for log in self.session.logs:
-            if log.pump.product.id == self.product.id:
-                log_qty += log.diff
-        self.log_qty = log_qty
-
-sale_session_line()
+        self.order_count = count
 
 class sale_session_log(models.Model):
     _name = 'sale.session.log'
     _description = 'Log'
     
-    session = fields.Many2one('sale.session', ondelete = 'cascade')
-    pump = fields.Many2one('stock.location.pump', ondelete = 'cascade', string="Pompe")
-    old_counter = fields.Float(digits_compute= dp.get_precision('Product UoS'), string="Ancien compteur")
-    new_counter = fields.Float(digits_compute= dp.get_precision('Product UoS'), required=True, default=0, string="Nouveau compteur")
-    diff = fields.Float(digits_compute= dp.get_precision('Product UoS'), compute='get_diff', string="Difference")
-    electric_counter = fields.Float(digits_compute= dp.get_precision('Product UoS'), compute='get_electric_counter', string="Compteur électrique")
+    session = fields.Many2one('sale.session', ondelete='cascade')
+    pump = fields.Many2one('stock.location.pump', ondelete='cascade', string="Pompe")
+    old_counter = fields.Float(digits_compute=dp.get_precision('Product UoS'), string="Ancien compteur")
+    new_counter = fields.Float(digits_compute=dp.get_precision('Product UoS'), required=True, default=0, string="Nouveau compteur")
+    diff = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_diff', string="Difference")
+    electric_counter = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_electric_counter', string="Compteur électrique")
     
     @api.one
     @api.depends('new_counter', 'old_counter')
@@ -233,16 +205,14 @@ class sale_session_log(models.Model):
     @api.depends('new_counter')
     def get_electric_counter(self):
         self.electric_counter = self.new_counter + self.pump.electric_diff
-    
-sale_session_log()
 
 class sale_order(models.Model):
     _inherit = 'sale.order'
     
-    session = fields.Many2one('sale.session', ondelete = 'set null')
-    vehicle = fields.Many2one('fleet.vehicle', ondelete= 'set null', string="Véhicule")
-    vouchers_delivered = fields.One2many('sale.order.voucher','sale_order_delivered', readonly=True, states={'draft': [('readonly', False)]}, string="Bons d'échange donnés")
-    vouchers_taken = fields.One2many('sale.order.voucher','sale_order_taken', readonly=True, states={'draft': [('readonly', False)]}, string="Bons d'échange reçus")
+    session = fields.Many2one('sale.session', ondelete='set null')
+    vehicle = fields.Many2one('fleet.vehicle', ondelete='set null', string="Véhicule")
+    vouchers_delivered = fields.One2many('sale.order.voucher', 'sale_order_delivered', readonly=True, states={'draft': [('readonly', False)]}, string="Bons d'échange donnés")
+    vouchers_taken = fields.One2many('sale.order.voucher', 'sale_order_taken', readonly=True, states={'draft': [('readonly', False)]}, string="Bons d'échange reçus")
     delivery_order_ref = fields.Char(string="N° BL")
     
     @api.multi
@@ -257,14 +227,12 @@ class sale_order(models.Model):
                 res[order.id]['amount_total'] -= vt.price_total
         return res
         
-sale_order()
-
 class sale_order_old(osv.osv):
     _inherit = 'sale.order'
     _name = 'sale.order'
     
     def onchange_partner_id(self, cr, uid, ids, part, context=None):
-        val = super(sale_order, self).onchange_partner_id(cr,uid,ids, part,context=context)
+        val = super(sale_order, self).onchange_partner_id(cr, uid, ids, part, context=context)
         val['value'].update({'vehicle': False})
         return val
     
@@ -281,25 +249,25 @@ class sale_order_old(osv.osv):
     _columns = {
         'amount_untaxed': oldfields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
             store={
-                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line','vouchers_delivered', 'vouchers_taken'], 10),
+                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line', 'vouchers_delivered', 'vouchers_taken'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The amount without tax.", track_visibility='always'),
         'amount_tax': oldfields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Taxes',
             store={
-                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line','vouchers_delivered', 'vouchers_taken'], 10),
+                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line', 'vouchers_delivered', 'vouchers_taken'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The tax amount."),
         'amount_total': oldfields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total',
             store={
-                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line','vouchers_delivered', 'vouchers_taken'], 10),
+                'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line', 'vouchers_delivered', 'vouchers_taken'], 10),
                 'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
             },
             multi='sums', help="The total amount.")
     }
     
-    def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_invoice = False, context=None):
+    def action_invoice_create(self, cr, uid, ids, grouped=False, states=None, date_invoice=False, context=None):
         if states is None:
             states = ['confirmed', 'done', 'exception']
         res = False
@@ -345,7 +313,7 @@ class sale_order_old(osv.osv):
                     'origin': vt.sale_order_taken.name,
                     'account_id': vt.product.property_account_income.id if vt.product.property_account_income.id else vt.product.categ_id.property_account_income_categ.id,
                     'price_unit': vt.price_unit,
-                    'quantity': -vt.quantity,
+                    'quantity':-vt.quantity,
                     'uos_id': vt.uom.id,
                     'product_id': vt.product.id or False,
                     'invoice_line_tax_id': [(6, 0, [x.id for x in vt.taxes])]
@@ -369,7 +337,7 @@ class sale_order_old(osv.osv):
                     self.write(cr, uid, [o.id], {'state': 'progress'})
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (o.id, res))
                     self.invalidate_cache(cr, uid, ['invoice_ids'], [o.id], context=context)
-                #remove last '|' in invoice_ref
+                # remove last '|' in invoice_ref
                 if len(invoice_ref) >= 1:
                     invoice_ref = invoice_ref[:-1]
                 if len(origin_ref) >= 1:
@@ -383,32 +351,30 @@ class sale_order_old(osv.osv):
                     cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
                     self.invalidate_cache(cr, uid, ['invoice_ids'], [order.id], context=context)
         return res
-sale_order_old()
-
 
 class sale_order_voucher(models.Model):
     _name = 'sale.order.voucher'
     
-    sale_order_delivered = fields.Many2one('sale.order', required = True, string="Bon de commande de délivrance")
+    sale_order_delivered = fields.Many2one('sale.order', required=True, string="Bon de commande de délivrance")
     sale_order_taken = fields.Many2one('sale.order', string="Bon de commande de consommation")
-    name = fields.Char('Code', required = True)
-    product = fields.Many2one('product.product', required = True, string="Article")
-    quantity = fields.Float(digits_compute= dp.get_precision('Product UoS'), required = True, string="Quantité")
-    uom = fields.Many2one('product.uom', required = True, string="Unité de mesure")
-    price_unit = fields.Float(digits_compute= dp.get_precision('Product Price'), required = True, string="Prix unitaire")
-    price_total = fields.Float(digits_compute= dp.get_precision('Product Price'), compute='get_price_total', string="Prix total")
-    state = fields.Selection([('draft','draft'),('delivered','Delivered'), ('collected','Collected'), ('done','Done')], 'Etat', readonly=True, copy=False, select=True, default='draft')
+    name = fields.Char('Code', required=True)
+    product = fields.Many2one('product.product', required=True, string="Article")
+    quantity = fields.Float(digits_compute=dp.get_precision('Product UoS'), required=True, string="Quantité")
+    uom = fields.Many2one('product.uom', required=True, string="Unité de mesure")
+    price_unit = fields.Float(digits_compute=dp.get_precision('Product Price'), required=True, string="Prix unitaire")
+    price_total = fields.Float(digits_compute=dp.get_precision('Product Price'), compute='get_price_total', string="Prix total")
+    state = fields.Selection([('draft', 'draft'), ('delivered', 'Delivered'), ('collected', 'Collected'), ('done', 'Done')], 'Etat', readonly=True, copy=False, select=True, default='draft')
     taxes = fields.Many2many('account.tax', string='Taxes', related='product.taxes_id', store=True)
         
     @api.one
     @api.onchange('product')
     def onchange_product(self):
         if self.product:
-            self.uom=self.product.uom_id
+            self.uom = self.product.uom_id
             if not self.sale_order_delivered.pricelist_id:
                 warn_msg = _('You have to select a pricelist or a customer in the sales form !\n'
                         'Please set one before choosing a product.')
-                warning_msgs = _("No Pricelist ! : ") + warn_msg +"\n\n"
+                warning_msgs = _("No Pricelist ! : ") + warn_msg + "\n\n"
             else:
                 price = self.sale_order_delivered.pricelist_id.with_context(
                     uom=self.uom.id or self.product.uom_id.id, date=self.sale_order_delivered.date_order).price_get(
@@ -417,7 +383,7 @@ class sale_order_voucher(models.Model):
                     warn_msg = _("Cannot find a pricelist line matching this product and quantity.\n"
                             "You have to change either the product, the quantity or the pricelist.")
     
-                    warning_msgs += _("No valid pricelist line found ! :") + warn_msg +"\n\n"
+                    warning_msgs += _("No valid pricelist line found ! :") + warn_msg + "\n\n"
                 else:
                     self.price_unit = price
     
@@ -426,12 +392,9 @@ class sale_order_voucher(models.Model):
     def get_price_total(self):
         self.price_total = self.price_unit * self.quantity
     
-sale_order_voucher()
-
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
     responsable = fields.Boolean(default=False)
-hr_employee()
 
 class sale_make_invoice(models.TransientModel):
     _inherit = 'sale.make.invoice'
@@ -445,8 +408,6 @@ class sale_make_invoice(models.TransientModel):
                 for i in o.invoice_ids:
                     i.merge_lines() 
             return result
-        
-sale_make_invoice()
 
 class res_partner(models.Model):
     _inherit = 'res.partner'
@@ -468,8 +429,7 @@ class res_partner(models.Model):
         args = args[:]
         recs = []
         if name:
-            recs = self.search([('ref', operator, name)] + args,limit=limit) | self.search([('name', operator, name)] + args,limit=limit)
+            recs = self.search([('ref', operator, name)] + args, limit=limit) | self.search([('name', operator, name)] + args, limit=limit)
         else:
             recs = self.search(args, limit=limit)
         return recs.name_get()
-res_partner()

@@ -21,11 +21,13 @@
 
 from datetime import datetime, timedelta
 import time
-from openerp.osv import fields, osv
-from openerp.tools.translate import _
-from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
-import openerp.addons.decimal_precision as dp
+
 from openerp import workflow
+import openerp.addons.decimal_precision as dp
+from openerp.osv import fields, osv
+from openerp.tools import DEFAULT_SERVER_DATE_FORMAT, DEFAULT_SERVER_DATETIME_FORMAT
+from openerp.tools.translate import _
+
 
 # TODO add a field price_unit_uos
 # - update it on change product and unit price
@@ -45,15 +47,15 @@ class sale_order_line(osv.osv):
             res[line.id] = cur_obj.round(cr, uid, cur, taxes['total_included'])
         return res
 
-    _inherit= 'sale.order.line'
+    _inherit = 'sale.order.line'
     _columns = {
-        'price_total': fields.function(_amount_total, string='Total', digits_compute= dp.get_precision('Account')),
+        'price_total': fields.function(_amount_total, string='Total', digits_compute=dp.get_precision('Account')),
     }
     
 sale_order_line()
 
 class account_invoice_line(osv.osv):
-    _inherit= 'account.invoice.line'
+    _inherit = 'account.invoice.line'
     
     def _amount_total(self, cr, uid, ids, field_name, arg, context=None):
         tax_obj = self.pool.get('account.tax')
@@ -69,7 +71,7 @@ class account_invoice_line(osv.osv):
         return res
 
     _columns = {
-        'price_total': fields.function(_amount_total, string='Total', digits_compute= dp.get_precision('Account')),
+        'price_total': fields.function(_amount_total, string='Total', digits_compute=dp.get_precision('Account')),
     }
     
 account_invoice_line()

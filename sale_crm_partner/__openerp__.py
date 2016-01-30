@@ -30,7 +30,7 @@
     """,
     'author': 'BADEP',
     'website': 'http://www.badep.ma',
-    'depends': ['sale_crm'], 
+    'depends': ['sale_crm'],
     'init_xml': [],
     'update_xml': [],
     'demo_xml': [],

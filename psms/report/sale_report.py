@@ -22,6 +22,7 @@
  
 from openerp.osv import fields, osv
 
+
 class sale_report(osv.osv):
     _inherit = "sale.report"
     _columns = {

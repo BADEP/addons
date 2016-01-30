@@ -1,5 +1,6 @@
 from openerp import fields, models
 
+
 class product_template(models.Model):
     _inherit = 'product.template'
     city_from = fields.Many2one('res.country.state.city', ondelete="set null")

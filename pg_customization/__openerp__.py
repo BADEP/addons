@@ -25,9 +25,11 @@
     'depends': [
         'sale',
         'purchase',
-        'auth_signup',
         'amount_to_text_fr',
         'sale_taxed_total',
+        'sale_stock',
+        'account_voucher',
+        'hr'
     ],
     'author': 'BADEP',
     'description': """
@@ -36,6 +38,7 @@ Package containing all Procter&Gamble required modules and the corresponding cus
     'website': 'https://www.badep.ma',
     'data': [
         'views.xml',
+        'security/ir.model.access.csv'
     ],
     'installable': True,
 }

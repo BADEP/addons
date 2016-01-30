@@ -22,6 +22,7 @@ from openerp import models, api
 from openerp import workflow
 from openerp.osv.orm import browse_record, browse_null
 
+
 INVOICE_KEY_COLS = ['partner_id', 'user_id', 'type',
                     'account_id', 'currency_id',
                     'journal_id', 'company_id']

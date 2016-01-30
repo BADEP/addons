@@ -22,6 +22,7 @@
 
 from openerp.osv import osv
 
+
 class sale_order_line(osv.osv):
     _inherit = "sale.order.line"
     
@@ -33,7 +34,7 @@ class sale_order_line(osv.osv):
             lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
         product = self.pool.get('product.product').browse(cr, uid, product, context=context)
         analytics_id = product.sale_analytics_id and product.sale_analytics_id.id or False
-        res.get('value',{}).update({'analytics_id': analytics_id})
+        res.get('value', {}).update({'analytics_id': analytics_id})
         return res
 sale_order_line()
 

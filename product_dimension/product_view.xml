@@ -12,6 +12,9 @@
                 	<field name="dimensions" widget="one2many_list">
 						<tree string="Dimensions" editable="bottom">
 							<field name="name" />
+							<field name="multiplier" />
+							<field name="rounding" />
+							<field name="offset" />
 						</tree>
 					</field>
                 </xpath>

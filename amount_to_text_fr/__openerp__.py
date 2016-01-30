@@ -30,7 +30,7 @@
     'category': 'Localization',
     'sequence': 4,
     'website' : 'http://www.badep.ma',
-    'depends' : ['sale','account'],
+    'depends' : ['sale', 'account'],
     'demo' : [],
     'data' : [
         'views.xml',

@@ -1,6 +1,51 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <template id="report_saleorder_document_inherit_product_dimension" inherit_id="sale.report_saleorder_document">
+            <xpath expr="//thead/tr/th[1]" position="before">
+				<th>Ref.</th>
+            </xpath>
+            <xpath expr="//thead/tr/th[3]" position="after">
+				<th>Unit.</th>
+            </xpath>
+            <xpath expr="//tbody/tr/td[1]" position="before">
+				<td>
+                	<span t-field="l.product_id.default_code"/>
+                </td>
+            </xpath>
+			<xpath expr="//span[@t-field='l.product_uom']" position="replace" />
+            <xpath expr="//tbody/tr/td[3]" position="after">
+				<td>
+                	<span groups="product.group_uom" t-field="l.product_uom"/>
+                </td>
+            </xpath>
+            <xpath expr="//thead/tr/th[3]" position="replace" />
+            <xpath expr="//tbody/tr/td[3]" position="replace" />
+            <xpath expr="//div[@class='col-xs-4 pull-right']/table/tr[1]" position="attributes">
+				<attribute name="t-if">o.state in ['draft','sent']</attribute>
+            </xpath>
+            <xpath expr="//div[@class='col-xs-4 pull-right']/table/tr[2]" position="attributes">
+				<attribute name="t-if">o.state in ['draft','sent']</attribute>
+            </xpath>
+        </template>
+
+<!--		<template id="report_saleorder_mrp_document_inherit_product_dimension" inherit_id="sale_mrp_extended.report_saleorder_mrp_document">
+            <xpath expr="//thead/tr/th[2]" position="before">
+				<th style="border: 1px solid black;">Ref.</th>
+            </xpath>
+            <xpath expr="//tbody/tr/td[2]" position="before">
+				<td style="border: 1px solid black;">
+                	<span t-field="l.product_id.default_code"/>
+                </td>
+            </xpath>
+			<xpath expr="//span[@t-field='l.product_id']" position="replace">
+		    	<span t-field="l.sale_dimensions_label"/>
+            </xpath>
+		    <xpath expr="//span[@t-field='l.product_uom']" position="after">
+		    	<span> / </span><span t-field="l.dimensions_label"/>
+            </xpath>
+		</template>-->
+
         <record id="sale_dimension_form_view" model="ir.ui.view">
             <field name="name">product_dimension.sale_dimension_form_view</field>
             <field name="model">sale.order</field>
@@ -9,22 +54,21 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="before">
+					<field name="product_dimension_qty" attrs="{'invisible': [('dimensions','=',[])]}" />
                 	<field name="dimensions" widget="one2many_list" attrs="{'invisible': [('dimensions','=',[])]}">
 						<tree string="Dimensions" create="false" delete="false" editable="bottom">
 							<field name="dimension" readonly="True"/>
 							<field name="quantity" />
+							<field name="extrapolated_qty" />
 						</tree>
 					</field>
                 </xpath>
-                <xpath expr="//field[@name='order_line']/form//field[@name='product_uom']" position="replace">
-					<field name="product_uom" groups="product.group_uom" class="oe_inline oe_no_button" />
-				</xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="attributes">
-					<attribute name="invisible">1</attribute>
-				</xpath>            
+					<attribute name="attrs">{'invisible': [('dimensions','!=',[])]}</attribute>
+				</xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="after">
-                	<field name="product_visible_qty" class="oe_inline"/>
-				</xpath>            
+                	<field name="product_visible_qty" class="oe_inline" attrs="{'invisible': [('dimensions','=',[])]}"/>
+				</xpath>
 			</field>
         </record>
     </data>

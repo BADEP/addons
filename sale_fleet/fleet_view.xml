@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+         <record model='ir.ui.view' id='fleet_account_vehicle_log_services_form'>
+            <field name="name">fleet.account.vehicle.log.services.form</field>
+            <field name="model">fleet.vehicle.log.services</field>
+			<field name="inherit_id" ref="fleet.fleet_vehicle_log_services_form" />
+            <field name="arch" type="xml">
+				<data>
+					<xpath expr="//sheet" position="before">
+						<header>
+		                    <button name="action_invoice_create" string="Create Invoice" type="object" class="oe_highlight" attrs="{'invisible': [('invoiced', '=', True)]}" groups="base.group_user"/>
+		            	</header>
+					</xpath>
+					<xpath expr="//field[@name='inv_ref']" position="before" >
+						<field name="invoiced" />
+					</xpath>
+				</data>
+			</field>
+        </record>
+    </data>
+</openerp>

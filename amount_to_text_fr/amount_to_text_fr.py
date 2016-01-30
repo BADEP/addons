@@ -22,16 +22,15 @@
 from openerp.osv import fields, osv
 
 
-
-to_19_fr = ( u'zéro',  'un',   'deux',  'trois', 'quatre',   'cinq',   'six',
-          'sept', 'huit', 'neuf', 'dix',   'onze', 'douze', 'treize',
-          'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf' )
-tens_fr  = ( 'vingt', 'trente', 'quarante', 'Cinquante', 'Soixante', 'Soixante-dix', 'Quatre-vingts', 'Quatre-vingt Dix')
-denom_fr = ( '',
-          'Mille',     'Millions',         'Milliards',       'Billions',       'Quadrillions',
-          'Quintillion',  'Sextillion',      'Septillion',    'Octillion',      'Nonillion',
-          'Décillion',    'Undecillion',     'Duodecillion',  'Tredecillion',   'Quattuordecillion',
-          'Sexdecillion', 'Septendecillion', 'Octodecillion', 'Icosillion', 'Vigintillion' )
+to_19_fr = (u'zéro', 'un', 'deux', 'trois', 'quatre', 'cinq', 'six',
+          'sept', 'huit', 'neuf', 'dix', 'onze', 'douze', 'treize',
+          'quatorze', 'quinze', 'seize', 'dix-sept', 'dix-huit', 'dix-neuf')
+tens_fr = ('vingt', 'trente', 'quarante', 'Cinquante', 'Soixante', 'Soixante-dix', 'Quatre-vingts', 'Quatre-vingt Dix')
+denom_fr = ('',
+          'Mille', 'Millions', 'Milliards', 'Billions', 'Quadrillions',
+          'Quintillion', 'Sextillion', 'Septillion', 'Octillion', 'Nonillion',
+          'Décillion', 'Undecillion', 'Duodecillion', 'Tredecillion', 'Quattuordecillion',
+          'Sexdecillion', 'Septendecillion', 'Octodecillion', 'Icosillion', 'Vigintillion')
 
 def _convert_nn_fr(val):
     """ convert a value < 100 to French
@@ -42,7 +41,7 @@ def _convert_nn_fr(val):
         if dval + 10 > val:
             if val % 10:
                 if dval == 70 or dval == 90:
-                    return tens_fr[dval/10 - 3] + '-' + to_19_fr[val%10 + 10]
+                    return tens_fr[dval / 10 - 3] + '-' + to_19_fr[val % 10 + 10]
                 else:
                     return dcap + '-' + to_19_fr[val % 10]
             return dcap
@@ -93,7 +92,7 @@ def amount_to_text_fr(number, currency):
     end_word = french_number(int(list[1]))
     cents_number = int(list[1])
     cents_name = (cents_number > 1) and ' Centimes' or ' Centime'
-    final_result = start_word +' '+units_name+' '+ end_word +' '+cents_name
+    final_result = start_word + ' ' + units_name + ' ' + end_word + ' ' + cents_name
     return final_result
 
 
@@ -107,7 +106,7 @@ class account_invoice(osv.osv):
             res[inv.id] = {
                 'amount_words': '0.0',
                             }
-            res[inv.id] = amount_to_text_fr(inv.amount_total,inv.currency_id.symbol)
+            res[inv.id] = amount_to_text_fr(inv.amount_total, inv.currency_id.symbol)
         return res
     
     _columns = {
@@ -124,7 +123,7 @@ class sale_order(osv.osv):
             res[order.id] = {
                 'amount_words': '0.0',
                             }
-            res[order.id] = amount_to_text_fr(order.amount_total,order.pricelist_id.currency_id.symbol)
+            res[order.id] = amount_to_text_fr(order.amount_total, order.pricelist_id.currency_id.symbol)
         return res
     
     _columns = {

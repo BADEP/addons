@@ -23,61 +23,81 @@
 from openerp import models, fields, api
 import openerp.addons.decimal_precision as dp
 
-class sale_order(models.Model):
-    _inherit="sale.order"
+
+class SaleOrder(models.Model):
+    _inherit = "sale.order"
     
     @api.model
     def _prepare_order_line_procurement(self, order, line, group_id=False):
-        res=super(sale_order,self)._prepare_order_line_procurement(order, line, group_id)
-        vals = {
-             'dimensions': [(0, 0, {'dimension': d.dimension.id, 'quantity': d.quantity, 'procurement_order': False})  for d in line.dimensions] 
-        }
-        res.update(vals)
+        res = super(SaleOrder, self)._prepare_order_line_procurement(order, line, group_id)
+        res['product_dimension_qty'] = line.product_dimension_qty
+        res['dimensions'] = [(0, 0, {'dimension': d.dimension.id, 'quantity': d.quantity})  for d in line.dimensions]
         return res
     
-sale_order()
+SaleOrder()
 
-class sale_order_line(models.Model):
+class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
-    dimensions = fields.One2many('sale.order.line.dimension','sale_order_line', readonly=True, states={'draft': [('readonly', False)]})
-    product_visible_qty=fields.Float('Quantity', digits_compute= dp.get_precision('Product UoS'), compute='get_visible_qty')
-
-    @api.depends('dimensions')
-    def get_visible_qty(self):
-        qty=1
-        for d in self.dimensions:
-            qty=qty*d.quantity
-        if qty != self.product_visible_qty:
-            self.product_visible_qty=qty
+    dimensions = fields.One2many('sale.order.line.dimension', 'sale_order_line', readonly=True, states={'draft': [('readonly', False)]})
+    product_visible_qty = fields.Float('Quantité', compute='get_visible_qty')
+    product_dimension_qty = fields.Integer('Quantité', required=True, default=1)
     
-    @api.returns('self')
-    @api.onchange('dimensions')
-    def onchange_dimensions(self):
-        qty=1
-        for d in self.dimensions:
-            qty=qty*d.quantity
-        if qty != self.product_uom_qty:
-            self.product_uom_qty=qty
-    
-    @api.returns('self')
     @api.multi
-    @api.onchange('product_uom')
-    def onchange_product_uom(self):
-        self.dimensions=[]
-        if self.product_uom.id:
-            for d in self.product_uom.dimensions:
-                new_dimension = self.dimensions.new({'dimension':d.id,'quantity':1,'sale_order_line': self.id})
-                self.dimensions=self.dimensions | new_dimension
-        return self.product_uom_change(pricelist=self.order_id.pricelist_id.id, product=self.product_id.id,
-                                qty=self.product_uom_qty, uom=self.product_uom.id, qty_uos=self.product_uos_qty,
-                                uos=self.product_uos.id, name=self.name, partner_id=self.order_id.partner_id.id,
-                                lang=False, update_tax=True, date_order=self.order_id.date_order)
-sale_order_line()
+    @api.onchange('dimensions', 'product_dimension_qty')
+    def onchange_set_name(self):
+        if self.product_id:
+            if self.dimensions:
+                str_dim='('
+                for d in self.dimensions:
+                    str_dim += str(d.quantity) + d.dimension.name + '*'
+                str_dim = str_dim[:-1] + ')'
+                name = str(self.product_dimension_qty) + ' ' + self.product_id.name + '(s) ' + str_dim
+                if self.product_id.description_sale:
+                    name += '\n' + self.product_id.description_sale
+                self.name = name
+            else:
+                self.name = self.product_id.name
 
-class sale_order_line_dimension(models.Model):
+    @api.multi
+    @api.depends('product_uom_qty')
+    def get_visible_qty(self):
+        self.product_visible_qty = self.product_uom_qty
+    
+    @api.multi
+    @api.onchange('dimensions', 'product_dimension_qty')
+    def onchange_dimensions(self):
+        qty = self.product_dimension_qty
+        for d in self.dimensions:
+            qty *= d.quantity / d.dimension.multiplier
+        if qty != self.product_uom_qty:
+            self.product_uom_qty = qty
+
+    @api.multi
+    def onchange_product_uom(self, pricelist, product, qty=0,
+                             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
+                             lang=False, update_tax=True, date_order=False, fiscal_position=False, context=None):
+        res = super(SaleOrderLine, self).onchange_product_uom(pricelist=pricelist, product=product, qty=qty,
+                                                              uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
+                                                              lang=lang, update_tax=update_tax, date_order=date_order, fiscal_position=fiscal_position)
+        if uom:
+            res['value'].update(dimensions = [(0, 0, {'dimension':d.id, 'quantity':d.multiplier, 'sale_order_line': self.id}) for d in self.env['product.uom'].browse(uom).dimensions])
+        res['value'].update(product_dimension_qty = qty)
+        return res
+SaleOrderLine()
+
+class SaleOrderLineDimension(models.Model):
     _name = "sale.order.line.dimension"
     dimension = fields.Many2one('product.uom.dimension', required=True, ondelete='cascade')
-    quantity = fields.Float('Quantity', digits_compute= dp.get_precision('Product UoS'), required=True, default=1)
-    sale_order_line = fields.Many2one('sale.order.line','Order Line', required=True, ondelete='cascade')
+    quantity = fields.Float('Quantité', digits_compute=dp.get_precision('Product UoS'), required=True)
+    sale_order_line = fields.Many2one('sale.order.line', required=True, ondelete='cascade')
+    extrapolated_qty = fields.Integer(string='Quantité extrapolée', compute='get_extrapolated_qty')
+
+    @api.multi
+    @api.depends('quantity')
+    def get_extrapolated_qty(self):
+        if self.dimension.rounding != 0:
+            self.extrapolated_qty = round(self.quantity / self.dimension.rounding)
+        else:
+            self.extrapolated_qty = self.quantity + self.dimension.offset
         
-sale_order_line_dimension()
+SaleOrderLineDimension()

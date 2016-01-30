@@ -23,6 +23,7 @@ import time
 
 from openerp.osv import fields, osv
 
+
 class account_analytic_default(osv.osv):
     _inherit = "account.analytic.default"
     _columns = {
@@ -33,7 +34,7 @@ class account_analytic_default(osv.osv):
         domain = []
         if product_id:
             domain += ['|', ('product_id', '=', product_id)]
-        domain += [('product_id','=', False)]
+        domain += [('product_id', '=', False)]
         if partner_id:
             domain += ['|', ('partner_id', '=', partner_id)]
         domain += [('partner_id', '=', False)]
@@ -41,15 +42,15 @@ class account_analytic_default(osv.osv):
             domain += ['|', ('company_id', '=', company_id)]
         domain += [('company_id', '=', False)]
         if user_id:
-            domain += ['|',('user_id', '=', user_id)]
-        domain += [('user_id','=', False)]
+            domain += ['|', ('user_id', '=', user_id)]
+        domain += [('user_id', '=', False)]
         if section_id:
-            section = self.pool.get('crm.case.section').browse(cr,uid,section_id,context=context)
+            section = self.pool.get('crm.case.section').browse(cr, uid, section_id, context=context)
             parent = section
             while parent:
-                domain += ['|',('section_id','=',parent.id)]
-                parent=parent.parent_id
-        domain += [('section_id','=', False)]
+                domain += ['|', ('section_id', '=', parent.id)]
+                parent = parent.parent_id
+        domain += [('section_id', '=', False)]
         if date:
             domain += ['|', ('date_start', '<=', date), ('date_start', '=', False)]
             domain += ['|', ('date_stop', '>=', date), ('date_stop', '=', False)]
@@ -78,8 +79,8 @@ class sale_order_line(osv.osv):
         res = super(sale_order_line, self).product_id_change(cr, uid, ids, pricelist, product, qty=qty,
             uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
             lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
-        product_obj = self.pool.get('product.product').browse(cr,uid,product,context=context)
-        partner = self.pool.get('res.partner').browse(cr,uid,partner_id,context=context)
+        product_obj = self.pool.get('product.product').browse(cr, uid, product, context=context)
+        partner = self.pool.get('res.partner').browse(cr, uid, partner_id, context=context)
         rec = self.pool.get('account.analytic.default').account_get(cr, uid, product_obj.id, partner_id, uid, partner.section_id.id, time.strftime('%Y-%m-%d'))
         if rec and rec.analytics_id:
             res['value'].update({'analytics_id': rec.analytics_id.id})

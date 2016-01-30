@@ -1,0 +1,71 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="vetcam_mrp_bom_form_view" model="ir.ui.view">
+            <field name="name">vetcam.mrp.bom.form.view</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+            <field eval="16" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                	<xpath expr="//field[@name='bom_line_ids']/tree//field[@name='product_qty']" position="after">
+                		<field name="dosing"/>
+                	</xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="vetcam_mrp_production_product_form_view" model="ir.ui.view">
+            <field name="name">vetcam.mrp.production.product.form.view</field>
+            <field name="model">mrp.production.product.line</field>
+            <field name="inherit_id" ref="mrp.mrp_production_product_form_view" />
+            <field eval="16" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                	<xpath expr="//field[@name='product_qty']" position="before">
+                		<field name="dosing"/>
+                		<field name="prev_dosing" invisible="1"/>
+                	</xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="vetcam_mrp_production_product_tree_view" model="ir.ui.view">
+            <field name="name">vetcam.mrp.production.product.tree.view</field>
+            <field name="model">mrp.production.product.line</field>
+            <field name="inherit_id" ref="mrp.mrp_production_product_tree_view" />
+            <field eval="16" name="priority"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <data>
+                	<xpath expr="//tree" position="attributes">
+                		<attribute name="editable">bottom</attribute>
+                	</xpath>
+                	<xpath expr="//field[@name='product_qty']" position="before">
+                		<field name="dosing"/>
+                		<field name="prev_dosing" invisible="1"/>
+                	</xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="view_mrp_product_produce_wizard_vetcam" model="ir.ui.view">
+            <field name="model">mrp.product.produce</field>
+            <field name="name">vetcam.mrp.product.produce.wizard</field>
+            <field name="inherit_id" ref="mrp.view_mrp_product_produce_wizard" />
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='consume_lines']/tree//field[@name='product_qty']" position="before">
+					<field name="product_ideal_qty"/>
+					<field name="batch_qty"/>
+					<field name="product_theorical_qty"/>
+				</xpath>
+				<xpath expr="//field[@name='consume_lines']/tree//field[@name='product_qty']" position="after">
+					<field name="efficiency"/>
+					<field name="deviation"/>
+				</xpath>
+            </field>
+        </record>
+    </data> 
+</openerp>
