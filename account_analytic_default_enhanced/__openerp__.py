@@ -42,7 +42,7 @@ Allows to automatically select analytic accounts based on criterions:
         'account_analytic_default_view.xml'
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

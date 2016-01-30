@@ -35,6 +35,6 @@ Directly link the fleet management to accounting.
     'data' : [
               'fleet_view.xml'
     ],
-    'installable' : True,
+    'installable' : False,
     'application' : False,
 }
