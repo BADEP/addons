@@ -20,31 +20,15 @@
 #
 ##############################################################################
 
-from openerp import fields, models
+from openerp import fields, models, api
 import openerp.addons.decimal_precision as dp
+from openerp.osv import osv, fields as oldfields
 
-
-class product_template(models.Model):
-    _inherit = 'product.template'
+class stock_picking(models.Model):
+    _inherit = 'stock.picking'
     
-    delivery_costs = fields.One2many('product.delivery.cost', 'product', string="Coûts de livraison")
-product_template()
-
-class product_delivery_cost(models.Model):
-    _name = 'product.delivery.cost'
-    _description = 'Coût de livraison'
-    code = fields.Many2one('product.delivery.code', ondelete='cascade', string='Tarif DT')
-    price = fields.Float(required=True, digits_compute=dp.get_precision('Product Price'), default=0, string='Prix transport')
-    product = fields.Many2one('product.template', ondelete='cascade', string='Article')
-
-product_delivery_cost()
-
-class product_delivery_code(models.Model):
-    _name = 'product.delivery.code'
-    _description = 'Tarif DT'
-
-    name = fields.Char(required=True, string='Label')
-    partners = fields.One2many('res.partner', 'code', string='Clients')
-    delivery_costs = fields.One2many('product.delivery.cost', 'code', string='DT')
-
-product_delivery_code()
+    vehicle = fields.Many2one('fleet.vehicle', readonly=False, states={'done': [('readonly', True)]}, string='Véhicule')
+    driver = fields.Many2one('res.partner', readonly=False, states={'done': [('readonly', True)]}, string='Chauffeur')
+    driver_cost = fields.Float(digits_compute=dp.get_precision('Account'), default=0, string='Coût transport')
+    
+stock_picking()

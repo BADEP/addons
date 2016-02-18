@@ -2,8 +2,8 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2015 BADEP. All Rights Reserved.
-#    Author: Khalid Hazam<k.hazam@badep.ma>
+#    Copyright (c) 2010-2013 Elico Corp. All Rights Reserved.
+#    Author: Yannick Gouin <yannick.gouin@elico-corp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,16 +22,18 @@
 
 
 {
-    'name': 'Delivery costs on products',
+    'name': 'Moroccan localization for companies',
     'version': '1.0',
-    'category': 'Sales Management',
+    'category': 'Localization',
     'description': """
-    Add delivery costs directly on product price.
+    Ajout RC, Patente, IF, CNSS à la fiche client. 
     """,
     'author': 'BADEP',
     'website': 'http://www.badep.ma',
-    'depends': ['sale_stock', 'purchase'],
-    'data': ['views.xml','security/ir.model.access.csv'],
+    'depends': ['base', 'report', 'account', 'stock'],
+    'init_xml': [],
+    'data': ['views.xml'],
+    'demo_xml': [],
     'installable': True,
 }
 

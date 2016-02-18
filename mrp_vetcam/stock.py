@@ -2,8 +2,8 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2015 BADEP. All Rights Reserved.
-#    Author: Khalid Hazam<k.hazam@badep.ma>
+#    Copyright (c) 2015-2016 BADEP. All Rights Reserved.
+#    Author: Khalid Hazam <k.hazam@badep.ma>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,20 +19,16 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp import models, fields, api
+import openerp.addons.decimal_precision as dp
+from collections import OrderedDict
+from openerp.osv import osv
+from openerp.tools import float_compare, float_is_zero
+from openerp.addons.product import _common
+from openerp import tools, SUPERUSER_ID
 
-
-{
-    'name': 'Delivery costs on products',
-    'version': '1.0',
-    'category': 'Sales Management',
-    'description': """
-    Add delivery costs directly on product price.
-    """,
-    'author': 'BADEP',
-    'website': 'http://www.badep.ma',
-    'depends': ['sale_stock', 'purchase'],
-    'data': ['views.xml','security/ir.model.access.csv'],
-    'installable': True,
-}
-
+class StockMove(models.Model):
+    _inherit = 'stock.move'
+    
+    bom_line = fields.Many2one('mrp.bom.line')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

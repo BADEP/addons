@@ -26,5 +26,5 @@ from openerp import fields, models
 class res_partner(models.Model):
     _inherit = 'res.partner'
     
-    code = fields.Many2one('product.delivery.code', ondelete='set null', string="Code DT")
+    code = fields.Many2one('product.delivery.code', ondelete='set null', string='Tarif DT')
 res_partner()

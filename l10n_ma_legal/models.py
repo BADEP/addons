@@ -2,8 +2,8 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2015 BADEP. All Rights Reserved.
-#    Author: Khalid Hazam<k.hazam@badep.ma>
+#    Copyright (c) 2010-2013 Elico Corp. All Rights Reserved.
+#    Author: Yannick Gouin <yannick.gouin@elico-corp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -19,20 +19,29 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp import models, fields, api
 
+class res_partner(models.Model):
+    _inherit = 'res.partner'
+    rc = fields.Char(string='RC')
+    pat = fields.Char(string='Patente')
+    idf = fields.Char(string='IF')
+    
+class res_company(models.Model):
+    _inherit = 'res.company'
+    
+    pat = fields.Char(string='Patente')
+    ice = fields.Char(string='Identifiant Commun')
+    cnss = fields.Char(string='CNSS')
+    tampon = fields.Binary()
+    
+class account_invoice(models.Model):
+    _inherit = 'account.invoice'
+    
+    with_stamp = fields.Boolean(string='Avec tampon')
 
-{
-    'name': 'Delivery costs on products',
-    'version': '1.0',
-    'category': 'Sales Management',
-    'description': """
-    Add delivery costs directly on product price.
-    """,
-    'author': 'BADEP',
-    'website': 'http://www.badep.ma',
-    'depends': ['sale_stock', 'purchase'],
-    'data': ['views.xml','security/ir.model.access.csv'],
-    'installable': True,
-}
-
+class stock_picking(models.Model):
+    _inherit = 'stock.picking'
+    
+    with_stamp = fields.Boolean(string='Avec tampon')
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

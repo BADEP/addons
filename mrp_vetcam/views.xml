@@ -58,6 +58,7 @@
             <field name="arch" type="xml">
 				<xpath expr="//field[@name='consume_lines']/tree//field[@name='product_qty']" position="before">
 					<field name="product_ideal_qty"/>
+					<field name="dosing"/>
 					<field name="batch_qty"/>
 					<field name="product_theorical_qty"/>
 				</xpath>

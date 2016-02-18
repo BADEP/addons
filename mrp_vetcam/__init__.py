@@ -20,8 +20,7 @@
 #
 ##############################################################################
 
-import mrp
-import product
+import mrp, product, stock
 
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

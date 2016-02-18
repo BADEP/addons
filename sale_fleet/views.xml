@@ -1,0 +1,137 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data>
+		<record id="sale_fleet_form_view" model="ir.ui.view">
+            <field name="name">sale_fleet.sale_order_form_view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_shipping_id']" position="after">
+                    <field name="vehicle" groups="base.group_user"/>
+		        	<field name="driver" groups="base.group_user"/>
+                    <field name="driver_cost" groups="base.group_user"/>
+				</xpath>
+			</field>
+        </record>
+
+		<record id="stock_fleet_form_view" model="ir.ui.view">
+            <field name="name">sale_fleet.stock_picking_form_view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="vehicle" groups="base.group_user"/>
+		        	<field name="driver" groups="base.group_user"/>
+                    <field name="driver_cost" groups="base.group_user"/>
+				</xpath>
+			</field>
+        </record>
+
+        <record id="sale_fleet_filter_view" model="ir.ui.view">
+            <field name="name">sale_fleet.sale_order_fliter_view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_sales_order_filter" />
+            <field eval="17" name="priority"/>
+            <field name="arch" type="xml">
+				<xpath expr="//filter[@string='Customer']" position="after">
+					<filter string="driver" domain="[]" context="{'group_by':'driver'}"/>
+					<filter string="vehicle" domain="[]" context="{'group_by':'vehicle'}"/>
+				</xpath>
+			</field>
+        </record>
+		<record id="sale_fleet_tree_view" model="ir.ui.view">
+            <field name="name">sale_fleet.sale_order_tree_view</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='user_id']" position="after">
+					<field name="vehicle"/>
+					<field name="driver"/>
+				</xpath>
+				<xpath expr="//field[@name='amount_total']" position="before">
+					<field name="driver_cost" sum="Total" groups="base.group_user"/>
+				</xpath>
+			</field>
+        </record>
+		<record id="stock_fleet_tree_view" model="ir.ui.view">
+            <field name="name">sale_fleet.stock_picking_tree_view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.vpicktree"/>
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_id']" position="after">
+					<field name="vehicle"/>
+					<field name="driver"/>
+				</xpath>
+			</field>
+        </record>
+
+        <record id="sale_fleet_report_picking" model="ir.ui.view">
+            <field name="name">sale_fleet.report_picking</field>
+            <field name="inherit_id" ref="stock.report_picking" />
+            <field eval="17" name="priority"/>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <xpath expr="//th[@name='td_sched_date_h']" position="after">
+		        	<th>Véhicule</th>
+		        	<th>Chauffeur</th>
+				</xpath>
+                <xpath expr="//td[@name='td_sched_date']" position="after">
+	                <td>
+	                    <span t-field="o.vehicle"/>
+	                </td>
+	                <td>
+	                    <span t-field="o.driver"/>
+	                </td>
+				</xpath>
+			</field>
+        </record>
+
+        <record id="sale_fleet.vehicle_form" model="ir.ui.view">
+            <field name="name">sale_fleet.fleet_vehicle_form</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_form" />
+            <field eval="17" name="priority"/>
+            <field name="model">fleet.vehicle</field>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//button[@name='act_show_log_cost']" position="after">
+                    <button name="act_show_sales" type="object" class="oe_stat_button" icon="fa-book">
+                        <field name="sales_count" widget="statinfo" string="Sales"/>
+                    </button>
+                    <button name="act_show_pickings" type="object" class="oe_stat_button" icon="fa-book">
+                        <field name="pickings_count" widget="statinfo" string="Pickings"/>
+                    </button>
+				</xpath>
+			</field>
+        </record>
+
+        <record id="sale_fleet_report_picking" model="ir.ui.view">
+            <field name="name">sale_fleet.report_picking</field>
+            <field name="inherit_id" ref="stock.report_picking" />
+            <field eval="17" name="priority"/>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <xpath expr="//th[@name='td_sched_date_h']" position="after">
+		        	<th>Véhicule</th>
+		        	<th>Chauffeur</th>
+				</xpath>
+                <xpath expr="//td[@name='td_sched_date']" position="after">
+	                <td>
+	                    <span t-field="o.vehicle"/>
+	                </td>
+	                <td>
+	                    <span t-field="o.driver"/>
+	                </td>
+				</xpath>
+			</field>
+        </record>
+
+    </data>
+</openerp>
