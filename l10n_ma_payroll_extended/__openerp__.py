@@ -19,35 +19,21 @@
 #
 ##############################################################################
 {
-    'name': 'Morocco-payroll',
-    'category': 'Localization/Payroll',
-    'author': 'Said Hijaoui (rhfree)',
-    'website': 'http://rhfree.com',
-    "category" : "Localization",
-    'version': '1.0Basic',
-    'depends': ['hr_payroll'],
-    
-	
-    'description': """Moroccan Payroll Rules Basic Version.
-======================
-
-    - Configuration of hr_payroll for Moroccan localization
-    - Basic configuration for newly installed company'
-    - Absence - Advances - CNSS - AMO
-	- Allow to split  Last name and First name in the contract
-	- Pro version  handles all kinds of allowances and bonuses plus seniority and other advantages like CIMR and private health insurance 
+    'name': 'Morocco-payroll - Extended',
+    'category': 'human resources',
+    'author': 'BADEP',
+    'website': 'http://badep.ma',
+    'depends': ['l10n_ma_payroll'],
+    'description': """
+    Enhancments for the moroccan payroll
     """,
     'active': False,
-    'update_xml':['l10n_ma_payroll_view.xml'],
-	 'data': [
+	'data': [
         'l10n_ma_payroll_view.xml',
         'l10n_ma_payroll_data.xml',
-		'views/payslip_report_view.xml',
-        'l10n_ma_payroll_reports.xml',
-        
        ],
     'auto_install': False,
-    'installable': False,
+    'installable': True,
     'application': False,
 	
 }

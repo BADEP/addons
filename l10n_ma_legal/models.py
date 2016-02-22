@@ -2,8 +2,6 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2010-2013 Elico Corp. All Rights Reserved.
-#    Author: Yannick Gouin <yannick.gouin@elico-corp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -33,15 +31,26 @@ class res_company(models.Model):
     pat = fields.Char(string='Patente')
     ice = fields.Char(string='Identifiant Commun')
     cnss = fields.Char(string='CNSS')
-    tampon = fields.Binary()
+    stamp = fields.Binary(string='Cachet')
     
 class account_invoice(models.Model):
     _inherit = 'account.invoice'
     
-    with_stamp = fields.Boolean(string='Avec tampon')
+    with_stamp = fields.Boolean(string='Avec cachet')
 
 class stock_picking(models.Model):
     _inherit = 'stock.picking'
     
-    with_stamp = fields.Boolean(string='Avec tampon')
+    with_stamp = fields.Boolean(string='Avec cachet')
+
+class sale_order(models.Model):
+    _inherit = 'sale.order'
+    
+    with_stamp = fields.Boolean(string='Avec cachet')
+
+class purchase_order(models.Model):
+    _inherit = 'purchase.order'
+    
+    with_stamp = fields.Boolean(string='Avec cachet')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

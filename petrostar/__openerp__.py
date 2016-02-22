@@ -30,10 +30,13 @@
     """,
     'author': 'BADEP',
     'website': 'http://www.badep.ma',
-    'depends': ['account_account',
+    'depends': ['account_accountant',
                 'purchase',
                 'sale_stock',
-                'fleet'],
+                'fleet',
+                'sale_transport_multi_address',
+                'stock_transport_multi_address'
+                ],
     'data': [
            'views.xml',
     ],

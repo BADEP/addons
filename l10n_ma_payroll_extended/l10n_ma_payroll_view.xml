@@ -1,0 +1,54 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<openerp>
+    <data>
+
+     <record id="hr_contract_view_form_l10n_ma_payroll_extended" model="ir.ui.view">
+            <field name="name">hr.contract.view.form.l10n.ma_payroll.extended</field>
+            <field name="model">hr.contract</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="l10n_ma_payroll.hr_contract_view_form_l10n_ma_payroll"/>
+			<field name="arch" type="xml">
+			<data>
+				<xpath expr="//group[@name='primes']" position="replace">
+                    <group name="primes" string="Primes et Indemnités">
+	                  	<field name="indemnite_saliss"/>
+	                    <field name="indemnite_vest"/>
+	                    <field name="indemnite_transport"/>
+						<field name="indemnite_encad"/>
+						<field name="indemnite_repr"/>
+						<field name="indemnite"/>
+					</group>
+                </xpath>
+				<xpath expr="//group[@name='left_column']" position="replace" />
+             </data>
+            </field>
+        </record>
+
+		<record id="hr_contribution_register_form_l10n_ma" model="ir.ui.view">
+            <field name="name">hr.contribution.register.form.l10n.ma_payroll</field>
+            <field name="model">hr.contribution.register</field>
+            <field name="priority">20</field>
+            <field name="inherit_id" ref="hr_payroll.hr_contribution_register_form"/>
+            <field name="arch" type="xml">
+            <data>
+                 <xpath expr="//field[@name='name']" position="after">
+					<field name="partner_id" />
+                 </xpath>
+            </data>
+            </field>
+        </record>
+		
+		<record id="hr_employee_form_l10n_ma_payroll_extended" model="ir.ui.view">
+            <field name="name">hr.employee.form.l10n.ma_payroll.extended</field>
+            <field name="model">hr.employee</field>
+            <field name="priority">30</field>
+            <field name="inherit_id" ref="l10n_ma_payroll.hr_employee_form_l10n_ma_payroll"/>
+            <field name="arch" type="xml">
+				<xpath expr="//group[@string='Absences']" position="replace" />
+				<xpath expr="//field[@name='av_sal']" position="replace" />
+			</field>
+		</record>
+			
+    </data>
+</openerp>

@@ -1,5 +1,32 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="petrostar_partner_form_consignee" model="ir.ui.view">
+            <field name="name">petrostar.consignee.partner_form_view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="stock_transport_multi_address.base_ifrc_partner_form_view_consignee_check_box" />
+            <field eval="16" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                	<xpath expr="//page[@string='Consignee']" position="replace" />
+                </data>
+            </field>
+        </record>
+
+        <record id="petrostar_partner_form" model="ir.ui.view">
+            <field name="name">petrostar.partner_form_view</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field eval="16" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                	<xpath expr="//label[@for='is_company']" position="after">
+                    	<span> / <field name="is_consignee" class="oe_inline"/> <label for="is_consignee"/></span>
+                	</xpath>
+				</data>
+            </field>
+        </record>
 	</data>
 </openerp>

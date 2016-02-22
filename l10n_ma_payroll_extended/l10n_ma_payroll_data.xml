@@ -1,0 +1,104 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="DEDNT" model="hr.salary.rule.category">
+			<field name="name">Déductions non taxables</field>
+			<field name="code">DEDNT</field>
+			<field name="parent_id" eval="False"/>
+	    </record>
+	
+		<record id="hr_payroll.hr_rule_basic_absence" model="hr.salary.rule">
+				<field name="name">Absences</field>
+				<field name="parent_rule_id" eval="False"/>
+				<field name="condition_select">none</field>
+				<field name="amount_percentage_base">contract.wage/26</field>
+				<field name="quantity">inputs.ABS.amount</field>
+		</record>
+
+		<record id="l10n_ma_payroll.hr_salary_rule_av_sal" model="hr.salary.rule">
+	            <field name="amount_python_compute">result = inputs.AVS.amount</field>
+	     </record>
+	
+		<record id="INDMNTD" model="hr.salary.rule">
+	        <field name="name">Indemnités divers</field>
+	        <field name="code">INDMNTD</field>
+	        <field name="sequence">5</field>
+	        <field name="category_id" ref="l10n_ma_payroll.INDMNT"/>
+			<field name="condition_select">none</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.indemnite</field>
+			<field name="appears_on_payslip" eval="True"/>
+		</record>
+	
+		<record id="INDMNTE" model="hr.salary.rule">
+	        <field name="name">Indemnités d'encadrement</field>
+	        <field name="code">INDMNTE</field>
+	        <field name="sequence">5</field>
+	        <field name="category_id" ref="l10n_ma_payroll.INDMNT"/>
+			<field name="condition_select">none</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.indemnite_encad</field>
+			<field name="appears_on_payslip" eval="True"/>
+		</record>
+	
+		<record id="INDMNTR" model="hr.salary.rule">
+	        <field name="name">Indemnités de représentation</field>
+	        <field name="code">INDMNTR</field>
+	        <field name="sequence">5</field>
+	        <field name="category_id" ref="l10n_ma_payroll.INDMNT"/>
+			<field name="condition_select">none</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.indemnite_repr</field>
+			<field name="appears_on_payslip" eval="True"/>
+		</record>
+	
+		<record id="INDMNTS" model="hr.salary.rule">
+	        <field name="name">Indemnités de salissement</field>
+	        <field name="code">INDMNTS</field>
+	        <field name="sequence">5</field>
+	        <field name="category_id" ref="l10n_ma_payroll.INDMNT"/>
+			<field name="condition_select">none</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.indemnite_saliss</field>
+			<field name="appears_on_payslip" eval="True"/>
+		</record>
+	
+		<record id="INDMNTT" model="hr.salary.rule">
+	        <field name="name">Indemnités de transport</field>
+	        <field name="code">INDMNTT</field>
+	        <field name="sequence">5</field>
+	        <field name="category_id" ref="l10n_ma_payroll.INDMNT"/>
+			<field name="condition_select">none</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.indemnite_transport</field>
+			<field name="appears_on_payslip" eval="True"/>
+		</record>
+	
+		<record id="INDMNTV" model="hr.salary.rule">
+	        <field name="name">Indemnités vestimentaire</field>
+	        <field name="code">INDMNTV</field>
+	        <field name="sequence">5</field>
+	        <field name="category_id" ref="l10n_ma_payroll.INDMNT"/>
+			<field name="condition_select">none</field>
+			<field name="amount_select">code</field>
+			<field name="amount_python_compute">result = contract.indemnite_vest</field>
+			<field name="appears_on_payslip" eval="True"/>
+		</record>
+	
+	  	<record id="hr_payroll.hr_rule_net" model="hr.salary.rule">
+	        <field name="amount_python_compute">result = round(BRUT - categories.RETENUES - AVS + categories.INDMNT - categories.DEDNT)</field>
+		</record>
+	
+	  	<record id="AVS" model="hr.rule.input">
+	        <field name="code">AVS</field>
+	        <field name="name">Avance sur Salaire</field>
+	        <field name="input_id" ref="l10n_ma_payroll.hr_salary_rule_av_sal" />
+		</record>
+	
+	  	<record id="ABS" model="hr.rule.input">
+	        <field name="code">ABS</field>
+	        <field name="name">Absence en jours</field>
+	        <field name="input_id" ref="hr_payroll.hr_rule_basic_absence" />
+		</record>
+	</data>
+</openerp>

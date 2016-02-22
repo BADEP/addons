@@ -19,6 +19,12 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp import fields, models, api
 
-
+class ResPartner(models.Model):
+    
+    @api.onchange('is_consignee')
+    def onchange_is_consignee(self):
+        if self.is_consignee:
+            self.is_company = True if self.is_consignee else False
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
