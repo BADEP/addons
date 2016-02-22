@@ -82,6 +82,20 @@
             </field>
         </record>
 
+        <record id="l10n_ma_legal.report_picking" model="ir.ui.view">
+            <field name="name">l10n_ma_legal.report_picking</field>
+            <field name="inherit_id" ref="stock.report_picking" />
+            <field eval="17" name="priority"/>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <xpath expr="//table[@t-if='o.pack_operation_ids']" position="after">
+					<div t-if="o.with_stamp" class="col-xs-12" style="text-align: center; margin: 100px;">
+                		<img t-if="o.company_id.stamp" t-att-src="'data:image/png;base64,%s' % o.company_id.stamp" style="max-height: 250px;"/>
+					</div>
+				</xpath>
+			</field>
+        </record>
+
         <record id="l10n_ma_legal.report_invoice" model="ir.ui.view">
             <field name="name">l10n_ma_legal.report_invoice</field>
             <field name="inherit_id" ref="account.report_invoice_document" />
@@ -117,20 +131,6 @@
             <field name="type">qweb</field>
             <field name="arch" type="xml">
                 <xpath expr="//p[@t-field='o.notes']" position="after">
-					<div t-if="o.with_stamp" class="col-xs-12" style="text-align: center; margin: 100px;">
-                		<img t-if="o.company_id.stamp" t-att-src="'data:image/png;base64,%s' % o.company_id.stamp" style="max-height: 250px;"/>
-					</div>
-				</xpath>
-			</field>
-        </record>
-
-        <record id="l10n_ma_legal.report_picking" model="ir.ui.view">
-            <field name="name">l10n_ma_legal.report_picking</field>
-            <field name="inherit_id" ref="stock.report_picking" />
-            <field eval="17" name="priority"/>
-            <field name="type">qweb</field>
-            <field name="arch" type="xml">
-                <xpath expr="//table[@t-if='o.pack_operation_ids']" position="after">
 					<div t-if="o.with_stamp" class="col-xs-12" style="text-align: center; margin: 100px;">
                 		<img t-if="o.company_id.stamp" t-att-src="'data:image/png;base64,%s' % o.company_id.stamp" style="max-height: 250px;"/>
 					</div>

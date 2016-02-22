@@ -52,5 +52,3 @@ class purchase_order(models.Model):
     _inherit = 'purchase.order'
     
     with_stamp = fields.Boolean(string='Avec cachet')
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
