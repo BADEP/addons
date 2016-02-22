@@ -25,6 +25,12 @@
                 	<xpath expr="//label[@for='is_company']" position="after">
                     	<span> / <field name="is_consignee" class="oe_inline"/> <label for="is_consignee"/></span>
                 	</xpath>
+                	<xpath expr="//field[@name='street']" position="attributes">
+                    	<attribute name="attrs">{'invisible': [('is_consignee','=', True)],'readonly': [('use_parent_address','=',True)]}</attribute>
+                	</xpath>
+                	<xpath expr="//field[@name='street2']" position="attributes">
+                    	<attribute name="attrs">{'invisible': [('is_consignee','=', True)],'readonly': [('use_parent_address','=',True)]}</attribute>
+                	</xpath>
 				</data>
             </field>
         </record>

@@ -22,6 +22,7 @@
 from openerp import fields, models, api
 
 class ResPartner(models.Model):
+    _inherit = 'res.partner'
     
     @api.onchange('is_consignee')
     def onchange_is_consignee(self):
