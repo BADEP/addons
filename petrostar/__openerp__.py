@@ -33,9 +33,11 @@
     'depends': ['account_accountant',
                 'purchase',
                 'sale_stock',
+                'stock_account',
                 'fleet',
                 'sale_transport_multi_address',
-                'stock_transport_multi_address'
+                'stock_transport_multi_address',
+                'purchase_transport_multi_address'
                 ],
     'data': [
            'views.xml',

@@ -133,7 +133,7 @@ class ResCurrency(models.Model):
     _inherit = 'res.currency'
     
     def get_default_label(self):
-        return self.name
+        self.label = self.name
     
     label = fields.Char(default = get_default_label)
 ResCurrency()

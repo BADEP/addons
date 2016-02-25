@@ -35,6 +35,26 @@
             </field>
         </record>
 
+        <record id="petrostar_invoice_form" model="ir.ui.view">
+            <field name="name">petrostar.invoice_form</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field eval="16" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                	<xpath expr="//field[@name='partner_id']" position="after">
+                    	<field name="delivery_address_id" context="{'show_address': 1}"/>
+                    	<field name="consignee_id" context="{'show_address': 1}"/>
+                	</xpath>
+                	<xpath expr="//div[@groups='base.group_multi_currency']" position="after">
+                        <field name="exchange_rate" groups="base.group_multi_currency" states="open,proforma2,paid"/>
+                        <field name="amount_local" groups="base.group_multi_currency" states="open,proforma2,paid"/>
+                	</xpath>
+				</data>
+            </field>
+        </record>
+
 		<record id="petrostar.report_purchaseorder_document" model="ir.ui.view">
             <field name="name">petrostar.report_purchaseorder_document</field>
             <field name="inherit_id" ref="purchase.report_purchaseorder_document" />
@@ -51,6 +71,27 @@
                     </div>
 				</xpath>
 
+			</field>
+        </record>
+
+		<record id="petrostar.report_invoice_document" model="ir.ui.view">
+            <field name="name">petrostar.report_invoice_document</field>
+            <field name="inherit_id" ref="account.report_invoice_document" />
+            <field eval="17" name="priority"/>
+            <field name="type">qweb</field>
+            <field name="arch" type="xml">
+                <xpath expr="//div[@class='col-xs-5 col-xs-offset-7']" position="after">
+                <div class="col-xs-6">
+					<t t-if="o.delivery_address_id">
+						<span><strong>Delivery Address/Adresse de livraison:</strong></span>
+	                    <address t-field="o.delivery_address_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+                	</t>
+					<t t-if="o.consignee_id">
+						<span><strong>Vessel/Bateau:</strong></span>
+	                    <address t-field="o.consignee_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
+                	</t>
+				</div>
+				</xpath>
 			</field>
         </record>
 	</data>

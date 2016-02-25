@@ -20,6 +20,36 @@
 #
 ##############################################################################
 from openerp import fields, models, api
+import openerp.addons.decimal_precision as dp
+
+class AccountInvoice(models.Model):
+    _inherit = 'account.invoice'
+    delivery_address_id = fields.Many2one('res.partner', string='Adresse de livraison')
+    consignee_id = fields.Many2one('res.partner', string='Bateau', domain=[('is_consignee', '=', True)])
+    exchange_rate = fields.Float(string='Taux de change', readonly=True)
+    amount_local = fields.Float(string='Montant en DH', digits=dp.get_precision('Account'), compute='compute_amount_local')
+
+    @api.one
+    @api.depends('exchange_rate', 'amount_total')
+    def compute_amount_local(self):
+        self.amount_local = self.exchange_rate * self.amount_total
+    
+    @api.multi
+    def invoice_validate(self):
+        res = super(AccountInvoice, self).invoice_validate()
+        for inv in self:
+            inv.exchange_rate = self.currency_id and self.currency_id.rate_silent
+    
+class StockPicking(models.Model):
+    _inherit = 'stock.picking'
+    
+    @api.model
+    def _get_invoice_vals(self, key, inv_type, journal_id, move):
+        res = super(StockPicking, self)._get_invoice_vals(key, inv_type, journal_id, move)
+        res.update({'consignee_id': move.picking_id.consignee_id and move.picking_id.consignee_id.id,
+                    'delivery_address_id': move.picking_id.delivery_address_id and move.picking_id.delivery_address_id.id,
+                    })
+        return res
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
