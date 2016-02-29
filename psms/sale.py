@@ -72,6 +72,16 @@ class sale_session(models.Model):
         self.action_force()
         
     @api.one
+    @api.onchange('logs')
+    def update_line(self):
+        for line in self.lines:
+            log_qty = 0
+            for log in self.logs:
+                if log.pump.product.id == line.product.id:
+                    log_qty += log.diff
+            line.log_qty = log_qty
+    
+    @api.one
     def action_force(self):
         for order in self.sale_orders:
             order.date_order = self.date
@@ -84,13 +94,14 @@ class sale_session(models.Model):
             log.pump.counter = log.new_counter
         self.state = 'done'
 
-    @api.depends('sale_orders')
+    @api.onchange('sale_orders')
     @api.one
     def get_client_lines(self):
         self.client_lines.unlink()
+        self.client_lines = []
         partners = self.sale_orders.mapped('partner_id')
         for partner in partners:
-            self.client_lines |= self.env['sale.session.client_line'].create({'partner': partner.id, 'session': self.id})
+            self.client_lines |= self.env['sale.session.client_line'].new({'partner': partner.id, 'session': self.id})
 
     @api.one
     @api.depends('sale_orders')

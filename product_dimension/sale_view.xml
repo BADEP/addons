@@ -29,7 +29,7 @@
             </xpath>
         </template>
 
-<!--		<template id="report_saleorder_mrp_document_inherit_product_dimension" inherit_id="sale_mrp_extended.report_saleorder_mrp_document">
+		<template id="report_saleorder_mrp_document_inherit_product_dimension" inherit_id="sale_mrp_extended.report_saleorder_mrp_document">
             <xpath expr="//thead/tr/th[2]" position="before">
 				<th style="border: 1px solid black;">Ref.</th>
             </xpath>
@@ -44,7 +44,7 @@
 		    <xpath expr="//span[@t-field='l.product_uom']" position="after">
 		    	<span> / </span><span t-field="l.dimensions_label"/>
             </xpath>
-		</template>-->
+		</template>
 
         <record id="sale_dimension_form_view" model="ir.ui.view">
             <field name="name">product_dimension.sale_dimension_form_view</field>

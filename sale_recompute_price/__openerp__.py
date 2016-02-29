@@ -32,7 +32,7 @@
     'website': 'http://www.badep.ma',
     'depends': ['sale'],
     'data': ['sale_view.xml'],
-    'installable': False,
+    'installable': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
