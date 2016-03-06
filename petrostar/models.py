@@ -26,8 +26,8 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
     delivery_address_id = fields.Many2one('res.partner', string='Adresse de livraison')
     consignee_id = fields.Many2one('res.partner', string='Bateau', domain=[('is_consignee', '=', True)])
-    exchange_rate = fields.Float(string='Taux de change', readonly=True)
-    amount_local = fields.Float(string='Montant en DH', digits=dp.get_precision('Account'), compute='compute_amount_local')
+    exchange_rate = fields.Float(string='Taux de change', readonly=True, digits=(12,6))
+    amount_local = fields.Float(string='Montant en DH', digits=dp.get_precision('Account'), compute='compute_amount_local', store=True)
 
     @api.one
     @api.depends('exchange_rate', 'amount_total')

@@ -19,14 +19,35 @@
 from openerp import models, fields, api, exceptions, _
 from openerp.addons import decimal_precision as dp
 
-
 class StockMoveProperty(models.Model):
     _name = 'stock.move.property'
     
-    property = fields.Many2one('product.property')
-    value = fields.Char(required = True)
-    move = fields.Many2one('stock.move')
+    property = fields.Many2one('product.property', domain="[('id', 'in', possible_properties[0][2])]", string='Propriété')
+    value = fields.Char(required = True, string='Valeur')
+    move = fields.Many2one('stock.move', string='Mouvement')
+    possible_properties = fields.Many2many(
+        comodel_name='product.property',
+        compute='_get_possible_properties', readonly=True)
+
+    @api.one
+    @api.depends('move.properties', 'move.product_id', 'move.product_id.properties')
+    def _get_possible_properties(self):
+        possible_properties = self.env['product.property']
+        for property in self.move.product_id.properties:
+                possible_properties |= property
+        self.possible_properties = possible_properties.sorted()
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
     properties = fields.One2many('stock.move.property', 'move')
+
+class ProductProperty(models.Model):
+    _name = 'product.property'
+    
+    name = fields.Char(string='Nom', required = True)
+    products = fields.Many2many('product.product', string='Articles')
+    
+class ProductProduct(models.Model):
+    _inherit = 'product.product'
+    
+    properties = fields.Many2many('product.property', string='Propriétés')

@@ -28,7 +28,7 @@
     "summary": "Set custom attributes on stock moves",
     "data": [
         "security/ir.model.access.csv",
-        "views/stock_view.xml",
+        "views.xml",
     ],
     "installable": True,
 }
