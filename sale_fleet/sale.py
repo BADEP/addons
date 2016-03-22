@@ -26,8 +26,8 @@ from openerp.osv import osv, fields as oldfields
 
 class sale_order(models.Model):
     _inherit = 'sale.order'
-    vehicle = fields.Many2one('fleet.vehicle', readonly=True, states={'draft': [('readonly', False)]}, string='Véhicule')
-    driver = fields.Many2one('res.partner', readonly=True, states={'draft': [('readonly', False)]}, string='Chauffeur')
+    vehicle = fields.Many2one('fleet.vehicle', readonly=True, states={'draft': [('readonly', False)]})
+    driver = fields.Many2one('res.partner', readonly=True, states={'draft': [('readonly', False)]})
     driver_cost = fields.Float(digits_compute=dp.get_precision('Account'), default=0, string='Coût transport')
 
     @api.onchange('vehicle')

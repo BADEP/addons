@@ -22,6 +22,7 @@
 
 from openerp import models, fields, api
 import openerp.addons.decimal_precision as dp
+from openerp import SUPERUSER_ID
 
 class procurement_order(models.Model):
     _inherit = "procurement.order"
@@ -41,7 +42,28 @@ class procurement_order(models.Model):
         res['product_dimension_qty'] = procurement.product_dimension_qty
         res['dimensions'] = [(0, 0, {'dimension': x.dimension.id, 'quantity': x.quantity}) for x in procurement.dimensions]
         return res
-        
+
+    @api.cr_uid_ids_context
+    def make_mo(self, cr, uid, ids, context=None):
+        """ Make Manufacturing(production) order from procurement
+        @return: New created Production Orders procurement wise
+        """
+        res = {}
+        production_obj = self.pool.get('mrp.production')
+        procurement_obj = self.pool.get('procurement.order')
+        for procurement in procurement_obj.browse(cr, uid, ids, context=context):
+            if self.check_bom_exists(cr, uid, [procurement.id], context=context):
+                #create the MO as SUPERUSER because the current user may not have the rights to do it (mto product launched by a sale for example)
+                vals = self._prepare_mo_vals(cr, uid, procurement, context=context)
+                produce_id = production_obj.create(cr, SUPERUSER_ID, vals, context=dict(context, force_company=procurement.company_id.id))
+                res[procurement.id] = produce_id
+                self.write(cr, uid, [procurement.id], {'production_id': produce_id})
+                self.production_order_create_note(cr, uid, procurement, context=context)
+                production_obj.action_compute(cr, uid, [produce_id], properties=[x.id for x in procurement.property_ids])
+            else:
+                res[procurement.id] = False
+                self.message_post(cr, uid, [procurement.id], body=_("No BoM exists for this product!"), context=context)
+        return res
 procurement_order()
 
 class procurement_order_dimension(models.Model):

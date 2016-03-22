@@ -65,6 +65,7 @@
                 </xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="attributes">
 					<attribute name="attrs">{'invisible': [('dimensions','!=',[])]}</attribute>
+					<attribute name="on_change"></attribute>
 				</xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="after">
                 	<field name="product_visible_qty" class="oe_inline" attrs="{'invisible': [('dimensions','=',[])]}"/>

@@ -28,6 +28,7 @@ class AccountInvoice(models.Model):
     consignee_id = fields.Many2one('res.partner', string='Bateau', domain=[('is_consignee', '=', True)])
     exchange_rate = fields.Float(string='Taux de change', readonly=True, digits=(12,6))
     amount_local = fields.Float(string='Montant en DH', digits=dp.get_precision('Account'), compute='compute_amount_local', store=True)
+    with_rate = fields.Boolean(string='Imprimer le taux', default=False)
 
     @api.one
     @api.depends('exchange_rate', 'amount_total')
@@ -38,8 +39,9 @@ class AccountInvoice(models.Model):
     def invoice_validate(self):
         res = super(AccountInvoice, self).invoice_validate()
         for inv in self:
-            inv.exchange_rate = self.currency_id and self.currency_id.rate_silent
-    
+            inv.exchange_rate = self.currency_id and self.currency_id.with_context(date=self.date_invoice).rate_silent
+        return res
+
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
     

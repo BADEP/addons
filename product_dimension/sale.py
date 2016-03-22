@@ -71,9 +71,12 @@ class SaleOrderLine(models.Model):
     def product_id_change(self, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
             lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False):
-        return super(SaleOrderLine, self.with_context({'display_default_code': False})).product_id_change(pricelist, product, qty,
-            uom, qty_uos, uos, name, partner_id, lang, update_tax, date_order, packaging, fiscal_position, flag)
-        
+        ctx = self.env.context.copy()
+        ctx.update({'display_default_code': False})
+        return super(SaleOrderLine, self.with_context(ctx)).product_id_change(pricelist, product, qty, uom, qty_uos, uos, name,
+                                        partner_id, lang, update_tax, date_order, packaging,
+                                        fiscal_position, flag)
+
     @api.multi
     def onchange_product_uom(self, pricelist, product, qty=0,
                              uom=False, qty_uos=0, uos=False, name='', partner_id=False,

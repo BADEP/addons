@@ -50,6 +50,7 @@
                 	<xpath expr="//div[@groups='base.group_multi_currency']" position="after">
                         <field name="exchange_rate" groups="base.group_multi_currency" states="open,proforma2,paid"/>
                         <field name="amount_local" groups="base.group_multi_currency" states="open,proforma2,paid"/>
+                		<field name="with_rate" groups="base.group_multi_currency" states="open,proforma2,paid"/>
                 	</xpath>
 				</data>
             </field>
@@ -91,6 +92,9 @@
 	                    <address t-field="o.consignee_id" t-field-options="{&quot;widget&quot;: &quot;contact&quot;, &quot;fields&quot;: [&quot;address&quot;, &quot;name&quot;], &quot;no_marker&quot;: true}"/>
                 	</t>
 				</div>
+				</xpath>
+				<xpath expr="//span[@t-field='o.amount_total']" position="after">
+                	<p t-if="o.with_rate"><span t-field="o.amount_local" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.company_id.currency_id&quot;}"/> (<span t-field="o.exchange_rate"/>)</p>
 				</xpath>
 			</field>
         </record>
