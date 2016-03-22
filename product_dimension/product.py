@@ -35,4 +35,3 @@ class ProductUomDimension(models.Model):
     rounding = fields.Float(string='Palier', digits_compute=dp.get_precision('Product UoS'), required=False)
     offset = fields.Float(string='biais', required=True, digits_compute=dp.get_precision('Product UoS'), default=0)
     product_uom = fields.Many2one('product.uom', required=True)
-

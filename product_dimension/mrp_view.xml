@@ -20,5 +20,20 @@
                 </xpath>
             </field>
         </record>
+
+		<template id="report_mrporder_inherit_product_dimension" inherit_id="mrp.report_mrporder">
+			<xpath expr="//span[@t-field='o.product_id.code']" position="replace" />
+			<xpath expr="//span[@t-field='o.product_id.name']" position="replace">
+				<span t-field="o.product_id"/>
+			</xpath>
+			<xpath expr="//span[@t-field='line.product_id.code']" position="replace" />
+			<xpath expr="//span[@t-field='line.product_id.name']" position="replace">
+				<span t-field="line.product_id"/>
+			</xpath>
+			<xpath expr="//span[@t-field='line2.product_id.code']" position="replace" />
+			<xpath expr="//span[@t-field='line2.product_id.name']" position="replace">
+				<span t-field="line2.product_id"/>
+			</xpath>
+		</template>
     </data>
 </openerp>

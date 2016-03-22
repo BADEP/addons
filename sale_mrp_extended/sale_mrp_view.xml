@@ -52,7 +52,7 @@
 		                           	<span t-field="l.name"/>
 		                        </td>
 		                        <td style="border: 1px solid black;">
-		                        	<span t-field="l.product_id"/>
+		                        	<span t-field="l.product_id.display_name"/>
 		                        </td>
 		                        <td class="text-right" style="border: 1px solid black;">
 		                            <span t-field="l.product_qty"/>

@@ -42,14 +42,14 @@ class mrp_production(models.Model):
     @api.one
     def get_sale_dimensions_label(self):
         if self.dimensions:
-            str_dim = (str(self.product_dimension_qty) if self.product_dimension_qty != 0 else '') + ' ' + self.product_id.name + ' '
+            str_dim = (str(self.product_dimension_qty) if self.product_dimension_qty != 0 else '') + ' ' + self.product_id.display_name + ' '
             for d in self.dimensions:
                 str_dim += str(d.quantity) + '*'
             str_dim = str_dim[:-1]
             self.sale_dimensions_label = str_dim
         else:
-            self.sale_dimensions_label = self.product_id.name
-    
+            self.sale_dimensions_label = self.product_id.display_name
+
 mrp_production()
 
 class mrp_production_dimension(models.Model):

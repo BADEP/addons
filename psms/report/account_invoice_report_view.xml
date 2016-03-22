@@ -77,6 +77,16 @@
 						                            <span t-esc="round(l.price_total, 2)"/>
 												</td>
 						                    </tr>
+						                    <tr style="height:100%;">
+						                        <td class="text-right" style="border-right: 1px solid black;">
+						                        </td>
+						                        <td style="border-right: 1px solid black;"></td>
+						                        <td class="text-right" style="border-right: 1px solid black;">
+						                        </td>
+						                        <td class="text-right" groups="sale.group_discount_per_so_line" style="border-right: 1px solid black;"></td>
+						                        <td class="text-right">
+												</td>
+						                    </tr>
 						                    <tr style="border-top: 1px solid black;">
 						                        <td colspan="2" style="border-top: 1px solid black;">
 								                <strong>ARRETEE LA PRESENTE FACTURE A LA SOMME DE:</strong>
