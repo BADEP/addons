@@ -38,11 +38,8 @@
                 	<span t-field="l.product_id.default_code"/>
                 </td>
             </xpath>
-			<xpath expr="//span[@t-field='l.product_id']" position="replace">
-		    	<span t-field="l.sale_dimensions_label"/>
-            </xpath>
 		    <xpath expr="//span[@t-field='l.product_uom']" position="after">
-		    	<span> / </span><span t-field="l.dimensions_label"/>
+		    	<t t-if="l.dimensions_label"><span> / </span><span t-field="l.dimensions_label"/></t>
             </xpath>
 		</template>
 

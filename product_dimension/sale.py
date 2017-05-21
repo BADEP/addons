@@ -37,7 +37,7 @@ class SaleOrder(models.Model):
 
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
-    dimensions = fields.One2many('sale.order.line.dimension', 'sale_order_line', readonly=True, states={'draft': [('readonly', False)]})
+    dimensions = fields.One2many('sale.order.line.dimension', 'sale_order_line', readonly=True, states={'draft': [('readonly', False)]}, copy=True)
     product_visible_qty = fields.Float('Quantité', compute='get_visible_qty')
     product_dimension_qty = fields.Integer('Quantité', required=True, default=1)
 
@@ -86,7 +86,7 @@ class SaleOrderLine(models.Model):
                                                               lang=lang, update_tax=update_tax, date_order=date_order, fiscal_position=fiscal_position)
         if uom:
             res['value'].update(dimensions = [(0, 0, {'dimension':d.id, 'quantity':d.multiplier, 'sale_order_line': self.id}) for d in self.env['product.uom'].browse(uom).dimensions])
-        res['value'].update(product_dimension_qty = qty)
+        #res['value'].update(product_dimension_qty = qty)
         return res
 
 class SaleOrderLineDimension(models.Model):

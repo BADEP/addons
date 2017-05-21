@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="account_journal_fiscal_position.account_journal_form" model="ir.ui.view">
+            <field name="name">account_journal_fiscal_position.account_journal_form</field>
+            <field name="inherit_id" ref="account.view_account_journal_form" />
+            <field eval="16" name="priority"/>
+            <field name="type">form</field>
+            <field name="model">account.journal</field>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+					<field name="fiscal_position" />
+				</field>
+			</field>
+        </record>
+        <record id="account_journal_fiscal_position.view_vendor_receipt_dialog_form" model="ir.ui.view">
+            <field name="name">account_journal_fiscal_position.view_vendor_receipt_dialog_form</field>
+            <field name="inherit_id" ref="account_voucher.view_vendor_receipt_dialog_form" />
+            <field eval="16" name="priority"/>
+            <field name="type">form</field>
+            <field name="model">account.voucher</field>
+            <field name="arch" type="xml">
+                <field name="journal_id" position="attributes">
+    			    <attribute name="domain">['&amp;', ('type','in',['bank', 'cash']), ('fiscal_position','=',context.get('fiscal_position',False))]</attribute>
+				</field>
+			</field>
+        </record>
+	</data>
+</openerp>

@@ -24,12 +24,16 @@ from openerp import fields, models, api
 import openerp.addons.decimal_precision as dp
 from openerp.osv import osv, fields as oldfields
 
-class sale_order(models.Model):
+class SaleOrder(models.Model):
     _inherit = 'sale.order'
-    vehicle = fields.Many2one('fleet.vehicle', readonly=True, states={'draft': [('readonly', False)]})
+    vehicle = fields.Many2one('fleet.vehicle', domain=[('sale_ok','=',True)], readonly=True, states={'draft': [('readonly', False)]})
     driver = fields.Many2one('res.partner', readonly=True, states={'draft': [('readonly', False)]})
     driver_cost = fields.Float(digits_compute=dp.get_precision('Account'), default=0, string='Coût transport')
-
+    custom_shipping = fields.Text(string="Adresse de livraison")
+    is_custom_shipping = fields.Boolean(string='Adresse de livraison divers',default=False)
+    custom_vehicle = fields.Char(string='Véhicule')
+    is_custom_vehicle = fields.Boolean(string='Véhicule divers',default=False)
+    
     @api.onchange('vehicle')
     def set_driver(self):
         if self.vehicle and self.vehicle.driver_id:
@@ -39,21 +43,15 @@ class sale_order(models.Model):
 
     @api.one
     def action_ship_create(self):
-        res = super(sale_order, self).action_ship_create()
+        res = super(SaleOrder, self).action_ship_create()
         vals = {
                 'vehicle': self.vehicle.id,
                 'driver': self.driver.id,
                 'driver_cost': self.driver_cost,
+                'custom_shipping': self.custom_shipping,
+                'is_custom_shipping': self.is_custom_shipping,
+                'custom_vehicle': self.custom_vehicle,
+                'is_custom_vehicle': self.is_custom_vehicle
                 }
         self.picking_ids.write(vals)
         return res
-sale_order()
-
-class stock_picking(models.Model):
-    _inherit = 'stock.picking'
-    
-    vehicle = fields.Many2one('fleet.vehicle', readonly=False, states={'done': [('readonly', True)]}, string='Véhicule')
-    driver = fields.Many2one('res.partner', readonly=False, states={'done': [('readonly', True)]}, string='Chauffeur')
-    driver_cost = fields.Float(digits_compute=dp.get_precision('Account'), default=0, string='Coût transport')
-    
-stock_picking()

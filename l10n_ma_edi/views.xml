@@ -1,0 +1,47 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		<menuitem id="account_edi_tableau" name="Tableaux EDI" parent="account.menu_configuration_misc" sequence="10"/>
+		
+		<record id="action_tableau" model="ir.actions.act_window">
+            <field name="name">Tableaux EDI</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">account.edi.tableau</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+		<record id="account_edi_tableau_form" model="ir.ui.view">
+			<field name="name">l10n_ma_edi.account_edi_tableau_form</field>
+            <field name="model">account.edi.tableau</field>
+			<field name="type">form</field>
+			<field eval="5" name="priority" />
+			<field name="arch" type="xml">
+				<group>
+					<field name="name" />
+					<field name="modele" />
+					<field name="champs" />
+				</group>
+			</field>
+		</record>
+
+		<record id="account_edi_champ_form" model="ir.ui.view">
+			<field name="name">l10n_ma_edi.account_edi_champ_form</field>
+            <field name="model">account.edi.champ</field>
+			<field name="type">form</field>
+			<field eval="5" name="priority" />
+			<field name="arch" type="xml">
+				<group>
+					<button name="calculate" type="object" string="Calculer" />
+					<field name="name" />
+					<field name="code" />
+					<field name="type" />
+				</group>
+				<group>
+					<field name="formule" />
+					<field name="result" />
+				</group>
+			</field>
+		</record>
+	</data>
+</openerp>

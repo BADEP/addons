@@ -1,16 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-        <record id="l10n_ma_legal.partner_legal_form" model="ir.ui.view">
+        <!--<record id="l10n_ma_legal.partner_legal_form" model="ir.ui.view">
             <field name="model">res.partner</field>
             <field name="name">l10n_ma_legal.partner_legal_form</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="arch" type="xml">
-				<xpath expr="//field[@name='function']" position="before">
+				<field name="function" position="before">
+					<field name="ice" attrs="{'invisible': [('is_company','=', False)]}"/>
 					<field name="idf" attrs="{'invisible': [('is_company','=', False)]}"/>
 					<field name="rc" attrs="{'invisible': [('is_company','=', False)]}"/>
 					<field name="pat" attrs="{'invisible': [('is_company','=', False)]}"/>
-				</xpath>
+				</field>
             </field>
         </record>
 
@@ -136,6 +137,6 @@
 					</div>
 				</xpath>
 			</field>
-        </record>
-    </data> 
+        </record>-->
+    </data>
 </openerp>

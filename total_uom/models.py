@@ -26,30 +26,35 @@ import openerp.addons.decimal_precision as dp
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
     total_uoms = fields.One2many('product.uom.total', 'sale_order', compute='get_total_uoms', string='Total par unité')
+    currency_id = fields.Many2one('res.currency',related='pricelist_id.currency_id')
     
     @api.one
     @api.depends('order_line')
     def get_total_uoms(self):
+        self.total_uoms.unlink()
         uoms = self.order_line.mapped('product_uom.id')
         for uom in uoms:
-            self.total_uoms |= self.env['product.uom.total'].new({'uom': uom,
-                                                                     'quantity': sum(x.product_uom_qty for x in self.order_line.filtered(lambda r: r.product_uom.id==uom)),
-                                                                     'sale_order': self.id
-                                                                     })
+            self.total_uoms |= self.env['product.uom.total'].create({'uom': uom,
+                                   'quantity': sum(x.product_uom_qty for x in self.order_line.filtered(lambda r: r.product_uom.id==uom)),
+                                   'sale_order': self.id})
+        self.currency_id = self.pricelist_id.currency_id
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
     total_uoms = fields.One2many('product.uom.total', 'stock_picking', compute='get_total_uoms', string='Total par unité')
-    
-    @api.one
+    picking_type_code = fields.Selection(related='picking_type_id.code', readonly=True, string='Picking Type Code', help="Technical field used to display the correct label on print button in the picking view")
+
+    @api.multi
     @api.depends('move_lines')
     def get_total_uoms(self):
-        uoms = self.move_lines.mapped('product_uom.id')
-        for uom in uoms:
-            self.total_uoms |= self.env['product.uom.total'].create({'uom': uom,
-                                                                     'quantity': sum(x.product_uom_qty for x in self.move_lines.filtered(lambda r: r.product_uom.id==uom)),
-                                                                     'stock_picking': self.id
-                                                                     })
+        for rec in self:
+            uoms = rec.move_lines.mapped('product_uom.id')
+            for uom in uoms:
+                rec.total_uoms |= rec.env['product.uom.total'].create({'uom': uom,
+                                                                         'quantity': sum(x.product_uom_qty for x in rec.move_lines.filtered(lambda r: r.product_uom.id==uom)),
+                                                                         'stock_picking': rec.id
+                                                                         })
+            rec.picking_type_code = rec.picking_type_id.code
 
 class ProductUomTotal(models.Model):
     _name = 'product.uom.total'

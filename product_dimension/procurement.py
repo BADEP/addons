@@ -23,6 +23,7 @@
 from openerp import models, fields, api
 import openerp.addons.decimal_precision as dp
 from openerp import SUPERUSER_ID
+from openerp.tools.translate import _
 
 class procurement_order(models.Model):
     _inherit = "procurement.order"

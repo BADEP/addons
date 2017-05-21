@@ -1,0 +1,227 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="l10n_ma_legal.partner_legal_form_prolight" model="ir.ui.view">
+            <field name="model">res.partner</field>
+            <field name="name">prolight_meta.partner_legal_form</field>
+            <field name="inherit_id" ref="l10n_ma_legal.partner_legal_form" />
+            <field name="arch" type="xml">
+				<field name="idf" position="attributes">
+					<attribute name="attrs">{'invisible': [('is_company','=', False)], 'required': [('is_company','=', True)]}</attribute>
+				</field>
+				<field name="rc" position="attributes">
+					<attribute name="attrs">{'invisible': [('is_company','=', False)], 'required': [('is_company','=', True)]}</attribute>
+				</field>
+				<field name="pat" position="attributes">
+					<attribute name="attrs">{'invisible': [('is_company','=', False)], 'required': [('is_company','=', True)]}</attribute>
+				</field>
+				<field name="ice" position="attributes">
+					<attribute name="attrs">{'invisible': [('is_company','=', False)], 'required': [('is_company','=', True)]}</attribute>
+				</field>
+				<field name="phone" position="attributes">
+					<attribute name="attrs">{'required': [('is_company','=', True)]}</attribute>
+				</field>
+            </field>
+        </record>
+
+        <record id="prolight_meta.sale_order_form" model="ir.ui.view">
+            <field name="model">sale.order</field>
+            <field name="name">prolight_meta.sale_order_form</field>
+            <field name="inherit_id" ref="sale.view_order_form" />
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="after">
+					<field name="quantity_in_stock"/>
+					<field name="quantity_forecast"/>
+				</xpath>
+            </field>
+        </record>
+
+        <record id="prolight_meta.sale_stock_order_form" model="ir.ui.view">
+            <field name="model">sale.order</field>
+            <field name="name">prolight_meta.sale_stock_order_form</field>
+            <field name="inherit_id" ref="sale_stock.view_order_form_inherit" />
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='order_line']/form//field[@name='th_weight']" position="before">
+					<field name="date_expected"/>
+				</xpath>
+            </field>
+        </record>
+
+		<record id="product_template_form_view_attributes" model="ir.ui.view">
+			<field name="name">prolight.product_template_form_view_attributes</field>
+            <field name="model">product.template</field>
+			<field name="inherit_id" ref="product.product_template_form_view" />
+			<field name="type">form</field>
+			<field eval="5" name="priority" />
+			<field name="arch" type="xml">
+				<field name="sale_ok" position="replace">
+					<field name="sale_ok"/>
+				</field>
+				<field name="name" position="attributes">
+					<attribute name="attrs">{'readonly': [('sale_ok','=',True),('active','=',True),('type','=','product')]}</attribute>
+				</field>
+				<field name="active" position="replace">
+					<field name="active"/>
+				</field>
+				<field name="type" position="replace">
+             	   <field name="type"/>
+				</field>
+				<field name="uom_id" position="replace">
+          	      <field name="uom_id" groups="product.group_uom"/>
+				</field>
+				<xpath expr="//page[@string='Information']/group[1]" position="after">
+					<group string="Hiérarchie ProLight" colspan="4" attrs="{'invisible': ['|','|',('sale_ok','=',False),('active','=',False),('type','!=','product')]}">
+						<group>
+							<field name="famille" attrs="{'required': [('sale_ok','=',True),('active','=',True),('type','=','product')], 'invisible': ['|','|',('sale_ok','=',False),('active','=',False),('type','!=','product')]}"/>
+							<field name="type2" attrs="{'required': [('famille','!=',False)], 'invisible': [('famille','=',False)]}"/>
+							<field name="modele" attrs="{'required': [('type2','!=',False)], 'invisible': [('type2','=',False)]}"/>
+						</group>
+						<group  attrs="{'invisible': [('modele','=',False)]}">
+							<label for="couleur"/>
+							<div>
+								<field name="couleur" attrs="{'required': [('modele','!=',False),('no_couleur','=',False)], 'invisible': [('no_couleur','=',True)]}"/>
+								<field name="no_couleur"/><label for="no_couleur"/>
+							</div>
+							<label for="puissance"/>
+							<div>
+								<field name="puissance" attrs="{'required': [('modele','!=',False),('no_puissance','=',False)], 'invisible': [('no_puissance','=',True)]}"/>
+								<field name="no_puissance"/><label for="no_puissance"/>
+							</div>
+							<label for="caracteristique"/>
+							<div>
+								<field name="caracteristique" attrs="{'required': [('modele','!=',False),('no_caracteristique','=',False)], 'invisible': [('no_caracteristique','=',True)]}"/>
+								<field name="no_caracteristique"/><label for="no_caracteristique"/>
+							</div>
+							<label for="commentaire"/>
+							<div>
+								<field name="commentaire"/>
+							</div>
+						</group>
+					</group>
+				</xpath>
+                <xpath expr="//page[@string='Information']" position="after">
+                    <page name="Similaires" string="Articles similaires">
+						<field name="articles_similaires">
+							<tree>
+								<field name="name"/>
+								<field name="famille"/>
+								<field name="type2"/>
+							</tree>
+						</field>
+					</page>
+				</xpath>
+			</field>
+		</record>
+
+		<record id="product_famille_form" model="ir.ui.view">
+			<field name="name">prolight.product_famille_form</field>
+            <field name="model">product.template.famille</field>
+			<field name="type">form</field>
+			<field eval="5" name="priority" />
+			<field name="arch" type="xml"><group>
+				<field name="name"/>
+				<field name="types"/>
+			</group></field>
+		</record>
+		<record id="product_type_form" model="ir.ui.view">
+			<field name="name">prolight.product_type_form</field>
+            <field name="model">product.template.type</field>
+			<field name="type">form</field>
+			<field eval="5" name="priority" />
+			<field name="arch" type="xml"><group>
+				<field name="name"/>
+				<field name="has_couleur"/>
+				<field name="has_puissance"/>
+				<field name="has_caracteristique"/>
+			</group></field>
+		</record>
+		<record id="product_modele_form" model="ir.ui.view">
+			<field name="name">prolight.product_modele_form</field>
+            <field name="model">product.template.modele</field>
+			<field name="type">form</field>
+			<field eval="5" name="priority" />
+			<field name="arch" type="xml"><group>
+				<field name="name"/>
+			</group></field>
+		</record>
+		<record id="product_couleur_form" model="ir.ui.view">
+			<field name="name">prolight.product_couleur_form</field>
+            <field name="model">product.template.couleur</field>
+			<field name="type">form</field>
+			<field eval="5" name="priority" />
+			<field name="arch" type="xml">
+				<field name="name"/>
+			</field>
+		</record>
+		<record id="product_puissance_form" model="ir.ui.view">
+			<field name="name">prolight.product_puissance_form</field>
+            <field name="model">product.template.puissance</field>
+			<field name="type">form</field>
+			<field eval="5" name="priority" />
+			<field name="arch" type="xml">
+				<field name="name"/>
+			</field>
+		</record>
+		<record id="product_caracteristique_form" model="ir.ui.view">
+			<field name="name">prolight.product_caracteristique_form</field>
+            <field name="model">product.template.caracteristique</field>
+			<field name="type">form</field>
+			<field eval="5" name="priority" />
+			<field name="arch" type="xml">
+				<field name="name"/>
+			</field>
+		</record>
+
+		<record id="action_famille" model="ir.actions.act_window">
+            <field name="name">Familles</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template.famille</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+		<record id="action_type" model="ir.actions.act_window">
+            <field name="name">Types</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+		<record id="action_modele" model="ir.actions.act_window">
+            <field name="name">Modèles</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template.modele</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+		<record id="action_couleur" model="ir.actions.act_window">
+            <field name="name">Couleurs</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template.couleur</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+		<record id="action_puissance" model="ir.actions.act_window">
+            <field name="name">Puissances</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template.puissance</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+		<record id="action_caracteristique" model="ir.actions.act_window">
+            <field name="name">Caractéristique</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">product.template.caracteristique</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form</field>
+        </record>
+
+		<menuitem id="menu_hierarchy" name="Hiérarchie ProLight" parent="base.menu_base_config" sequence="10"/>
+		<menuitem id="menu_famille" action="action_famille" parent="prolight_meta.menu_hierarchy" sequence="10"/>
+		<menuitem id="menu_type" action="action_type" parent="prolight_meta.menu_hierarchy" sequence="10"/>
+		<menuitem id="menu_modele" action="action_modele" parent="prolight_meta.menu_hierarchy" sequence="10"/>
+		<menuitem id="menu_couleur" action="action_couleur" parent="prolight_meta.menu_hierarchy" sequence="10"/>
+		<menuitem id="menu_puissance" action="action_puissance" parent="prolight_meta.menu_hierarchy" sequence="10"/>
+		<menuitem id="menu_caracteristique" action="action_caracteristique" parent="prolight_meta.menu_hierarchy" sequence="10"/>
+
+	</data>
+</openerp>

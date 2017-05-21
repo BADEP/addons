@@ -19,6 +19,7 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp import tools
 from openerp import fields, models, api
 import openerp.addons.decimal_precision as dp
 
@@ -60,4 +61,34 @@ class ResPartner(models.Model):
     def onchange_is_consignee(self):
         if self.is_consignee:
             self.is_company = True if self.is_consignee else False
+            
+class account_invoice_report(models.Model):
+    _inherit = "account.invoice.report"
+
+    @api.cr
+    def init(self, cr):
+        # self._table = account_invoice_report
+        tools.drop_view_if_exists(cr, self._table)
+        cr.execute("""CREATE or REPLACE VIEW %s as (
+            WITH currency_rate (currency_id, rate, date_start, date_end) AS (
+                SELECT r.currency_id, 1/r.rate, r.name AS date_start,
+                    (SELECT name FROM res_currency_rate r2
+                     WHERE r2.name > r.name AND
+                           r2.currency_id = r.currency_id
+                     ORDER BY r2.name ASC
+                     LIMIT 1) AS date_end
+                FROM res_currency_rate r
+            )
+            %s
+            FROM (
+                %s %s %s
+            ) AS sub
+            JOIN currency_rate cr ON
+                (cr.currency_id = sub.currency_id AND
+                 cr.date_start <= COALESCE(sub.date, NOW()) AND
+                 (cr.date_end IS NULL OR cr.date_end > COALESCE(sub.date, NOW())))
+        )""" % (
+                    self._table,
+                    self._select(), self._sub_select(), self._from(), self._group_by()))
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -41,7 +41,7 @@
 		                <thead>
 		                    <tr style="background-color: lightgrey;">
 		                        <th style="border: 1px solid black;">N°</th>
-		                        <th style="border: 1px solid black;">Article</th>
+		                        <th style="border: 1px solid black;">Description</th>
 		                        <th class="text-right" style="border: 1px solid black;">Qté</th>
 		                        <th class="text-right" style="border: 1px solid black;">Date planifiée</th>
 		                    </tr>
@@ -52,7 +52,7 @@
 		                           	<span t-field="l.name"/>
 		                        </td>
 		                        <td style="border: 1px solid black;">
-		                        	<span t-field="l.product_id.display_name"/>
+		                        	<span t-field="l.sale_line"/>
 		                        </td>
 		                        <td class="text-right" style="border: 1px solid black;">
 		                            <span t-field="l.product_qty"/>

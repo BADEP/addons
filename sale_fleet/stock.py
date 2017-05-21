@@ -24,11 +24,13 @@ from openerp import fields, models, api
 import openerp.addons.decimal_precision as dp
 from openerp.osv import osv, fields as oldfields
 
-class stock_picking(models.Model):
+class StockPicking(models.Model):
     _inherit = 'stock.picking'
     
     vehicle = fields.Many2one('fleet.vehicle', readonly=False, states={'done': [('readonly', True)]}, string='Véhicule')
     driver = fields.Many2one('res.partner', readonly=False, states={'done': [('readonly', True)]}, string='Chauffeur')
     driver_cost = fields.Float(digits_compute=dp.get_precision('Account'), default=0, string='Coût transport')
-    
-stock_picking()
+    custom_shipping = fields.Text(string="Adresse de livraison")
+    is_custom_shipping = fields.Boolean(string='Adresse de livraison divers',default=False)
+    custom_vehicle = fields.Char(string='Véhicule')
+    is_custom_vehicle = fields.Boolean(string='Véhicule divers',default=False)

@@ -11,7 +11,7 @@
 				<data>
 					<xpath expr="//group[@name='sale_total']" position="after">
 			        	<group style="width: 500px; clear: none">
-							<field name="total_uoms"/>
+							<field name="total_uoms" readonly="1"/>
 						</group>
 					</xpath>
 				</data>
@@ -28,7 +28,7 @@
 				<data>
 					<xpath expr="//field[@name='move_lines']" position="after">
 			        	<group>
-							<field name="total_uoms"/>
+							<field name="total_uoms" readonly="1"/>
 						</group>
 					</xpath>
 				</data>
@@ -60,8 +60,8 @@
 							<h4>Total Quantités:</h4>
 					        <table class="table table-condensed">
 		                        <tr t-foreach="o.total_uoms" t-as="l" class="border-black">
-		                            <td><span t-field="l.quantity"/></td>
-		                            <td><span t-field="l.uom"/></td>
+		                            <td name="quantity"><span t-field="l.quantity"/></td>
+		                            <td name="uom"><span t-field="l.uom"/></td>
 								</tr>
 		                    </table>
 						</div>

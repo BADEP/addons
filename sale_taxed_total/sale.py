@@ -49,7 +49,7 @@ class sale_order_line(osv.osv):
 
     _inherit = 'sale.order.line'
     _columns = {
-        'price_total': fields.function(_amount_total, string='Total', digits_compute=dp.get_precision('Account')),
+        'price_total': fields.function(_amount_total, string='Total', digits_compute=dp.get_precision('Account'), store=True)
     }
     
 sale_order_line()
@@ -71,7 +71,7 @@ class account_invoice_line(osv.osv):
         return res
 
     _columns = {
-        'price_total': fields.function(_amount_total, string='Total', digits_compute=dp.get_precision('Account')),
+        'price_total': fields.function(_amount_total, string='Total', digits_compute=dp.get_precision('Account'), store=True),
     }
     
 account_invoice_line()

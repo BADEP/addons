@@ -5,15 +5,30 @@ class hr_contract(models.Model):
     _inherit = 'hr.contract'
     _name = 'hr.contract'
 
-    indemnite_saliss = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité Salissure",default=0)
-    indemnite_vest = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité Vestimentaire",default=0)
-    indemnite_repr = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité de représentation",default=0)
-    indemnite = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnités divers",default=0)
-    indemnite_transport = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité de Transport",default=0)
-    indemnite_encad = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité d'encadrement",default=0)
+    int1 = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité Non taxable 1",default=0)
+    int2 = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité Non taxable 2",default=0)
+    int3 = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité Non taxable 3",default=0)
+    int4 = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité Non taxable 4",default=0)
+    int5 = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité Non taxable 5",default=0)
+    it1 = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité taxable 1",default=0)
+    it2 = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité taxable 2",default=0)
+    it3 = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité taxable 3",default=0)
+    it4 = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité taxable 4",default=0)
+    it5 = fields.Float(digits_compute=dp.get_precision('Account'), string="Indemnité taxable 5",default=0)
 
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
 
     matricule_cimr = fields.Char(string="Numéro CIMR", required=False)
     matricule_mut = fields.Char(string="Numéro MUTUELLE", required=False)
+    
+class HrSalaryRule(models.Model):
+    _inherit = 'hr.salary.rule'
+    _order = 'sequence asc'
+    
+class HrSalaryRuleCategory(models.Model):
+    _inherit = 'hr.salary.rule.category'
+    
+    sequence = fields.Integer('Sequence',required=True,default=5)
+    
+    _order = 'sequence asc'

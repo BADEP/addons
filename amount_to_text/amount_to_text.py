@@ -132,6 +132,7 @@ ResLang()
 class ResCurrency(models.Model):
     _inherit = 'res.currency'
     
+    @api.one
     def get_default_label(self):
         self.label = self.name
     

@@ -11,16 +11,23 @@
 			<field name="arch" type="xml">
 			<data>
 				<xpath expr="//group[@name='primes']" position="replace">
-                    <group name="primes" string="Primes et Indemnités">
-	                  	<field name="indemnite_saliss"/>
-	                    <field name="indemnite_vest"/>
-	                    <field name="indemnite_transport"/>
-						<field name="indemnite_encad"/>
-						<field name="indemnite_repr"/>
-						<field name="indemnite"/>
-					</group>
+                    <group name="primes-nt" string="Primes et Indemnités non taxables">
+	                  	<field name="int1"/>
+	                  	<field name="int2"/>
+	                  	<field name="int3"/>
+	                  	<field name="int4"/>
+	                  	<field name="int5"/>
+                    </group>
                 </xpath>
-				<xpath expr="//group[@name='left_column']" position="replace" />
+                <xpath expr="//group[@name='left_column']" position="replace">
+                    <group name="primes-t" string="Primes et Indemnités taxables">
+	                  	<field name="it1"/>
+	                  	<field name="it2"/>
+	                  	<field name="it3"/>
+	                  	<field name="it4"/>
+	                  	<field name="it5"/>
+                    </group>
+                </xpath>
              </data>
             </field>
         </record>

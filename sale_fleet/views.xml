@@ -8,11 +8,20 @@
             <field eval="17" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-				<xpath expr="//field[@name='partner_shipping_id']" position="after">
-                    <field name="vehicle" groups="base.group_user"/>
-		        	<field name="driver" groups="base.group_user"/>
+				<field name="partner_shipping_id" position="before">
+					<field name="is_custom_shipping" />
+				</field>
+				<field name="partner_shipping_id" position="attributes">
+					<attribute name="attrs">{'invisible': [('is_custom_shipping','=',True)]}</attribute>
+				</field>
+				<field name="partner_shipping_id" position="after">
+					<field name="custom_shipping" attrs="{'invisible': [('is_custom_shipping','=',False)]}"/>
+					<field name="is_custom_vehicle" />
+                    <field name="vehicle" groups="base.group_user" domain="[('sale_ok','=',True)]" attrs="{'invisible': [('is_custom_vehicle','=',True)]}"/>
+		        	<field name="custom_vehicle" groups="base.group_user" attrs="{'invisible': [('is_custom_vehicle','=',False)]}"/>
+		        	<field name="driver" groups="base.group_user" attrs="{'invisible': [('is_custom_vehicle','=',True)]}"/>
                     <field name="driver_cost" groups="base.group_user"/>
-				</xpath>
+				</field>
 			</field>
         </record>
 
@@ -23,11 +32,15 @@
             <field eval="17" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-				<xpath expr="//field[@name='partner_id']" position="after">
-                    <field name="vehicle" groups="base.group_user"/>
-		        	<field name="driver" groups="base.group_user"/>
+				<field name="partner_id" position="after">
+					<field name="is_custom_shipping" />
+					<field name="custom_shipping" attrs="{'invisible': [('is_custom_shipping','=',False)]}"/>
+					<field name="is_custom_vehicle" />
+                    <field name="vehicle" groups="base.group_user" attrs="{'invisible': [('is_custom_vehicle','=',True)]}"/>
+                    <field name="custom_vehicle" groups="base.group_user" attrs="{'invisible': [('is_custom_vehicle','=',False)]}"/>
+		        	<field name="driver" groups="base.group_user" attrs="{'invisible': [('is_custom_vehicle','=',True)]}"/>
                     <field name="driver_cost" groups="base.group_user"/>
-				</xpath>
+				</field>
 			</field>
         </record>
 
@@ -38,8 +51,8 @@
             <field eval="17" name="priority"/>
             <field name="arch" type="xml">
 				<xpath expr="//filter[@string='Customer']" position="after">
-					<filter string="driver" domain="[]" context="{'group_by':'driver'}"/>
-					<filter string="vehicle" domain="[]" context="{'group_by':'vehicle'}"/>
+					<filter string="Chauffeur" domain="[]" context="{'group_by':'driver'}"/>
+					<filter string="Véhicule" domain="[]" context="{'group_by':'vehicle'}"/>
 				</xpath>
 			</field>
         </record>
@@ -109,6 +122,27 @@
                         <field name="pickings_count" widget="statinfo" string="Pickings"/>
                     </button>
 				</xpath>
+				<field name="driver_id" position="after">
+					<field name="partner_id" />
+					<field name="sale_ok" />
+					<field name="purchase_ok" />
+				</field>
+			</field>
+        </record>
+
+        <record id="sale_fleet.vehicle_search" model="ir.ui.view">
+            <field name="name">sale_fleet.fleet_vehicle_search</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_search" />
+            <field eval="17" name="priority"/>
+            <field name="model">fleet.vehicle</field>
+            <field name="type">search</field>
+            <field name="arch" type="xml">
+            	<filter name="alert_true" position="before">
+                    <filter name="company_fleet" domain="[('is_company_owned','=',True)]" string="Parc de la société"/>
+				</filter>
+				<filter name="groupby_model" position="after">
+                	<filter name="groupby_partner" context="{'group_by' : 'partner_id'}" string="Propriétaire"/>
+				</filter>
 			</field>
         </record>
 

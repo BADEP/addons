@@ -32,6 +32,26 @@ class FleetVehicle(models.Model):
     sales_count = fields.Float(digits_compute=dp.get_precision('Account'), compute='get_sales_count')
     stock_pickings = fields.One2many('stock.picking', 'vehicle')
     pickings_count = fields.Float(digits_compute=dp.get_precision('Account'), compute='get_pickings_count')
+    partner_id = fields.Many2one('res.partner', string="Propriétaire")
+    name = fields.Char(compute='get_name')
+    is_company_owned = fields.Boolean(string='Appartient à la société', compute='get_is_company_owned',store=True)
+    sale_ok = fields.Boolean(string='Disponible dans les ventes',default=True)
+    purchase_ok = fields.Boolean(string='Disponible dans les achats',default=True)
+    
+    @api.one
+    @api.depends('partner_id')
+    def get_is_company_owned(self):
+        if self.partner_id and self.partner_id.id == self.env.user.company_id.partner_id.id:
+            self.is_company_owned = True
+        else:
+            self.is_company_owned = False
+    @api.one
+    @api.depends('partner_id','license_plate')
+    def get_name(self):
+        if self.partner_id:
+            self.name = self.partner_id.display_name + ' / ' + self.license_plate
+        else:
+            self.name = self.model_id.brand_id.name + '/' + self.model_id.modelname + ' / ' + self.license_plate
 
     @api.one
     @api.depends('sale_orders')

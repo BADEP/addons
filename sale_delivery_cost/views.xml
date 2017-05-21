@@ -29,6 +29,7 @@
 						<field name="delivery_costs">
 							<tree string="Delivery Costs" editable="bottom">
 								<field name="code" />
+								<field name="pricelist" />
 								<field name="price" />
 							</tree>
 						</field>
@@ -120,6 +121,7 @@
 					<field name="delivery_costs">
 						<tree string="Costs" editable="bottom">
 		                    <field name="product"/>
+		                    <field name="pricelist"/>
 		                    <field name="price"/>
                         </tree>
 					</field>

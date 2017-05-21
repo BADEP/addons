@@ -22,12 +22,9 @@
 
 from openerp import models, fields, api
 
-
-class product_product(models.Model):
-    _inherit = 'product.product'
+class ProductPricelist(models.Model):
+    _inherit = 'product.pricelist'
     
-    is_mold = fields.Char()
-    lifecycle = fields.Integer()
-    productions = fields.Many2one('mrp.production')
-product_product()
+    partners = fields.One2many('res.partner', 'property_product_pricelist')
+
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

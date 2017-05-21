@@ -36,6 +36,7 @@ class product_delivery_cost(models.Model):
     code = fields.Many2one('product.delivery.code', ondelete='cascade', string='Tarif DT')
     price = fields.Float(required=True, digits_compute=dp.get_precision('Product Price'), default=0, string='Prix transport')
     product = fields.Many2one('product.template', ondelete='cascade', string='Article')
+    pricelist = fields.Many2one('product.pricelist', ondelete='set null')
 
 product_delivery_cost()
 
