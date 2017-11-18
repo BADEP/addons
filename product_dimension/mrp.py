@@ -31,8 +31,8 @@ class MrpBomLine(models.Model):
 class MrpProduction(models.Model):
     _inherit = "mrp.production"
     dimensions = fields.One2many('mrp.production.dimension','mrp_production')
-    product_dimension_qty = fields.Integer('Quantité', required=True, default=0)
-    dimensions_label = fields.Char('Qté. produite', compute='get_dimensions_label')
+    product_dimension_qty = fields.Integer('Quantite', required=True, default=0)
+    dimensions_label = fields.Char('Qte. produite', compute='get_dimensions_label')
     
     @api.one
     def get_dimensions_label(self):
@@ -54,9 +54,9 @@ class MrpProduction(models.Model):
 class MrpProductionDimension(models.Model):
     _name = "mrp.production.dimension"
     dimension = fields.Many2one('product.uom.dimension', required=True, ondelete='cascade')
-    quantity = fields.Float('Quantité', digits_compute= dp.get_precision('Product UoS'), required=True)
+    quantity = fields.Float('Quantite', digits_compute= dp.get_precision('Product UoS'), required=True)
     mrp_production = fields.Many2one('mrp.production', required=True, ondelete='cascade')
-    extrapolated_qty = fields.Integer(string='Quantité extrapolée', compute='get_extrapolated_qty')
+    extrapolated_qty = fields.Integer(string='Quantite extrapolee', compute='get_extrapolated_qty')
     
     @api.one
     @api.depends('dimension', 'quantity')

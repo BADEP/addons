@@ -26,14 +26,6 @@ class ResPartner(models.Model):
     idf = fields.Char(string='IF')
     ice = fields.Char(string='ICE')
     
-    @api.multi
-    @api.onchange('type')
-    def onchange_type2(self):
-        if self.type != 'invoice':
-            self.customer = False
-            self.supplier = False
-        
-    
 class res_company(models.Model):
     _inherit = 'res.company'
     

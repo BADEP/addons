@@ -19,8 +19,15 @@
 #    along with this program.  If not, see <http://www.gnu.org/licenses/>.
 #
 ##############################################################################
+from openerp.osv import fields as oldfields, osv
+from openerp import tools
+from openerp import fields, models, api
+from dateutil.relativedelta import relativedelta
+import openerp.addons.decimal_precision as dp
+from openerp.tools.float_utils import float_round
 
-import models, account, sale, stock, product, purchase
-
-
+class SaleLayoutCategory(models.Model):
+    _inherit = 'sale_layout.category'
+    color_code = fields.Char(string='Hex Code', required=True, size=7, default='#aaaaaa')
+    
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

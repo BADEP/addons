@@ -9,6 +9,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='category_id']" position="after">
+					<field name="label" />
                 	<field name="dimensions" widget="one2many_list">
 						<tree string="Dimensions" editable="bottom">
 							<field name="name" />

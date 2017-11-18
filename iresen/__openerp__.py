@@ -20,7 +20,25 @@
 #
 ##############################################################################
 
-import models, account, sale, stock, product, purchase
 
+{
+    'name': 'IRESEN Prototype',
+    'version': '1.0',
+    'category': 'Project',
+    'description': """
+    Module prototype pour la plateforme de soumission aux Appels à Projets R&D et INNOVATION
+    """,
+    'author': 'BADEP',
+    'website': 'https://badep.ma',
+    'depends': ['project',
+                'website',
+                'document'
+                ''
+                ],
+    'data': [
+           'views.xml',
+    ],
+    'installable': True,
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

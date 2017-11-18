@@ -20,7 +20,24 @@
 #
 ##############################################################################
 
-import models, account, sale, stock, product, purchase
 
+{
+    'name': 'Shemstravel Meta Package',
+    'version': '1.0',
+    'category': 'Sales',
+    'description': """
+    Shemstravel Meta Package
+    """,
+    'author': 'WEBMANIA',
+    'website': 'http://www.webmania.ma',
+    'depends': ['account_accountant',
+                'sale_margin',
+                'invoice_margin'
+                ],
+    'data': [
+           'views.xml',
+    ],
+    'installable': True,
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -20,7 +20,10 @@
 #
 ##############################################################################
 
-import models, account, sale, stock, product, purchase
+from openerp import fields, models, api
+import openerp.addons.decimal_precision as dp
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class PurchaseOrder(models.Model):
+    _inherit = 'purchase.order'
+    
+    display_price = fields.Boolean(default=True, string='Prix')

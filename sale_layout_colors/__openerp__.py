@@ -20,7 +20,23 @@
 #
 ##############################################################################
 
-import models, account, sale, stock, product, purchase
 
+{
+    'name': 'Sale Layout Colors',
+    'version': '1.0',
+    'category': 'Sales',
+    'description': """
+    Colors for Sale Sections: Add Field in Sale Section where the user can inputs the Hex Code for each section.
+    """,
+    'author': 'BADEP',
+    'website': 'https://badep.ma',
+    'depends': ['sale_layout',
+                'web_widget_color'
+                ],
+    'data': [
+           'views.xml',
+    ],
+    'installable': True,
+}
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

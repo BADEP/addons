@@ -25,8 +25,13 @@ import openerp.addons.decimal_precision as dp
 
 class ProductUom(models.Model):
     _inherit = "product.uom"
+    
+    @api.one
+    def _get_default_label(self):
+        return self.name
+    
+    label = fields.Char(required=True, default=_get_default_label)
     dimensions = fields.One2many('product.uom.dimension', 'product_uom', copy=True)
-
 
 class ProductUomDimension(models.Model):
     _name = 'product.uom.dimension'

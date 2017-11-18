@@ -2,8 +2,8 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2016-2016 BADEP. All Rights Reserved.
-#    Author: Khalid HAZAM <k.hazam@badep.ma>
+#    Copyright (c) 2010-2013 Elico Corp. All Rights Reserved.
+#    Author: Yannick Gouin <yannick.gouin@elico-corp.com>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,7 +20,8 @@
 #
 ##############################################################################
 
-import models, account, sale, stock, product, purchase
+from openerp import tools
+from openerp import fields, models, api
 
-
-# vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
+class ProjectSubmission(models.Model):
+    _name = 'project.submission'

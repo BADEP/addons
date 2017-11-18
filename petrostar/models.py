@@ -23,6 +23,25 @@ from openerp import tools
 from openerp import fields, models, api
 import openerp.addons.decimal_precision as dp
 
+class AccountMoveLine(models.Model):
+    _inherit = 'account.move.line'
+
+    partner_sage = fields.Char(compute='get_partner_sage', string='Tier Sage')
+    date_sage = fields.Date(compute='get_date_sage')
+
+    @api.one
+    @api.depends('date', 'period_id')
+    def get_date_sage(self):
+        self.date_sage = self.date if self.date < self.period_id.date_stop else self.period_id.date_stop
+
+    @api.one
+    @api.depends('partner_id')
+    def get_partner_sage(self):
+        if self.partner_id and self.account_id.type == 'receivable':
+            self.partner_sage = self.partner_id.code_c_sage
+        if self.partner_id and self.account_id.type == 'payable':
+            self.partner_sage = self.partner_id.code_f_sage
+
 class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
     delivery_address_id = fields.Many2one('res.partner', string='Adresse de livraison')
@@ -56,7 +75,15 @@ class StockPicking(models.Model):
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
-    
+    code_c_sage = fields.Char(string='Code Client Sage', compute='get_codes_sage')
+    code_f_sage = fields.Char(string='Code Fournisseur Sage', compute='get_codes_sage')
+
+    @api.depends('ref', 'name')
+    @api.one
+    def get_codes_sage(self):
+        self.code_c_sage = (self.ref if self.ref else self.name) + " - Client"
+        self.code_f_sage = (self.ref if self.ref else self.name) + " - Fournisseur"
+
     @api.onchange('is_consignee')
     def onchange_is_consignee(self):
         if self.is_consignee:

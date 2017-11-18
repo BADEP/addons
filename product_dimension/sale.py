@@ -38,8 +38,14 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
     dimensions = fields.One2many('sale.order.line.dimension', 'sale_order_line', readonly=True, states={'draft': [('readonly', False)]}, copy=True)
-    product_visible_qty = fields.Float('Quantité', compute='get_visible_qty')
-    product_dimension_qty = fields.Integer('Quantité', required=True, default=1)
+    product_visible_qty = fields.Float('Quantite', compute='get_visible_qty')
+    product_dimension_qty = fields.Integer('Quantite', required=True, default=1)
+    dummy_total = fields.Float(string='Total', digits_compute=dp.get_precision('Product UoS'), compute='get_dummy_total')
+    
+    @api.one
+    @api.depends('product_visible_qty','product_uom_qty','price_unit','discount')
+    def get_dummy_total(self):
+        self.dummy_total = self.price_unit * self.product_uom_qty * (1 - (self.discount or 0.0) / 100.0)
 
     
     @api.one
@@ -92,9 +98,9 @@ class SaleOrderLine(models.Model):
 class SaleOrderLineDimension(models.Model):
     _name = "sale.order.line.dimension"
     dimension = fields.Many2one('product.uom.dimension', required=True, ondelete='cascade')
-    quantity = fields.Float('Quantité', digits_compute=dp.get_precision('Product UoS'), required=True)
+    quantity = fields.Float('Quantite', digits_compute=dp.get_precision('Product UoS'), required=True)
     sale_order_line = fields.Many2one('sale.order.line', required=True, ondelete='cascade')
-    extrapolated_qty = fields.Integer(string='Quantité extrapolée', compute='get_extrapolated_qty')
+    extrapolated_qty = fields.Integer(string='Quantite extrapolee', compute='get_extrapolated_qty')
 
     @api.one
     @api.depends('quantity')

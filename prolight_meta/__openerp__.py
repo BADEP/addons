@@ -34,12 +34,19 @@
                 'purchase',
                 'sale_stock',
                 'l10n_ma_legal',
-                'stock_account'
+                'stock_account',
+                'sale_automatic_workflow',
+#                'sale_payment_method',
+                'sale_margin'
                 ],
     'data': [
-           'views.xml',
+           'account_views.xml',
+           'sale_views.xml',
+           'purchase_views.xml',
+           'stock_views.xml'
     ],
     'installable': True,
+    'application': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

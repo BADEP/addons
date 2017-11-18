@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+    
+        <template id="category_template_colors" inherit_id="sale_layout.category_template">
+            <xpath expr="//td[@colspan='100']" position="before">
+				<t t-set="color" t-value="p['category'].color_code" />
+			</xpath>
+            <xpath expr="//td[@colspan='100']" position="attributes">
+				<attribute name="style"></attribute>
+				<attribute name="t-att-style">'font-weight: bold; border-bottom: 0px solid black; background-color: ' + p['category'].color_code + ';'</attribute>
+            </xpath>
+        </template>
+        <record id="report_configuration_colors_form_view" model="ir.ui.view">
+            <field name="model">sale_layout.category</field>
+            <field name="name">sale_layout_colors.sale_order_form</field>
+            <field name="inherit_id" ref="sale_layout.report_configuration_form_view" />
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                	<field name="color_code" widget="color"/>
+                </field>
+            </field>
+        </record>
+	</data>
+</openerp>

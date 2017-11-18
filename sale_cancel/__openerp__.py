@@ -2,8 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2016-2016 BADEP. All Rights Reserved.
-#    Author: Khalid HAZAM <k.hazam@badep.ma>
+#    Copyright (C) 2004-2010 Tiny SPRL (<http://tiny.be>).
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,7 +19,24 @@
 #
 ##############################################################################
 
-import models, account, sale, stock, product, purchase
 
-
+{
+    'name': 'Sale Cancel',
+    'version': '1.0',
+    'category': 'Hidden',
+    'description': """
+    WARNING! Technical module, do not use in production.
+    Cancel Everything in Sale Order even if it's in the state 'done':
+    - If there is a stock picking it will be returned to the state 'draft', deleted (depends on 'stock_cancel').
+    - If there is an invoice, it will be unreconciled, canceled and deleted(depends on account_cancel')
+    """,
+    'author': 'BADEP',
+    'website': 'https://www.badep.ma',
+    'depends': ['stock_cancel','account_cancel'],
+    'data': [
+        'views.xml',
+    ],
+    'installable': True,
+    'auto_install': False,
+}
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
