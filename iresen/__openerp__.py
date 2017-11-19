@@ -26,7 +26,7 @@
     'version': '1.0',
     'category': 'Project',
     'description': """
-    Module prototype pour la plateforme de soumission aux Appels à Projets R&D et INNOVATION
+    Module prototype IRESEN
     """,
     'author': 'BADEP',
     'website': 'https://badep.ma',
@@ -38,7 +38,7 @@
     'data': [
            'views.xml',
     ],
-    'installable': True,
+    'installable': False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
