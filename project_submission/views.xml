@@ -2,5 +2,60 @@
 <openerp>
     <data>
 
+		<record id="action_project_offer" model="ir.actions.act_window">
+            <field name="name">Offres</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.offer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+		<record id="action_project_submission" model="ir.actions.act_window">
+            <field name="name">Soumissions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.submission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+
+		<record id="action_project_candidate" model="ir.actions.act_window">
+            <field name="name">Candidats</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.candidate</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+		<record id="action_submission_request" model="ir.actions.act_window">
+            <field name="name">Demandes de ressources</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+
+		<record id="action_project_request" model="ir.actions.act_window">
+            <field name="name">Types de demandes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.offer.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+        <menuitem id="menu_project_submission_root" name="Appels à projets" sequence="10"/>
+
+		<menuitem id="menu_project_submission_main" name="Appels à projets" parent="project_submission.menu_project_submission_root" sequence="0"/>
+		<menuitem id="menu_project_submission_config" name="Configuration" parent="project_submission.menu_project_submission_root" sequence="10"/>
+
+		<menuitem id="menu_project_offer" name="Offres" action="action_project_offer" parent="project_submission.menu_project_submission_main" sequence="0"/>
+		<menuitem id="menu_project_submission" name="Soumissions" action="action_project_submission" parent="project_submission.menu_project_submission_main" sequence="10"/>
+		<menuitem id="menu_project_candidate" name="Candidats" action="action_project_candidate" parent="project_submission.menu_project_submission_main" sequence="20"/>
+		<menuitem id="menu_project_submission_request" name="Demandes de ressources" action="action_submission_request" parent="project_submission.menu_project_submission_main" sequence="20"/>
+
+		<menuitem id="menu_project_offer_type" name="Types d'offres" parent="project_submission.menu_project_submission_config" sequence="0"/>
+		<menuitem id="menu_project_request_type" name="Types de demandes" action="action_project_request" parent="project_submission.menu_project_submission_config" sequence="10"/>
+
+
 	</data>
 </openerp>
