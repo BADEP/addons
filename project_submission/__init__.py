@@ -2,8 +2,7 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2010-2013 Elico Corp. All Rights Reserved.
-#    Author: Yannick Gouin <yannick.gouin@elico-corp.com>
+#    Copyright (c) 2010-2011 Elico Corp. All Rights Reserved.
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -20,8 +19,6 @@
 #
 ##############################################################################
 
-from openerp import tools
-from openerp import fields, models, api
 
-class ProjectSubmission(models.Model):
-    _name = 'project.submission'
+
+import models
