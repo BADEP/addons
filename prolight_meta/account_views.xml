@@ -10,12 +10,6 @@
                 <th t-if="o.display_photo">Photo</th>
                 <th t-if="o.display_ref">Ref.</th>
             </xpath>
-
-            <xpath expr="//t[@t-as='l']/tr/td[5]" position="replace">
-                <td class="text-right">
-                    <span t-field="l.amount_taxes" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
-                </td>
-            </xpath>
             <xpath expr="//t[@t-as='l']/tr/td[@groups='sale.group_discount_per_so_line']" position="attributes">
                 <attribute name="t-if">o.display_discount</attribute>
             </xpath>
@@ -53,37 +47,15 @@
 		    attachment_use="False"
 		    attachment="(object.name)+'.pdf'"
 		/>
-        
-        <!--<record id="prolight_meta.partner_legal_form_prolight" model="ir.ui.view">
-            <field name="model">res.partner</field>
-            <field name="name">prolight_meta.partner_legal_form</field>
-            <field name="inherit_id" ref="l10n_ma_legal.partner_legal_form" />
-            <field name="arch" type="xml">
-                <field name="idf" position="attributes">
-                    <attribute name="attrs">{'invisible': [('is_company','=', False)]}</attribute>
-                </field>
-                <field name="rc" position="attributes">
-                    <attribute name="attrs">{'invisible': [('is_company','=', False)]}</attribute>
-                </field>
-                <field name="pat" position="attributes">
-                    <attribute name="attrs">{'invisible': [('is_company','=', False)]}</attribute>
-                </field>
-                <field name="ice" position="attributes">
-                    <attribute name="attrs">{'invisible': [('is_company','=', False)]}</attribute>
-                </field>
-                <field name="phone" position="attributes">
-                    <attribute name="attrs">{'required': [('is_company','=', True)]}</attribute>
-                </field>
-            </field>
-        </record>-->
 
         <record id="prolight_meta.partner_base_form" model="ir.ui.view">
             <field name="model">res.partner</field>
             <field name="name">prolight_meta.partner_base_form</field>
             <field name="inherit_id" ref="base.view_partner_form" />
             <field name="arch" type="xml">
-                <field name="ref" position="after">
-					<field name="code_prolight"/>
+                <field name="supplier" position="after">
+					<field name="supplier_code" attrs="{'invisible': [('supplier','=', False)]}"/>
+					<field name="supplier_delay" attrs="{'invisible': [('supplier','=', False)]}"/>
 				</field>
             </field>
         </record>

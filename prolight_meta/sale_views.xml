@@ -14,11 +14,6 @@
                 <th t-if="o.display_photo">Photo</th>
                 <th t-if="o.display_ref">Ref.</th>
             </xpath>
-            <xpath expr="//t[@t-as='l']//tr/td[2]" position="replace">
-                <td class="text-right">
-                    <span t-field="l.amount_taxes" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
-                </td>
-            </xpath>
             <xpath expr="//t[@t-as='l']//tr/td[@groups='sale.group_discount_per_so_line']" position="attributes">
                 <attribute name="t-if">o.display_discount</attribute>
             </xpath>
@@ -55,11 +50,9 @@
                     <field name="quantity_in_stock"/>
                     <field name="quantity_unreserved"/>
                 </xpath>
-                <!--<xpath expr="//field[@name='order_line']/form//field[@name='name']" position="attributes">
-                    <attribute name="readonly">1</attribute>
-                </xpath>-->
                 <xpath expr="//field[@name='order_line']/form//field[@name='name']" position="after">
-                    <field name="exception_ids" readonly="1">
+                    <field name="has_exception" invisible="1"/>
+					<field name="exception_ids" attrs="{'invisible': [('has_exception','=',False)], 'readonly': True}">
 						<tree>
 							<field name="name"/>
 							<field name="description"/>
@@ -69,19 +62,17 @@
                 <xpath expr="//field[@name='order_line']/tree//field[@name='price_subtotal']" position="before">
                     <field name="margin" groups="base.group_sale_manager"/>
                     <field name="margin_percentage" groups="base.group_sale_manager"/>
+                    <field name="has_exception" invisible="1"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='name']" position="attributes">
                     <attribute name="invisible">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/form//label[@for='name']" position="replace" />
-                <!--<xpath expr="//field[@name='order_line']/form//field[@name='name']" position="attributes">
-                    <attribute name="invisible">1</attribute>
-                </xpath>-->
-                <xpath expr="//field[@name='order_line']/tree" position="after">
-                    <field name="exception_ids" invisible="1"></field>
+                <xpath expr="//field[@name='order_line']/form//field[@name='name']" position="attributes">
+                    <attribute name="attrs">{'invisible': [('product_id','!=',False)]}</attribute>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree" position="attributes">
-                    <attribute name="colors">red:has_exception = True</attribute>
+                    <attribute name="colors">red:has_exception==True</attribute>
                 </xpath>
                 <field name="address_allotment_id" position="attributes">
                     <attribute name="invisible">1</attribute>

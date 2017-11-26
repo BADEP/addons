@@ -57,6 +57,8 @@ class SaleOrder(models.Model):
         if self.amount_untaxed != 0:
             self.margin_percentage = round((self.margin / self.amount_untaxed) * 100, 2)
 
+
+    """Get partner configuration: Note, workflow"""
     @api.multi
     def onchange_partner_id(self, part):
         if not part:
@@ -74,20 +76,24 @@ class SaleOrder(models.Model):
         val.get('value', {}).update({'workflow_process_id': workflow_process_id})
         return val
     
+    
+    """Propagate layout to procurement (and therefore to pickings)"""
     @api.model
     def _prepare_order_line_procurement(self, order, line, group_id=False):
         res = super(SaleOrder, self)._prepare_order_line_procurement(order, line, group_id)
         res['sale_layout_cat_id'] = line.sale_layout_cat_id.id
         res['categ_sequence'] = line.categ_sequence
         return res
-    
+
     @api.multi
     def action_ship_create(self):
+        """Propagate note to shipping and assign available stock"""
         res = super(SaleOrder, self).action_ship_create()
         for order in self:
             order.picking_ids.write({'note': order.note})
+            order.picking_ids.action_assign()
         return res
-    
+
     @api.multi
     def _detect_exceptions(self, order_exceptions,
                            line_exceptions):
@@ -110,34 +116,20 @@ class SaleOrderLine(models.Model):
         'sale_order_line_exception_rel', 'sale_order_line_id', 'exception_id',
         string='Exceptions')
     
-    has_exception = fields.Boolean(compute='has_exception', default=True)
+    has_exception = fields.Boolean(compute='get_has_exception', default=True)
     quantity_in_stock = fields.Float(string='Quantité en Stock', digits_compute=dp.get_precision('Product UoS'), related='product_id.qty_available', store=True)
     quantity_forecast = fields.Float(string='Quantité prévue', digits_compute=dp.get_precision('Product UoS'), compute='get_forecast_data',store=True)
     quantity_unreserved = fields.Float(string='Quantité non réservée', digits_compute=dp.get_precision('Product UoS'), related='product_id.qty_available_not_res',store=True)
     date_expected = fields.Date(string="Date prévue", compute='get_forecast_data')
-    margin_percentage = fields.Char(string="Marge (%)", compute='get_margin_percentage', digits_compute=dp.get_precision('Account'))
-    amount_taxes = fields.Float(string='Taxes', digits_compute=dp.get_precision('Product UoS'), compute='get_amount_taxes')
-    
+    margin_percentage = fields.Char(string="Marge (%)", compute='get_margin_percentage', digits_compute=dp.get_precision('Account')) 
     
     @api.one
     @api.depends('exception_ids')
-    def has_exception(self):
+    def get_has_exception(self):
         if self.exception_ids:
             self.has_exception = True
         else:
             self.has_exception = False
-
-    @api.one
-    @api.depends('discount', 'price_unit', 'tax_id', 'product_id', 'product_uom_qty')
-    def get_amount_taxes(self):
-        self.amount_taxes = self.tax_id.compute_all(self.price_unit * (1 - (self.discount or 0.0) / 100.0),
-                                                    self.product_uom_qty,
-                                                    product=self.product_id,
-                                                    partner=self.order_id.partner_id)['total_included'] - \
-                            self.tax_id.compute_all(self.price_unit * (1 - (self.discount or 0.0) / 100.0),
-                                                    self.product_uom_qty,
-                                                    product=self.product_id,
-                                                    partner=self.order_id.partner_id)['total']
 
     @api.one
     @api.depends('margin', 'price_subtotal')
@@ -145,12 +137,15 @@ class SaleOrderLine(models.Model):
         if self.price_subtotal != 0:
             self.margin_percentage = round((self.margin / self.price_subtotal) * 100, 2)
     
+    """Get forecast qty"""
     @api.one
     @api.depends('delay','product_id','order_id.date_order')
     def get_forecast_data(self):
         self.date_expected = fields.Datetime.to_string(fields.Datetime.from_string(self.order_id.date_order) + relativedelta(days=self.delay))
         self.quantity_forecast = self.product_id and self.product_id.with_context({'date_expected': self.date_expected}).virtual_available or 0
 
+    """1)Display only product name without ref
+    2)Calculate available qty and forecast qty for the prodct"""    
     @api.multi
     def product_id_change(self, pricelist, product, qty=0,
             uom=False, qty_uos=0, uos=False, name='', partner_id=False,
@@ -164,6 +159,9 @@ class SaleOrderLine(models.Model):
         result['value'].update({'quantity_in_stock': product_obj.qty_available, 'quantity_forecast': self.quantity_forecast})
         return result
     
+    
+    """"Disable out of stock warning
+    TODO: Only disable if the product is mto or mts+mto"""
     @api.multi
     def _check_routing(self, product, warehouse_id):
         return True
@@ -171,6 +169,7 @@ class SaleOrderLine(models.Model):
 class SaleException(models.Model):
     _inherit = 'sale.exception'
 
+    """Link Exceptions to order lines"""
     sale_order_line_ids = fields.Many2many(
         'sale.order.line',
         'sale_order_line_exception_rel', 'exception_id', 'sale_order_line_id',

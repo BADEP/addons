@@ -97,4 +97,5 @@ class ResPartner(models.Model):
     credit_limit_block_delivery = fields.Boolean(string='Bloquer les livraisons au delà du plafond')
     grace_delay = fields.Integer(string="Délai de grâce")
     grace_delay_block_delivery = fields.Boolean(string='Bloquer les livraisons au delà du délai de grâce')
-    code_prolight = fields.Char(string='Code Prolight')
+    supplier_code = fields.Char(string='Référence fournisseur')
+    supplier_delay = fields.Integer(string='Délai fournisseur')

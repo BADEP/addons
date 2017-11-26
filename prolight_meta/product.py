@@ -57,6 +57,10 @@ class ProductTemplate(models.Model):
         if vals.get('name'):
             quotes = self.env['sale.order.line'].search([('product_id', 'in', self.product_variant_ids.ids),('state', '=', 'draft')])
             quotes.write({'name': self.name})
+        if vals.get('default_code'):
+            supplier = self.env['res.partner'].search([('supplier_code','=',vals.get('default_code')[:3])])
+            if supplier and not self.seller_ids and not vals.get('seller_ids'):
+                vals.update({'seller_ids': [(0,0,{'name': supplier.id, 'delay': supplier.delay})]})
         return super(ProductTemplate, self).write(vals)
 
     @api.model
