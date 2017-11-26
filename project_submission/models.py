@@ -49,8 +49,8 @@ REQSOUMISS_ETAT =[
 ]
 
 class ProjectField(models.Model):
-    _name = 'project.field'
-    _description = 'Thématique'
+    _name = 'project.offer.field'
+    _description = u'Thématique'
     
     name = fields.Char('Nom')
 
@@ -58,7 +58,7 @@ class ProjectSubmission(models.Model):
     """hr.applicant"""
     _name = 'project.submission'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
-    _description = 'Soumission'
+    _description = u'Soumission'
     
     name = fields.Char('Intitulé du projet', required=True)
     field = fields.Many2one('project.field', 'Domaine d\'activité')
@@ -87,7 +87,7 @@ class ProjectSubmission(models.Model):
     
 class ProjectOffer(models.Model):
     """hr.job"""
-    _description = 'Appel à projets'
+    _description = u'Offre'
     _name = 'project.offer'
 
     def _get_partner_id(self):
@@ -129,7 +129,7 @@ class ProjectOffer(models.Model):
 class ProjectOfferType(models.Model):
     """hr.department"""
     _name = 'project.offer.type'
-    _description = 'Type d\'appel à projets'
+    _description = u'Type d\'appel à projets'
     
     name = fields.Char('Libellé', required=True)
     offers = fields.One2many('project.offer', 'type')
@@ -143,17 +143,15 @@ class ProjectCandidate(models.Model):
     _inherit = ['mail.thread']
     _inherits = {"res.users": 'user_id'}
     _name = 'project.candidate'
-    _description = 'Soumissionaire'
+    _description = u'Soumissionaire'
 
-    active = fields.Boolean(default=True)
     submission_ids = fields.One2many('project.submission', 'candidate', 'Soumissions')
     user_id = fields.Many2one('res.users', 'Utilisateur lié', required=True, ondelete='restrict')
-    parent_id = fields.Many2one('project.candidate', 'Candidat')
     offer_ids = fields.One2many('project.offer', string='Offres', compute='get_offer_ids')
     color = fields.Integer('Color Index', default=0)
     city = fields.Char(related='partner_id.city', string='Ville')
     login = fields.Char(related='user_id.login', string='Login', readonly=True)
-    login_date = fields.Date(related='user_id.login_date', string='Dernière Connection', readonly=1)
+    login_date = fields.Date(related='user_id.login_date', string='Dernière Connection', readonly=True)
     
     @api.one
     @api.depends('submission_ids')
@@ -162,7 +160,7 @@ class ProjectCandidate(models.Model):
     
 class ProjectRequest(models.Model):  
     _name = 'project.request'
-    _description = 'Demande de ressources'
+    _description = u'Demande de ressources'
     
     name = fields.Char(string='Objet', size=200)
     type_id = fields.Many2one('project.request.type', 'Type de demande')
@@ -173,5 +171,6 @@ class ProjectRequest(models.Model):
 
 class ProjectSubmissionRequestType(models.Model):
     _name = 'project.request.type'
+    _description = 'Type de demande'
     
     name = fields.Char()
