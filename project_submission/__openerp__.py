@@ -26,7 +26,7 @@
     'version': '1.0',
     'category': 'Project',
     'description': """
-    Module prototype pour la plateforme de soumission aux Appels à Projets R&D et INNOVATION
+    Module prototype pour la plateforme de soumission aux Appels à Projets
     """,
     'author': 'BADEP',
     'website': 'https://badep.ma',
