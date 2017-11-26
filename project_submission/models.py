@@ -50,6 +50,7 @@ REQSOUMISS_ETAT =[
 
 class ProjectField(models.Model):
     _name = 'project.field'
+    _description = 'Thématique'
     
     name = fields.Char('Nom')
 
@@ -57,6 +58,7 @@ class ProjectSubmission(models.Model):
     """hr.applicant"""
     _name = 'project.submission'
     _inherit = ['mail.thread', 'ir.needaction_mixin']
+    _description = 'Soumission'
     
     name = fields.Char('Intitulé du projet', required=True)
     field = fields.Many2one('project.field', 'Domaine d\'activité')
@@ -85,6 +87,7 @@ class ProjectSubmission(models.Model):
     
 class ProjectOffer(models.Model):
     """hr.job"""
+    _description = 'Appel à projets'
     _name = 'project.offer'
 
     def _get_partner_id(self):
@@ -122,11 +125,11 @@ class ProjectOffer(models.Model):
             'no_of_total_submissions': 0
         })
         return True
-      
     
-class ProjectType(models.Model):
+class ProjectOfferType(models.Model):
     """hr.department"""
-    _name = 'project.type'
+    _name = 'project.offer.type'
+    _description = 'Type d\'appel à projets'
     
     name = fields.Char('Libellé', required=True)
     offers = fields.One2many('project.offer', 'type')
@@ -140,10 +143,11 @@ class ProjectCandidate(models.Model):
     _inherit = ['mail.thread']
     _inherits = {"res.users": 'user_id'}
     _name = 'project.candidate'
+    _description = 'Soumissionaire'
 
     active = fields.Boolean(default=True)
     submission_ids = fields.One2many('project.submission', 'candidate', 'Soumissions')
-    user_id = fields.Many2one('res.users', 'Utilisateur lié')
+    user_id = fields.Many2one('res.users', 'Utilisateur lié', required=True, ondelete='restrict')
     parent_id = fields.Many2one('project.candidate', 'Candidat')
     offer_ids = fields.One2many('project.offer', string='Offres', compute='get_offer_ids')
     color = fields.Integer('Color Index', default=0)
@@ -157,12 +161,17 @@ class ProjectCandidate(models.Model):
         self.offer_ids = self.submission_ids.mapped('offer')
     
 class ProjectRequest(models.Model):  
-    _name = 'project.submission.request'
+    _name = 'project.request'
+    _description = 'Demande de ressources'
     
     name = fields.Char(string='Objet', size=200)
-    type_id = fields.Many2one('project.submission.request.type', 'Type de demande')
+    type_id = fields.Many2one('project.request.type', 'Type de demande')
     submission_id = fields.Many2one('project.submission', 'Projet')
     request_date = fields.Datetime('Date de demande', readonly=True)
     processing_date = fields.Datetime('Date de traitement', readonly=True)
     state = fields.Selection(REQSOUMISS_ETAT, 'Submission')
+
+class ProjectSubmissionRequestType(models.Model):
+    _name = 'project.request.type'
     
+    name = fields.Char()
