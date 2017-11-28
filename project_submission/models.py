@@ -87,7 +87,7 @@ class ProjectSubmission(models.Model):
     
 class ProjectOffer(models.Model):
     """hr.job"""
-    _description = 'Appel à projets'
+    
     _name = 'project.offer'
 
     def _get_partner_id(self):
@@ -129,7 +129,7 @@ class ProjectOffer(models.Model):
 class ProjectOfferType(models.Model):
     """hr.department"""
     _name = 'project.offer.type'
-    _description = 'Type d\'appel à projets'
+    
     
     name = fields.Char('Libellé', required=True)
     offers = fields.One2many('project.offer', 'type')
@@ -175,3 +175,5 @@ class ProjectSubmissionRequestType(models.Model):
     _name = 'project.request.type'
     
     name = fields.Char()
+    
+    
