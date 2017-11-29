@@ -16,32 +16,31 @@
 			    <field name="arch" type="xml">
 			        <form string="project offer">
 						<sheet>
-							   <xpath expr="//thead/tr/th[1]" position="before">
-					                <th>
-									</th>
-					            </xpath>
-					            <div class="oe_right" name="buttons"/>
-                        		 
-		                            <label for="user_id" class="oe_edit_only"/>
+							   <!-- <xpath expr="//thead/tr/th[1]" position="before">-->
+					      	<group col="1">
 		                            <field name="user_id" widget="Many2one_tags"/>
 		                            
-		                            <label for="documents_count" class="oe_edit_only"/>
+		                            <field name="type" widget="Many2one_tags"/>
+
+		                            <field name="submissions" widget="One2many_tags"/>
+                        	</group>
+                        	
+                        	<group col="2">
+	                            
 		                            <field name="documents_count" widget="Many2one_tags"/>
 		                            
-		                            <label for="partner_id" class="oe_edit_only"/>
-		                            <field name="partner_id" widget="Many2one_tags"/>
-		                            
-		                            <label for="submissions" class="oe_edit_only"/>
-		                            <field name="submissions" widget="One2many_tags"/>
-		                            
-		                            <label for="type" class="oe_edit_only"/>
-		                            <field name="type" widget="Many2one_tags"/>
-		                            		                            
-		                            <label for="total_time" class="oe_edit_only"/>
+	                            	<field name="partner_id"/>
+	                            	
+		                            <field name="state"/>
+	                            	
 		                            <field name="total_time"/>
 		                            
-		                            <label for="state" class="oe_edit_only"/>
-		                            <field name="state"/>
+                        	</group>
+					           <!-- </xpath>-->
+					            <div class="oe_right" name="buttons"/>
+                        		 
+		                            
+		                            
 		                            
 			                    <div class="oe_right oe_button_box" name="button_box">
 			                            <!-- Put here related buttons -->
@@ -116,26 +115,26 @@
 			        <form string="Candidates">
 						<sheet>
 							   <xpath expr="//thead/tr/th[1]" position="before">
-					                <th>
-									<field name="image_medium" widget='image' class="oe_left oe_avatar"/>
-									</th>
-					            </xpath>
-					            <xpath expr="//t[@t-as='l']/tr/td[1]" position="before">
-					            	<td>
-					                </td>
-					                <td>
-										<label for="name" class="oe_edit_only"/>
-					                </td>
+									<th>
+					            <field name="image_medium" widget='image' class="oe_left oe_avatar"/><br/><br/><br/>
+					            </th>
+					            <tr>
+										 <h1><field name="name" placeholder="Name"/></h1>
+										 </tr>
 					                <td t-if="o.display_ref">
-					                     <field name="name"/>
-					                </td>
-					            </xpath>
+					               
+					                
+					            
 		                            <label for="user_id" class="oe_edit_only"/>
 		                            <field name="user_id" widget="Many2one_tags"/>
 		                            <label for="city" class="oe_edit_only"/>
 		                            <field name="city"/>
 		                            <label for="login_date" class="oe_edit_only"/>
 		                            <field name="login_date"/>
+		                            <label for="offer_ids" class="oe_edit_only"/>
+		                            <field name="offer_ids"/>
+		                            </td>
+		                            </xpath>
 			                    <div class="oe_right oe_button_box" name="button_box">
 			                            <!-- Put here related buttons -->
 								</div>
