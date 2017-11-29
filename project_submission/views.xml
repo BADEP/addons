@@ -7,14 +7,14 @@
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project.offer</field>
             <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
+            <field name="view_mode">kanban,tree,form</field>
         </record>
         
         <record id="view_project_offer_kanban" model="ir.ui.view">
             <field name="name">project.offer.kanban</field>
             <field name="model">project.offer</field>
             <field name="arch" type="xml">
-                <kanban class="oe_background_grey">
+                <kanban class="oe_background_grey" default_group_by="state">
                     <field name="name"/>
                     <field name="type"/>
                     <field name="submission_count"/>
@@ -22,8 +22,10 @@
                     <field name="submissions"/>
                     <field name="document_ids"/>
                     <field name="accepted_count"/>
-                    <field name="manager_id"/>
+                    <field name="user_id"/>
                     <field name="state"/>
+                    <field name="total_count"/>
+                    <field name="accepted_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_kanban_global_click">
@@ -41,7 +43,7 @@
                                 </div>
                                 <div class="oe_kanban_content">
                                     <t t-if="record.user_id.raw_value">
-                                        <img t-att-src="kanban_image('res.users', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar"/>
+                                        <img t-att-src="kanban_image('res.partner', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar"/>
                                     </t>
                                     <t t-if="record.user_id.raw_value === false">
                                         <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
@@ -51,20 +53,15 @@
                                             <field name="name"/>
                                         </div>
                                         <div class="text-center oe_job oe_department oe_kanban_ellipsis">
-                                            <strong><field name="department_id"/>
-                                            <span t-if="record.manager_id.value" class="oe_manager_name">
-                                                (<t t-esc="record.manager_id.value"/>)
+                                            <strong><field name="type"/>
+                                            <span t-if="record.user_id.value" class="oe_manager_name">
                                             </span></strong>
                                         </div>
-                                        <div class="text-center oe_job_alias oe_kanban_ellipsis" t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'">
-                                            <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
-                                        </div>
-
                                     </div>
-                                    <t t-if="record.state.raw_value == 'recruit'">
+                                    <t t-if="record.state.raw_value == 'open'">
                                         <div class="oe_applications">
-                                            <a name="%(action_hr_job_applications)d" type="action">
-                                                <span><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
+                                            <a name="%(action_project_submission)d" type="action">
+												<span><t t-esc="record.submissions.raw_value.length"/> Soumissions</span>
                                             </a>
                                             <br/>
                                             <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
@@ -73,31 +70,29 @@
                                             </a>
                                         </div>
                                         <div class="oe_job_justgage">
-                                            <field state="recruit" name="no_of_hired_employee" widget="gauge"
+                                            <field state="open" name="accepted_count" widget="gauge"
                                                 style="margin-top:7px; width:160px; height: 120px;"
                                                 options="{
-                                                    'max_field': 'no_of_recruitment',
-                                                    'label': 'Hired Employees',
-                                                    'on_change': 'action_set_no_of_recruitment',
-                                                    'on_click_label': 'employee(s) to recruit',
+                                                    'max_field': 'total_count',
+                                                    'label': 'Soumissions acceptées',
+                                                    'on_change': 'action_set_total_count',
+                                                    'on_click_label': 'Nombre de soumissions à accepter',
                                                     'force_set': False,
-                                                    'gauge_value_field': 'no_of_recruitment',
+                                                    'gauge_value_field': 'total_count',
                                                 }">
-                                                Hired Employees
+                                                Soumissions acceptées
                                             </field>
                                         </div>
                                     </t>
-                                    <t t-if="record.state.raw_value == 'open'">
+                                    <t t-if="record.state.raw_value == 'draft'">
                                         <div class="oe_start_recruitment">
-                                            <p><b>click here</b>, To start the recruitment</p>
+                                            <p><b>Cliquez ici</b> pour lancer l'offre</p>
                                             <img src="/hr_recruitment/static/src/img/down1.png"/>
                                         </div>
                                     </t>
                                     <div class="oe_launch_recruitment">
-                                        <a t-if="record.state.raw_value == 'open'" data-name="job_recruitment" data-type="object" class="oe_kanban_action">Launch Recruitment</a>
-                                        <a t-if="record.state.raw_value == 'recruit'" data-name="job_open" data-type="object" class="oe_kanban_action">Recruitment Done</a>
-                                        <a t-if="record.survey_id.raw_value"> | </a>
-                                        <a t-if="record.survey_id.raw_value" data-name="action_print_survey" data-type="object" class="oe_kanban_action">Print Interview</a>
+                                        <a t-if="record.state.raw_value == 'draft'" data-name="action_open" data-type="object" class="oe_kanban_action">Lancer l'offre</a>
+                                        <a t-if="record.state.raw_value == 'open'" data-name="action_close" data-type="object" class="oe_kanban_action">Clôturer l'offre</a>
                                     </div>
                                 </div>
                             </div>
@@ -112,34 +107,33 @@
 			    <field name="model">project.offer</field>
 			    <field name="arch" type="xml">
 			        <form string="project offer">
+                    <header>
+                        <button name="action_open" string="Lancer l'offre" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="action_close" string="Clôturer l'offre" states="open,done" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,done,closed"/>
+                    </header>
 						<sheet>
-							   <!-- <xpath expr="//thead/tr/th[1]" position="before">-->
+            <div class="oe_right" name="buttons">
+                <div class="oe_button_box">
+                    <button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" type="action">
+                        <field name="submission_count" widget="statinfo" string="Soumissions"/>
+                    </button>
+                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
+                        <field name="documents_count" widget="statinfo" string="Documents"/>
+                    </button>
+                </div>
+            </div>
 					      	<group col="1">
-		                            <field name="user_id" widget="Many2one_tags"/>
-		                            
-		                            <field name="type" widget="Many2one_tags"/>
-
-		                            <field name="submissions" widget="One2many_tags"/>
-                        	</group>
-                        	
-                        	<group col="2">
-	                            
-		                            <field name="documents_count" widget="Many2one_tags"/>
-		                            
+		                            <field name="name"/>
 	                            	<field name="partner_id"/>
-	                            	
-		                            <field name="state"/>
-	                            	
-		                            <field name="total_time"/>
-		                            
+		                            <field name="user_id"/>
                         	</group>
-					           <!-- </xpath>-->
-					            <div class="oe_right" name="buttons"/>
-                        		  
-			                    <div class="oe_right oe_button_box" name="button_box">
-			                            <!-- Put here related buttons -->
-								</div>
-		                            
+                        	<group col="2">
+		                            <field name="type"/>
+		                            <field name="submissions"/>
+		                            <field name="total_time"/>   
+		                            <field name="total_count"/>         
+                        	</group>
 						</sheet>
 					</form>
 				</field>
@@ -247,8 +241,7 @@
 			    <field name="arch" type="xml">
 			        <form string="Types Offre">
 						<sheet>
-                            <label for="name" class="oe_edit_only"/>
-                            <field name="offers" widget="One2many_tags"/>
+                            <field name="name"/>
                             <field name="note"/>
 						</sheet>
 					</form>

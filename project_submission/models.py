@@ -48,7 +48,7 @@ REQSOUMISS_ETAT =[
     ('cancel', 'Annulé')
 ]
 
-class ProjectField(models.Model):
+class ProjectOfferField(models.Model):
     _name = 'project.offer.field'
     _description = u'Thématique'
     
@@ -61,7 +61,7 @@ class ProjectSubmission(models.Model):
     _description = u'Soumission'
     
     name = fields.Char('Intitulé du projet', required=True)
-    field = fields.Many2one('project.field', 'Domaine d\'activité')
+    field = fields.Many2one('project.offer.field', 'Domaine d\'activité')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     project = fields.Many2one('project.project', string='Projet')
     state = fields.Selection(SUBMISS_ETAT, 'Etat', track_visibility='always')
@@ -93,13 +93,15 @@ class ProjectOffer(models.Model):
     def _get_partner_id(self):
         return self.env.user.company_id.partner_id.id
 
+    name = fields.Char(string='Nom', required=True)
+    document_ids = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     partner_id =  fields.Many2one('res.partner', 'Institut hôte',default=_get_partner_id)
     submissions = fields.One2many('project.submission', 'offer', string='Soumissions')
-    type = fields.Many2one('project.type')
+    type = fields.Many2one('project.offer.type')
     total_time = fields.Integer('Durée de Réalisation en mois')
     survey_id =  fields.Many2one('survey.survey', 'Formulaire d\'inscription')
-    color = fields.Integer('Couleur')
+    color = fields.Integer('Couleur', default=0)
     state =  fields.Selection([('draft', 'Brouillon'), ('open', 'En cours'),
                               ('done', 'Terminé'), ('closed', 'Fermé')],
                               string='Status', readonly=True, required=True,
@@ -107,14 +109,41 @@ class ProjectOffer(models.Model):
     submission_count =  fields.Integer(compute='_count_all', string='Soumissions')
     accepted_count =  fields.Integer(compute='_count_all', string='Soumissions acceptées')
     user_id =  fields.Many2one('res.users', 'Responsable', track_visibility='always')
-    no_of_accepted_submissions = fields.Integer(compute='_count_all')
-    no_of_total_submissions = fields.Integer(string='Limite de soumissions')
+    vacant_count = fields.Integer(compute='_count_all')
+    total_count = fields.Integer(string='Limite de soumissions')
     
-    @api.depends('submissions', 'no_of_total_submissions')
+    @api.multi
+    def _get_attached_docs(self):
+        res = {}
+        for rec in self:
+            res[rec.id] = self.env['ir.attachment'].search([('res_model', '=', 'project.offer'), ('res_id', '=', rec.id)])
+        return res
+    
+    @api.one
+    def action_get_attachment_tree_view(self):
+        model, action_id = self.env['ir.model.data'].get_object_reference('base', 'action_attachment')
+        action = self.env[model].read(action_id)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': self.id}
+        action['domain'] = str([('res_model', '=', 'project.offer'), ('res_id', '=', self.id)])
+        return action
+
+    @api.depends('submissions', 'total_count')
     def _count_all(self):
         self.accepted_count = len(self.submissions.filtered(lambda s: s.state == 'accepted'))
-        self.no_of_accepted_submissions = self.no_of_total_submissions - self.accepted_count
+        self.vacant_count = self.total_count - self.accepted_count
         return 0
+    
+    @api.one
+    def action_set_total_count(self, value):
+        self.total_count= value
+        
+    @api.one
+    def action_open(self):
+        self.state = 'open'
+        
+    @api.one
+    def action_close(self):
+        self.state = 'closed'
 
     def action_print_survey(self):
         return self.survey_id.action_print_survey()
@@ -131,7 +160,7 @@ class ProjectOfferType(models.Model):
     _name = 'project.offer.type'
     _description = u'Type d\'appel à projets'
     
-    name = fields.Char('Libellé', required=True)
+    name = fields.Char('Nom', required=True)
     offers = fields.One2many('project.offer', 'type')
     note = fields.Text('Note')
     
