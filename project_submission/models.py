@@ -174,3 +174,5 @@ class ProjectSubmissionRequestType(models.Model):
     _description = 'Type de demande'
     
     name = fields.Char()
+    
+    

@@ -9,6 +9,61 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
         </record>
+        
+        <record id="view_project_offer_form" model="ir.ui.view">
+			    <field name="name">project.offer.form</field>
+			    <field name="model">project.offer</field>
+			    <field name="arch" type="xml">
+			        <form string="project offer">
+						<sheet>
+							   <!-- <xpath expr="//thead/tr/th[1]" position="before">-->
+					      	<group col="1">
+		                            <field name="user_id" widget="Many2one_tags"/>
+		                            
+		                            <field name="type" widget="Many2one_tags"/>
+
+		                            <field name="submissions" widget="One2many_tags"/>
+                        	</group>
+                        	
+                        	<group col="2">
+	                            
+		                            <field name="documents_count" widget="Many2one_tags"/>
+		                            
+	                            	<field name="partner_id"/>
+	                            	
+		                            <field name="state"/>
+	                            	
+		                            <field name="total_time"/>
+		                            
+                        	</group>
+					           <!-- </xpath>-->
+					            <div class="oe_right" name="buttons"/>
+                        		 
+		                            
+		                            
+		                            
+			                    <div class="oe_right oe_button_box" name="button_box">
+			                            <!-- Put here related buttons -->
+								</div>
+		                            
+						</sheet>
+					</form>
+				</field>
+		</record>
+		
+		<record id="view_offer_filter" model="ir.ui.view">
+            <field name="name">offer</field>
+            <field name="model">project.offer</field>
+            <field name="arch" type="xml">
+                <search string="offers">
+                    <filter domain="[('state','=','open')]" string="In Position"/>
+                    <field name="partner_id"/>
+                    <group expand="0" string="Group By">
+                        
+                    </group>
+                </search>
+            </field>
+        </record>
 
 		<record id="action_project_submission" model="ir.actions.act_window">
             <field name="name">Soumissions</field>
@@ -17,14 +72,24 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
         </record>
+        
+        <record id="view_project_kanban" model="ir.ui.view">
+		    <field name="name">project.submission.kanban</field>
+		    <field name="model">project.submission</field>
+		    <field name="arch" type="xml">
+		        <!-- FIRST PART, we declare the fields we use -->
+		        <kanban class="oe_background_grey"> 
+		        <!-- Second part, we have the Qweb code -->
+		        <templates>
+		            <!-- You can put t-if="" on fields to have a conditional display
+		            REMEMBER : t-if have JAVASCRIPT syntax, not python syntax
+		            and, to access a value, you must use record.field_name.raw_value
+		            -->
+		        </templates>
+		        </kanban>
+		    </field>
+		</record>
 
-		<record id="action_project_candidate" model="ir.actions.act_window">
-            <field name="name">Candidats</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">project.candidate</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">tree,form,kanban</field>
-        </record>
 
 		<record id="action_submission_request" model="ir.actions.act_window">
             <field name="name">Demandes de ressources</field>
@@ -35,6 +100,49 @@
         </record>
 
 
+		<record id="action_project_candidate" model="ir.actions.act_window">
+            <field name="name">Candidats</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.candidate</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+        
+		<record id="view_project_candidate_form" model="ir.ui.view">
+			    <field name="name">project.candidate.form</field>
+			    <field name="model">project.candidate</field>
+			    <field name="arch" type="xml">
+			        <form string="Candidates">
+						<sheet>
+							   <xpath expr="//thead/tr/th[1]" position="before">
+									<th>
+					            <field name="image_medium" widget='image' class="oe_left oe_avatar"/><br/><br/><br/>
+					            </th>
+					            <tr>
+										 <h1><field name="name" placeholder="Name"/></h1>
+										 </tr>
+					                <td t-if="o.display_ref">
+					               
+					                
+					            
+		                            <label for="user_id" class="oe_edit_only"/>
+		                            <field name="user_id" widget="Many2one_tags"/>
+		                            <label for="city" class="oe_edit_only"/>
+		                            <field name="city"/>
+		                            <label for="login_date" class="oe_edit_only"/>
+		                            <field name="login_date"/>
+		                            <label for="offer_ids" class="oe_edit_only"/>
+		                            <field name="offer_ids"/>
+		                            </td>
+		                            </xpath>
+			                    <div class="oe_right oe_button_box" name="button_box">
+			                            <!-- Put here related buttons -->
+								</div>
+						</sheet>
+					</form>
+				</field>
+		</record>
+			
 		<record id="action_project_request" model="ir.actions.act_window">
             <field name="name">Types de demandes</field>
             <field name="type">ir.actions.act_window</field>
@@ -42,6 +150,20 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
         </record>
+        
+        <record id="view_project_request_form" model="ir.ui.view">
+			    <field name="name">project.offer.type.form</field>
+			    <field name="model">project.offer.type</field>
+			    <field name="arch" type="xml">
+			        <form string="Types Offre">
+						<sheet>
+		                            <label for="name" class="oe_edit_only"/>
+		                            <field name="offers" widget="One2many_tags"/>
+		                            <field name="note"/>
+						</sheet>
+					</form>
+				</field>
+		</record>
 
         <menuitem id="menu_project_submission_root" name="Appels à projets" sequence="10"/>
 
