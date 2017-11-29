@@ -10,6 +10,103 @@
             <field name="view_mode">tree,form,kanban</field>
         </record>
         
+        <record id="view_project_offer_kanban" model="ir.ui.view">
+            <field name="name">project.offer.kanban</field>
+            <field name="model">project.offer</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="submission_count"/>
+                    <field name="color"/>
+                    <field name="submissions"/>
+                    <field name="document_ids"/>
+                    <field name="accepted_count"/>
+                    <field name="manager_id"/>
+                    <field name="state"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban oe_custom">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                            <li><a type="edit">Edit...</a></li>
+                                        </t>
+                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                            <li><a type="delete">Delete</a></li>
+                                        </t>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <t t-if="record.user_id.raw_value">
+                                        <img t-att-src="kanban_image('res.users', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar"/>
+                                    </t>
+                                    <t t-if="record.user_id.raw_value === false">
+                                        <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
+                                    </t>
+                                    <div class="oe_job_detail">
+                                        <div class="text-center oe_job oe_name oe_kanban_ellipsis">
+                                            <field name="name"/>
+                                        </div>
+                                        <div class="text-center oe_job oe_department oe_kanban_ellipsis">
+                                            <strong><field name="department_id"/>
+                                            <span t-if="record.manager_id.value" class="oe_manager_name">
+                                                (<t t-esc="record.manager_id.value"/>)
+                                            </span></strong>
+                                        </div>
+                                        <div class="text-center oe_job_alias oe_kanban_ellipsis" t-if="record.alias_name.value and record.alias_domain.value and record.state.raw_value == 'recruit'">
+                                            <small><i class="fa fa-envelope-o"></i> <field name="alias_id"/></small>
+                                        </div>
+
+                                    </div>
+                                    <t t-if="record.state.raw_value == 'recruit'">
+                                        <div class="oe_applications">
+                                            <a name="%(action_hr_job_applications)d" type="action">
+                                                <span><t t-esc="record.application_ids.raw_value.length"/> Applications</span>
+                                            </a>
+                                            <br/>
+                                            <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
+                                                <span t-if="record.document_ids.raw_value.length gt 1"><t t-esc="record.document_ids.raw_value.length"/> Documents</span>
+                                                <span t-if="record.document_ids.raw_value.length lt 2"><t t-esc="record.document_ids.raw_value.length"/> Document</span>
+                                            </a>
+                                        </div>
+                                        <div class="oe_job_justgage">
+                                            <field state="recruit" name="no_of_hired_employee" widget="gauge"
+                                                style="margin-top:7px; width:160px; height: 120px;"
+                                                options="{
+                                                    'max_field': 'no_of_recruitment',
+                                                    'label': 'Hired Employees',
+                                                    'on_change': 'action_set_no_of_recruitment',
+                                                    'on_click_label': 'employee(s) to recruit',
+                                                    'force_set': False,
+                                                    'gauge_value_field': 'no_of_recruitment',
+                                                }">
+                                                Hired Employees
+                                            </field>
+                                        </div>
+                                    </t>
+                                    <t t-if="record.state.raw_value == 'open'">
+                                        <div class="oe_start_recruitment">
+                                            <p><b>click here</b>, To start the recruitment</p>
+                                            <img src="/hr_recruitment/static/src/img/down1.png"/>
+                                        </div>
+                                    </t>
+                                    <div class="oe_launch_recruitment">
+                                        <a t-if="record.state.raw_value == 'open'" data-name="job_recruitment" data-type="object" class="oe_kanban_action">Launch Recruitment</a>
+                                        <a t-if="record.state.raw_value == 'recruit'" data-name="job_open" data-type="object" class="oe_kanban_action">Recruitment Done</a>
+                                        <a t-if="record.survey_id.raw_value"> | </a>
+                                        <a t-if="record.survey_id.raw_value" data-name="action_print_survey" data-type="object" class="oe_kanban_action">Print Interview</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+    </record>
+        
         <record id="view_project_offer_form" model="ir.ui.view">
 			    <field name="name">project.offer.form</field>
 			    <field name="model">project.offer</field>
@@ -38,10 +135,7 @@
                         	</group>
 					           <!-- </xpath>-->
 					            <div class="oe_right" name="buttons"/>
-                        		 
-		                            
-		                            
-		                            
+                        		  
 			                    <div class="oe_right oe_button_box" name="button_box">
 			                            <!-- Put here related buttons -->
 								</div>
@@ -90,7 +184,6 @@
 		    </field>
 		</record>
 
-
 		<record id="action_submission_request" model="ir.actions.act_window">
             <field name="name">Demandes de ressources</field>
             <field name="type">ir.actions.act_window</field>
@@ -98,7 +191,6 @@
             <field name="view_type">form</field>
             <field name="view_mode">tree,form,kanban</field>
         </record>
-
 
 		<record id="action_project_candidate" model="ir.actions.act_window">
             <field name="name">Candidats</field>
@@ -115,7 +207,7 @@
 			        <form string="Candidates">
 						<sheet>
 							   <xpath expr="//thead/tr/th[1]" position="before">
-									<th>
+								<th>
 					            <field name="image_medium" widget='image' class="oe_left oe_avatar"/><br/><br/><br/>
 					            </th>
 					            <tr>
@@ -123,8 +215,6 @@
 										 </tr>
 					                <td t-if="o.display_ref">
 					               
-					                
-					            
 		                            <label for="user_id" class="oe_edit_only"/>
 		                            <field name="user_id" widget="Many2one_tags"/>
 		                            <label for="city" class="oe_edit_only"/>
@@ -157,9 +247,9 @@
 			    <field name="arch" type="xml">
 			        <form string="Types Offre">
 						<sheet>
-		                            <label for="name" class="oe_edit_only"/>
-		                            <field name="offers" widget="One2many_tags"/>
-		                            <field name="note"/>
+                            <label for="name" class="oe_edit_only"/>
+                            <field name="offers" widget="One2many_tags"/>
+                            <field name="note"/>
 						</sheet>
 					</form>
 				</field>
