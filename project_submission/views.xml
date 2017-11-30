@@ -100,7 +100,7 @@
                     </templates>
                 </kanban>
             </field>
-    </record>
+    	</record>
         
         <record id="view_project_offer_form" model="ir.ui.view">
 			    <field name="name">project.offer.form</field>
@@ -161,22 +161,94 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
         
-        <record id="view_project_kanban" model="ir.ui.view">
-		    <field name="name">project.submission.kanban</field>
-		    <field name="model">project.submission</field>
-		    <field name="arch" type="xml">
-		        <!-- FIRST PART, we declare the fields we use -->
-		        <kanban class="oe_background_grey"> 
-		        <!-- Second part, we have the Qweb code -->
-		        <templates>
-		            <!-- You can put t-if="" on fields to have a conditional display
-		            REMEMBER : t-if have JAVASCRIPT syntax, not python syntax
-		            and, to access a value, you must use record.field_name.raw_value
-		            -->
-		        </templates>
-		        </kanban>
-		    </field>
-		</record>
+        <record model="ir.ui.view" id="view_project_submission_kanban">
+        <field name="name">Project Submission kanban</field>
+        <field name="model">project.submission</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="state"/>
+                <field name="color"/>
+                <field name="user_id"/>
+                <field name="partner_id"/>
+                <field name="field"/>
+                <field name="offer"/>
+                <field name="title_action"/>
+                <field name="date_open"/>
+                <field name="date_action"/>
+                <field name="project"/>
+                <field name="accepted_count"/>
+                <templates>
+                    <t t-name="kanban-tooltip">
+                        <ul class="oe_kanban_tooltip">
+                            <!-- <li t-if="record.partner_id.raw_value"><b>Contact:</b> <field name="partner_id"/></li>
+                            <li t-if="record.field.raw_value"><b>Departement:</b> <field name="field"/></li>-->
+                        </ul>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
+                            <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <span class="oe_e">i</span>
+                                <ul class="oe_dropdown_menu">
+                                    <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                    <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+
+                            </div>
+                            <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                <div>
+                                    <t t-if="record.partner_id.raw_value"><b><field name="partner_id"/></b><br/></t>
+                                    <i><field name="name"/></i><br/>
+                                    <field name="offer"/><br/>
+                                    <!-- <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>-->
+                                </div>
+                                <div style="padding-left: 0.5em">
+                                    <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
+                                        <t t-if="record.date_action.raw_value"> : </t>
+                                        <field name="title_action"/>
+                                </div>
+                                <div style="width:240px"><field name="categ_ids"/></div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <div class="pull-left" groups="base.group_user">
+                                        <field name="priority" widget="priority"/>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <t t-raw="record.message_summary.raw_value"/>
+                                    <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Documents</a>
+                                </div>
+
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+            </kanban>
+        </field>
+    </record>
+        
+        <record id="view_project_submission_kanban_" model="ir.ui.view">
+            <field name="name">project.submission.kanban</field>
+            <field name="model">project.submission</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey" default_group_by="state">
+                    <field name="name"/>
+                    <field name="project"/>
+                    <field name="submission_count"/>
+                    <field name="color"/>
+                    <field name="offer"/>
+                    <field name="document_ids"/>
+                    <field name="accepted_count"/>
+                    <field name="user_id"/>
+                    <field name="state"/>
+                    <field name="total_count"/>
+                    <field name="accepted_count"/>
+                   
+                </kanban>
+            </field>
+    	</record>
 
 		<record id="action_submission_request" model="ir.actions.act_window">
             <field name="name">Demandes de ressources</field>

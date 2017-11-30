@@ -60,10 +60,15 @@ class ProjectSubmission(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = u'Soumission'
     
+    def _get_partner_id(self):
+        return self.env.user.company_id.partner_id.id
+    
     name = fields.Char('Intitulé du projet', required=True)
     field = fields.Many2one('project.offer.field', 'Domaine d\'activité')
+    document_ids = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     project = fields.Many2one('project.project', string='Projet')
+    partner_id =  fields.Many2one('res.partner', 'Institut hôte',default=_get_partner_id)
     state = fields.Selection(SUBMISS_ETAT, 'Etat', track_visibility='always')
     offer = fields.Many2one('project.offer', string='Offre de projet')
     candidate = fields.Many2one('project.candidate', string='Soumissionnaire')
@@ -78,12 +83,38 @@ class ProjectSubmission(models.Model):
     title_action = fields.Char('Prochaine action', size=64)
     color = fields.Integer('Couleur', default=0)
     
+    @api.multi
+    def _get_attached_docs(self):
+        res = {}
+        for rec in self:
+            res[rec.id] = self.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', '=', rec.id)])
+        return res
+    
     @api.onchange('candidate')
     def set_default_address(self):
         self.address = self.candidate.partner_id
     
     def _count_all(self):
         return 0
+    
+    def action_makeMeeting(self):
+        """ This opens Meeting's calendar view to schedule meeting on current applicant
+            @return: Dictionary value for created Meeting view
+        """
+        submission = self.browse()
+        submission_ids = []
+        if submission.partner_id:
+            submission_ids.append(submission.partner_id.id)
+        if submission.field :
+            submission_ids.append(submission.field.manager_id.user_id.partner_id.id)
+        category = self.pool.get('ir.model.data').get_object(self)
+        res = self.pool.get('ir.actions.act_window').for_xml_id(self)
+        res['context'] = {
+            'default_partner_ids': self.partner_id,
+            'default_user_id': self.user_id,
+            'default_name': submission.name,
+        }
+        return res
     
 class ProjectOffer(models.Model):
     """hr.job"""
