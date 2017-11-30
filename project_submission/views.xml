@@ -25,7 +25,6 @@
                     <field name="user_id"/>
                     <field name="state"/>
                     <field name="total_count"/>
-                    <field name="accepted_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_kanban_global_click">
@@ -161,6 +160,7 @@
             <field name="view_mode">kanban,tree,form</field>
         </record>
         
+        
         <record model="ir.ui.view" id="view_project_submission_kanban">
         <field name="name">Project Submission kanban</field>
         <field name="model">project.submission</field>
@@ -169,19 +169,75 @@
                 <field name="state"/>
                 <field name="color"/>
                 <field name="user_id"/>
-                <field name="partner_id"/>
+                <!-- <field name="partner_id"/>-->
                 <field name="field"/>
                 <field name="offer"/>
                 <field name="title_action"/>
-                <field name="date_open"/>
+                <field name="date_submitted"/>
+                <field name="date_processed"/>
                 <field name="date_action"/>
                 <field name="project"/>
-                <field name="accepted_count"/>
+                <field name="documents_count"/>
+                <field name="candidate"/>
+                <field name="message_summary"/>
+                <field name="priority"/>
+                <field name="partner_mobile"/>
+                
                 <templates>
                     <t t-name="kanban-tooltip">
                         <ul class="oe_kanban_tooltip">
-                            <!-- <li t-if="record.partner_id.raw_value"><b>Contact:</b> <field name="partner_id"/></li>
-                            <li t-if="record.field.raw_value"><b>Departement:</b> <field name="field"/></li>-->
+                            <li t-if="record.candidate.raw_value"><b>Candidat:</b> <field name="candidate"/></li>
+                            <li t-if="record.field.raw_value"><b>Thématique:</b> <field name="field"/></li>
+                        </ul>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
+                             <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <span class="oe_e">i</span>
+                                <ul class="oe_dropdown_menu">
+                                    <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                    <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+
+                            </div>
+                            <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                <div>
+                                    <b><field name="candidate"/></b><br/>
+                                    <i><field name="name"/></i><br/>
+                                    <field name="offer"/><br/>
+                                </div>
+                                <div style="padding-left: 0.5em">
+                                    <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
+                                        <t t-if="record.date_action.raw_value"> : </t>
+                                        <field name="title_action"/>
+                                </div>
+                                <div style="width:240px"><field name="field"/></div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <div class="pull-left" groups="base.group_user">
+                                        <!-- <field name="priority" widget="priority"/>-->
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <t t-raw="record.message_summary.raw_value"/>
+                                    <a t-if="record.documents_count" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="documents_count"/> Documents</a>
+                                </div>
+
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+                </templates>
+           
+           		<templates>
+           		
+           		    <t t-name="kanban-tooltip">
+                        <ul class="oe_kanban_tooltip">
+                            <li t-if="record.field.raw_value"><b>Domaine:</b> <field name="field"/></li>
+                            <li t-if="record.candidate.raw_value"><b>Contact:</b> <field name="candidate"/></li>
+                            <li t-if="record.state.raw_value"><b>State:</b> <field name="state"/></li>
                         </ul>
                     </t>
                     <t t-name="kanban-box">
@@ -197,10 +253,10 @@
                             </div>
                             <div class="oe_kanban_content" tooltip="kanban-tooltip">
                                 <div>
-                                    <t t-if="record.partner_id.raw_value"><b><field name="partner_id"/></b><br/></t>
+                                    <!--<t t-if="record.partner_name.raw_value"><b><field name="partner_name"/></b><br/></t>-->
                                     <i><field name="name"/></i><br/>
                                     <field name="offer"/><br/>
-                                    <!-- <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>-->
+                                    <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
                                 </div>
                                 <div style="padding-left: 0.5em">
                                     <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
@@ -208,7 +264,7 @@
                                         <t t-if="record.date_action.raw_value"> : </t>
                                         <field name="title_action"/>
                                 </div>
-                                <div style="width:240px"><field name="categ_ids"/></div>
+                                <div style="width:240px"><field name="field"/></div>
                                 <div class="oe_kanban_bottom_right">
                                     <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left" groups="base.group_user">
@@ -217,20 +273,24 @@
                                 </div>
                                 <div class="oe_kanban_footer_left" style="margin-top:5px;">
                                     <t t-raw="record.message_summary.raw_value"/>
-                                    <a t-if="record.attachment_number" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="attachment_number"/> Documents</a>
+                                    <a t-if="record.documents_count" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="documents_count"/> Documents</a>
                                 </div>
 
                             </div>
                             <div class="oe_clear"></div>
                         </div>
                     </t>
-                </templates>
+   
+           		
+           		</templates>
+           
+           
             </kanban>
         </field>
     </record>
+       
         
-
-		<record id="action_submission_request" model="ir.actions.act_window">
+       	<record id="action_submission_request" model="ir.actions.act_window">
             <field name="name">Demandes de ressources</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">project.request</field>
@@ -252,29 +312,21 @@
 			    <field name="arch" type="xml">
 			        <form string="Candidates">
 						<sheet>
-							   <xpath expr="//thead/tr/th[1]" position="before">
-								<th>
-					            <field name="image_medium" widget='image' class="oe_left oe_avatar"/><br/><br/><br/>
-					            </th>
-					            <tr>
-										 <h1><field name="name" placeholder="Name"/></h1>
-										 </tr>
-					                <td t-if="o.display_ref">
-					               
-		                            <label for="user_id" class="oe_edit_only"/>
-		                            <field name="user_id" widget="Many2one_tags"/>
-		                            <label for="city" class="oe_edit_only"/>
-		                            <field name="city"/>
-		                            <label for="login_date" class="oe_edit_only"/>
-		                            <field name="login_date"/>
-		                            <label for="offer_ids" class="oe_edit_only"/>
-		                            <field name="offer_ids"/>
-		                            </td>
-		                            </xpath>
-			                    <div class="oe_right oe_button_box" name="button_box">
-			                            <!-- Put here related buttons -->
-								</div>
+				            <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+				            <h1><field name="name" placeholder="Name"/></h1>
+				            <label for="user_id" class="oe_edit_only"/>
+	                        <field name="user_id"/>
+	                        <label for="city" class="oe_edit_only"/>
+	                        <field name="city"/>
+	                        <label for="login_date" class="oe_edit_only"/>
+	                        <field name="login_date"/>
+	                        <label for="offer_ids" class="oe_edit_only"/>
+	                        <field name="offer_ids"/>
 						</sheet>
+						<div class="oe_chatter">
+                <field name="message_follower_ids" widget="mail_followers"/>
+                <field name="message_ids" widget="mail_thread"/>
+            </div>
 					</form>
 				</field>
 		</record>

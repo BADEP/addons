@@ -61,28 +61,30 @@ class ProjectSubmission(models.Model):
     _inherit = ['mail.thread', 'ir.needaction_mixin']
     _description = u'Soumission'
     
-    def _get_partner_id(self):
-        return self.env.user.company_id.partner_id.id
+    @api.one
+    def _get_manager(self):
+        return self.offer.user_id
     
     name = fields.Char('Intitulé du projet', required=True)
-    field = fields.Many2one('project.offer.field', 'Domaine d\'activité')
+    field = fields.Many2one('project.offer.field', 'Domaine d\'activité', required=True)
     document_ids = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     project = fields.Many2one('project.project', string='Projet')
-    partner_id =  fields.Many2one('res.partner', 'Institut hôte',default=_get_partner_id)
-    state = fields.Selection(SUBMISS_ETAT, 'Etat', track_visibility='always')
-    offer = fields.Many2one('project.offer', string='Offre de projet')
-    candidate = fields.Many2one('project.candidate', string='Soumissionnaire')
+    state = fields.Selection(SUBMISS_ETAT, 'Etat', track_visibility='always', default='draft')
+    offer = fields.Many2one('project.offer', string='Offre de projet', required=True)
+    candidate = fields.Many2one('project.candidate', string='Soumissionnaire', required=True)
     address = fields.Many2one('res.partner', string='Adresse du projet')
     active = fields.Boolean('Actif', default=True)
     description = fields.Text('Description')
-    probability = fields.Float('Probabilité')
-    user_id = fields.Many2one('res.users', 'Responsable', track_visibility='always')
-    date_closed = fields.Datetime('Date de clôture', readonly=True)
-    date_open = fields.Datetime('Date d\'assignation', readonly=True)
+    probability = fields.Float('Probabilité', default=0)
+    user_id = fields.Many2one('res.users', 'Responsable', track_visibility='always', default=_get_manager)
+    date_submitted = fields.Datetime('Date de soumission', readonly=True)
+    date_processed = fields.Datetime('Date de traitement', readonly=True)
     date_action = fields.Datetime('Date de la prochaine action')
     title_action = fields.Char('Prochaine action', size=64)
     color = fields.Integer('Couleur', default=0)
+    priority = fields.Selection(AVAILABLE_PRIORITIES, 'Appreciation')
+    partner_mobile = fields.Char(related='candidate.mobile')
     
     @api.multi
     def _get_attached_docs(self):
@@ -98,22 +100,22 @@ class ProjectSubmission(models.Model):
     def _count_all(self):
         return 0
     
+    @api.one
     def action_makeMeeting(self):
         """ This opens Meeting's calendar view to schedule meeting on current applicant
             @return: Dictionary value for created Meeting view
         """
-        submission = self.browse()
-        submission_ids = []
-        if submission.partner_id:
-            submission_ids.append(submission.partner_id.id)
-        if submission.field :
-            submission_ids.append(submission.field.manager_id.user_id.partner_id.id)
-        category = self.pool.get('ir.model.data').get_object(self)
-        res = self.pool.get('ir.actions.act_window').for_xml_id(self)
+        
+        partners= []
+        if self.candidate:
+            partners.append(self.candidate.partner_id.id)
+        if self.user_id :
+            partners.append(self.user_id.partner_id.id)
+        res = self.env['ir.actions.act_window'].for_xml_id('calendar', 'action_calendar_event')
         res['context'] = {
-            'default_partner_ids': self.partner_id,
+            'default_partner_ids': partners,
             'default_user_id': self.user_id,
-            'default_name': submission.name,
+            'default_name': self.name,
         }
         return res
     
