@@ -48,6 +48,7 @@ REQSOUMISS_ETAT =[
     ('cancel', 'Annulé')
 ]
 
+
 class ProjectOfferField(models.Model):
     _name = 'project.offer.field'
     _description = u'Thématique'

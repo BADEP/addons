@@ -229,26 +229,6 @@
         </field>
     </record>
         
-        <record id="view_project_submission_kanban_" model="ir.ui.view">
-            <field name="name">project.submission.kanban</field>
-            <field name="model">project.submission</field>
-            <field name="arch" type="xml">
-                <kanban class="oe_background_grey" default_group_by="state">
-                    <field name="name"/>
-                    <field name="project"/>
-                    <field name="submission_count"/>
-                    <field name="color"/>
-                    <field name="offer"/>
-                    <field name="document_ids"/>
-                    <field name="accepted_count"/>
-                    <field name="user_id"/>
-                    <field name="state"/>
-                    <field name="total_count"/>
-                    <field name="accepted_count"/>
-                   
-                </kanban>
-            </field>
-    	</record>
 
 		<record id="action_submission_request" model="ir.actions.act_window">
             <field name="name">Demandes de ressources</field>
