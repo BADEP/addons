@@ -93,6 +93,14 @@ class ProjectSubmission(models.Model):
             res[rec.id] = self.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', '=', rec.id)])
         return res
     
+    @api.one
+    def action_get_attachment_tree_view(self):
+        model, action_id = self.env['ir.model.data'].get_object_reference('base', 'action_attachment')
+        action = self.env[model].read(action_id)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': self.id}
+        action['domain'] = str([('res_model', '=', 'project.submission'), ('res_id', '=', self.id)])
+        return action
+    
     @api.onchange('candidate')
     def set_default_address(self):
         self.address = self.candidate.partner_id
@@ -215,6 +223,12 @@ class ProjectCandidate(models.Model):
     city = fields.Char(related='partner_id.city', string='Ville')
     login = fields.Char(related='user_id.login', string='Login', readonly=True)
     login_date = fields.Date(related='user_id.login_date', string='Dernière Connection', readonly=True)
+    address_home_id = fields.Many2one('res.partner', string='Adresse Candidate')
+    mobile_phone = fields.Char(string='Mobile', readonly=False)
+    email = fields.Char(string='Email', size=240)
+    work_location = fields.Char('Adresse Travail')
+    notes = fields.Text('Notes')
+        
     
     @api.one
     @api.depends('submission_ids')
