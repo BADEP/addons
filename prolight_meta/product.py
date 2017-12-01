@@ -69,6 +69,10 @@ class ProductTemplate(models.Model):
         products.write({'active': False})
         return True
     
+    @api.model
+    def update_names(self):
+        self.search([('with_hierarchy','=',True)]).generate_name()
+    
     @api.one
     @api.onchange('famille')
     def onchange_famille(self):
@@ -123,11 +127,17 @@ class ProductTemplate(models.Model):
         self.famille = False
 
     @api.one
-    @api.onchange('famille','type2','modele','couleur','puissance','caracteristique','commentaire')
+    @api.onchange('type2','modele','couleur','puissance', 't_couleur', 'tension', 'caracteristique','commentaire')
     def generate_name(self):
-        if self.active and self.sale_ok and self.type == 'product':
-            name = (self.type2.sudo().name if self.type2 else '') + (' - ' + self.modele.sudo().name if self.modele else '') + (' - ' + self.couleur.sudo().name if self.couleur else '') + (' - ' + self.puissance.sudo().name if self.puissance else '') + (' - ' + self.caracteristique.sudo().name if self.caracteristique else '') + (' - ' + self.commentaire if self.commentaire else '')
-            self.name = name
+        name = (self.type2.sudo().name if self.type2 else '') + \
+            (' - ' + self.modele.sudo().name if self.modele else '') + \
+            (' - ' + self.couleur.sudo().name if self.couleur else '') + \
+            (' - ' + self.puissance.sudo().name if self.puissance else '') + \
+            (' - ' + self.t_couleur.sudo().name if self.t_couleur else '') + \
+            (' - ' + self.tension.sudo().name if self.tension else '') + \
+            (' - ' + self.caracteristique.sudo().name if self.caracteristique else '') + \
+            (' - ' + self.commentaire if self.commentaire else '')
+        self.name = name
 
 class ProductTemplateFamille(models.Model):
     _name = 'product.template.famille'
@@ -172,11 +182,17 @@ class ProductProduct(models.Model):
 
     default_code = fields.Char('Internal Reference', select=True, required=True)
         
-    @api.onchange('famille','type2','modele','couleur','puissance','caracteristique','commentaire')
+    @api.onchange('type2','modele','couleur','puissance', 't_couleur', 'tension', 'caracteristique','commentaire')
     def generate_name(self):
-        if self.active and self.sale_ok and self.type == 'product':
-            name = (self.type2.name if self.type2 else '') + (' - ' + self.modele.name if self.modele else '') + (' - ' + self.couleur.name if self.couleur else '') + (' - ' + self.puissance.name if self.puissance else '') + (' - ' + self.caracteristique.name if self.caracteristique else '') + (' - ' + self.commentaire if self.commentaire else '')
-            self.name = name
+        name = (self.type2.sudo().name if self.type2 else '') + \
+            (' - ' + self.modele.sudo().name if self.modele else '') + \
+            (' - ' + self.couleur.sudo().name if self.couleur else '') + \
+            (' - ' + self.puissance.sudo().name if self.puissance else '') + \
+            (' - ' + self.t_couleur.sudo().name if self.t_couleur else '') + \
+            (' - ' + self.tension.sudo().name if self.tension else '') + \
+            (' - ' + self.caracteristique.sudo().name if self.caracteristique else '') + \
+            (' - ' + self.commentaire if self.commentaire else '')
+        self.name = name
     
     @api.model
     def _search_product_quantity(self, obj, name, domain):

@@ -42,5 +42,5 @@ class AccountInvoice(models.Model):
     _inherit = 'account.invoice'
     
     display_ref = fields.Boolean(default=True, string='Référence produit')
-    display_photo = fields.Boolean(default=True, string='Photo produit')
-    display_discount = fields.Boolean(default=True, string='Remise')
+    display_photo = fields.Boolean(default=False, string='Photo produit')
+    display_discount = fields.Boolean(default=False, string='Remise')

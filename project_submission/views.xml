@@ -1,7 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
-
+		<record id="action_project_submission" model="ir.actions.act_window">
+            <field name="name">Soumissions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.submission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
 		<record id="action_project_offer" model="ir.actions.act_window">
             <field name="name">Offres</field>
             <field name="type">ir.actions.act_window</field>
@@ -151,15 +157,6 @@
                 </search>
             </field>
         </record>
-
-		<record id="action_project_submission" model="ir.actions.act_window">
-            <field name="name">Soumissions</field>
-            <field name="type">ir.actions.act_window</field>
-            <field name="res_model">project.submission</field>
-            <field name="view_type">form</field>
-            <field name="view_mode">kanban,tree,form</field>
-        </record>
-        
         
         <record model="ir.ui.view" id="view_project_submission_kanban">
         <field name="name">Project Submission kanban</field>

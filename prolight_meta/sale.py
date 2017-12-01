@@ -39,8 +39,8 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
     
     display_ref = fields.Boolean(default=True, string='Référence produit')
-    display_photo = fields.Boolean(default=True, string='Photo produit')
-    display_discount = fields.Boolean(default=True, string='Remise')
+    display_photo = fields.Boolean(default=False, string='Photo produit')
+    display_discount = fields.Boolean(default=False, string='Remise')
     margin_percentage = fields.Char(string="Marge (%)", compute='get_margin_percentage', digits_compute=dp.get_precision('Account'))
 
     @api.one
