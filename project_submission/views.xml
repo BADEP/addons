@@ -120,7 +120,7 @@
 						<sheet>
             <div class="oe_right" name="buttons">
                 <div class="oe_button_box">
-                    <button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" type="action">
+                    <button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" type="object">
                         <field name="submission_count" widget="statinfo" string="Soumissions"/>
                     </button>
                     <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">

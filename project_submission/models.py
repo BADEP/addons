@@ -139,9 +139,9 @@ class ProjectOffer(models.Model):
     document_ids = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     partner_id =  fields.Many2one('res.partner', 'Institut hôte',default=_get_partner_id)
-    submissions = fields.One2many('project.submission', 'offer', string='Soumissions')
-    type = fields.Many2one('project.offer.type')
-    total_time = fields.Integer('Durée de Réalisation en mois')
+    submissions = fields.One2many('project.submission', 'offer', string='Soumissions', required=True)
+    type = fields.Many2one('project.offer.type', required=True)
+    total_time = fields.Integer('Durée de Réalisation en mois', required=True)
     survey_id =  fields.Many2one('survey.survey', 'Formulaire d\'inscription')
     color = fields.Integer('Couleur', default=0)
     state =  fields.Selection([('draft', 'Brouillon'), ('open', 'En cours'),
@@ -152,27 +152,40 @@ class ProjectOffer(models.Model):
     accepted_count =  fields.Integer(compute='_count_all', string='Soumissions acceptées')
     user_id =  fields.Many2one('res.users', 'Responsable', track_visibility='always')
     vacant_count = fields.Integer(compute='_count_all')
-    total_count = fields.Integer(string='Limite de soumissions')
-    
-    @api.multi
-    def _get_attached_docs(self):
-        res = {}
-        for rec in self:
-            res[rec.id] = self.env['ir.attachment'].search([('res_model', '=', 'project.offer'), ('res_id', '=', rec.id)])
-        return res
+    total_count = fields.Integer(string='Limite de soumissions', required=True)
     
     @api.one
+    def _get_attached_docs(self):
+        res = self.env['ir.attachment'].search([('res_model', '=', 'project.offer'), ('res_id', '=', self.id)])
+        return res
+    """
+    @api.returns('ir.actions.act_window')
+    @api.multi
     def action_get_attachment_tree_view(self):
+        self.ensure_one()
         model, action_id = self.env['ir.model.data'].get_object_reference('base', 'action_attachment')
-        action = self.env[model].read(action_id)
-        action['context'] = {'default_res_model': self._name, 'default_res_id': self.id}
-        action['domain'] = str([('res_model', '=', 'project.offer'), ('res_id', '=', self.id)])
+        action = self.env[model].browse(action_id)
+        ctx = action.env.context.copy()
+        ctx.update({'default_res_model': self._name, 'default_res_id': self.id})
+        #action['context'] = {'default_res_model': self._name, 'default_res_id': self.id}
+        #action['domain'] = str([('res_model', '=', 'project.offer'), ('res_id', '=', self.id)])
+        return action.with_context(ctx)"""
+    
+    @api.cr_uid_ids_context
+    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
+        #open attachments of job and related applicantions.
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
+        action['domain'] = str([('res_model', '=', 'project.offer'), ('res_id', 'in', ids)])
         return action
-
+    
+    @api.one
     @api.depends('submissions', 'total_count')
     def _count_all(self):
         self.accepted_count = len(self.submissions.filtered(lambda s: s.state == 'accepted'))
         self.vacant_count = self.total_count - self.accepted_count
+        self.documents_count = len(self.document_ids)
         return 0
     
     @api.one
