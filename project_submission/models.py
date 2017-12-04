@@ -170,7 +170,7 @@ class ProjectOffer(models.Model):
         #action['context'] = {'default_res_model': self._name, 'default_res_id': self.id}
         #action['domain'] = str([('res_model', '=', 'project.offer'), ('res_id', '=', self.id)])
         return action.with_context(ctx)"""
-    
+     
     @api.cr_uid_ids_context
     def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
         #open attachments of job and related applicantions.

@@ -8,6 +8,51 @@
             <field name="view_type">form</field>
             <field name="view_mode">kanban,tree,form</field>
         </record>
+		
+		<record id="view_project_submission_form" model="ir.ui.view">
+			    <field name="name">project.submission.form</field>
+			    <field name="model">project.submission</field>
+			    <field name="arch" type="xml">
+			        <form string="Soumission">
+                    <header>
+                        <!--<button name="action_open" string=" A" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="action_close" string="Clôturer l'offre" states="open,done" type="object" class="oe_highlight" groups="base.group_user"/>
+                        --><field name="state" widget="statusbar" statusbar_visible="draft,open,done,closed"/>
+                    </header>
+						<sheet>
+            <div class="oe_right" name="buttons">
+                <div class="oe_button_box">
+                    <button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" type="object">
+                        <!--<field name="submission_count" widget="statinfo" string="Soumissions"/>-->
+                    </button>
+                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
+                        <field name="documents_count" widget="statinfo" string="Documents"/>
+                    </button>
+                </div>
+            </div>
+					      	<group col="1">
+		                            <field name="name"/>
+		                            <field name="user_id"/>
+		                            <field name="candidate"/>
+		                            <field name="partner_mobile"/>
+		                            <field name="offer"/>
+		                            <field name="project"/>
+                        	</group>
+                        	<group col="2">
+		                            <field name="offer"/>
+		                            <field name="field"/>
+		                            <field name="address"/>
+		                            <field name="description"/>
+		                            <!--<field name="date_submitted"/>-->   
+		                            <field name="date_processed"/>
+		                            <field name="title_action"/>
+		                            <field name="date_action"/>
+                        	</group>
+						</sheet>
+					</form>
+				</field>
+		</record>
+		
 		<record id="action_project_offer" model="ir.actions.act_window">
             <field name="name">Offres</field>
             <field name="type">ir.actions.act_window</field>
@@ -235,8 +280,7 @@
         </field>
     </record>
        
-       
-    <record id="view_crm_case_jobs_filter" model="ir.ui.view">
+	    <record id="view_crm_case_jobs_filter" model="ir.ui.view">
         <field name="name">Souissions s</field>
         <field name="model">project.submission</field>
         <field name="arch" type="xml">
@@ -264,8 +308,6 @@
            </search>
         </field>
     </record>
-
-       
         
        	<record id="action_submission_request" model="ir.actions.act_window">
             <field name="name">Demandes de ressources</field>
