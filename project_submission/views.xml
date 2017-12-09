@@ -155,6 +155,7 @@
         <record id="view_project_offer_form" model="ir.ui.view">
 			    <field name="name">project.offer.form</field>
 			    <field name="model">project.offer</field>
+			    <field name="type">form</field>
 			    <field name="arch" type="xml">
 			        <form string="project offer">
                     <header>

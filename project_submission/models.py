@@ -153,6 +153,8 @@ class ProjectOffer(models.Model):
     user_id =  fields.Many2one('res.users', 'Responsable', track_visibility='always')
     vacant_count = fields.Integer(compute='_count_all')
     total_count = fields.Integer(string='Limite de soumissions', required=True)
+    date_open = fields.Datetime(string='Date de publication')
+    date_closed = fields.Datetime(string='Date de clôture')
     
     @api.one
     def _get_attached_docs(self):
@@ -195,20 +197,16 @@ class ProjectOffer(models.Model):
     @api.one
     def action_open(self):
         self.state = 'open'
+        self.date_open = fields.Datetime.now()
         
     @api.one
     def action_close(self):
         self.state = 'closed'
+        self.date_closed = fields.Datetime.now()
 
+    @api.one
     def action_print_survey(self):
         return self.survey_id.action_print_survey()
-
-    def set_open(self):
-        self.write({
-            'state': 'open',
-            'no_of_total_submissions': 0
-        })
-        return True
     
 class ProjectOfferType(models.Model):
     """hr.department"""

@@ -1,24 +1,21 @@
 {
-    'name': 'Jobs',
+    'name': 'Website Project Submission',
     'category': 'Website',
     'version': '1.0',
-    'summary': 'Job Descriptions And Application Forms',
+    'summary': 'Offer Descriptions And Application Forms',
     'description': """
 OpenERP Contact Form
 ====================
 
         """,
-    'author': 'OpenERP SA',
-    'depends': ['website_partner', 'hr_recruitment', 'website_mail'],
+    'author': 'BADEP',
+    'depends': ['website_partner', 'project_submission', 'website_mail'],
     'data': [
         'security/ir.model.access.csv',
-        'security/website_hr_recruitment_security.xml',
+        'security/website_project_submission_security.xml',
         'data/config_data.xml',
-        'views/hr_job_views.xml',
+        'views/project_offer_views.xml',
         'views/templates.xml',
-    ],
-    'demo': [
-        'data/hr_job_demo.xml',
     ],
     'installable': True,
 }

@@ -1,9 +1,9 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 <data>
-    <record id="hr_job_public" model="ir.rule">
-        <field name="name">Job Positions: Public</field>
-        <field name="model_id" ref="hr.model_hr_job"/>
+    <record id="project_offer_public" model="ir.rule">
+        <field name="name">Offer Positions: Public</field>
+        <field name="model_id" ref="project_submission.model_project_offer"/>
         <field name="domain_force">[('website_published', '=', True)]</field>
         <field name="groups" eval="[(4, ref('base.group_public'))]"/>
         <field name="perm_read" eval="True"/>
@@ -11,9 +11,9 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
-    <record id="hr_job_portal" model="ir.rule">
+    <record id="project_offer_portal" model="ir.rule">
         <field name="name">offer Positions: Portal</field>
-        <field name="model_id" ref="hr.model_hr_job"/>
+        <field name="model_id" ref="project_submission.model_project_offer"/>
         <field name="domain_force">[('website_published', '=', True)]</field>
         <field name="groups" eval="[(4, ref('base.group_portal'))]"/>
         <field name="perm_read" eval="True"/>
@@ -21,20 +21,20 @@
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
-    <record id="hr_job_officer" model="ir.rule">
+    <record id="project_offer_officer" model="ir.rule">
         <field name="name">Offer Positions: Poject Officer</field>
-        <field name="model_id" ref="hr.model_hr_job"/>
+        <field name="model_id" ref="project_submission.model_project_offer"/>
         <field name="domain_force">[(1, '=', 1)]</field>
-        <field name="groups" eval="[(4, ref('base.group_hr_user'))]"/>
+        <field name="groups" eval="[(4, ref('base.group_user'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
         <field name="perm_create" eval="False"/>
         <field name="perm_unlink" eval="False"/>
     </record>
-    <record id="hr_department_public" model="ir.rule">
-        <field name="name">Offer department: Public</field>
-        <field name="model_id" ref="hr.model_hr_department"/>
-        <field name="domain_force">[('jobs_ids.website_published', '=', True)]</field>
+    <record id="project_offer_type_public" model="ir.rule">
+        <field name="name">Offer Type: Public</field>
+        <field name="model_id" ref="project_submission.model_project_offer_type"/>
+        <field name="domain_force">[('offer.website_published', '=', True)]</field>
         <field name="groups" eval="[(4, ref('base.group_public'))]"/>
         <field name="perm_read" eval="True"/>
         <field name="perm_write" eval="False"/>
