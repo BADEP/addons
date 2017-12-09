@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_move_property stock_user,stock.move.property,stock_product_properties.model_stock_move_property,stock.group_stock_user,1,1,1,1
+access_product_property_stock_user,product.property,stock_product_properties.model_product_property,stock.group_stock_user,1,0,0,0
+access_product_property_stock_manager,product.property,stock_product_properties.model_product_property,stock.group_stock_manager,1,1,1,1
+access_product_property_sale_manager,product.property,stock_product_properties.model_product_property,base.group_sale_manager,1,1,1,1

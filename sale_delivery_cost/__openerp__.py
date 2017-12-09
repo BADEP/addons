@@ -30,7 +30,7 @@
     """,
     'author': 'BADEP',
     'website': 'http://www.badep.ma',
-    'depends': ['sale', 'fleet', 'hr'],
+    'depends': ['sale_stock', 'purchase'],
     'data': ['views.xml','security/ir.model.access.csv'],
     'installable': True,
 }

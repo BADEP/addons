@@ -32,7 +32,7 @@
     'test': [
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
     'active': False,
     'certificate': False,
     'auto_install': False,

@@ -26,12 +26,120 @@ from openerp.osv import osv
 from openerp.tools import float_compare, float_is_zero
 from openerp.addons.product import _common
 from openerp import tools, SUPERUSER_ID
+from openerp.tools.translate import _
 
 class mrp_production(models.Model):
     _inherit = 'mrp.production'
     
+    @api.cr_uid_id_context
+    def action_produce(self, cr, uid, production_id, production_qty, production_mode, wiz=False, context=None):
+        """ To produce final product based on production mode (consume/consume&produce).
+        If Production mode is consume, all stock move lines of raw materials will be done/consumed.
+        If Production mode is consume & produce, all stock move lines of raw materials will be done/consumed
+        and stock move lines of final product will be also done/produced.
+        @param production_id: the ID of mrp.production object
+        @param production_qty: specify qty to produce in the uom of the production order
+        @param production_mode: specify production mode (consume/consume&produce).
+        @param wiz: the mrp produce product wizard, which will tell the amount of consumed products needed
+        @return: True
+        """
+        stock_mov_obj = self.pool.get('stock.move')
+        uom_obj = self.pool.get("product.uom")
+        production = self.browse(cr, uid, production_id, context=context)
+        production_qty_uom = uom_obj._compute_qty(cr, uid, production.product_uom.id, production_qty, production.product_id.uom_id.id)
+        precision = self.pool['decimal.precision'].precision_get(cr, uid, 'Product Unit of Measure')
+
+        main_production_move = False
+        if production_mode == 'consume_produce':
+            # To produce remaining qty of final product
+            produced_products = {}
+            for produced_product in production.move_created_ids2:
+                if produced_product.scrapped:
+                    continue
+                if not produced_products.get(produced_product.product_id.id, False):
+                    produced_products[produced_product.product_id.id] = 0
+                produced_products[produced_product.product_id.id] += produced_product.product_qty
+            for produce_product in production.move_created_ids:
+                subproduct_factor = self._get_subproduct_factor(cr, uid, production.id, produce_product.id, context=context)
+                lot_id = False
+                if wiz:
+                    lot_id = wiz.lot_id.id
+                qty = min(subproduct_factor * production_qty_uom, produce_product.product_qty) #Needed when producing more than maximum quantity
+                new_moves = stock_mov_obj.action_consume(cr, uid, [produce_product.id], qty,
+                                                         location_id=produce_product.location_id.id, restrict_lot_id=lot_id, context=context)
+                stock_mov_obj.write(cr, uid, new_moves, {'production_id': production_id}, context=context)
+                remaining_qty = subproduct_factor * production_qty_uom - qty
+                if not float_is_zero(remaining_qty, precision_digits=precision):
+                    # In case you need to make more than planned
+                    #consumed more in wizard than previously planned
+                    extra_move_id = stock_mov_obj.copy(cr, uid, produce_product.id, default={'product_uom_qty': remaining_qty,
+                                                                                             'production_id': production_id}, context=context)
+                    stock_mov_obj.action_confirm(cr, uid, [extra_move_id], context=context)
+                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
+
+                if produce_product.product_id.id == production.product_id.id:
+                    main_production_move = produce_product.id
+
+        if production_mode in ['consume', 'consume_produce']:
+            if wiz:
+                consume_lines = []
+                for cons in wiz.consume_lines:
+                    consume_lines.append({'bom_line': cons.bom_line.id, 'product_id': cons.product_id.id, 'lot_id': cons.lot_id.id, 'product_qty': cons.product_qty})
+            else:
+                consume_lines = self._calculate_qty(cr, uid, production, production_qty_uom, context=context)
+            for consume in consume_lines:
+                remaining_qty = consume['product_qty']
+                for raw_material_line in production.move_lines:
+                    if raw_material_line.state in ('done', 'cancel'):
+                        continue
+                    if remaining_qty <= 0:
+                        break
+                    if consume['bom_line'] != raw_material_line.bom_line.id:
+                        continue
+                    consumed_qty = min(remaining_qty, raw_material_line.product_qty)
+                    stock_mov_obj.action_consume(cr, uid, [raw_material_line.id], consumed_qty, raw_material_line.location_id.id,
+                                                 restrict_lot_id=consume['lot_id'], consumed_for=main_production_move, context=context)
+                    remaining_qty -= consumed_qty
+                if not float_is_zero(remaining_qty, precision_digits=precision):
+                    #consumed more in wizard than previously planned
+                    product = self.pool.get('product.product').browse(cr, uid, consume['product_id'], context=context)
+                    extra_move_id = self._make_consume_line_from_data(cr, uid, production, product, product.uom_id.id, remaining_qty, False, 0, context=context)
+                    stock_mov_obj.write(cr, uid, [extra_move_id], {'restrict_lot_id': consume['lot_id'],
+                                                                    'consumed_for': main_production_move}, context=context)
+                    stock_mov_obj.action_done(cr, uid, [extra_move_id], context=context)
+
+        self.message_post(cr, uid, production_id, body=_("%s produced") % self._description, context=context)
+
+        # Remove remaining products to consume if no more products to produce
+        if not production.move_created_ids and production.move_lines:
+            stock_mov_obj.action_cancel(cr, uid, [x.id for x in production.move_lines], context=context)
+
+        self.signal_workflow(cr, uid, [production_id], 'button_produce_done')
+        return True
+    
+    @api.model
+    def _make_production_consume_line(self, line):
+        res = super(mrp_production, self)._make_production_consume_line(line)
+        self.env['stock.move'].browse(res).bom_line = line.bom_line
+        return res
+        
+    @api.cr_uid_context
+    def _get_consumed_data(self, cr, uid, production, context=None):
+        ''' returns a dictionary containing for each raw material of the given production, its quantity already consumed (in the raw material UoM)
+        '''
+        consumed_data = {}
+        # Calculate already consumed qtys
+        for consumed in production.move_lines2:
+            if consumed.scrapped:
+                continue
+            if not consumed_data.get(consumed.bom_line.id, False):
+                consumed_data[consumed.bom_line.id] = 0
+            consumed_data[consumed.bom_line.id] += consumed.product_qty
+        return consumed_data
+
     @api.cr_uid_context
     def _calculate_qty(self, cr, uid, production, product_qty=0.0, context=None):
+
         """
             Calculates the quantity still needed to produce an extra number of products
             product_qty is in the uom of the product
@@ -52,27 +160,27 @@ class mrp_production(models.Model):
             if scheduled.product_id.type == 'service':
                 continue
             qty = uom_obj._compute_qty(cr, uid, scheduled.product_uom.id, scheduled.product_qty, scheduled.product_id.uom_id.id)
-            if scheduled_qty.get(scheduled.product_id.id):
-                scheduled_qty[scheduled.product_id.id] += qty
-                dosing[scheduled.product_id.id] += scheduled.dosing
+            if scheduled_qty.get(scheduled.bom_line.id):
+                scheduled_qty[scheduled.bom_line.id] += qty
+                dosing[scheduled.bom_line.id] += scheduled.dosing
             else:
-                scheduled_qty[scheduled.product_id.id] = qty
-                dosing[scheduled.product_id.id] = scheduled.dosing
+                scheduled_qty[scheduled.bom_line.id] = qty
+                dosing[scheduled.bom_line.id] = scheduled.dosing
         dicts = OrderedDict()
         # Find product qty to be consumed and consume it
-        for product_id in scheduled_qty.keys():
+        for bom_line in scheduled_qty.keys():
 
-            consumed_qty = consumed_data.get(product_id, 0.0)
+            consumed_qty = consumed_data.get(bom_line, 0.0)
             
             # qty available for consume and produce
-            sched_product_qty = scheduled_qty[product_id]
+            sched_product_qty = scheduled_qty[bom_line]
             qty_avail = sched_product_qty - consumed_qty
             if qty_avail <= 0.0:
                 # there will be nothing to consume for this raw material
                 continue
 
-            if not dicts.get(product_id):
-                dicts[product_id] = {}
+            if not dicts.get(bom_line):
+                dicts[bom_line] = {}
 
             # total qty of consumed product we need after this consumption
             if product_qty + produced_qty <= production_qty:
@@ -85,7 +193,7 @@ class mrp_production(models.Model):
             for move in production.move_lines:
                 if qty <= 0.0:
                     break
-                if move.product_id.id != product_id:
+                if move.bom_line.id != bom_line:
                     continue
 
                 q = min(move.product_qty, qty)
@@ -94,23 +202,24 @@ class mrp_production(models.Model):
                 for quant, quant_qty in quants:
                     if quant:
                         lot_id = quant.lot_id.id
-                        if not product_id in dicts.keys():
-                            dicts[product_id] = {lot_id: quant_qty}
-                        elif lot_id in dicts[product_id].keys():
-                            dicts[product_id][lot_id] += quant_qty
+                        if not bom_line in dicts.keys():
+                            dicts[bom_line] = {lot_id: quant_qty}
+                        elif lot_id in dicts[bom_line].keys():
+                            dicts[bom_line][lot_id] += quant_qty
                         else:
-                            dicts[product_id][lot_id] = quant_qty
+                            dicts[bom_line][lot_id] = quant_qty
                         qty -= quant_qty
             if float_compare(qty, 0, self.pool['decimal.precision'].precision_get(cr, uid, 'Product Unit of Measure')) == 1:
-                if dicts[product_id].get(False):
-                    dicts[product_id][False] += qty
+                if dicts[bom_line].get(False):
+                    dicts[bom_line][False] += qty
                 else:
-                    dicts[product_id][False] = qty
+                    dicts[bom_line][False] = qty
 
         consume_lines = []
-        for prod in dicts.keys():
-            for lot, qty in dicts[prod].items():
-                consume_lines.append({'product_id': prod, 'product_ideal_qty': qty, 'product_qty': qty, 'lot_id': lot, 'dosing': dosing[prod]})
+        for bom_line in dicts.keys():
+            bom_line_obj = self.pool.get('mrp.bom.line').browse(cr, uid, bom_line, context=context)
+            for lot, qty in dicts[bom_line].items():
+                consume_lines.append({'bom_line': bom_line, 'product_id': bom_line_obj.product_id.id, 'product_ideal_qty': qty, 'product_qty': qty, 'lot_id': lot, 'dosing': dosing[bom_line]})
         return consume_lines
 
 class mrp_bom(models.Model):
@@ -179,6 +288,7 @@ class mrp_bom(models.Model):
                     'name': bom_line_id.product_id.name,
                     'product_id': bom_line_id.product_id.id,
                     'product_qty': quantity,
+                    'bom_line': bom_line_id.id,
                     'dosing': bom_line_id.dosing,
                     'prev_dosing': bom_line_id.dosing,
                     'product_uom': bom_line_id.product_uom.id,
@@ -210,7 +320,8 @@ class mrp_production_product_line(models.Model):
     
     dosing = fields.Float(string='Dosage', digits_compute=dp.get_precision('Product UoS'))
     prev_dosing = fields.Float(string='Dosage', digits_compute=dp.get_precision('Product UoS'))
-    
+    bom_line = fields.Many2one('mrp.bom.line')
+
     @api.one
     @api.onchange('dosing')
     def onchange_dosing(self):
@@ -221,32 +332,15 @@ class mrp_production_product_line(models.Model):
 class mrp_product_produce_line(models.TransientModel):
     _inherit = "mrp.product.produce.line"
     
-    @api.one
-    def get_dosing(self):
-        dosing = 0
-        production = self.env['mrp.production'].browse(self.env.context['active_id'])
-        for line in production.product_lines:
-            if line.product_id.id == self.product_id.id:
-                dosing += line.dosing
-        return dosing
-
-    @api.one
-    def get_batch_qty(self):
-        return round(self.product_qty/self.dosing)
-    
-    @api.one
-    def get_ideal_qty(self):
-        return self.product_qty
-    
     product_ideal_qty = fields.Float(digits_compute=dp.get_precision('Product Unit of Measure'),
-                                         string='Quantité idéale',
-                                         default=get_ideal_qty)
+                                         string='Quantité idéale')
     product_theorical_qty = fields.Float(digits_compute=dp.get_precision('Product Unit of Measure'),
                                      string='Quantité Théorique')
-    dosing = fields.Float(string='Dosage', digits_compute=dp.get_precision('Product UoS'), default=get_dosing)
-    batch_qty = fields.Integer(string='Nombre de gâchés', default=get_batch_qty)
+    dosing = fields.Float(string='Dosage', digits_compute=dp.get_precision('Product UoS'))
+    batch_qty = fields.Integer(string='Nombre de gâchés')
     efficiency = fields.Float(compute='get_efficiency', string='Efficacité')
     deviation = fields.Float(compute='get_deviation', string='Déviation')
+    bom_line = fields.Many2one('mrp.bom.line')
 
     @api.one
     @api.onchange('batch_qty', 'dosing')
@@ -267,5 +361,5 @@ class mrp_product_produce_line(models.TransientModel):
     @api.depends('product_qty','product_theorical_qty')
     def get_deviation(self):
         if self.product_theorical_qty != 0:
-            self.deviation = (self.product_qty - self.product_theorical_qty)/self.product_theorical_qty
+            self.deviation = 100*(self.product_qty - self.product_theorical_qty)/self.product_theorical_qty
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

@@ -1,0 +1,251 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+<data>
+
+<template id="offer_footer_custom" inherit_id="website.footer_default" name="Footer Offer Link">
+    <xpath expr="//div[@id='info']/ul" position="inside">
+    <li><a href="/offers">Appels à projets</a></li>
+    </xpath>
+</template>
+
+<template id="index" name="Offers">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure">
+                <section data-snippet-id="text-block" class="mb16">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center mb16" data-snippet-id="colmd">
+                                <h2>Appels à projets en cours</h2>
+                                <h3 class="text-muted">Join us and help disrupt the enterprise market!</h3>
+                            </div>
+                            <div class="col-md-12" data-snippet-id="colmd">
+                                <p>
+                                    With a small team of smart people, we released the most
+                                    disruptive enterprise management software in the world.
+                                    Odoo is fully open source, super easy, full featured
+                                    (3000+ apps) and its online offer is 3 times cheaper than
+                                    traditional competitors like SAP and Ms Dynamics.
+                                </p>
+                                <p>
+                                    Join us, we offer you an extraordinary chance to learn, to
+                                    develop and to be part of an exciting experience and
+                                    team.
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+
+            <div class="container oe_website_offers">
+                <div class="row">
+                    <div class="hidden" id="offers_grid_left">
+
+                    </div>
+                    <div class="col-md-12" id="offers_grid">
+                        <div t-if="not offers">
+                            <div class="text-center text-muted">
+                              <h4 class="css_editable_display">Aucun appel à projets touvé</h4>
+                              <h4 class="css_editable_hidden">There isn't offer offer published now, click <a t-attf-href="/page/website.contactus">here</a> to contact us</h4>
+                              <t groups="base.group_website_publisher">
+                                 <t  groups="base.group_project_manager">
+                                  <p>Click on "Content" to define a new project offer or "Help" for more informations.</p>
+                                  <img src="/website/static/src/img/content_here.png"/>
+                                </t>
+                              </t>
+                            </div>
+                        </div>
+                        <ul class="media-list" t-if="offers">
+                            <li t-foreach="offers" t-as="offer" class="media">
+                                <div class="media-body" t-att-data-publish="offer.website_published and 'on' or 'off'">
+                                    <h3 class="media-heading">
+                                        <a t-attf-href="/offers/detail/#{ slug(offer) }">
+                                            <span t-field="offer.name"/>
+                                        </a>
+                                        <!-- <small t-if="offer.no_of_project &gt; 1">
+                                            <t t-esc="offer.no_of_project"/> open positions
+                                        </small> -->
+                                    </h3>
+
+                                    <span t-field="offer.partner_id" t-field-options='{
+                                        "widget": "contact",
+                                        "fields": ["address"],
+                                        "no_tag_br": true
+                                        }'/>
+                                    <span t-if="not offer.website_published" class="label label-danger">not published</span>
+                                    <div class="text-muted">
+                                        <i class="fa fa-clock-o"/> <span t-field="offer.write_date"/>
+                                    </div>
+                                </div>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="detail" name='Offer Detail'>
+    <t t-call="website.layout">
+    <t t-set="additional_title">Détails de l'appel à projets</t>
+    <div id="wrap" class="js_project_submission">
+        <div class="oe_structure"/>
+
+        <section class="container mt8">
+            <div class="row">
+              <div class="col-sm-5">
+                  <ol class="breadcrumb mb0">
+                      <li><a href="/offers">Nos appels à projets</a></li>
+                      <li class="active"><span t-field="offer.name"></span></li>
+                  </ol>
+              </div><div class="col-sm-7">
+                  <t t-call="website.publish_management">
+                      <t t-set="object" t-value="offer"/>
+                      <t t-set="publish_edit" t-value="True"/>
+                  </t>
+              </div>
+            </div>
+        </section>
+
+        <div class="oe_structure" style="clear:both;">
+            <h1 class="text-center" t-field="offer.name"/>
+            <h5 class="text-center" t-field="offer.partner_id" t-field-options='{
+                "widget": "contact",
+                "fields": ["address"],
+                "no_tag_br": true
+                }'/>
+           <h5 class="text-center text-muted">
+                <i class="fa fa-clock-o"/> <span t-field="offer.write_date"/>
+            </h5>
+        </div>
+        <div t-field="offer.website_description"/>
+
+        <div class="oe_structure">
+            <section data-snippet-id="cta" class="mt16 mb16">
+                <div class="container">
+                    <div class="row">
+                        <div class="col-md-12 text-center mt16 mb16">
+                            <a t-attf-href="/offers/apply/#{ offer.id }" class="btn btn-primary btn-lg">Postuler</a>
+                        </div>
+                    </div>
+                </div>
+            </section>
+        </div>
+    </div>
+    </t>
+</template>
+
+<template id="apply">
+    <t t-call="website.layout">
+        <t t-set="additional_title">Postuler à l'appel à projets</t>
+        <div id="wrap">
+            <div class="container">
+                <h1 class="text-center">
+                    Formulaire de soumission
+                </h1>
+                <h2 t-if="offer" class="text-center text-muted">
+                    <span t-field="offer.name"/>
+                </h2>
+
+                <div class="row">
+                    <section id="forms">
+                        <!-- TODO Multilingual form action support ? -->
+                        <form class="form-horizontal mt32" action="/offers/thankyou" method="post" enctype="multipart/form-data">
+                            <input type="hidden" t-att-value="offer and offer.id or False" name="offer"/>
+                            <div t-attf-class="form-group #{error.get('partner_name') and 'has-error' or ''}">
+                                <label class="col-md-3 col-sm-4 control-label" for="name">Intitulé du projet</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <input type="text" t-att-value="default.get('name')" class="form-control" name="name" required="True"/>
+                                </div>
+                            </div>
+                            <div t-attf-class="form-group #{error.get('email_from') and 'has-error' or ''}">
+                                <label class="col-md-3 col-sm-4 control-label" for="field">Thématique</label>
+                                <div class="col-md-7 col-sm-8">
+							    	<select name="field" t-att-value="default.get('field')" id="field" class="form-control" required="True">
+						         		<option value="">Sélectionnez la thématique...</option>
+							        	<t t-foreach="fields" t-as="f">
+						            		<option t-att-value="f.id"><t t-esc="f.name"/></option>
+							        	</t>
+							    	</select>
+							    </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-sm-4 control-label" for="description">Short Introduction</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <textarea  class="form-control" t-esc="default.get('description')" name="description" style="min-height: 120px"/>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <label class="col-md-3 col-sm-4 control-label" for="ufile">Resume</label>
+                                <div class="col-md-7 col-sm-8">
+                                    <input class="input-file" id="fileInput" type="file" name="ufile"/>
+                                    <span t-if="error.get('ufile')">Please send again your resume.</span>
+                                </div>
+                            </div>
+                            <div class="form-group">
+                                <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
+                                    <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                            </div>
+                        </form>
+                    </section>
+                </div>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="thankyou">
+    <t t-call="website.layout">
+        <div id="wrap">
+            <div class="oe_structure">
+                <div class="container">
+                    <h1>Thank you!</h1>
+                    <p>
+                        Your offer application has been successfully registered,
+                        we will get back to you soon.
+                    </p>
+                </div>
+                <section data-snippet-id="cta" class="oe_dark">
+                    <div class="container">
+                        <div class="row">
+                            <div class="col-md-12 text-center mt16 mb16">
+                                <a href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
+                            </div>
+                        </div>
+                    </div>
+                </section>
+            </div>
+        </div>
+    </t>
+</template>
+
+<template id="offer_types" inherit_id="website_project_submission.index" active="False" customize_show="True" name="Filter by Type">
+    <xpath expr="//div[@id='offers_grid_left']" position="inside">
+        <ul class="nav nav-pills nav-stacked mb32">
+            <t t-foreach="types" t-as="t">
+                <li t-att-class="'active' if type and type.id == t.id else ''">
+                    <a t-attf-href="/offers/type/#{ slug(type) }" ><span t-field="t.name"/></a>
+                </li>
+            </t>
+        </ul>
+    </xpath>
+    <xpath expr="//div[@id='offers_grid_left']" position="attributes">
+        <attribute name="class">col-md-3</attribute>
+    </xpath>
+    <xpath expr="//div[@id='offers_grid']" position="attributes">
+        <attribute name="class">col-md-9</attribute>
+    </xpath>
+</template>
+
+<!-- User Navbar -->
+<template id="content_new_offer_offer" inherit_id="website.user_navbar" groups="base.group_user">
+    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
+         <li><a href="/offers/add" class="js_link2post">New offer Offer</a></li>
+    </xpath>
+</template>
+
+</data>
+</openerp>

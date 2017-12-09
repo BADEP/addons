@@ -23,18 +23,20 @@
 from openerp import models, fields, api
 import openerp.addons.decimal_precision as dp
 
-class product_uom(models.Model):
+class ProductUom(models.Model):
     _inherit = "product.uom"
+    
+    @api.one
+    def _get_default_label(self):
+        return self.name
+    
+    label = fields.Char(required=True, default=_get_default_label)
     dimensions = fields.One2many('product.uom.dimension', 'product_uom', copy=True)
 
-product_uom()
-
-class product_uom_dimension(models.Model):
+class ProductUomDimension(models.Model):
     _name = 'product.uom.dimension'
     name = fields.Char(required=True)
     multiplier = fields.Float(string='Coeff.', required=True, digits_compute=dp.get_precision('Product UoS'), default=1)
     rounding = fields.Float(string='Palier', digits_compute=dp.get_precision('Product UoS'), required=False)
     offset = fields.Float(string='biais', required=True, digits_compute=dp.get_precision('Product UoS'), default=0)
     product_uom = fields.Many2one('product.uom', required=True)
-    
-product_uom_dimension()

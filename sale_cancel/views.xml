@@ -1,0 +1,19 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+	<data>
+		<record id="sale_view_order_form_total_uom" model="ir.ui.view">
+			<field name="name">sale.view_order_form_total_uom</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+            <field name="model">sale.order</field>
+			<field eval="16" name="priority" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//button[@name='action']" position="attributes">
+                        <attribute name="states">manual,progress,done</attribute>
+					</xpath>
+				</data>
+			</field>
+		</record>
+	</data>
+</openerp>

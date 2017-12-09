@@ -1,0 +1,408 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+		<record id="action_project_submission" model="ir.actions.act_window">
+            <field name="name">Soumissions</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.submission</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+		
+		<record id="view_project_submission_form" model="ir.ui.view">
+			    <field name="name">project.submission.form</field>
+			    <field name="model">project.submission</field>
+			    <field name="arch" type="xml">
+			        <form string="Soumission">
+                    <header>
+                        <!--<button name="action_open" string=" A" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="action_close" string="Clôturer l'offre" states="open,done" type="object" class="oe_highlight" groups="base.group_user"/>
+                        --><field name="state" widget="statusbar" statusbar_visible="draft,open,done,closed"/>
+                    </header>
+						<sheet>
+            <div class="oe_right" name="buttons">
+                <div class="oe_button_box">
+                    <button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" type="object">
+                        <!--<field name="submission_count" widget="statinfo" string="Soumissions"/>-->
+                    </button>
+                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
+                        <field name="documents_count" widget="statinfo" string="Documents"/>
+                    </button>
+                </div>
+            </div>
+					      	<group col="1">
+		                            <field name="name"/>
+		                            <field name="user_id"/>
+		                            <field name="candidate"/>
+		                            <field name="partner_mobile"/>
+		                            <field name="offer"/>
+		                            <field name="project"/>
+                        	</group>
+                        	<group col="2">
+		                            <field name="offer"/>
+		                            <field name="field"/>
+		                            <field name="address"/>
+		                            <field name="description"/>
+		                            <!--<field name="date_submitted"/>-->   
+		                            <field name="date_processed"/>
+		                            <field name="title_action"/>
+		                            <field name="date_action"/>
+                        	</group>
+						</sheet>
+					</form>
+				</field>
+		</record>
+		
+		<record id="action_project_offer" model="ir.actions.act_window">
+            <field name="name">Offres</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.offer</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">kanban,tree,form</field>
+        </record>
+        
+        <record id="view_project_offer_kanban" model="ir.ui.view">
+            <field name="name">project.offer.kanban</field>
+            <field name="model">project.offer</field>
+            <field name="arch" type="xml">
+                <kanban class="oe_background_grey" default_group_by="state">
+                    <field name="name"/>
+                    <field name="type"/>
+                    <field name="submission_count"/>
+                    <field name="color"/>
+                    <field name="submissions"/>
+                    <field name="document_ids"/>
+                    <field name="accepted_count"/>
+                    <field name="user_id"/>
+                    <field name="state"/>
+                    <field name="total_count"/>
+                    <templates>
+                        <t t-name="kanban-box">
+                            <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_kanban_global_click">
+                                <div class="oe_dropdown_toggle oe_dropdown_kanban oe_custom">
+                                    <span class="oe_e">í</span>
+                                    <ul class="oe_dropdown_menu">
+                                        <t t-if="widget.view.is_action_enabled('edit')">
+                                            <li><a type="edit">Edit...</a></li>
+                                        </t>
+                                        <t t-if="widget.view.is_action_enabled('delete')">
+                                            <li><a type="delete">Delete</a></li>
+                                        </t>
+                                        <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                    </ul>
+                                </div>
+                                <div class="oe_kanban_content">
+                                    <t t-if="record.user_id.raw_value">
+                                        <img t-att-src="kanban_image('res.partner', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar"/>
+                                    </t>
+                                    <t t-if="record.user_id.raw_value === false">
+                                        <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
+                                    </t>
+                                    <div class="oe_job_detail">
+                                        <div class="text-center oe_job oe_name oe_kanban_ellipsis">
+                                            <field name="name"/>
+                                        </div>
+                                        <div class="text-center oe_job oe_department oe_kanban_ellipsis">
+                                            <strong><field name="type"/>
+                                            <span t-if="record.user_id.value" class="oe_manager_name">
+                                            </span></strong>
+                                        </div>
+                                    </div>
+                                    <t t-if="record.state.raw_value == 'open'">
+                                        <div class="oe_applications">
+                                            <a name="%(action_project_submission)d" type="action">
+												<span><t t-esc="record.submissions.raw_value.length"/> Soumissions</span>
+                                            </a>
+                                            <br/>
+                                            <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
+                                                <span t-if="record.document_ids.raw_value.length gt 1"><t t-esc="record.document_ids.raw_value.length"/> Documents</span>
+                                                <span t-if="record.document_ids.raw_value.length lt 2"><t t-esc="record.document_ids.raw_value.length"/> Document</span>
+                                            </a>
+                                        </div>
+                                        <div class="oe_job_justgage">
+                                            <field state="open" name="accepted_count" widget="gauge"
+                                                style="margin-top:7px; width:160px; height: 120px;"
+                                                options="{
+                                                    'max_field': 'total_count',
+                                                    'label': 'Soumissions acceptées',
+                                                    'on_change': 'action_set_total_count',
+                                                    'on_click_label': 'Nombre de soumissions à accepter',
+                                                    'force_set': False,
+                                                    'gauge_value_field': 'total_count',
+                                                }">
+                                                Soumissions acceptées
+                                            </field>
+                                        </div>
+                                    </t>
+                                    <t t-if="record.state.raw_value == 'draft'">
+                                        <div class="oe_start_recruitment">
+                                            <p><b>Cliquez ici</b> pour lancer l'offre</p>
+                                            <img src="/hr_recruitment/static/src/img/down1.png"/>
+                                        </div>
+                                    </t>
+                                    <div class="oe_launch_recruitment">
+                                        <a t-if="record.state.raw_value == 'draft'" data-name="action_open" data-type="object" class="oe_kanban_action">Lancer l'offre</a>
+                                        <a t-if="record.state.raw_value == 'open'" data-name="action_close" data-type="object" class="oe_kanban_action">Clôturer l'offre</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </t>
+                    </templates>
+                </kanban>
+            </field>
+    	</record>
+        
+        <record id="view_project_offer_form" model="ir.ui.view">
+			    <field name="name">project.offer.form</field>
+			    <field name="model">project.offer</field>
+			    <field name="type">form</field>
+			    <field name="arch" type="xml">
+			        <form string="project offer">
+                    <header>
+                        <button name="action_open" string="Lancer l'offre" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <button name="action_close" string="Clôturer l'offre" states="open,done" type="object" class="oe_highlight" groups="base.group_user"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,open,done,closed"/>
+                    </header>
+						<sheet>
+            <div class="oe_right" name="buttons">
+                <div class="oe_button_box">
+                    <button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" type="action">
+                        <field name="submission_count" widget="statinfo" string="Soumissions"/>
+                    </button>
+                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
+                        <field name="documents_count" widget="statinfo" string="Documents"/>
+                    </button>
+                </div>
+            </div>
+					      	<group col="1">
+		                            <field name="name"/>
+	                            	<field name="partner_id"/>
+		                            <field name="user_id"/>
+                        	</group>
+                        	<group col="2">
+		                            <field name="type"/>
+		                            <field name="submissions"/>
+		                            <field name="total_time"/>   
+		                            <field name="total_count"/>         
+                        	</group>
+						</sheet>
+					</form>
+				</field>
+		</record>
+		
+		<record id="view_offer_filter" model="ir.ui.view">
+            <field name="name">offer</field>
+            <field name="model">project.offer</field>
+            <field name="arch" type="xml">
+                <search string="offers">
+                    <filter domain="[('state','=','open')]" string="In Position"/>
+                    <field name="partner_id"/>
+                    <group expand="0" string="Group By">
+                        
+                    </group>
+                </search>
+            </field>
+        </record>
+        
+        <record model="ir.ui.view" id="view_project_submission_kanban">
+        <field name="name">Project Submission kanban</field>
+        <field name="model">project.submission</field>
+        <field name="arch" type="xml">
+            <kanban default_group_by="state">
+                <field name="state"/>
+                <field name="color"/>
+                <field name="user_id"/>
+                <!-- <field name="partner_id"/>-->
+                <field name="field"/>
+                <field name="offer"/>
+                <field name="title_action"/>
+                <field name="date_submitted"/>
+                <field name="date_processed"/>
+                <field name="date_action"/>
+                <field name="project"/>
+                <field name="documents_count"/>
+                <field name="candidate"/>
+                <field name="message_summary"/>
+                <field name="priority"/>
+                <field name="partner_mobile"/>
+               
+           		<templates>
+           		
+           		    <t t-name="kanban-tooltip">
+                        <ul class="oe_kanban_tooltip">
+                            <li t-if="record.field.raw_value"><b>Domaine:</b> <field name="field"/></li>
+                            <li t-if="record.candidate.raw_value"><b>Contact:</b> <field name="candidate"/></li>
+                            <li t-if="record.state.raw_value"><b>State:</b> <field name="state"/></li>
+                        </ul>
+                    </t>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_card oe_kanban_global_click oe_semantic_html_override">
+                            <div class="oe_dropdown_toggle oe_dropdown_kanban">
+                                <span class="oe_e">i</span>
+                                <ul class="oe_dropdown_menu">
+                                    <t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
+                                    <li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
+                                    <li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
+                                </ul>
+
+                            </div>
+                            
+                            <div class="oe_kanban_content" tooltip="kanban-tooltip">
+                                <div>
+                                    <!--<t t-if="record.partner_name.raw_value"><b><field name="partner_name"/></b><br/></t>-->
+                                    <i><field name="name"/></i><br/>
+                                    <field name="offer"/><br/>
+                                    <t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
+                                </div>
+                                <div style="padding-left: 0.5em">
+                                    <t t-if="record.date_action.raw_value and record.date_action.raw_value lt (new Date())" t-set="red">oe_kanban_text_red</t>
+                                    <span t-attf-class="#{red || ''}"><field name="date_action"/></span>
+                                        <t t-if="record.date_action.raw_value"> : </t>
+                                        <field name="title_action"/>
+                                </div>
+                                <div style="width:240px"><field name="field"/></div>
+                                <div class="oe_kanban_bottom_right">
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <div class="pull-left" groups="base.group_user">
+                                        <field name="priority" widget="priority"/>
+                                    </div>
+                                </div>
+                                <div class="oe_kanban_footer_left" style="margin-top:5px;">
+                                    <t t-raw="record.message_summary.raw_value"/>
+                                    <a t-if="record.documents_count" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="documents_count"/> Documents</a>
+                                </div>
+
+                            </div>
+                            <div class="oe_clear"></div>
+                        </div>
+                    </t>
+           		</templates>
+            </kanban>
+        </field>
+    </record>
+       
+	    <record id="view_crm_case_jobs_filter" model="ir.ui.view">
+        <field name="name">Souissions s</field>
+        <field name="model">project.submission</field>
+        <field name="arch" type="xml">
+            <search string="Search Applicants">
+                <field name="candidate" filter_domain="['|','|',('name','ilike',self),('candidate','ilike',self),('email_from','ilike',self)]" string="Subject / Soumission"/>
+                <filter string="My" domain="[('user_id', '=', uid)]"/>
+                <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
+                <separator/>
+                <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
+                    domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
+                <separator/>
+                <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+                <field name="offer"/>
+                <field name="field"/>
+                <field name="user_id"/>
+                <separator/>
+                <field name="candidate"/>
+                <separator/>
+                <group expand="0" string="Group By">
+                    <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
+                    <filter string="Offre" domain="[]" context="{'group_by':'offer'}"/>
+                    <filter string="Domaine" domain="[]" context="{'group_by':'field'}"/>
+                    <filter string="Date creation" context="{'group_by':'create_date'}"/>
+                </group>
+           </search>
+        </field>
+    </record>
+        
+       	<record id="action_submission_request" model="ir.actions.act_window">
+            <field name="name">Demandes de ressources</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.request</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+
+		<record id="action_project_candidate" model="ir.actions.act_window">
+            <field name="name">Candidats</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.candidate</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+        
+		<record id="view_project_candidate_form" model="ir.ui.view">
+			    <field name="name">project.candidate.form</field>
+			    <field name="model">project.candidate</field>
+			    <field name="arch" type="xml">
+			        <form string="Candidates">
+						<sheet>
+				            <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
+				            
+				            <h1><field name="name" placeholder="Name"/></h1>
+				            <!-- <label for="user_id" class="oe_edit_only"/>
+	                        <field name="user_id"/>-->
+	                        <label for="address_home_id" class="oe_edit_only"/>
+	                        <field name="address_home_id"/>
+	                        
+	                        <label for="mobile_phone" class="oe_edit_only"/>
+	                        <field name="mobile_phone"/>
+	                        
+	                        <label for="email" class="oe_edit_only"/>
+	                        <field name="email"/>
+	                        
+	                        <label for="city" class="oe_edit_only"/>
+	                        <field name="city"/>
+	                        
+	                        <label for="login_date" class="oe_edit_only"/>
+	                        <field name="login_date"/>
+	                        
+	                        <label for="work_location" class="oe_edit_only"/>
+	                        <field name="work_location"/>
+	                        
+	                        <label for="notes" class="oe_edit_only"/>
+	                        <field name="notes"/>
+	                        
+	                        <!-- <label for="offer_ids" class="oe_edit_only"/>
+	                        <field name="offer_ids" visible='false'/>-->
+						</sheet>
+						<div class="oe_chatter">
+			                <field name="message_follower_ids" widget="mail_followers"/>
+			                <field name="message_ids" widget="mail_thread"/>
+	            		</div>
+					</form>
+				</field>
+		</record>
+			
+		<record id="action_project_request" model="ir.actions.act_window">
+            <field name="name">Types de demandes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">project.offer.type</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">tree,form,kanban</field>
+        </record>
+        
+        <record id="view_project_request_form" model="ir.ui.view">
+			    <field name="name">project.offer.type.form</field>
+			    <field name="model">project.offer.type</field>
+			    <field name="arch" type="xml">
+			        <form string="Types Offre">
+						<sheet>
+                            <field name="name"/>
+                            <field name="note"/>
+						</sheet>
+					</form>
+				</field>
+		</record>
+
+        <menuitem id="menu_project_submission_root" name="Appels à projets" sequence="10"/>
+
+		<menuitem id="menu_project_submission_main" name="Appels à projets" parent="project_submission.menu_project_submission_root" sequence="0"/>
+		<menuitem id="menu_project_submission_config" name="Configuration" parent="project_submission.menu_project_submission_root" sequence="10"/>
+
+		<menuitem id="menu_project_offer" name="Offres" action="action_project_offer" parent="project_submission.menu_project_submission_main" sequence="0"/>
+		<menuitem id="menu_project_submission" name="Soumissions" action="action_project_submission" parent="project_submission.menu_project_submission_main" sequence="10"/>
+		<menuitem id="menu_project_candidate" name="Candidats" action="action_project_candidate" parent="project_submission.menu_project_submission_main" sequence="20"/>
+		<menuitem id="menu_project_submission_request" name="Demandes de ressources" action="action_submission_request" parent="project_submission.menu_project_submission_main" sequence="20"/>
+
+		<menuitem id="menu_project_offer_type" name="Types d'offres" parent="project_submission.menu_project_submission_config" sequence="0"/>
+		<menuitem id="menu_project_request_type" name="Types de demandes" action="action_project_request" parent="project_submission.menu_project_submission_config" sequence="10"/>
+
+
+	</data>
+</openerp>

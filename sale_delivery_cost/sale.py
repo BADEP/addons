@@ -37,9 +37,8 @@ class sale_order_line_old(osv.osv):
         cost = 0
         
         product_obj = self.pool.get('product.product').browse(cr, uid, product, context)
-        partner_shipping_id = self.pool.get('res.partner').browse(cr, uid, context.get('partner_shipping_id'), context)
         for delivery_cost in product_obj.product_tmpl_id.delivery_costs:
-            if delivery_cost.code.id == partner_shipping_id.code.id:
+            if delivery_cost.code.id == context.get('code'):
                 cost += delivery_cost.price
                 break
         if 'price_unit' in res['value']:
@@ -76,10 +75,8 @@ sale_order_line()
 
 class sale_order(models.Model):
     _inherit = 'sale.order'
-    vehicle = fields.Many2one('fleet.vehicle', readonly=True, states={'draft': [('readonly', False)]}, string='Véhicule')
-    driver = fields.Many2one('res.partner', related='vehicle.driver_id', store=True, readonly=True, states={'draft': [('readonly', False)]}, string='Chauffeur')
-    driver_cost = fields.Float(digits_compute=dp.get_precision('Account'), default=0, string='Coût transport')
     delivery_cost = fields.Float(digits_compute=dp.get_precision('Account'), compute='get_delivery_cost', string='Total DT')
+    code = fields.Many2one('product.delivery.code', string='Tarif DT')
     
     @api.depends('order_line')
     def get_delivery_cost(self):
@@ -88,13 +85,18 @@ class sale_order(models.Model):
             cost += line.cost_subtotal
         self.delivery_cost = cost
     
+    @api.multi
+    def onchange_delivery_id(self, company_id, partner_id, delivery_id, fiscal_position):
+        r = super(sale_order, self).onchange_delivery_id(company_id, partner_id, delivery_id, fiscal_position)
+        delivery = self.env['res.partner'].browse(delivery_id)
+        r['value']['code'] = delivery.code and delivery.code.id or False
+        return r
+    
     @api.one
     def action_ship_create(self):
         res = super(sale_order, self).action_ship_create()
         vals = {
-                'vehicle': self.vehicle.id,
-                'driver': self.driver.id,
-                'driver_cost': self.driver_cost
+                'code': self.code and self.code.id or False,
                 }
         self.picking_ids.write(vals)
         return res
@@ -103,8 +105,6 @@ sale_order()
 class stock_picking(models.Model):
     _inherit = 'stock.picking'
     
-    vehicle = fields.Many2one('fleet.vehicle', readonly=False, states={'done': [('readonly', True)]}, string='Véhicule')
-    driver = fields.Many2one('res.partner', readonly=False, states={'done': [('readonly', True)]}, string='Chauffeur')
-    driver_cost = fields.Float(digits_compute=dp.get_precision('Account'), default=0, string='Coût transport')
-    
+    code = fields.Many2one('product.delivery.code', string='Tarif DT')
+
 stock_picking()

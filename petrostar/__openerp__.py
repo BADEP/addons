@@ -2,8 +2,8 @@
 ##############################################################################
 #
 #    OpenERP, Open Source Management Solution
-#    Copyright (c) 2010-2013 Elico Corp. All Rights Reserved.
-#    Author: Yannick Gouin <yannick.gouin@elico-corp.com>
+#    Copyright (c) 2016-2016 BADEP. All Rights Reserved.
+#    Author: Khalid HAZAM <k.hazam@badep.ma>
 #
 #    This program is free software: you can redistribute it and/or modify
 #    it under the terms of the GNU Affero General Public License as
@@ -22,21 +22,26 @@
 
 
 {
-    'name': 'Warehouse on Partner',
+    'name': 'Petrostar Customization',
     'version': '1.0',
     'category': 'Sales',
     'description': """
-    Define a preferred warehouse for each partner. The warehouse is then used automatically as the source location on sale orders with the customer. 
+    Petrostar meta-package
     """,
     'author': 'BADEP',
     'website': 'http://www.badep.ma',
-    'depends': ['sale', 'stock', 'sale_stock'],
-    'init_xml': [],
-    'update_xml': [
-           'partner_view.xml',
-
+    'depends': ['account_accountant',
+                'purchase',
+                'sale_stock',
+                'stock_account',
+                'fleet',
+                'sale_transport_multi_address',
+                'stock_transport_multi_address',
+                'purchase_transport_multi_address'
+                ],
+    'data': [
+           'views.xml',
     ],
-    'demo_xml': [],
     'installable': True,
 }
 

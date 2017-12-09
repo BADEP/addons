@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="report_invoice_amount_to_text_fr" model="ir.ui.view">
+			<field name="name">amount_to_text.report_invoice_document_amount_to_text_fr</field>
+			<field name="inherit_id" ref="account.report_invoice_document" />
+			<field eval="10" name="priority" />
+			<field name="type">qweb</field>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//p[@t-if='o.comment']" position="before">
+			            <p>
+			                <strong t-if="o.partner_id.lang == 'fr_FR'">Arrêté la présente facture à la somme de:</strong>
+			                <strong t-if="o.partner_id.lang == 'en_US'">This bill is stopped at the sum of:</strong>
+			                <span t-field="o.amount_to_text"/>
+			            </p>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="report_saleorder_amount_to_text_fr" model="ir.ui.view">
+			<field name="name">amount_to_text.report_saleorder_document_amount_to_text_fr</field>
+			<field name="inherit_id" ref="sale.report_saleorder_document" />
+			<field eval="16" name="priority" />
+			<field name="type">qweb</field>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//p[@t-field='o.note']" position="before">
+			            <p>
+			                <strong t-if="o.partner_id.lang == 'fr_FR'">Arrêté le présent devis/commande à la somme de:</strong>
+			                <strong t-if="o.partner_id.lang == 'en_US'">This sale order is stopped at the sum of:</strong>
+			                <span t-field="o.amount_to_text"style="text-transform: uppercase; font-size: 20px;"/>
+			            </p>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="view_currency_form_label" model="ir.ui.view">
+			<field name="name">amount_to_text.view_currency_form_label</field>
+			<field name="inherit_id" ref="base.view_currency_form" />
+			<field eval="16" name="priority" />
+			<field name="type">form</field>
+			<field name="model">res.currency</field>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='name']" position="after">
+						<field name="label" />
+					</xpath>
+				</data>
+			</field>
+		</record>
+	</data>
+</openerp>

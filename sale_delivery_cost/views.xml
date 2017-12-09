@@ -25,47 +25,16 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='sales']" position="after">
-                    <page string="Delivery Costs" attrs="{'invisible':[('sale_ok','=',False)]}" name="delivery_costs">
+                    <page string="Tarifs DT" attrs="{'invisible':[('sale_ok','=',False)]}" name="delivery_costs">
 						<field name="delivery_costs">
 							<tree string="Delivery Costs" editable="bottom">
 								<field name="code" />
+								<field name="pricelist" />
 								<field name="price" />
 							</tree>
 						</field>
                     </page>
                 </xpath>
-			</field>
-        </record>
-
-        <record id="picking_delivery_cost_form_view" model="ir.ui.view">
-            <field name="name">sale_delivery_cost.stock_picking_form_view</field>
-            <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_form" />
-            <field eval="17" name="priority"/>
-            <field name="type">form</field>
-            <field name="arch" type="xml">
-                <xpath expr="//field[@name='partner_id']" position="after">
-		        	<field name="vehicle"/>
-		        	<field name="driver"/>
-                    <field name="driver_cost"/>
-				</xpath>
-			</field>
-        </record>
-
-        <record id="delivery_cost_report_picking" model="ir.ui.view">
-            <field name="name">sale_delivery_cost.report_picking</field>
-            <field name="inherit_id" ref="stock.report_picking" />
-            <field eval="17" name="priority"/>
-            <field name="type">qweb</field>
-            <field name="arch" type="xml">
-                <xpath expr="//th[@name='td_sched_date_h']" position="after">
-		        	<th>Chauffeur</th>
-				</xpath>
-                <xpath expr="//td[@name='td_sched_date']" position="after">
-	                <td>
-	                    <span t-field="o.driver"/>
-	                </td>
-				</xpath>
 			</field>
         </record>
 
@@ -77,57 +46,47 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_id']" position="attributes">
-					<attribute name="context">{'partner_shipping_id':parent.partner_shipping_id, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
+					<attribute name="context">{'code':parent.code, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
 				</xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='product_id']" position="attributes">
-					<attribute name="context">{'partner_shipping_id':parent.partner_shipping_id, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
+					<attribute name="context">{'code':parent.code, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
 				</xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="attributes">
-					<attribute name="context">{'partner_shipping_id':parent.partner_shipping_id, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
+					<attribute name="context">{'code':parent.code, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
 				</xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="attributes">
-					<attribute name="context">{'partner_shipping_id':parent.partner_shipping_id, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
+					<attribute name="context">{'code':parent.code, 'partner_id':parent.partner_id, 'quantity':product_uom_qty, 'pricelist':parent.pricelist_id, 'uom':product_uom}</attribute>
+				</xpath>
+                <xpath expr="//field[@name='pricelist_id']" position="after">
+					<field name="code" />
 				</xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="before">
-                	<field name="price_base" groups="base.grou_user"/>
+                	<field name="price_base" groups="base.group_user"/>
                 	<field name="cost_unit" groups="base.group_user"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="before">
                 	<field name="price_base" groups="base.group_user"/>
                 	<field name="cost_unit" groups="base.group_user"/>
                 </xpath>
-				<xpath expr="//field[@name='partner_shipping_id']" position="after">
-		        	<field name="driver" groups="base.group_user"/>
-                    <field name="driver_cost" groups="base.group_user"/>
-				</xpath>
 				<xpath expr="//field[@name='amount_untaxed']" position="before">
 					<field name="delivery_cost" groups="base.group_user" widget="monetary" options="{'currency_field': 'currency_id'}"/>
 				</xpath>
 			</field>
         </record>
 
-        <record id="sale_delivery_cost_tree_view" model="ir.ui.view">
-            <field name="name">sale_delivery_cost.sale_order_tree_view</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_order_tree" />
+		<record id="purchase_delivery_cost_form_view" model="ir.ui.view">
+            <field name="name">sale_delivery_cost.sale_order_form_view</field>
+            <field name="model">purchase.order</field>
+            <field name="inherit_id" ref="purchase.purchase_order_form" />
             <field eval="17" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-				<xpath expr="//field[@name='amount_total']" position="before">
-					<field name="driver"/>
-					<field name="driver_cost" sum="Total" groups="base.group_user"/>
-				</xpath>
-			</field>
-        </record>
-
-        <record id="sale_delivery_cost_filter_view" model="ir.ui.view">
-            <field name="name">sale_delivery_cost.sale_order_fliter_view</field>
-            <field name="model">sale.order</field>
-            <field name="inherit_id" ref="sale.view_sales_order_filter" />
-            <field eval="17" name="priority"/>
-            <field name="arch" type="xml">
-				<xpath expr="//filter[@string='Customer']" position="after">
-					<filter string="driver" domain="[]" context="{'group_by':'driver'}"/>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='price_unit']" position="before">
+                	<field name="price_base" groups="base.group_user"/>
+                	<field name="cost_unit" groups="base.group_user"/>
+                </xpath>
+				<xpath expr="//field[@name='amount_untaxed']" position="before">
+					<field name="delivery_cost" groups="base.group_user" widget="monetary" options="{'currency_field': 'currency_id'}"/>
 				</xpath>
 			</field>
         </record>
@@ -144,7 +103,7 @@
         </record>
 
 		<record id="action_code" model="ir.actions.act_window">
-            <field name="name">Codes</field>
+            <field name="name">Tarifs DT</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">product.delivery.code</field>
             <field name="view_type">form</field>
@@ -162,11 +121,25 @@
 					<field name="delivery_costs">
 						<tree string="Costs" editable="bottom">
 		                    <field name="product"/>
+		                    <field name="pricelist"/>
 		                    <field name="price"/>
                         </tree>
 					</field>
 				</form>
             </field>
+        </record>
+
+		<record id="stock_delivery_cost_form_view" model="ir.ui.view">
+            <field name="name">sale_delivery_cost.stock_picking_form_view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+				<xpath expr="//field[@name='partner_id']" position="after">
+                    <field name="code" groups="base.group_user"/>
+				</xpath>
+			</field>
         </record>
 		<menuitem id="menu_code" action="action_code" parent="base.menu_base_config" sequence="10"/>
    

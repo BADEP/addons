@@ -1,6 +1,38 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+
+        <template id="report_invoice_product_dimension" inherit_id="account.report_invoice_document">
+		    <xpath expr="//span[@t-field='l.uos_id']" position="replace">
+                <span t-field="l.uos_id.label" groups="product.group_uom"/>
+            </xpath>
+        </template>
+
+        <template id="report_stock_picking_product_dimension" inherit_id="stock.report_picking">
+		    <xpath expr="//span[@t-field='move.product_id.uom_id']" position="replace">
+				<span t-field="move.product_id.uom_id.label" groups="product.group_uom"/>
+            </xpath>
+		    <xpath expr="//span[@t-field='move.product_uom']" position="replace">
+				<span t-field="move.product_uom.label" groups="product.group_uom"/>
+			</xpath>
+		    <xpath expr="//span[@t-field='pack_operation.product_uom_id']" position="replace">
+				<span t-field="pack_operation.product_uom_id.label" groups="product.group_uom"/>
+			</xpath>
+        </template>
+
+		<template id="report_saleorder_mrp_document_inherit_product_dimension" inherit_id="sale_mrp_extended.report_saleorder_mrp_document">
+            <xpath expr="//thead/tr/th[2]" position="before">
+				<th style="border: 1px solid black;">Ref.</th>
+            </xpath>
+            <xpath expr="//tbody/tr/td[2]" position="before">
+				<td style="border: 1px solid black;">
+                	<span t-field="l.product_id.default_code"/>
+                </td>
+            </xpath>
+		    <xpath expr="//span[@t-field='l.product_uom']" position="after">
+		    	<t t-if="l.dimensions_label"><span> / </span><span t-field="l.dimensions_label"/></t>
+            </xpath>
+		</template>
         <template id="report_saleorder_document_inherit_product_dimension" inherit_id="sale.report_saleorder_document">
             <xpath expr="//thead/tr/th[1]" position="before">
 				<th>Ref.</th>
@@ -16,7 +48,7 @@
 			<xpath expr="//span[@t-field='l.product_uom']" position="replace" />
             <xpath expr="//tbody/tr/td[3]" position="after">
 				<td>
-                	<span groups="product.group_uom" t-field="l.product_uom"/>
+                	<span groups="product.group_uom" t-field="l.product_uom.label"/>
                 </td>
             </xpath>
             <xpath expr="//thead/tr/th[3]" position="replace" />
@@ -29,7 +61,7 @@
             </xpath>
         </template>
 
-<!--		<template id="report_saleorder_mrp_document_inherit_product_dimension" inherit_id="sale_mrp_extended.report_saleorder_mrp_document">
+		<template id="report_saleorder_mrp_document_inherit_product_dimension" inherit_id="sale_mrp_extended.report_saleorder_mrp_document">
             <xpath expr="//thead/tr/th[2]" position="before">
 				<th style="border: 1px solid black;">Ref.</th>
             </xpath>
@@ -38,13 +70,10 @@
                 	<span t-field="l.product_id.default_code"/>
                 </td>
             </xpath>
-			<xpath expr="//span[@t-field='l.product_id']" position="replace">
-		    	<span t-field="l.sale_dimensions_label"/>
-            </xpath>
 		    <xpath expr="//span[@t-field='l.product_uom']" position="after">
-		    	<span> / </span><span t-field="l.dimensions_label"/>
+		    	<t t-if="l.dimensions_label"><span> / </span><span t-field="l.dimensions_label"/></t>
             </xpath>
-		</template>-->
+		</template>
 
         <record id="sale_dimension_form_view" model="ir.ui.view">
             <field name="name">product_dimension.sale_dimension_form_view</field>
@@ -65,9 +94,13 @@
                 </xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="attributes">
 					<attribute name="attrs">{'invisible': [('dimensions','!=',[])]}</attribute>
+					<attribute name="on_change"></attribute>
 				</xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="after">
                 	<field name="product_visible_qty" class="oe_inline" attrs="{'invisible': [('dimensions','=',[])]}"/>
+				</xpath>
+                <xpath expr="//field[@name='order_line']/form//field[@name='price_unit']" position="after">
+                	<field name="dummy_total"/>
 				</xpath>
 			</field>
         </record>

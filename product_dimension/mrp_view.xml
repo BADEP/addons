@@ -1,6 +1,19 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
     <data>
+        <record id="mrp_bom_dimension_form_view" model="ir.ui.view">
+            <field name="name">mrp.bom.dimension.form.view</field>
+            <field name="model">mrp.bom</field>
+            <field name="inherit_id" ref="mrp.mrp_bom_form_view" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='bom_line_ids']/tree//field[@name='product_uom']" position="after">
+					<field name="dimensions" widget="many2many_tags" options="{'no_create_edit': True}"/>
+                </xpath>
+            </field>
+        </record>
+
         <record id="mrp_production_dimension_form_view" model="ir.ui.view">
             <field name="name">mrp.production.dimension.form.view</field>
             <field name="model">mrp.production</field>
@@ -20,5 +33,20 @@
                 </xpath>
             </field>
         </record>
+
+		<template id="report_mrporder_inherit_product_dimension" inherit_id="mrp.report_mrporder">
+			<xpath expr="//span[@t-field='o.product_id.code']" position="replace" />
+			<xpath expr="//span[@t-field='o.product_id.name']" position="replace">
+				<span t-field="o.product_id"/>
+			</xpath>
+			<xpath expr="//span[@t-field='line.product_id.code']" position="replace" />
+			<xpath expr="//span[@t-field='line.product_id.name']" position="replace">
+				<span t-field="line.product_id"/>
+			</xpath>
+			<xpath expr="//span[@t-field='line2.product_id.code']" position="replace" />
+			<xpath expr="//span[@t-field='line2.product_id.name']" position="replace">
+				<span t-field="line2.product_id"/>
+			</xpath>
+		</template>
     </data>
 </openerp>

@@ -32,14 +32,17 @@ product_template()
 
 class product_delivery_cost(models.Model):
     _name = 'product.delivery.cost'
-
-    code = fields.Many2one('product.delivery.code', ondelete='cascade', string="Code DT")
+    _description = 'Coût de livraison'
+    code = fields.Many2one('product.delivery.code', ondelete='cascade', string='Tarif DT')
     price = fields.Float(required=True, digits_compute=dp.get_precision('Product Price'), default=0, string='Prix transport')
     product = fields.Many2one('product.template', ondelete='cascade', string='Article')
+    pricelist = fields.Many2one('product.pricelist', ondelete='set null')
+
 product_delivery_cost()
 
 class product_delivery_code(models.Model):
     _name = 'product.delivery.code'
+    _description = 'Tarif DT'
 
     name = fields.Char(required=True, string='Label')
     partners = fields.One2many('res.partner', 'code', string='Clients')

@@ -26,14 +26,15 @@
     'website' : 'http://www.badep.ma',
     'summary' : 'Vehicle, accounting',
     'description' : """
-Directly link the fleet management to accounting.
-""",
+    Useful when the company has its own transportation fleet. Each Sale order and picking order can now be assigned to a particular vehicle and driver.
+    """,
     'depends' : [
         'fleet',
-        'account',
+        'sale',
+        'stock',
     ],
     'data' : [
-              'fleet_view.xml'
+              'views.xml'
     ],
     'installable' : True,
     'application' : False,
