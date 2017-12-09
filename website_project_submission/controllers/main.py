@@ -11,15 +11,9 @@ from openerp.addons.website.models.website import slug
 class website_project_submission(http.Controller):
     @http.route([
         '/Offers',
-        '/Offers/country/<model("res.country"):country>',
         '/Offers/type/<model("project.offer.type"):type>',
-        '/Offers/country/<model("res.country"):country>/type/<model("project.offer.type"):type>',
-        '/Offers/office/<int:office_id>',
-        '/Offers/country/<model("res.country"):country>/office/<int:office_id>',
-        '/Offers/type/<model("project.offer.type"):type>/office/<int:office_id>',
-        '/Offers/country/<model("res.country"):country>/type/<model("project.offer.type"):type>/office/<int:office_id>',
     ], type='http', auth="public", website=True)
-    def Offers(self, country=None, type=None, office_id=None, **kwargs):
+    def Offers(self, type=None, **kwargs):
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
 
         Country = env['res.country']

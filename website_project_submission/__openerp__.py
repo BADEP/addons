@@ -20,5 +20,5 @@ OpenERP Contact Form
     'demo': [
         'data/hr_job_demo.xml',
     ],
-    'installable': True,
+    'installable': False,
 }
