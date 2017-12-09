@@ -157,7 +157,7 @@ class ProjectOffer(models.Model):
     @api.one
     def _get_attached_docs(self):
         res = self.env['ir.attachment'].search([('res_model', '=', 'project.offer'), ('res_id', '=', self.id)])
-        return res
+        self.document_ids =  res.ids
     """
     @api.returns('ir.actions.act_window')
     @api.multi
@@ -183,10 +183,10 @@ class ProjectOffer(models.Model):
     @api.one
     @api.depends('submissions', 'total_count')
     def _count_all(self):
+        self.submission_count = len(self.submissions)
         self.accepted_count = len(self.submissions.filtered(lambda s: s.state == 'accepted'))
         self.vacant_count = self.total_count - self.accepted_count
         self.documents_count = len(self.document_ids)
-        return 0
     
     @api.one
     def action_set_total_count(self, value):
