@@ -16,91 +16,91 @@
                     <div class="container">
                         <div class="row">
                             <div class="col-md-12 text-center mb16" data-snippet-id="colmd">
-                                <h2>Appels à projets en cours</h2>
+                                <div class="p-3 mb-2 bg-primary text-white"><h1>Appels à projets en cours</h1></div>
                                 <h3 class="text-muted">Join us and help disrupt the enterprise market!</h3>
-                            </div>
-                            <div class="col-md-12" data-snippet-id="colmd">
-                                <p>
-                                    With a small team of smart people, we released the most
-                                    disruptive enterprise management software in the world.
-                                    Odoo is fully open source, super easy, full featured
-                                    (3000+ apps) and its online offer is 3 times cheaper than
-                                    traditional competitors like SAP and Ms Dynamics.
-                                </p>
-                                <p>
-                                    Join us, we offer you an extraordinary chance to learn, to
-                                    develop and to be part of an exciting experience and
-                                    team.
-                                </p>
                             </div>
                         </div>
                     </div>
                 </section>
             </div>
-
-            <div class="container oe_website_offers">
-                <div class="row">
-                    <div class="hidden" id="offers_grid_left">
-
-                    </div>
-                    <div class="col-md-12" id="offers_grid">
-                        <div t-if="not offers">
-                            <div class="text-center text-muted">
-                              <h4 class="css_editable_display">Aucun appel à projets touvé</h4>
-                              <h4 class="css_editable_hidden">There isn't offer offer published now, click <a t-attf-href="/page/website.contactus">here</a> to contact us</h4>
-                              <t groups="base.group_website_publisher">
-                                 <t  groups="base.group_project_manager">
-                                  <p>Click on "Content" to define a new project offer or "Help" for more informations.</p>
-                                  <img src="/website/static/src/img/content_here.png"/>
-                                </t>
-                              </t>
-                            </div>
-                        </div>
-                        <ul class="media-list" t-if="offers">
-                            <li t-foreach="offers" t-as="offer" class="media">
-                                <div class="media-body" t-att-data-publish="offer.website_published and 'on' or 'off'">
-                                    <h3 class="media-heading">
-                                        <a t-attf-href="/offers/detail/#{ slug(offer) }">
-                                            <span t-field="offer.name"/>
-                                        </a>
-                                        <!-- <small t-if="offer.no_of_project &gt; 1">
-                                            <t t-esc="offer.no_of_project"/> open positions
-                                        </small> -->
-                                    </h3>
-
-                                    <span t-field="offer.partner_id" t-field-options='{
-                                        "widget": "contact",
-                                        "fields": ["address"],
-                                        "no_tag_br": true
-                                        }'/>
-                                    <span t-if="not offer.website_published" class="label label-danger">not published</span>
-                                    <div class="text-muted">
-                                        <i class="fa fa-clock-o"/> <span t-field="offer.write_date"/>
-                                    </div>
-                                </div>
-                            </li>
-                        </ul>
-                    </div>
+		</div>
+        <div class="col-md-12" id="offers_grid">
+            <div t-if="not offers">
+                <div class="text-center text-muted">
+                  <h4 class="css_editable_display">Aucun appel à projets touvé</h4>
+                  <h4 class="css_editable_hidden">There isn't offer offer published now, click <a t-attf-href="/page/website.contactus">here</a> to contact us</h4>
+                  <t groups="base.group_website_publisher">
+                     <t  groups="base.group_project_manager">
+                      <p>Click on "Content" to define a new project offer or "Help" for more informations.</p>
+                      <img src="/website/static/src/img/content_here.png"/>
+                    </t>
+                  </t>
                 </div>
-            </div>
-        </div>
-    </t>
+         	</div>
+		</div>
+		
+		
+    <div class="row">
+    	<div class="container">
+    		<div t-foreach="offers" t-as="offer" class="col-lg-4">
+	    			<style>
+						.tn-texts { 
+							font-size: 1.4rem;
+							color: red;
+							font-weight: bold;
+						}
+					</style>
+	          		<div>
+		          		<h2><span t-field="offer.name"/></h2>
+		          		<p></p>
+		          		<p><span t-field="offer.partner_id" t-field-options='{
+                                 "widget": "contact",
+                                 "fields": ["address"],
+                                 "no_tag_br": true
+                                 }'/>
+                         </p>
+				    </div>
+				    <span t-field="offer.write_date"/>
+				    
+				    <p><span t-field="offer.date_open"/></p>
+				    				    
+				    <div class="tn-texts"><p>
+				    	<span t-field="offer.total_time"/></p>
+				    </div>
+				    
+				    <div class="container-fluid">
+						<style>
+							.btn-secondary { 
+							background-color:gainsboro;
+							border-color:#ccc;
+							}
+						</style>
+					</div>
+					<div class="btn-secondary">
+	       				<p><a t-attf-href="/offers/detail/#{ slug(offer) }">View details »</a></p>
+	         		</div>
+      		</div>
+      	</div>
+      </div>
+	</t>
 </template>
 
-<template id="detail" name='Offer Detail'>
+
+<template id="detail" name='Detail'>
     <t t-call="website.layout">
     <t t-set="additional_title">Détails de l'appel à projets</t>
-    <div id="wrap" class="js_project_submission">
+    <div id="wrap" >
         <div class="oe_structure"/>
 
         <section class="container mt8">
             <div class="row">
               <div class="col-sm-5">
                   <ol class="breadcrumb mb0">
-                      <li><a href="/offers">Nos appels à projets</a></li>
+                      <li><br><a href="/offers">Nos appels à projets</a></br></li>
                       <li class="active"><span t-field="offer.name"></span></li>
                   </ol>
-              </div><div class="col-sm-7">
+              </div>
+              <div class="col-sm-7">
                   <t t-call="website.publish_management">
                       <t t-set="object" t-value="offer"/>
                       <t t-set="publish_edit" t-value="True"/>
@@ -108,20 +108,29 @@
               </div>
             </div>
         </section>
-
+        
         <div class="oe_structure" style="clear:both;">
             <h1 class="text-center" t-field="offer.name"/>
-            <h5 class="text-center" t-field="offer.partner_id" t-field-options='{
-                "widget": "contact",
-                "fields": ["address"],
-                "no_tag_br": true
-                }'/>
+            
+       		<p><span t-field="offer.partner_id" t-field-options='{
+                       "widget": "contact",
+                       "fields": ["address"],
+                       "no_tag_br": true
+                       }'/>
+                       </p>
+		    <span t-field="offer.write_date"/>
+				    
+				    
+		    <div class="tn-texts"><span t-field="offer.total_time"/></div>
+		    
+		    
            <h5 class="text-center text-muted">
                 <i class="fa fa-clock-o"/> <span t-field="offer.write_date"/>
             </h5>
-        </div>
-        <div t-field="offer.website_description"/>
-
+        
+			
+			
+		</div>
         <div class="oe_structure">
             <section data-snippet-id="cta" class="mt16 mb16">
                 <div class="container">
@@ -133,9 +142,12 @@
                 </div>
             </section>
         </div>
+    
+    
     </div>
     </t>
 </template>
+
 
 <template id="apply">
     <t t-call="website.layout">

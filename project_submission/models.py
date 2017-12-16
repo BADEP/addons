@@ -93,12 +93,21 @@ class ProjectSubmission(models.Model):
             res[rec.id] = self.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', '=', rec.id)])
         return res
     
-    @api.one
+    """@api.one
     def action_get_attachment_tree_view(self):
         model, action_id = self.env['ir.model.data'].get_object_reference('base', 'action_attachment')
         action = self.env[model].read(action_id)
         action['context'] = {'default_res_model': self._name, 'default_res_id': self.id}
         action['domain'] = str([('res_model', '=', 'project.submission'), ('res_id', '=', self.id)])
+        return action"""
+        
+    @api.cr_uid_ids_context
+    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
+        #open attachments of job and related applicantions.
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
+        action['domain'] = str([('res_model', '=', 'project.submission'), ('res_id', 'in', ids)])
         return action
     
     @api.onchange('candidate')
@@ -231,14 +240,6 @@ class ProjectCandidate(models.Model):
     user_id = fields.Many2one('res.users', 'Utilisateur lié', required=True, ondelete='restrict')
     offer_ids = fields.One2many('project.offer', string='Offres', compute='get_offer_ids')
     color = fields.Integer('Color Index', default=0)
-    city = fields.Char(related='partner_id.city', string='Ville')
-    login = fields.Char(related='user_id.login', string='Login', readonly=True)
-    login_date = fields.Date(related='user_id.login_date', string='Dernière Connection', readonly=True)
-    address_home_id = fields.Many2one('res.partner', string='Adresse Candidate')
-    mobile_phone = fields.Char(string='Mobile', readonly=False)
-    email = fields.Char(string='Email', size=240)
-    work_location = fields.Char('Adresse Travail')
-    notes = fields.Text('Notes')
         
     
     @api.one

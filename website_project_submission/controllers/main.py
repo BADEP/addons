@@ -6,6 +6,7 @@ from openerp import http
 from openerp.tools.translate import _
 from openerp.http import request
 
+from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.website.models.website import slug
 
 class website_project_submission(http.Controller):
@@ -20,7 +21,7 @@ class website_project_submission(http.Controller):
         offer_orm = env['project.offer']
 
         # List Offers available to current UID
-        offer_ids = offer_orm.search([], order="website_published desc, date_open desc").ids
+        offer_ids = offer_orm.search([('state','=','open')], order="website_published desc, date_open desc").ids
         # Browse Offers as superuser, because address is restricted
         offers = offer_orm.sudo().browse(offer_ids)
 
@@ -54,6 +55,8 @@ class website_project_submission(http.Controller):
 
     @http.route('/offers/apply/<model("project.offer"):offer>', type='http', auth="public", website=True)
     def offers_apply(self, offer):
+        if not request.session.uid:    
+            return login_redirect()
         field_obj = http.request.env['project.offer.field']
         fields = field_obj.search([])
         error = {}
@@ -72,7 +75,7 @@ class website_project_submission(http.Controller):
         return ['name', 'partner_mobile', 'description']
 
     def _get_submission_relational_fields(self):
-        return ['field', 'offer', 'candidate', 'address', 'user_id']
+        return ['field', 'offer', 'candidate']
 
     def _get_submission_files_fields(self):
         return ['ufile']
@@ -82,6 +85,8 @@ class website_project_submission(http.Controller):
 
     @http.route('/offers/thankyou', methods=['POST'], type='http', auth="public", website=True)
     def offers_thankyou(self, **post):
+        if not request.session.uid:    
+            return login_redirect()
         error = {}
         for field_name in self._get_submission_required_fields():
             if not post.get(field_name):
@@ -97,6 +102,10 @@ class website_project_submission(http.Controller):
 
         # public user can't create applicants (duh)
         env = request.env(user=SUPERUSER_ID)
+        user = env['res.users'].browse(request.session.uid)
+        candidate = env['project.candidate'].search([('user_id','=', user.id)])
+        if candidate.id == False:
+            candidate = env['project.candidate'].create({'user_id': user.id})
         value = {
             'name': post.get('name'), 
         }
@@ -105,8 +114,7 @@ class website_project_submission(http.Controller):
         for f in self._get_submission_relational_fields():
             value[f] = int(post.get(f) or 0)
         # Retro-compatibility for saas-3. "phone" field should be replace by "partner_phone" in the template in trunk.
-        value['partner_mobile'] = post.pop('partner_mobile', False)
-
+        value['candidate'] = candidate.id
         submission = env['project.submission'].create(value).id
         for field_name in self._get_submission_files_fields():
             if post[field_name]:

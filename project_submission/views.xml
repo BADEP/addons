@@ -15,36 +15,26 @@
 			    <field name="arch" type="xml">
 			        <form string="Soumission">
                     <header>
-                        <!--<button name="action_open" string=" A" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
-                        <button name="action_close" string="Clôturer l'offre" states="open,done" type="object" class="oe_highlight" groups="base.group_user"/>
-                        --><field name="state" widget="statusbar" statusbar_visible="draft,open,done,closed"/>
+                        <field name="state" widget="statusbar"/>
                     </header>
 						<sheet>
-            <div class="oe_right" name="buttons">
-                <div class="oe_button_box">
-                    <button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" type="object">
-                        <!--<field name="submission_count" widget="statinfo" string="Soumissions"/>-->
-                    </button>
-                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
-                        <field name="documents_count" widget="statinfo" string="Documents"/>
-                    </button>
-                </div>
-            </div>
-					      	<group col="1">
+				            <div class="oe_right" name="buttons">
+				                <div class="oe_button_box">
+				                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
+				                        <field name="documents_count" widget="statinfo" string="Documents"/>
+				                    </button>
+				                </div>
+				            </div>
+					      	<group col="2">
 		                            <field name="name"/>
-		                            <field name="user_id"/>
+		                            <field name="offer"/>
 		                            <field name="candidate"/>
-		                            <field name="partner_mobile"/>
-		                            <field name="offer"/>
-		                            <field name="project"/>
-                        	</group>
-                        	<group col="2">
-		                            <field name="offer"/>
+		                            <field name="user_id"/>
 		                            <field name="field"/>
-		                            <field name="address"/>
+		                            <field name="project" attrs="{'invisible': [('state','!=','accepted')]}"/>
 		                            <field name="description"/>
-		                            <!--<field name="date_submitted"/>-->   
-		                            <field name="date_processed"/>
+		                            <field name="date_submitted" readonly="1" attrs="{'invisible': [('state','=','draft')]}"/>
+		                            <field name="date_processed" readonly="1" attrs="{'invisible': [('state','in',['draft', 'submitted'])]}"/>
 		                            <field name="title_action"/>
 		                            <field name="date_action"/>
                         	</group>
@@ -164,26 +154,23 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,open,done,closed"/>
                     </header>
 						<sheet>
-            <div class="oe_right" name="buttons">
-                <div class="oe_button_box">
-                    <button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" type="action">
-                        <field name="submission_count" widget="statinfo" string="Soumissions"/>
-                    </button>
-                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
-                        <field name="documents_count" widget="statinfo" string="Documents"/>
-                    </button>
-                </div>
-            </div>
-					      	<group col="1">
+				            <div class="oe_right" name="buttons">
+				                <div class="oe_button_box">
+				                    <button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" type="action">
+				                        <field name="submission_count" widget="statinfo" string="Soumissions"/>
+				                    </button>
+				                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
+				                        <field name="documents_count" widget="statinfo" string="Documents"/>
+				                    </button>
+				                </div>
+				            </div>
+					      	<group col="2">
 		                            <field name="name"/>
-	                            	<field name="partner_id"/>
 		                            <field name="user_id"/>
-                        	</group>
-                        	<group col="2">
 		                            <field name="type"/>
-		                            <field name="submissions"/>
-		                            <field name="total_time"/>   
-		                            <field name="total_count"/>         
+		                            <field name="date_open"/>
+		                            <field name="date_closed"/>
+		                            <field name="total_time"/>
                         	</group>
 						</sheet>
 					</form>
@@ -282,7 +269,7 @@
     </record>
        
 	    <record id="view_crm_case_jobs_filter" model="ir.ui.view">
-        <field name="name">Souissions s</field>
+        <field name="name">Soumissions</field>
         <field name="model">project.submission</field>
         <field name="arch" type="xml">
             <search string="Search Applicants">
@@ -332,16 +319,25 @@
 			    <field name="arch" type="xml">
 			        <form string="Candidates">
 						<sheet>
+				            <div class="oe_right" name="buttons">
+				                <div class="oe_button_box">
+				                     <button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" type="action">
+				                        <!-- <field name="submission_count" widget="statinfo" string="Soumissions"/>-->
+				                    </button>
+				                    <!--<button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
+				                        <field name="documents_count" widget="statinfo" string="Documents"/>
+				                    </button>-->
+				                </div>
+				            </div>
 				            <field name="image_medium" widget='image' class="oe_left oe_avatar"/>
 				            
 				            <h1><field name="name" placeholder="Name"/></h1>
-				            <!-- <label for="user_id" class="oe_edit_only"/>
-	                        <field name="user_id"/>-->
-	                        <label for="address_home_id" class="oe_edit_only"/>
-	                        <field name="address_home_id"/>
 	                        
-	                        <label for="mobile_phone" class="oe_edit_only"/>
-	                        <field name="mobile_phone"/>
+	                        <label for="login" class="oe_edit_only"/>
+	                        <field name="login"/>
+	                        
+	                        <label for="mobile" class="oe_edit_only"/>
+	                        <field name="mobile"/>
 	                        
 	                        <label for="email" class="oe_edit_only"/>
 	                        <field name="email"/>
@@ -349,17 +345,8 @@
 	                        <label for="city" class="oe_edit_only"/>
 	                        <field name="city"/>
 	                        
-	                        <label for="login_date" class="oe_edit_only"/>
-	                        <field name="login_date"/>
 	                        
-	                        <label for="work_location" class="oe_edit_only"/>
-	                        <field name="work_location"/>
-	                        
-	                        <label for="notes" class="oe_edit_only"/>
-	                        <field name="notes"/>
-	                        
-	                        <!-- <label for="offer_ids" class="oe_edit_only"/>
-	                        <field name="offer_ids" visible='false'/>-->
+	                    
 						</sheet>
 						<div class="oe_chatter">
 			                <field name="message_follower_ids" widget="mail_followers"/>
