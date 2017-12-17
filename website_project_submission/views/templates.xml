@@ -143,7 +143,6 @@
             </section>
         </div>
     
-    
     </div>
     </t>
 </template>
@@ -233,6 +232,9 @@
         </div>
     </t>
 </template>
+
+
+
 
 <template id="offer_types" inherit_id="website_project_submission.index" active="False" customize_show="True" name="Filter by Type">
     <xpath expr="//div[@id='offers_grid_left']" position="inside">

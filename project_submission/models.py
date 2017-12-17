@@ -85,6 +85,9 @@ class ProjectSubmission(models.Model):
     color = fields.Integer('Couleur', default=0)
     priority = fields.Selection(AVAILABLE_PRIORITIES, 'Appreciation')
     partner_mobile = fields.Char(related='candidate.mobile')
+    montant = fields.Float('Montant', default=0)
+    organisme = fields.Many2one('res.partner', string='Organisme', required=True)
+    partners = fields.Many2many('res.partner', string='Partenaire')
     
     @api.multi
     def _get_attached_docs(self):
@@ -164,11 +167,24 @@ class ProjectOffer(models.Model):
     total_count = fields.Integer(string='Limite de soumissions', required=True)
     date_open = fields.Datetime(string='Date de publication')
     date_closed = fields.Datetime(string='Date de clôture')
+    min_time = fields.Integer(string='Durée Minimale')
+    max_time = fields.Integer(string='Durée Maximale')
+    montant_total = fields.Float('Montant')
     
     @api.one
     def _get_attached_docs(self):
         res = self.env['ir.attachment'].search([('res_model', '=', 'project.offer'), ('res_id', '=', self.id)])
         self.document_ids =  res.ids
+    
+    @api.cr_uid_ids_context
+    def action_get_submission_tree_view(self, cr, uid, ids, context=None):
+        #open attachments of job and related applicantions.
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'project_submission', 'action_project_submission')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
+        action['domain'] = str([('offer', 'in', ids)])
+        return action
+    
     """
     @api.returns('ir.actions.act_window')
     @api.multi
@@ -232,15 +248,55 @@ class ProjectCandidate(models.Model):
 
     """hr.employee"""
     _inherit = ['mail.thread']
-    _inherits = {"res.users": 'user_id'}
+    _inherits = {"res.users": 'user'}
     _name = 'project.candidate'
     _description = u'Soumissionaire'
 
     submission_ids = fields.One2many('project.submission', 'candidate', 'Soumissions')
-    user_id = fields.Many2one('res.users', 'Utilisateur lié', required=True, ondelete='restrict')
+    user = fields.Many2one('res.users', 'Utilisateur lié', required=True, ondelete='restrict')
     offer_ids = fields.One2many('project.offer', string='Offres', compute='get_offer_ids')
     color = fields.Integer('Color Index', default=0)
-        
+    document_ids = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
+    documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
+    
+    
+    @api.one
+    def onchange_type(self, is_company):
+        if self.user:
+            return self.user.onchange_type(is_company)
+    
+    @api.one
+    def onchange_address(self, use_parent_address, parent_id):
+        if self.user:
+            return self.user.onchange_address(use_parent_address, parent_id)
+    @api.one
+    def onchange_state(self, state_id):
+        if self.user:
+            return self.user.onchange_state(state_id)
+    @api.one
+    def action_reset_password(self):
+        if self.user:
+            return self.user.action_reset_password()
+    
+    @api.one
+    def _count_all(self):
+        self.documents_count = len(self.document_ids)
+    
+    @api.multi
+    def _get_attached_docs(self):
+        res = {}
+        for rec in self:
+            res[rec.id] = self.env['ir.attachment'].search([('res_model', '=', 'project.candidate'), ('res_id', '=', rec.id)])
+        return res
+    
+    @api.cr_uid_ids_context
+    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
+        #open attachments of job and related applicantions.
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
+        action['domain'] = str([('res_model', '=', 'project.candidate'), ('res_id', 'in', ids)])
+        return action
     
     @api.one
     @api.depends('submission_ids')

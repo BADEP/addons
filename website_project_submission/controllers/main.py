@@ -103,9 +103,9 @@ class website_project_submission(http.Controller):
         # public user can't create applicants (duh)
         env = request.env(user=SUPERUSER_ID)
         user = env['res.users'].browse(request.session.uid)
-        candidate = env['project.candidate'].search([('user_id','=', user.id)])
+        candidate = env['project.candidate'].search([('user','=', user.id)])
         if candidate.id == False:
-            candidate = env['project.candidate'].create({'user_id': user.id})
+            candidate = env['project.candidate'].create({'user': user.id})
         value = {
             'name': post.get('name'), 
         }
