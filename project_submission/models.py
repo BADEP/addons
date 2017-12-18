@@ -258,7 +258,7 @@ class ProjectCandidate(models.Model):
     color = fields.Integer('Color Index', default=0)
     document_ids = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
-    
+    submission_count =  fields.Integer(compute='_count_all', string='Soumissions')
     
     @api.one
     def onchange_type(self, is_company):
@@ -278,16 +278,39 @@ class ProjectCandidate(models.Model):
         if self.user:
             return self.user.action_reset_password()
     
-    @api.one
+    """@api.one
     def _count_all(self):
-        self.documents_count = len(self.document_ids)
+        self.documents_count = len(self.document_ids)"""
     
-    @api.multi
+    """@api.multi
     def _get_attached_docs(self):
         res = {}
         for rec in self:
-            res[rec.id] = self.env['ir.attachment'].search([('res_model', '=', 'project.candidate'), ('res_id', '=', rec.id)])
-        return res
+            res2 = rec.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', 'in', rec.submission_ids.ids)])
+            res[rec.id] = res2
+        return res"""
+        
+    @api.one
+    def _count_all(self):
+        self.submission_count = len(self.submission_ids)
+        self.documents_count = len(self.document_ids)
+    
+    """@api.one
+    def action_set_total_count(self, value):
+        self.total_count= value"""
+    
+    '''@api.multi
+    def _get_attached_docs(self):
+        res = {}
+        for rec in self:
+            res[rec.id] = self.env['ir.attachment'].search([('res_model', '=', 'project.candidate'), ('res_id', '=', rec.ids)])
+        return res'''
+    
+    @api.one
+    def _get_attached_docs(self):
+        res = self.env['ir.attachment'].search([('res_model', '=', 'project.candidate'), ('res_id', '=', self.id)])
+        res2 = self.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', 'in', self.submission_ids.ids)])
+        self.document_ids =  res.ids + res2.ids
     
     @api.cr_uid_ids_context
     def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
@@ -297,6 +320,24 @@ class ProjectCandidate(models.Model):
         action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
         action['domain'] = str([('res_model', '=', 'project.candidate'), ('res_id', 'in', ids)])
         return action
+        
+    @api.cr_uid_ids_context
+    def action_get_submission_tree_view(self, cr, uid, ids, context=None):
+        #open attachments of job and related applicantions.
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'project_submission', 'action_project_submission')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
+        action['domain'] = str([('candidate', 'in', ids)])
+        return action
+        
+    """@api.cr_uid_ids_context
+    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
+        #open attachments of job and related applicantions.
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
+        action['domain'] = str([('res_model', '=', 'project.candidate'), ('res_id', 'in', ids)])
+        return action"""
     
     @api.one
     @api.depends('submission_ids')

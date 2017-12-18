@@ -341,8 +341,8 @@
 			    				<button string="Réinitialiser le mot de passe" class="oe_link" type="object" name="action_reset_password"/>
 		                    </div>
 				            <div name="buttons_submission" class="oe_right oe_button_box">
-	                        	<button class="oe_stat_button" icon="fa-file-o" name="action_get_attachment_tree_view" type="object">
-			                         <field name="documents_count" widget="statinfo" string="Soumissions"/>
+	                        	<button class="oe_stat_button" icon="fa-file-o" name="action_get_submission_tree_view" type="object">
+			                         <field name="submission_count" widget="statinfo" string="Soumissions"/>
 			                    </button>
 			                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
 			                        <field name="documents_count" widget="statinfo" string="Documents"/>
