@@ -23,22 +23,31 @@
 				                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
 				                        <field name="documents_count" widget="statinfo" string="Documents"/>
 				                    </button>
+				                    <button name="action_start_survey" class="oe_stat_button" icon="fa-user" type="object" help="Answer related job question">
+				                        <div>Start<br/>Interview</div>
+				                    </button>
+				                    <button name="action_print_survey" class="oe_stat_button" icon="fa-print" type="object" help="Print interview report">
+				                        <div>Print<br/>Interview</div>
+				                    </button>
 				                </div>
 				            </div>
-					      	<group col="2">
+					      	<group>
 		                            <field name="name"/>
 		                            <field name="offer"/>
 		                            <field name="candidate"/>
-		                            <field name="user_id"/>
-		                            <field name="field"/>
-		                            <field name="organisme"/>
-		                            <field name="partners"/>
-		                            <field name="project" attrs="{'invisible': [('state','!=','accepted')]}"/>
 		                            <field name="description"/>
+		                            <field name="field"/>
+		                            <field name="manager"/>
+		                            <field name="organisme"/>
+                        	</group>
+					      	<group>
+		                            <field name="project" attrs="{'invisible': [('state','!=','accepted')]}"/>
 		                            <field name="date_submitted" readonly="1" attrs="{'invisible': [('state','=','draft')]}"/>
 		                            <field name="date_processed" readonly="1" attrs="{'invisible': [('state','in',['draft', 'submitted'])]}"/>
 		                            <field name="title_action"/>
 		                            <field name="date_action"/>
+		                            <field name="response"/>
+		                            <field name="partners"/>
                         	</group>
 						</sheet>
 					</form>
@@ -60,14 +69,13 @@
                 <kanban class="oe_background_grey" default_group_by="state">
                     <field name="name"/>
                     <field name="type"/>
-                    <field name="submission_count"/>
+                    <field name="submissions_count"/>
                     <field name="color"/>
                     <field name="submissions"/>
-                    <field name="document_ids"/>
+                    <field name="documents"/>
                     <field name="accepted_count"/>
-                    <field name="user_id"/>
+                    <field name="manager"/>
                     <field name="state"/>
-                    <field name="total_count"/>
                     <templates>
                         <t t-name="kanban-box">
                             <div t-attf-class="oe_kanban_color_#{kanban_getcolor(record.color.raw_value)} oe_kanban_job oe_kanban_card oe_kanban_global_click">
@@ -84,10 +92,10 @@
                                     </ul>
                                 </div>
                                 <div class="oe_kanban_content">
-                                    <t t-if="record.user_id.raw_value">
-                                        <img t-att-src="kanban_image('res.partner', 'image_medium', record.user_id.raw_value[0])" t-att-title="record.user_id.value" class="oe_kanban_avatar oe_job_avatar"/>
+                                    <t t-if="record.manager.raw_value">
+                                        <img t-att-src="kanban_image('res.partner', 'image_medium', record.manager.raw_value[0])" t-att-title="record.manager.value" class="oe_kanban_avatar oe_job_avatar"/>
                                     </t>
-                                    <t t-if="record.user_id.raw_value === false">
+                                    <t t-if="record.manager.raw_value === false">
                                         <img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
                                     </t>
                                     <div class="oe_job_detail">
@@ -96,7 +104,7 @@
                                         </div>
                                         <div class="text-center oe_job oe_department oe_kanban_ellipsis">
                                             <strong><field name="type"/>
-                                            <span t-if="record.user_id.value" class="oe_manager_name">
+                                            <span t-if="record.manager.value" class="oe_manager_name">
                                             </span></strong>
                                         </div>
                                     </div>
@@ -106,21 +114,19 @@
 												<span><t t-esc="record.submissions.raw_value.length"/> Soumissions</span>
                                             </a>
                                             <br/>
-                                            <a t-if="record.document_ids.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
-                                                <span t-if="record.document_ids.raw_value.length gt 1"><t t-esc="record.document_ids.raw_value.length"/> Documents</span>
-                                                <span t-if="record.document_ids.raw_value.length lt 2"><t t-esc="record.document_ids.raw_value.length"/> Document</span>
+                                            <a t-if="record.documents.raw_value.length gt 0" name="action_get_attachment_tree_view" type="object">
+                                                <span t-if="record.documents.raw_value.length gt 1"><t t-esc="record.documents.raw_value.length"/> Documents</span>
+                                                <span t-if="record.documents.raw_value.length lt 2"><t t-esc="record.documents.raw_value.length"/> Document</span>
                                             </a>
                                         </div>
                                         <div class="oe_job_justgage">
                                             <field state="open" name="accepted_count" widget="gauge"
                                                 style="margin-top:7px; width:160px; height: 120px;"
                                                 options="{
-                                                    'max_field': 'total_count',
+                                                    'max_field': 'submissions_count',
                                                     'label': 'Soumissions acceptées',
-                                                    'on_change': 'action_set_total_count',
-                                                    'on_click_label': 'Nombre de soumissions à accepter',
                                                     'force_set': False,
-                                                    'gauge_value_field': 'total_count',
+                                                    'gauge_value_field': 'submissions_count',
                                                 }">
                                                 Soumissions acceptées
                                             </field>
@@ -160,23 +166,26 @@
 				            <div class="oe_right" name="buttons">
 				                <div class="oe_button_box">
 				                    <button class="oe_stat_button" icon="fa-file-o" name="action_get_submission_tree_view" type="object">
-				                        <field name="submission_count" widget="statinfo" string="Soumissions"/>
+				                        <field name="submissions_count" widget="statinfo" string="Soumissions"/>
 				                    </button>
 				                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
 				                        <field name="documents_count" widget="statinfo" string="Documents"/>
 				                    </button>
 				                </div>
 				            </div>
-					      	<group col="2">
+					      	<group>
 		                            <field name="name"/>
-		                            <field name="user_id"/>
+		                            <field name="manager"/>
 		                            <field name="type"/>
-									<field name="montant_total"/>
+									<field name="budget_total"/>
+                        	</group>
+					      	<group>
 									<field name="min_time"/>
 									<field name="max_time"/>
 		                            <field name="date_open"/>
 		                            <field name="date_closed"/>
-		                            <field name="total_time"/>
+		                            <field name="survey" attrs="{'required': [('state','!=','draft')]}" class="oe_inline" domain="[('res_model','=','project_offer')]"/>
+           					        <button string="Print Interview" name="action_print_survey" type="object" attrs="{'invisible':[('survey','=',False)]}" class="oe_inline oe_link"/>
                         	</group>
 						</sheet>
 					
@@ -190,7 +199,7 @@
             <field name="arch" type="xml">
                 <search string="offers">
                     <filter domain="[('state','=','open')]" string="In Position"/>
-                    <field name="partner_id"/>
+                    <field name="host"/>
                     <group expand="0" string="Group By">
                         
                     </group>
@@ -205,8 +214,7 @@
             <kanban default_group_by="state">
                 <field name="state"/>
                 <field name="color"/>
-                <field name="user_id"/>
-                <!-- <field name="partner_id"/>-->
+                <field name="manager"/>
                 <field name="field"/>
                 <field name="offer"/>
                 <field name="title_action"/>
@@ -214,7 +222,7 @@
                 <field name="date_processed"/>
                 <field name="date_action"/>
                 <field name="project"/>
-                <field name="montant"/>
+                <field name="budget"/>
                 <field name="documents_count"/>
                 <field name="candidate"/>
                 <field name="message_summary"/>
@@ -257,7 +265,7 @@
                                 </div>
                                 <div style="width:240px"><field name="field"/></div>
                                 <div class="oe_kanban_bottom_right">
-                                    <img t-att-src="kanban_image('res.users', 'image_small', record.user_id.raw_value)" t-att-title="record.user_id.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
+                                    <img t-att-src="kanban_image('res.users', 'image_small', record.manager.raw_value)" t-att-title="record.manager.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
                                     <div class="pull-left" groups="base.group_user">
                                         <field name="priority" widget="priority"/>
                                     </div>
@@ -290,8 +298,8 @@
         <field name="arch" type="xml">
             <search string="Search Applicants">
                 <field name="candidate" filter_domain="['|','|',('name','ilike',self),('candidate','ilike',self),('email_from','ilike',self)]" string="Subject / Soumission"/>
-                <filter string="My" domain="[('user_id', '=', uid)]"/>
-                <filter string="Unassigned" domain="[('user_id', '=', False)]"/>
+                <filter string="My" domain="[('manager', '=', uid)]"/>
+                <filter string="Unassigned" domain="[('manager', '=', False)]"/>
                 <separator/>
                 <filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
                     domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
@@ -299,12 +307,12 @@
                 <filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
                 <field name="offer"/>
                 <field name="field"/>
-                <field name="user_id"/>
+                <field name="manager"/>
                 <separator/>
                 <field name="candidate"/>
                 <separator/>
                 <group expand="0" string="Group By">
-                    <filter string="Responsible" domain="[]"  context="{'group_by':'user_id'}"/>
+                    <filter string="Responsable" domain="[]"  context="{'group_by':'manager'}"/>
                     <filter string="Offre" domain="[]" context="{'group_by':'offer'}"/>
                     <filter string="Domaine" domain="[]" context="{'group_by':'field'}"/>
                     <filter string="Date creation" context="{'group_by':'create_date'}"/>
@@ -342,7 +350,7 @@
 		                    </div>
 				            <div name="buttons_submission" class="oe_right oe_button_box">
 	                        	<button class="oe_stat_button" icon="fa-file-o" name="action_get_submission_tree_view" type="object">
-			                         <field name="submission_count" widget="statinfo" string="Soumissions"/>
+			                         <field name="submissions_count" widget="statinfo" string="Soumissions"/>
 			                    </button>
 			                    <button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
 			                        <field name="documents_count" widget="statinfo" string="Documents"/>
@@ -378,7 +386,7 @@
 			        <form string="Types Offre">
 						<sheet>
                             <field name="name"/>
-                            <field name="note"/>
+                            <!-- <field name="note"/>-->
 						</sheet>
 					</form>
 				</field>

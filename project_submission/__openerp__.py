@@ -31,9 +31,8 @@
     'author': 'BADEP',
     'website': 'https://badep.ma',
     'depends': ['project',
-                'website',
-                'document'
-                ''
+                'document',
+                'survey'
                 ],
     'data': [
            'views.xml',

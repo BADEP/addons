@@ -82,9 +82,9 @@ class website_project_submission(http.Controller):
 
     def _get_submission_required_fields(self):
         return ['name', 'description', 'ufile', 'field']
-
-    @http.route('/offers/thankyou', methods=['POST'], type='http', auth="public", website=True)
-    def offers_thankyou(self, **post):
+    
+    @http.route('/offers/apply2', methods=['POST'], type='http', auth="public", website=True)
+    def offers_apply2(self, **post):
         if not request.session.uid:    
             return login_redirect()
         error = {}
@@ -127,6 +127,7 @@ class website_project_submission(http.Controller):
                     'datas_fname': post[field_name].filename,
                 }
                 env['ir.attachment'].create(attachment_value)
+        return submission.action_start_survey()
         return request.render("website_project_submission.thankyou", {})
 
 # vim :et:
