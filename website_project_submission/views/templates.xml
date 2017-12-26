@@ -10,20 +10,6 @@
 
 <template id="index" name="Offers">
     <t t-call="website.layout">
-        <div id="wrap">
-            <div class="oe_structure">
-                <section data-snippet-id="text-block" class="mb16">
-                    <div class="container">
-                        <div class="row">
-                            <div class="col-md-12 text-center mb16" data-snippet-id="colmd">
-                                <div class="p-3 mb-2 bg-primary text-white"><h1>Appels à projets en cours</h1></div>
-                                <h3 class="text-muted">Join us and help disrupt the enterprise market!</h3>
-                            </div>
-                        </div>
-                    </div>
-                </section>
-            </div>
-		</div>
         <div class="col-md-12" id="offers_grid">
             <div t-if="not offers">
                 <div class="text-center text-muted">
@@ -37,51 +23,28 @@
                   </t>
                 </div>
          	</div>
+            <ul class="media-list" t-if="offers">
+                <li t-foreach="offers" t-as="offer" class="media">
+                    <div class="media-body" t-att-data-publish="offer.website_published and 'on' or 'off'">
+                        <h3 class="media-heading">
+                            <a t-attf-href="/offers/detail/#{ slug(offer) }">
+                                <span t-field="offer.name"/>
+                            </a>
+                        </h3>
+
+                        <span t-if="offer.host" t-field="offer.host" t-field-options='{
+                            "widget": "contact",
+                            "fields": ["address"],
+                            "no_tag_br": true
+                            }'/>
+                        <span t-if="not offer.website_published" class="label label-danger">not published</span>
+                        <div class="text-muted">
+                            <i class="fa fa-clock-o"/> <span t-field="offer.date_open"/>
+                        </div>
+                    </div>
+                </li>
+            </ul>
 		</div>
-		
-		
-    <div class="row">
-    	<div class="container">
-    		<div t-foreach="offers" t-as="offer" class="col-lg-4">
-	    			<style>
-						.tn-texts { 
-							font-size: 1.4rem;
-							color: red;
-							font-weight: bold;
-						}
-					</style>
-	          		<div>
-		          		<h2><span t-field="offer.name"/></h2>
-		          		<p></p>
-		          		<p><span t-field="offer.partner_id" t-field-options='{
-                                 "widget": "contact",
-                                 "fields": ["address"],
-                                 "no_tag_br": true
-                                 }'/>
-                         </p>
-				    </div>
-				    <span t-field="offer.write_date"/>
-				    
-				    <p><span t-field="offer.date_open"/></p>
-				    				    
-				    <div class="tn-texts"><p>
-				    	<span t-field="offer.total_time"/></p>
-				    </div>
-				    
-				    <div class="container-fluid">
-						<style>
-							.btn-secondary { 
-							background-color:gainsboro;
-							border-color:#ccc;
-							}
-						</style>
-					</div>
-					<div class="btn-secondary">
-	       				<p><a t-attf-href="/offers/detail/#{ slug(offer) }">View details »</a></p>
-	         		</div>
-      		</div>
-      	</div>
-      </div>
 	</t>
 </template>
 
@@ -111,26 +74,16 @@
         
         <div class="oe_structure" style="clear:both;">
             <h1 class="text-center" t-field="offer.name"/>
-            
-       		<p><span t-field="offer.partner_id" t-field-options='{
+       		<h5 t-field="offer.host" t-field-options='{
                        "widget": "contact",
                        "fields": ["address"],
                        "no_tag_br": true
                        }'/>
-                       </p>
-		    <span t-field="offer.write_date"/>
-				    
-				    
-		    <div class="tn-texts"><span t-field="offer.total_time"/></div>
-		    
-		    
            <h5 class="text-center text-muted">
-                <i class="fa fa-clock-o"/> <span t-field="offer.write_date"/>
+                <i class="fa fa-clock-o"/> <span t-field="offer.date_open"/>
             </h5>
-        
-			
-			
 		</div>
+        <div t-field="offer.website_description"/>
         <div class="oe_structure">
             <section data-snippet-id="cta" class="mt16 mb16">
                 <div class="container">
@@ -163,7 +116,7 @@
                 <div class="row">
                     <section id="forms">
                         <!-- TODO Multilingual form action support ? -->
-                        <form class="form-horizontal mt32" action="/offers/survey" method="post" enctype="multipart/form-data">
+                        <form class="form-horizontal mt32" action="/offers/apply2" method="post" enctype="multipart/form-data">
                             <input type="hidden" t-att-value="offer and offer.id or False" name="offer"/>
                             <div t-attf-class="form-group #{error.get('partner_name') and 'has-error' or ''}">
                                 <label class="col-md-3 col-sm-4 control-label" for="name">Intitulé du projet</label>
@@ -208,6 +161,16 @@
     </t>
 </template>
 
+<template id="general"/>
+
+<template id="survey"/>
+
+<template id="partners"/>
+
+<template id="finances"/>
+
+<template id="tasks"/>
+
 <template id="thankyou">
     <t t-call="website.layout">
         <div id="wrap">
@@ -232,9 +195,6 @@
         </div>
     </t>
 </template>
-
-
-
 
 <template id="offer_types" inherit_id="website_project_submission.index" active="False" customize_show="True" name="Filter by Type">
     <xpath expr="//div[@id='offers_grid_left']" position="inside">

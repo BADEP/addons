@@ -64,6 +64,7 @@ class website_project_submission(http.Controller):
         if 'website_project_submission_error' in request.session:
             error = request.session.pop('website_project_submission_error')
             default = request.session.pop('website_project_submission_default')
+        ## SET SWITCH TO TEMPLATES ACCORDING TO SUBMISSION STATE
         return request.render("website_project_submission.apply", {
             'offer': offer,
             'fields': fields,
@@ -115,14 +116,14 @@ class website_project_submission(http.Controller):
             value[f] = int(post.get(f) or 0)
         # Retro-compatibility for saas-3. "phone" field should be replace by "partner_phone" in the template in trunk.
         value['candidate'] = candidate.id
-        submission = env['project.submission'].create(value).id
+        submission = env['project.submission'].create(value)
         for field_name in self._get_submission_files_fields():
             if post[field_name]:
                 attachment_value = {
                     'name': post[field_name].filename,
                     'res_name': value['name'],
                     'res_model': 'project.submission',
-                    'res_id': submission,
+                    'res_id': submission.id,
                     'datas': base64.encodestring(post[field_name].read()),
                     'datas_fname': post[field_name].filename,
                 }

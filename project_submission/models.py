@@ -23,6 +23,7 @@
 from openerp import tools
 from openerp import fields, models, api
 import openerp.addons.decimal_precision as dp
+from openerp.exceptions import ValidationError
 
 
 AVAILABLE_PRIORITIES = [
@@ -49,12 +50,104 @@ REQSOUMISS_ETAT =[
     ('cancel', 'Annulé')
 ]
 
+class ProjectOffer(models.Model):
+    """hr.job"""
+    _description = u'Offre'
+    _name = 'project.offer'
+    _inherit = ['mail.thread']
+
+    @api.one
+    def _get_default_host(self):
+        return self.env.user.company_id.partner_id.id
+    
+    @api.one
+    def _get_default_manager(self):
+        return self.env.user.id
+
+    name = fields.Char(string='Nom', required=True)
+    documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
+    documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
+    host =  fields.Many2one('res.partner', 'Institut hôte',default=_get_default_host)
+    submissions = fields.One2many('project.submission', 'offer', string='Soumissions', required=True)
+    type = fields.Many2one('project.offer.type', required=True)
+    survey =  fields.Many2one('survey.survey', 'Formulaire d\'inscription')
+    color = fields.Integer('Couleur', default=0)
+    state =  fields.Selection([('draft', 'Brouillon'), ('open', 'En cours'),
+                              ('done', 'Terminé'), ('closed', 'Fermé')],
+                              string='Status', readonly=True, required=True,
+                              track_visibility='always', copy=False, default='draft')
+    submissions_count =  fields.Integer(compute='_count_all', string='Soumissions')
+    accepted_count =  fields.Integer(compute='_count_all', string='Soumissions acceptées')
+    manager =  fields.Many2one('res.users', 'Responsable', track_visibility='always', default=_get_default_manager)
+    date_open = fields.Datetime(string='Date de publication')
+    date_closed = fields.Datetime(string='Date de clôture')
+    min_time = fields.Integer(string='Durée minimale')
+    max_time = fields.Integer(string='Durée maximale')
+    budget_total = fields.Float('Budget', digits_compute=dp.get_precision('Account'))
+    
+    @api.constrains('min_time', 'max_time')
+    def _check_min_max_time(self):
+        if self.min_time > self.max_time:
+            raise ValidationError("La durée minimale ne peut être inférieure à la durée maximale.")
+    
+    @api.one
+    def _get_attached_docs(self):
+        res = self.env['ir.attachment'].search([('res_model', '=', 'project.offer'), ('res_id', '=', self.id)])
+        self.documents =  res.ids
+    
+    @api.cr_uid_ids_context
+    def action_get_submission_tree_view(self, cr, uid, ids, context=None):
+        #open attachments of job and related applicantions.
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'project_submission', 'action_project_submission')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
+        action['domain'] = str([('offer', 'in', ids)])
+        return action
+     
+    @api.cr_uid_ids_context
+    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
+        #open attachments of job and related applicantions.
+        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
+        action = self.pool.get(model).read(cr, uid, action_id, context=context)
+        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
+        action['domain'] = str([('res_model', '=', 'project.offer'), ('res_id', 'in', ids)])
+        return action
+    
+    @api.multi
+    def action_print_survey(self):
+        if self.survey:
+            return self.env['survey.survey'].browse(self.survey.id).action_print_survey()
+    
+    @api.one
+    @api.depends('submissions')
+    def _count_all(self):
+        self.submissions_count = len(self.submissions)
+        self.accepted_count = len(self.submissions.filtered(lambda s: s.state == 'accepted'))
+        self.documents_count = len(self.documents)
+        
+    @api.one
+    def action_open(self):
+        self.state = 'open'
+        self.date_open = fields.Datetime.now()
+        
+    @api.one
+    def action_close(self):
+        self.state = 'closed'
+        self.date_closed = fields.Datetime.now()
 
 class ProjectOfferField(models.Model):
     _name = 'project.offer.field'
     _description = u'Thématique'
     
     name = fields.Char('Nom')
+
+class ProjectOfferType(models.Model):
+    """hr.department"""
+    _name = 'project.offer.type'
+    _description = u'Type d\'appel à projets'
+    
+    name = fields.Char('Nom', required=True)
+    offers = fields.One2many('project.offer', 'type')
 
 class ProjectSubmission(models.Model):
     """hr.applicant"""
@@ -70,7 +163,7 @@ class ProjectSubmission(models.Model):
     offer = fields.Many2one('project.offer', string='Offre de projet', required=True)
     candidate = fields.Many2one('project.candidate', string='Soumissionnaire', required=True)
     field = fields.Many2one('project.offer.field', 'Domaine d\'activité', required=True)
-    partners = fields.Many2many('res.partner', string='Partenaires')
+    partners = fields.One2many('project.submission.partner', 'submission', string='Partenaires')
     description = fields.Text('Description')
     manager = fields.Many2one('res.users', 'Responsable', default=_get_manager)
     date_submitted = fields.Datetime('Date de soumission', readonly=True)
@@ -78,18 +171,39 @@ class ProjectSubmission(models.Model):
     date_action = fields.Datetime('Date de la prochaine action')
     title_action = fields.Char('Prochaine action', size=64)
     partner_mobile = fields.Char(related='candidate.mobile', store=False)
-    budget = fields.Float('budget', default=0)
-    organisme = fields.Many2one('res.partner', related='candidate.parent_id', store=False)
+    organisme = fields.Many2one('res.partner', related='candidate.parent_id', string='Organisme', store=False)
     project = fields.Many2one('project.project', string='Projet')
     state = fields.Selection(SUBMISS_ETAT, 'Etat', track_visibility='always', default='draft')
-    priority = fields.Selection(AVAILABLE_PRIORITIES, 'Appreciation')
-    probability = fields.Float('Probabilité', default=0)
+    priority = fields.Selection(AVAILABLE_PRIORITIES, 'Appréciation')
     color = fields.Integer('Couleur', default=0)
     documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     survey = fields.Many2one('survey.survey', related='offer.survey')
-    response = fields.Many2one('survey.user_input')
+    response = fields.Many2one('survey.user_input', string="Réponse au formulaire")
+    budget = fields.Float(compute='_get_amounts', store=True, digital_precision=dp.get_precision('Account'))
+    montant_subventionne = fields.Float(compute='_get_amounts', string="Montant subventionné", store=True, digital_precision=dp.get_precision('Account'))
+    montant_propre = fields.Float(compute='_get_amounts', string="Financement propre", store=True, digital_precision=dp.get_precision('Account'))
+    percent_subventionne = fields.Float(compute='_get_amounts', string="Pourcentage subventionné (%)", store=True)
+    budget_lines = fields.One2many('project.submission.budgetline', 'submission', string="Lignes de budget")
+    total_time = fields.Integer('Durée du projet')
     
+    @api.one
+    @api.constrains('total_time')
+    def _check_total_time(self):
+        if self.offer:
+            if self.total_time > self.offer.max_time:    
+                raise ValidationError("La durée du prjet doit être inférieure à la durée maximum de l'offre: %s mois" % self.offer.max_time)
+            if self.total_time > self.offer.max_time or self.total_time < self.offer.min_time:    
+                raise ValidationError("La durée du prjet doit être supérieure à la durée minimum du projet: %S mois " % self.offer.min_time)
+    
+    @api.one
+    @api.depends('budget_lines')
+    def _get_amounts(self):
+        self.budget = sum(self.budget_lines.mapped('budget'))
+        self.montant_subventionne = sum(self.budget_lines.mapped('montant_subventionne'))
+        self.montant_propre = sum(self.budget_lines.mapped('montant_propre'))
+        self.percent_subventionne = (self.montant_subventionne / self.budget)*100 if self.budget != 0 else 0
+  
     @api.multi
     def _get_attached_docs(self):
         res = {}
@@ -144,93 +258,60 @@ class ProjectSubmission(models.Model):
             return self.survey.action_print_survey()
         else:
             return self.survey.with_context(survey_token = self.response.token).action_print_survey()
-    
-class ProjectOffer(models.Model):
-    """hr.job"""
-    _description = u'Offre'
-    _name = 'project.offer'
 
-    @api.one
-    def _get_default_host(self):
-        return self.env.user.company_id.partner_id.id
+class ProjectSubmissionPartner(models.Model):
+    _name = 'project.submission.partner'
+    
+    submission = fields.Many2one('project.submission')
+    partner = fields.Many2one('res.partner', string='partenaire')
+    
+    type = fields.Many2one('project.partner.type')
+    time = fields.Integer(string='Durée (mois)', required=True)
+    montant = fields.Float(digital_precision=dp.get_precision('Account'), required=True, string='Financement demandé / mois')
+    total = fields.Float(digital_precision=dp.get_precision('Account'), compute='_get_total', store=True)
     
     @api.one
-    def _get_default_manager(self):
-        return self.env.user.id
+    @api.depends('time', 'montant')
+    def _get_total(self):
+        self.total = self.time * self.montant
 
-    name = fields.Char(string='Nom', required=True)
-    documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
-    documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
-    host =  fields.Many2one('res.partner', 'Institut hôte',default=_get_default_host)
-    submissions = fields.One2many('project.submission', 'offer', string='Soumissions', required=True)
-    type = fields.Many2one('project.offer.type', required=True)
-    survey =  fields.Many2one('survey.survey', 'Formulaire d\'inscription')
-    color = fields.Integer('Couleur', default=0)
-    state =  fields.Selection([('draft', 'Brouillon'), ('open', 'En cours'),
-                              ('done', 'Terminé'), ('closed', 'Fermé')],
-                              string='Status', readonly=True, required=True,
-                              track_visibility='always', copy=False, default='draft')
-    submissions_count =  fields.Integer(compute='_count_all', string='Soumissions')
-    accepted_count =  fields.Integer(compute='_count_all', string='Soumissions acceptées')
-    manager =  fields.Many2one('res.users', 'Responsable', track_visibility='always', default=_get_default_manager)
-    date_open = fields.Datetime(string='Date de publication')
-    date_closed = fields.Datetime(string='Date de clôture')
-    min_time = fields.Integer(string='Durée Minimale')
-    max_time = fields.Integer(string='Durée Maximale')
-    budget_total = fields.Float('Budget', digits_compute=dp.get_precision('Account'))
+class ProjectPartnerType(models.Model):
+    _name = 'project.partner.type'
+    
+    name = fields.Char(required=True)
+
+class ProjectSubmissionBudgetLine(models.Model):
+    _name = 'project.submission.budgetline'
+    
+    submission = fields.Many2one('project.submission', required=True, ondelete='cascade')
+    budget = fields.Float(digital_precision=dp.get_precision('Account'), required=True)
+    montant_propre = fields.Float(digital_precision=dp.get_precision('Account'), required=True)
+    montant_subventionne = fields.Float(compute='_get_amount', store=True, digital_precision=dp.get_precision('Account'), required=True)
+    percent_subventionne = fields.Float(compute='_get_amount', store=True)
+    type = fields.Many2one('project.budgetline.type', required=True)
+    
+    _sql_constraints = [
+        ('submission_type_unique',
+         'unique(submission, type)',
+         'Une seule ligne de budget est permise par type')
+    ]
     
     @api.one
-    def _get_attached_docs(self):
-        res = self.env['ir.attachment'].search([('res_model', '=', 'project.offer'), ('res_id', '=', self.id)])
-        self.documents =  res.ids
-    
-    @api.cr_uid_ids_context
-    def action_get_submission_tree_view(self, cr, uid, ids, context=None):
-        #open attachments of job and related applicantions.
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'project_submission', 'action_project_submission')
-        action = self.pool.get(model).read(cr, uid, action_id, context=context)
-        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
-        action['domain'] = str([('offer', 'in', ids)])
-        return action
-     
-    @api.cr_uid_ids_context
-    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
-        #open attachments of job and related applicantions.
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
-        action = self.pool.get(model).read(cr, uid, action_id, context=context)
-        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
-        action['domain'] = str([('res_model', '=', 'project.offer'), ('res_id', 'in', ids)])
-        return action
-    
-    @api.multi
-    def action_print_survey(self):
-        if self.survey:
-            return self.env['survey.survey'].browse(self.survey.id).action_print_survey()
+    @api.depends('budget', 'montant_propre')
+    def _get_amount(self):
+        self.montant_subventionne = self.budget - self.montant_propre
+        self.percent_subventionne = (self.montant_subventionne / self.budget)*100 if self.budget != 0 else 0
     
     @api.one
-    @api.depends('submissions')
-    def _count_all(self):
-        self.submission_count = len(self.submissions)
-        self.accepted_count = len(self.submissions.filtered(lambda s: s.state == 'accepted'))
-        self.documents_count = len(self.documents)
-        
-    @api.one
-    def action_open(self):
-        self.state = 'open'
-        self.date_open = fields.Datetime.now()
-        
-    @api.one
-    def action_close(self):
-        self.state = 'closed'
-        self.date_closed = fields.Datetime.now()
+    @api.constrains('budget', 'montant_propre')
+    def _check_amounts(self):
+        if self.budget < self.montant_propre:
+            raise ValidationError("Le financement propre ne peut être supérieur au budget.")
+
+class ProjectBudgetLineType(models.Model):
+    _name = 'project.budgetline.type'
     
-class ProjectOfferType(models.Model):
-    """hr.department"""
-    _name = 'project.offer.type'
-    _description = u'Type d\'appel à projets'
-    
-    name = fields.Char('Nom', required=True)
-    offers = fields.One2many('project.offer', 'type')
+    name = fields.Char(required=True)
 
 class ProjectCandidate(models.Model):
 
@@ -304,7 +385,7 @@ class ProjectRequest(models.Model):
     state = fields.Selection(REQSOUMISS_ETAT, 'Submission')
     note = fields.Text(required=True)
 
-class ProjectSubmissionRequestType(models.Model):
+class ProjectRequestType(models.Model):
     _name = 'project.request.type'
     _description = 'Type de demande'
     
