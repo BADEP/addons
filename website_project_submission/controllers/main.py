@@ -10,11 +10,12 @@ from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.website.models.website import slug
 
 class website_project_submission(http.Controller):
+
+
     @http.route([
         '/offers',
         '/offers/type/<model("project.offer.type"):type_id>',
         ], type='http', auth="public", website=True)
-    
     def offers(self, type=None, **kwargs):
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
 
@@ -44,7 +45,7 @@ class website_project_submission(http.Controller):
         offer = request.env['project.offer'].create({
             'name': _('Nouvel Offre à projet'),
         })
-        return request.redirect("/Offers/detail/%s?enable_editor=1" % slug(offer))
+        return request.redirect("/offers/detail/%s?enable_editor=1" % slug(offer))
 
     @http.route('/offers/detail/<model("project.offer"):offer>', type='http', auth="public", website=True)
     def offers_detail(self, offer, **kwargs):
@@ -53,82 +54,177 @@ class website_project_submission(http.Controller):
             'main_object': offer,
         })
 
-    @http.route('/offers/apply/<model("project.offer"):offer>', type='http', auth="public", website=True)
-    def offers_apply(self, offer):
-        if not request.session.uid:    
+    @http.route(['/offers/apply/<model("project.offer"):offer>',
+                 '/offers/apply/<model("project.offer"):offer>/stage/<int:stage>'
+                 ], type='http', auth="public", website=True)
+    def offers_apply(self, offer=None, stage=None, **post):
+        
+        #If no user connected, force connection
+        #TODO: Redirect to submission page if offer variable is in session
+        if not request.session.uid:
+            request.session['offer'] = offer.id
             return login_redirect()
-        field_obj = http.request.env['project.offer.field']
-        fields = field_obj.search([])
+        
+        #Get error data
         error = {}
         default = {}
         if 'website_project_submission_error' in request.session:
             error = request.session.pop('website_project_submission_error')
             default = request.session.pop('website_project_submission_default')
-        ## SET SWITCH TO TEMPLATES ACCORDING TO SUBMISSION STATE
-        return request.render("website_project_submission.apply", {
-            'offer': offer,
-            'fields': fields,
-            'error': error,
-            'default': default,
-        })
-
-    def _get_submission_char_fields(self):
-        return ['name', 'partner_mobile', 'description']
-
-    def _get_submission_relational_fields(self):
-        return ['field', 'offer', 'candidate']
-
-    def _get_submission_files_fields(self):
-        return ['ufile']
-
-    def _get_submission_required_fields(self):
-        return ['name', 'description', 'ufile', 'field']
-    
-    @http.route('/offers/apply2', methods=['POST'], type='http', auth="public", website=True)
-    def offers_apply2(self, **post):
-        if not request.session.uid:    
-            return login_redirect()
-        error = {}
-        for field_name in self._get_submission_required_fields():
-            if not post.get(field_name):
-                error[field_name] = 'missing'
-        if error:
-            request.session['website_project_submission_error'] = error
-            for field_name in self._get_submission_files_fields():
-                f = field_name in post and post.pop(field_name)
-                if f:
-                    error[field_name] = 'reset'
-            request.session['website_project_submission_default'] = post
-            return request.redirect('/offers/apply/%s' % post.get("offer"))
-
-        # public user can't create applicants (duh)
+            
+        #Get the candidate, if no candidate create one
         env = request.env(user=SUPERUSER_ID)
         user = env['res.users'].browse(request.session.uid)
         candidate = env['project.candidate'].search([('user','=', user.id)])
         if candidate.id == False:
             candidate = env['project.candidate'].create({'user': user.id})
-        value = {
-            'name': post.get('name'), 
-        }
-        for f in self._get_submission_char_fields():
-            value[f] = post.get(f)
-        for f in self._get_submission_relational_fields():
-            value[f] = int(post.get(f) or 0)
-        # Retro-compatibility for saas-3. "phone" field should be replace by "partner_phone" in the template in trunk.
-        value['candidate'] = candidate.id
-        submission = env['project.submission'].create(value)
-        for field_name in self._get_submission_files_fields():
-            if post[field_name]:
+
+        #Get the submission, if no submission call creation template
+        submission = env['project.submission'].search([('offer', '=', offer.id), ('candidate', '=', candidate.id)])
+        stage = 0 if (submission.id == False and bool(post) == False) else min(stage, submission.get_early_stage()) if stage != None else submission.get_early_stage()[0]
+        if stage == 0:
+            fields = env['project.offer.field'].search([])
+            ## SET SWITCH TO TEMPLATES ACCORDING TO SUBMISSION STATE
+            if submission:
+                default['name'] = submission.name
+                default['acronyme'] = submission.acronyme
+                default['field'] = submission.field.id
+                default['duration'] = submission.duration
+                default['description'] = submission.description
+            duration_steps = range(offer.min_time, offer.max_time + 1)
+            return request.render("website_project_submission.apply0", {
+                'offer': offer,
+                'duration_steps': duration_steps,
+                'fields': fields,
+                'error': error,
+                'default': default,
+            })
+        if stage == 1:
+            default['name'] = candidate.name
+            default['organisme'] = candidate.parent_id and candidate.parent_id.name
+            default['function'] = candidate.function
+            default['phone'] = candidate.phone
+            default['mobile'] = candidate.mobile
+            default['email'] = candidate.email if candidate.email else candidate.login
+            
+            if bool(post):
+                value = {
+                    'name': post.get('name'),
+                    'acronyme': post.get('acronyme'),
+                    'offer': offer.id,
+                    'candidate': candidate.id,
+                    'field': int(post.get('field')),
+                    'description': post.get('description'),
+                }
+                if submission:
+                    submission.write(value)
+                else:
+                    submission = env['project.submission'].create(value)
                 attachment_value = {
-                    'name': post[field_name].filename,
+                    'name': post['ufile'].filename,
                     'res_name': value['name'],
                     'res_model': 'project.submission',
                     'res_id': submission.id,
-                    'datas': base64.encodestring(post[field_name].read()),
-                    'datas_fname': post[field_name].filename,
+                    'datas': base64.encodestring(post['ufile'].read()),
+                    'datas_fname': post['ufile'].filename,
                 }
                 env['ir.attachment'].create(attachment_value)
-        return submission.action_start_survey()
-        return request.render("website_project_submission.thankyou", {})
+            return request.render("website_project_submission.apply1", {
+                'offer': offer,
+                'submission': submission,
+                'candidate': candidate,
+                'error': error,
+                'default': default,
+            })
+        elif stage == 2:
+            if bool(post):
+                value = {
+                    'name': post.get('name'),
+                    'function': post.get('function'),
+                    'phone': post.get('phone'),
+                    'mobile': post.get('mobile'),
+                    'email': post.get('email'),
+                }
+                candidate.write(value)
+                if candidate.parent_id:
+                    candidate.parent_id.write({'name': post.get('organisme')})
+                else:
+                    organisme = env['res.partner'].create({'name': post.get('organisme')})
+                    candidate.write({'parent_id': organisme.id})
+                attachment_value = {
+                    'name': post['ufile'].filename,
+                    'res_name': value['name'],
+                    'res_model': 'project.candidate',
+                    'res_id': candidate.id,
+                    'datas': base64.encodestring(post['ufile'].read()),
+                    'datas_fname': post['ufile'].filename,
+                }
+                env['ir.attachment'].create(attachment_value)
+            types = env['project.partner.type'].search([])
+            duration_steps = range(1, offer.max_time + 1)
+            return request.render("website_project_submission.apply2", {
+                'offer': offer,
+                'types': types,
+                'duration_steps': duration_steps,
+                'submission': submission,
+                'partners': submission.partners,
+                'error': error,
+                'default': default,
+            })
+        elif stage == 3:
+            if bool(post):
+                partner_organisme = env['res.partner'].create({'name': post.get('organisme')})
+                partner_value = {
+                    'name': post.get('name'),
+                    'function': post.get('function'),
+                    'phone': post.get('phone'),
+                    'mobile': post.get('mobile'),
+                    'email': post.get('email'),
+                    'parent_id': partner_organisme.id,
+                }
+                partner = env['res.partner'].create(partner_value)
+                submission_value = {
+                    'type': post.get('type'),
+                    'function': post.get('function'),
+                    'montant': post.get('montant'),
+                    'time': post.get('time'),
+                    'submission': submission.id,
+                    'partner': partner.id,
+                }
+                submission_partner = env['project.submission.partner'].create(submission_value)
+                if post.get('submit') == 'add':
+                    return request.redirect("/offers/apply/%s/stage/2" % slug(offer))
+            types = env['project.budgetline.type'].search([])
+            return request.render("website_project_submission.apply3", {
+                'offer': offer,
+                'types': types,
+                'submission': submission,
+                'error': error,
+                'default': default,
+            })
+        elif stage == 4:
+            if bool(post):
+                value = {
+                    'type': post.get('type'),
+                    'budget': post.get('budget'),
+                    'montant_propre': float(post.get('budget')) - float(post.get('montant_propre')),
+                    'submission': submission.id,
+                }
+                budget_line = env['project.submission.budgetline'].create(value)
+                if post.get('submit') == 'add':
+                    return request.redirect("/offers/apply/%s/stage/3" % slug(offer))
+            if submission.survey:  
+                if not submission.response:
+                    response = env['survey.user_input'].create({'survey_id': submission.survey.id, 'partner_id': candidate.user.partner_id.id})
+                    submission.write({'response': response.id})
+                else:
+                    response = submission.response
+                return request.redirect("/survey/fill/%s/%s" % (slug(submission.survey), response.token))
+            return request.render("website_project_submission.thankyou", {
+                'offer': offer,
+                'submission': submission,
+                'error': error,
+                'default': default,
+            })
 
 # vim :et:

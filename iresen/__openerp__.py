@@ -31,9 +31,7 @@
     """,
     'author': 'BADEP',
     'website': 'https://badep.ma',
-    'depends': ['document',
-                'auth_signup',
-                'project_submission',
+    'depends': ['auth_signup',
                 'website_project_submission'
                 ],
     'data': [

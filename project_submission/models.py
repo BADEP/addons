@@ -68,8 +68,8 @@ class ProjectOffer(models.Model):
     documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     host =  fields.Many2one('res.partner', 'Institut hôte',default=_get_default_host)
-    submissions = fields.One2many('project.submission', 'offer', string='Soumissions', required=True)
-    type = fields.Many2one('project.offer.type', required=True)
+    submissions = fields.One2many('project.submission', 'offer', string='Soumissions')
+    type = fields.Many2one('project.offer.type')
     survey =  fields.Many2one('survey.survey', 'Formulaire d\'inscription')
     color = fields.Integer('Couleur', default=0)
     state =  fields.Selection([('draft', 'Brouillon'), ('open', 'En cours'),
@@ -160,11 +160,12 @@ class ProjectSubmission(models.Model):
         return self.offer.user_id.id
     
     name = fields.Char('Intitulé du projet', required=True)
+    acronyme = fields.Char('Acronyme', required=True)
     offer = fields.Many2one('project.offer', string='Offre de projet', required=True)
     candidate = fields.Many2one('project.candidate', string='Soumissionnaire', required=True)
     field = fields.Many2one('project.offer.field', 'Domaine d\'activité', required=True)
     partners = fields.One2many('project.submission.partner', 'submission', string='Partenaires')
-    description = fields.Text('Description')
+    description = fields.Text('Description', required=True)
     manager = fields.Many2one('res.users', 'Responsable', default=_get_manager)
     date_submitted = fields.Datetime('Date de soumission', readonly=True)
     date_processed = fields.Datetime('Date de traitement', readonly=True)
@@ -183,17 +184,17 @@ class ProjectSubmission(models.Model):
     budget = fields.Float(compute='_get_amounts', store=True, digital_precision=dp.get_precision('Account'))
     montant_subventionne = fields.Float(compute='_get_amounts', string="Montant subventionné", store=True, digital_precision=dp.get_precision('Account'))
     montant_propre = fields.Float(compute='_get_amounts', string="Financement propre", store=True, digital_precision=dp.get_precision('Account'))
-    percent_subventionne = fields.Float(compute='_get_amounts', string="Pourcentage subventionné (%)", store=True)
+    percent_subventionne = fields.Float(compute='_get_amounts', digital_precision=2, string="Pourcentage subventionné (%)", store=True)
     budget_lines = fields.One2many('project.submission.budgetline', 'submission', string="Lignes de budget")
-    total_time = fields.Integer('Durée du projet')
+    duration = fields.Integer('Durée du projet')
     
     @api.one
-    @api.constrains('total_time')
-    def _check_total_time(self):
+    @api.constrains('duration')
+    def _check_duration(self):
         if self.offer:
-            if self.total_time > self.offer.max_time:    
+            if self.duration > self.offer.max_time:    
                 raise ValidationError("La durée du prjet doit être inférieure à la durée maximum de l'offre: %s mois" % self.offer.max_time)
-            if self.total_time > self.offer.max_time or self.total_time < self.offer.min_time:    
+            if self.duration > self.offer.max_time or self.duration < self.offer.min_time:    
                 raise ValidationError("La durée du prjet doit être supérieure à la durée minimum du projet: %S mois " % self.offer.min_time)
     
     @api.one
@@ -219,10 +220,23 @@ class ProjectSubmission(models.Model):
         action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
         action['domain'] = str([('res_model', '=', 'project.submission'), ('res_id', 'in', ids)])
         return action
-    
+
+    @api.one
     @api.depends('documents')
     def _count_all(self):
         self.documents_count = len(self.documents)
+    
+    @api.one
+    def get_early_stage(self):
+        if not (self.candidate.parent_id and self.candidate.function and self.candidate.mobile and self.candidate.email and self.duration):
+            return 1
+        elif not (self.partners):
+            return 2
+        elif not (self.budget_lines):
+            return 3
+        elif self.survey and (not self.response or (self.response and self.response.state!='done')):
+            return 4
+        return 5
     
     @api.multi
     def action_makeMeeting(self):
@@ -245,12 +259,14 @@ class ProjectSubmission(models.Model):
     @api.multi
     def action_start_survey(self):
         # create a response and link it to this applicant
-        if not self.response:
-            response = self.env['survey.user_input'].create({'survey_id': self.survey.id, 'partner_id': self.candidate.user.partner_id.id})
-            self.write({'response': response.id})
-        else:
-            response = self.response
-        return self.survey.with_context(survey_token = response.token).action_start_survey() if self.survey else False
+        if self.survey:
+            if not self.response:
+                response = self.env['survey.user_input'].create({'survey_id': self.survey.id, 'partner_id': self.candidate.user.partner_id.id})
+                self.write({'response': response.id})
+            else:
+                response = self.response
+            return self.survey.with_context(survey_token = response.token).action_start_survey()
+        return False
 
     @api.multi
     def action_print_survey(self):
@@ -286,8 +302,8 @@ class ProjectSubmissionBudgetLine(models.Model):
     submission = fields.Many2one('project.submission', required=True, ondelete='cascade')
     budget = fields.Float(digital_precision=dp.get_precision('Account'), required=True)
     montant_propre = fields.Float(digital_precision=dp.get_precision('Account'), required=True)
-    montant_subventionne = fields.Float(compute='_get_amount', store=True, digital_precision=dp.get_precision('Account'), required=True)
-    percent_subventionne = fields.Float(compute='_get_amount', store=True)
+    montant_subventionne = fields.Float(compute='_get_amount', store=True, digital_precision=dp.get_precision('Account'))
+    percent_subventionne = fields.Float(compute='_get_amount', digital_precision=2, store=True)
     type = fields.Many2one('project.budgetline.type', required=True)
     
     _sql_constraints = [
