@@ -45,7 +45,6 @@
 			</field>
 		</record>
 
-
 		<!-- KANBAN -->
 		<record id="view_project_offer_kanban" model="ir.ui.view">
 			<field name="name">project.offer.kanban</field>
@@ -95,7 +94,7 @@
 									</div>
 									<t t-if="record.state.raw_value == 'open'">
 										<div class="oe_applications">
-											<a name="action_get_submission_tree_view" type="object">
+											<a name="%(action_project_submission)d" t-attf-data-context="{'search_default_offer': [{{record.id.raw_value}}], 'default_offer': {{record.id.raw_value}}}" type="action">
 												<span><t t-esc="record.submissions.raw_value.length"/> Soumissions</span>
 											</a>
 											<br/>
@@ -161,7 +160,7 @@
 			   		
 			   			<t t-name="kanban-tooltip">
 							<ul class="oe_kanban_tooltip">
-								<li t-if="record.field.raw_value"><b>Domaine:</b> <field name="field"/></li>
+								<li t-if="record.field.raw_value"><b>Domaines:</b> <field name="field"/></li>
 								<li t-if="record.candidate.raw_value"><b>Contact:</b> <field name="candidate"/></li>
 								<li t-if="record.state.raw_value"><b>State:</b> <field name="state"/></li>
 							</ul>
@@ -222,7 +221,6 @@
 			</field>
 		</record>
 
-
 		<!-- FORMS -->	
 		<record id="view_project_submission_form" model="ir.ui.view">
 			<field name="name">project.submission.form</field>
@@ -272,17 +270,16 @@
 							<group colspan="2">
 								<field name="description"/>
 								<field name="partners">
-									<tree editable="bottom">
+									<tree>
 										<field name="type"/>
-										<field name="partner"/>
-										<field name="time"/>
-										<field name="montant"/>
-										<field name="total"/>
+										<field name="name"/>
+										<field name="mobile"/>
+										<field name="email"/>
 									</tree>
 								</field>
 							</group>
 							<group>
-								<field name="field"/>
+								<field name="field" widget="many2many_tags"/>
 								<field name="duration"/>
 							</group>
 							<group>
@@ -299,7 +296,7 @@
 								<field name="montant_subventionne"/>
 								<field name="percent_subventionne"/>
 							</group>
-							<group colspan="2">
+							<group colspan="2" string="Répartition financière">
 								<field name="budget_lines">
 									<tree editable="bottom">
 										<field name="type"/>
@@ -310,6 +307,52 @@
 									</tree>
 								</field>
 							</group>
+							<group colspan="2" string="Personnel">
+								<field name="personnels">
+									<tree editable="bottom">
+										<field name="type"/>
+										<field name="function"/>
+										<field name="number"/>
+										<field name="time"/>
+										<field name="montant"/>
+										<field name="total"/>
+									</tree>
+								</field>
+							</group>
+						</group>
+						<group colspan="2" string="Tâches et livrables">
+							<field name="tasks">
+								<tree>
+									<field name="type"/>
+									<field name="date_start"/>
+									<field name="date_end"/>
+									<field name="partner"/>
+									<field name="partners"/>
+									<field name="objectives"/>
+									<field name="description"/>
+									<field name="lots" widget="many2many_tags"/>
+								</tree>
+								<form>
+									<group>
+									<field name="type"/>
+									<field name="date_start"/>
+									<field name="date_end"/>
+									<field name="submission" invisible="1"/>
+									<field name="possible_values" invisible="1"/>
+									<field name="partner"/>
+									<field name="partners"/>
+									<field name="objectives"/>
+									<field name="description"/>
+									<field name="lots">
+										<tree editable="bottom">
+											<field name="type"/>
+											<field name="name"/>
+											<field name="date_due"/>
+											<field name="partner"/>
+										</tree>
+									</field></group>
+								</form>
+							</field>
 						</group>
 					</sheet>
 				</form>
@@ -332,10 +375,11 @@
                         <div class="oe_title">
                             <label for="name" class="oe_edit_only"/>
                             <h1><field name="name" class="oe_inline"/></h1>
+                            <field name="description"/>
                         </div>
 						<div class="oe_right" name="buttons">
 							<div class="oe_button_box">
-								<button class="oe_stat_button" icon="fa-file-o" name="action_get_submission_tree_view" type="object">
+								<button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" context="{'search_default_offer': [active_id], 'default_offer': active_id}" type="action">
 									<field name="submissions_count" widget="statinfo" string="Soumissions"/>
 								</button>
 								<button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
@@ -344,6 +388,7 @@
 							</div>
 						</div>
 					  	<group>
+                            <field name="description"/>
 					  		<group>
 								<field name="manager"/>
 								<field name="type"/>
@@ -382,7 +427,7 @@
 						<button string="Réinitialiser le mot de passe" class="oe_link" type="object" name="action_reset_password"/>
 					</div>
 					<div name="buttons_submission" class="oe_right oe_button_box">
-						<button class="oe_stat_button" icon="fa-file-o" name="action_get_submission_tree_view" type="object">
+						<button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" context="{'search_default_candidate': [active_id], 'default_candidate': active_id}" type="action">
 							 <field name="submissions_count" widget="statinfo" string="Soumissions"/>
 						</button>
 						<button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
@@ -416,7 +461,6 @@
 			</form>
 		</field>
 	</record>
-
 
 		<!-- ACTIONS -->
 		<record id="action_project_offer" model="ir.actions.act_window">
@@ -476,6 +520,27 @@
 			<field name="view_type">form</field>
 			<field name="view_mode">tree,form</field>
 		</record>
+		<record id="action_project_partner_function" model="ir.actions.act_window">
+			<field name="name">Titres</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.partner.function</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record id="action_project_submission_task_type" model="ir.actions.act_window">
+			<field name="name">Types d'activité</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.submission.task.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record id="action_project_lot_type" model="ir.actions.act_window">
+			<field name="name">Types de livrable</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.lot.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
 
 		<!-- MENUS -->
 		<menuitem id="menu_project_submission_root" name="Appels à projets" sequence="10"/>
@@ -490,7 +555,10 @@
 
 		<menuitem id="menu_project_offer_type" name="Types d'offres" action="action_project_offer_type" parent="project_submission.menu_project_submission_config" sequence="0"/>
 		<menuitem id="menu_project_offer_field" name="Thématiques" action="action_project_offer_field" parent="project_submission.menu_project_submission_config" sequence="10"/>
+		<menuitem id="menu_project_partner_function" name="Titres" action="action_project_partner_function" parent="project_submission.menu_project_submission_config" sequence="15"/>
 		<menuitem id="menu_project_request_type" name="Types de demandes" action="action_project_request_type" parent="project_submission.menu_project_submission_config" sequence="20"/>
+		<menuitem id="menu_project_submission_task_type" name="Types d'activité" action="action_project_submission_task_type" parent="project_submission.menu_project_submission_config" sequence="25"/>
+		<menuitem id="menu_project_lot_type" name="Types de livrable" action="action_project_lot_type" parent="project_submission.menu_project_submission_config" sequence="26"/>
 		<menuitem id="menu_project_budgetline_type" name="Types de lignes de budget" action="action_project_budgetline_type" parent="project_submission.menu_project_submission_config" sequence="30"/>
 
 	</data>

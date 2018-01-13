@@ -56,15 +56,14 @@ class ProjectOffer(models.Model):
     _name = 'project.offer'
     _inherit = ['mail.thread']
 
-    @api.one
     def _get_default_host(self):
         return self.env.user.company_id.partner_id.id
-    
-    @api.one
+
     def _get_default_manager(self):
         return self.env.user.id
 
     name = fields.Char(string='Nom', required=True)
+    description = fields.Text(string='Description')
     documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     host =  fields.Many2one('res.partner', 'Institut hôte',default=_get_default_host)
@@ -81,8 +80,8 @@ class ProjectOffer(models.Model):
     manager =  fields.Many2one('res.users', 'Responsable', track_visibility='always', default=_get_default_manager)
     date_open = fields.Datetime(string='Date de publication')
     date_closed = fields.Datetime(string='Date de clôture')
-    min_time = fields.Integer(string='Durée minimale')
-    max_time = fields.Integer(string='Durée maximale')
+    min_time = fields.Integer(string='Durée minimale (en semestres)')
+    max_time = fields.Integer(string='Durée maximale (en semestres)')
     budget_total = fields.Float('Budget', digits_compute=dp.get_precision('Account'))
     
     @api.constrains('min_time', 'max_time')
@@ -94,23 +93,12 @@ class ProjectOffer(models.Model):
     def _get_attached_docs(self):
         res = self.env['ir.attachment'].search([('res_model', '=', 'project.offer'), ('res_id', '=', self.id)])
         self.documents =  res.ids
-    
-    @api.cr_uid_ids_context
-    def action_get_submission_tree_view(self, cr, uid, ids, context=None):
-        #open attachments of job and related applicantions.
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'project_submission', 'action_project_submission')
-        action = self.pool.get(model).read(cr, uid, action_id, context=context)
-        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
-        action['domain'] = str([('offer', 'in', ids)])
-        return action
      
-    @api.cr_uid_ids_context
-    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
-        #open attachments of job and related applicantions.
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
-        action = self.pool.get(model).read(cr, uid, action_id, context=context)
-        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
-        action['domain'] = str([('res_model', '=', 'project.offer'), ('res_id', 'in', ids)])
+    @api.multi
+    def action_get_attachment_tree_view(self):
+        action = self.env.ref('base.action_attachment').read()[0]
+        action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0]}
+        action['domain'] = str([('res_model', '=', 'project.offer'), ('res_id', 'in', self.ids)])
         return action
     
     @api.multi
@@ -142,7 +130,6 @@ class ProjectOfferField(models.Model):
     name = fields.Char('Nom')
 
 class ProjectOfferType(models.Model):
-    """hr.department"""
     _name = 'project.offer.type'
     _description = u'Type d\'appel à projets'
     
@@ -156,17 +143,18 @@ class ProjectSubmission(models.Model):
     _description = u'Soumission'
     
     @api.one
-    def _get_manager(self):
-        return self.offer.user_id.id
+    @api.onchange('offer', 'offer.manager')
+    def _get_default_manager(self):
+        self.manager = self.offer.manager
     
     name = fields.Char('Intitulé du projet', required=True)
-    acronyme = fields.Char('Acronyme', required=True)
+    acronyme = fields.Char('Acronyme')
     offer = fields.Many2one('project.offer', string='Offre de projet', required=True)
     candidate = fields.Many2one('project.candidate', string='Soumissionnaire', required=True)
-    field = fields.Many2one('project.offer.field', 'Domaine d\'activité', required=True)
-    partners = fields.One2many('project.submission.partner', 'submission', string='Partenaires')
-    description = fields.Text('Description', required=True)
-    manager = fields.Many2one('res.users', 'Responsable', default=_get_manager)
+    field = fields.Many2many('project.offer.field', string='Domaine d\'activité')
+    partners = fields.Many2many('res.partner', string='Partenaires')
+    description = fields.Text('Description')
+    manager = fields.Many2one('res.users', 'Responsable')
     date_submitted = fields.Datetime('Date de soumission', readonly=True)
     date_processed = fields.Datetime('Date de traitement', readonly=True)
     date_action = fields.Datetime('Date de la prochaine action')
@@ -186,7 +174,9 @@ class ProjectSubmission(models.Model):
     montant_propre = fields.Float(compute='_get_amounts', string="Financement propre", store=True, digital_precision=dp.get_precision('Account'))
     percent_subventionne = fields.Float(compute='_get_amounts', digital_precision=2, string="Pourcentage subventionné (%)", store=True)
     budget_lines = fields.One2many('project.submission.budgetline', 'submission', string="Lignes de budget")
-    duration = fields.Integer('Durée du projet')
+    personnels = fields.One2many('project.submission.personnel', 'submission', string="Personnels")
+    duration = fields.Integer('Durée du projet (en semestres)')
+    tasks = fields.One2many('project.submission.task', 'submission', string="Tâches et livrables")
     
     @api.one
     @api.constrains('duration')
@@ -205,20 +195,16 @@ class ProjectSubmission(models.Model):
         self.montant_propre = sum(self.budget_lines.mapped('montant_propre'))
         self.percent_subventionne = (self.montant_subventionne / self.budget)*100 if self.budget != 0 else 0
   
-    @api.multi
+    @api.one
     def _get_attached_docs(self):
-        res = {}
-        for rec in self:
-            res[rec.id] = self.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', '=', rec.id)])
-        return res
+        self.documents = self.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', '=', self.id)]).ids
         
-    @api.cr_uid_ids_context
-    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
-        #open attachments of job and related applicantions.
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
-        action = self.pool.get(model).read(cr, uid, action_id, context=context)
-        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
-        action['domain'] = str([('res_model', '=', 'project.submission'), ('res_id', 'in', ids)])
+        
+    @api.multi
+    def action_get_attachment_tree_view(self):
+        action = self.env.ref('base.action_attachment').read()[0]
+        action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0]}
+        action['domain'] = str([('res_model', '=', 'project.submission'), ('res_id', 'in', self.ids)])
         return action
 
     @api.one
@@ -275,13 +261,71 @@ class ProjectSubmission(models.Model):
         else:
             return self.survey.with_context(survey_token = self.response.token).action_print_survey()
 
-class ProjectSubmissionPartner(models.Model):
-    _name = 'project.submission.partner'
+class ResPartner(models.Model):
+    _inherit = 'res.partner'
+    
+    submissions = fields.Many2many('project.submissions')
+    type = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')], required=True)
+    
+class ProjectPartnerFunction(models.Model):
+    _name = 'project.partner.function'
+    
+    name = fields.Char(required=True, string='Nom')
+
+class ProjectSubmissionTask(models.Model):
+    _name = 'project.submission.task'
+    
+    @api.depends('submission.partners')
+    @api.one
+    def _get_possible_partners_values(self):
+        self.possible_values = self.submission.partners + self.submission.candidate.partner_id
+    
+    @api.one
+    @api.onchange('submission', 'submission.candidate')
+    def _get_default_partner(self):
+        self.partner = self.submission.candidate.partner_id
+
+    submission = fields.Many2one('project.submission', required=True)
+    name = fields.Char(string='Designation', required=True)
+    type = fields.Many2one('project.submission.task.type', required=True)
+    date_start = fields.Date(string='Date de début')
+    date_end = fields.Date(string='Date de fin')
+    partner = fields.Many2one('res.partner', string='Coordinateur', required=True, domain="[('id', 'in', possible_values[0][2])]")
+    partners = fields.Many2many('res.partner', string='Partenaires impliquées', domain="[('id', 'in', possible_values[0][2])]")
+    objectives = fields.Text(string='Objectifs')
+    description = fields.Text(string='Description des tâches et rôles des partenaires')
+    lots = fields.One2many('project.submission.lot', 'task', string='Livrables')
+    possible_values = fields.Many2many(
+        comodel_name='res.partner',
+        compute='_get_possible_partners_values', readonly=True)
+    
+class ProjectSubmissionTaskType(models.Model):
+    _name = 'project.submission.task.type'
+    
+    name = fields.Char('Nom', required=True)
+    
+class ProjectSubmissionLot(models.Model):
+    _name = 'project.submission.lot'
+    
+    task = fields.Many2one('project.submission.task', required=True)
+    name = fields.Char('Nom', required=True)
+    date_due = fields.Date(string='Date d\'échéance')
+    partner = fields.Many2one('res.partner', string='Coordinateur', required=True)
+    type = fields.Many2one('project.lot.type', required=True)
+    
+class ProjectLotType(models.Model):
+    _name = 'project.lot.type'
+    
+    name = fields.Char('Nom', required=True)
+
+class ProjectSubmissionPersonnel(models.Model):
+    _name = 'project.submission.personnel'
     
     submission = fields.Many2one('project.submission')
-    partner = fields.Many2one('res.partner', string='partenaire')
     
-    type = fields.Many2one('project.partner.type')
+    type = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')], required=True)
+    function = fields.Many2one('project.partner.function', string='Titre')
+    number = fields.Integer(string='Effectif')
     time = fields.Integer(string='Durée (mois)', required=True)
     montant = fields.Float(digital_precision=dp.get_precision('Account'), required=True, string='Financement demandé / mois')
     total = fields.Float(digital_precision=dp.get_precision('Account'), compute='_get_total', store=True)
@@ -290,11 +334,6 @@ class ProjectSubmissionPartner(models.Model):
     @api.depends('time', 'montant')
     def _get_total(self):
         self.total = self.time * self.montant
-
-class ProjectPartnerType(models.Model):
-    _name = 'project.partner.type'
-    
-    name = fields.Char(required=True)
 
 class ProjectSubmissionBudgetLine(models.Model):
     _name = 'project.submission.budgetline'
@@ -340,6 +379,7 @@ class ProjectCandidate(models.Model):
     user = fields.Many2one('res.users', 'Utilisateur lié', required=True, ondelete='restrict')
     submissions = fields.One2many('project.submission', 'candidate', 'Soumissions')
     submissions_count =  fields.Integer(compute='_count_all', string='Soumissions')
+    self_documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     color = fields.Integer('Color Index', default=0)
@@ -371,22 +411,14 @@ class ProjectCandidate(models.Model):
     def _get_attached_docs(self):
         res = self.env['ir.attachment'].search([('res_model', '=', 'project.candidate'), ('res_id', '=', self.id)])
         res2 = self.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', 'in', self.submissions.ids)])
+        self.self_documents = res.ids
         self.documents =  res.ids + res2.ids
     
-    @api.cr_uid_ids_context
-    def action_get_attachment_tree_view(self, cr, uid, ids, context=None):
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'base', 'action_attachment')
-        action = self.pool.get(model).read(cr, uid, action_id, context=context)
-        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
-        action['domain'] = str([('res_model', '=', 'project.candidate'), ('res_id', 'in', ids)])
-        return action
-        
-    @api.cr_uid_ids_context
-    def action_get_submission_tree_view(self, cr, uid, ids, context=None):
-        model, action_id = self.pool.get('ir.model.data').get_object_reference(cr, uid, 'project_submission', 'action_project_submission')
-        action = self.pool.get(model).read(cr, uid, action_id, context=context)
-        action['context'] = {'default_res_model': self._name, 'default_res_id': ids[0]}
-        action['domain'] = str([('candidate', 'in', ids)])
+    @api.multi
+    def action_get_attachment_tree_view(self):
+        action = self.env.ref('base.action_attachment').read()[0]
+        action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0]}
+        action['domain'] = str(['|', '&', ('res_model', '=', 'project.candidate'), ('res_id', 'in', self.ids), '&', ('res_model', '=', 'project.submission'), ('res_id', 'in', self.submissions.ids)])
         return action
     
 class ProjectRequest(models.Model):  

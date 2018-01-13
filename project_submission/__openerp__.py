@@ -36,6 +36,8 @@
                 ],
     'data': [
            'views.xml',
+           'security/project_submission_security.xml',
+           'security/ir.model.access.csv'
     ],
     'installable': True,
 }

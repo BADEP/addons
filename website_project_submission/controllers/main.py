@@ -14,7 +14,7 @@ class website_project_submission(http.Controller):
 
     @http.route([
         '/offers',
-        '/offers/type/<model("project.offer.type"):type_id>',
+        '/offers/type/<model("project.offer.type"):type>',
         ], type='http', auth="public", website=True)
     def offers(self, type=None, **kwargs):
         env = request.env(context=dict(request.env.context, show_address=True, no_tag_br=True))
@@ -55,9 +55,9 @@ class website_project_submission(http.Controller):
         })
 
     @http.route(['/offers/apply/<model("project.offer"):offer>',
-                 '/offers/apply/<model("project.offer"):offer>/stage/<int:stage>'
+                 '/offers/apply/<model("project.offer"):offer>/stage/<int:next_stage>'
                  ], type='http', auth="public", website=True)
-    def offers_apply(self, offer=None, stage=None, **post):
+    def offers_apply(self, offer=None, next_stage=None, **post):
         
         #If no user connected, force connection
         #TODO: Redirect to submission page if offer variable is in session
@@ -81,63 +81,47 @@ class website_project_submission(http.Controller):
 
         #Get the submission, if no submission call creation template
         submission = env['project.submission'].search([('offer', '=', offer.id), ('candidate', '=', candidate.id)])
-        stage = 0 if (submission.id == False and bool(post) == False) else min(stage, submission.get_early_stage()) if stage != None else submission.get_early_stage()[0]
-        if stage == 0:
-            fields = env['project.offer.field'].search([])
-            ## SET SWITCH TO TEMPLATES ACCORDING TO SUBMISSION STATE
-            if submission:
-                default['name'] = submission.name
-                default['acronyme'] = submission.acronyme
-                default['field'] = submission.field.id
-                default['duration'] = submission.duration
-                default['description'] = submission.description
-            duration_steps = range(offer.min_time, offer.max_time + 1)
-            return request.render("website_project_submission.apply0", {
-                'offer': offer,
-                'duration_steps': duration_steps,
-                'fields': fields,
-                'error': error,
-                'default': default,
-            })
-        if stage == 1:
-            default['name'] = candidate.name
-            default['organisme'] = candidate.parent_id and candidate.parent_id.name
-            default['function'] = candidate.function
-            default['phone'] = candidate.phone
-            default['mobile'] = candidate.mobile
-            default['email'] = candidate.email if candidate.email else candidate.login
-            
-            if bool(post):
+        if not submission:
+            submission = env['project.submission'].create({
+                                                           'name': '/',
+                                                           'offer': offer.id,
+                                                           'candidate': candidate.id,})
+        
+        #Save the current stage
+        current_stage = post.get('current_stage') and int(post.get('current_stage'))
+        if bool(post):
+            if post.get('unlink-doc'):
+                env['ir.attachment'].browse(int(post.get('unlink-doc'))).unlink()
+            if post.get('unlink-partner'):
+                submission.write({'partners': [(3, 0, int(post.get('unlink-partner')))]})
+                partner = env['res.partner'].browse(int(post.get('unlink-partner')))
+                if not partner.submissions:
+                    partner.unlink()
+            #Stage 0: Project general informations
+            if current_stage == 0:
                 value = {
                     'name': post.get('name'),
                     'acronyme': post.get('acronyme'),
-                    'offer': offer.id,
-                    'candidate': candidate.id,
-                    'field': int(post.get('field')),
+                    'duration': post.get('duration'),
+                    'field': [(6, 0, [int(x) for x in request.httprequest.form.getlist('fields')])],
                     'description': post.get('description'),
                 }
-                if submission:
-                    submission.write(value)
-                else:
-                    submission = env['project.submission'].create(value)
-                attachment_value = {
-                    'name': post['ufile'].filename,
-                    'res_name': value['name'],
-                    'res_model': 'project.submission',
-                    'res_id': submission.id,
-                    'datas': base64.encodestring(post['ufile'].read()),
-                    'datas_fname': post['ufile'].filename,
-                }
-                env['ir.attachment'].create(attachment_value)
-            return request.render("website_project_submission.apply1", {
-                'offer': offer,
-                'submission': submission,
-                'candidate': candidate,
-                'error': error,
-                'default': default,
-            })
-        elif stage == 2:
-            if bool(post):
+                submission.write(value)
+                if post.get('ufile'):
+                    submission.documents.unlink()
+                    attachment_value = {
+                        'name': post['ufile'].filename,
+                        'res_name': value['name'],
+                        'res_model': 'project.submission',
+                        'res_id': submission.id,
+                        'datas': base64.encodestring(post['ufile'].read()),
+                        'datas_fname': post['ufile'].filename,
+                    }
+                    env['ir.attachment'].create(attachment_value)
+                    submission._get_attached_docs()
+
+            #Stage 1: Candidate general informations
+            elif current_stage == 1:
                 value = {
                     'name': post.get('name'),
                     'function': post.get('function'),
@@ -151,28 +135,20 @@ class website_project_submission(http.Controller):
                 else:
                     organisme = env['res.partner'].create({'name': post.get('organisme')})
                     candidate.write({'parent_id': organisme.id})
-                attachment_value = {
-                    'name': post['ufile'].filename,
-                    'res_name': value['name'],
-                    'res_model': 'project.candidate',
-                    'res_id': candidate.id,
-                    'datas': base64.encodestring(post['ufile'].read()),
-                    'datas_fname': post['ufile'].filename,
-                }
-                env['ir.attachment'].create(attachment_value)
-            types = env['project.partner.type'].search([])
-            duration_steps = range(1, offer.max_time + 1)
-            return request.render("website_project_submission.apply2", {
-                'offer': offer,
-                'types': types,
-                'duration_steps': duration_steps,
-                'submission': submission,
-                'partners': submission.partners,
-                'error': error,
-                'default': default,
-            })
-        elif stage == 3:
-            if bool(post):
+                if post.get('ufile'):
+                    attachment_value = {
+                        'name': post['ufile'].filename,
+                        'res_name': value['name'],
+                        'res_model': 'project.candidate',
+                        'res_id': candidate.id,
+                        'datas': base64.encodestring(post['ufile'].read()),
+                        'datas_fname': post['ufile'].filename,
+                    }
+                    env['ir.attachment'].create(attachment_value)
+                    candidate._get_attached_docs()
+
+            #Stage 2: Project partners informations
+            elif current_stage == 2:
                 partner_organisme = env['res.partner'].create({'name': post.get('organisme')})
                 partner_value = {
                     'name': post.get('name'),
@@ -191,28 +167,88 @@ class website_project_submission(http.Controller):
                     'submission': submission.id,
                     'partner': partner.id,
                 }
-                submission_partner = env['project.submission.partner'].create(submission_value)
+                env['project.submission.partner'].create(submission_value)
                 if post.get('submit') == 'add':
                     return request.redirect("/offers/apply/%s/stage/2" % slug(offer))
-            types = env['project.budgetline.type'].search([])
-            return request.render("website_project_submission.apply3", {
-                'offer': offer,
-                'types': types,
-                'submission': submission,
-                'error': error,
-                'default': default,
-            })
-        elif stage == 4:
-            if bool(post):
+
+            #Stage 3: Project budget informations
+            elif current_stage == 3:
                 value = {
                     'type': post.get('type'),
                     'budget': post.get('budget'),
                     'montant_propre': float(post.get('budget')) - float(post.get('montant_propre')),
                     'submission': submission.id,
                 }
-                budget_line = env['project.submission.budgetline'].create(value)
+                env['project.submission.budgetline'].create(value)
                 if post.get('submit') == 'add':
-                    return request.redirect("/offers/apply/%s/stage/3" % slug(offer))
+                    return request.redirect("/offers/apply/%s/stage/3" % slug(offer))     
+        
+        if next_stage == None:
+            if bool(post) and post.get('submit') == 'next':
+                next_stage = current_stage + 1
+            elif bool(post) and post.get('submit') == 'prev':
+                next_stage = current_stage - 1
+            elif bool(post) and current_stage:
+                next_stage = current_stage
+            else:
+                next_stage = 0
+                
+        #prepare next_stage vals
+        vals = {
+                'offer': offer,
+                'submission': submission,
+                'candidate': candidate,
+                'error': error,
+                'default': default,
+                'current_stage': next_stage,
+                }
+        if next_stage == 0:
+            fields = env['project.offer.field'].search([])
+            if submission:
+                default['name'] = submission.name
+                default['acronyme'] = submission.acronyme
+                default['field'] = submission.field.ids
+                default['duration'] = submission.duration
+                default['description'] = submission.description
+            duration_steps = range(offer.min_time, offer.max_time + 1)
+            vals.update({
+                'error': error,
+                'default': default,
+                'duration_steps': duration_steps,
+                'fields': fields,
+            })
+        if next_stage == 1:
+            default['name'] = candidate.name
+            default['organisme'] = candidate.parent_id and candidate.parent_id.name
+            default['function'] = candidate.function
+            default['phone'] = candidate.phone
+            default['mobile'] = candidate.mobile
+            default['email'] = candidate.email if candidate.email else candidate.login
+
+            vals.update({
+                'error': error,
+                'default': default,
+            })
+        elif next_stage == 2:
+            types = [('scientifique', 'Scientifique'), ('industriel', 'Industriel')]
+            duration_steps = range(1, offer.max_time + 1)
+            if post.get('edit-partner'):
+                partner = env['res.partner'].browse(int(post.get('edit-partner')))
+                vals.update({'partner': partner})
+            vals.update({
+                'duration_steps': duration_steps,
+                'types': types,
+                'error': error,
+                'default': default,
+            })
+        elif next_stage == 3:
+            types = env['project.budgetline.type'].search([])
+            vals.update({
+                'types': types,
+                'error': error,
+                'default': default,
+            })
+        elif next_stage == 4:
             if submission.survey:  
                 if not submission.response:
                     response = env['survey.user_input'].create({'survey_id': submission.survey.id, 'partner_id': candidate.user.partner_id.id})
@@ -226,5 +262,5 @@ class website_project_submission(http.Controller):
                 'error': error,
                 'default': default,
             })
-
+        return request.render('website_project_submission.apply', vals)
 # vim :et:

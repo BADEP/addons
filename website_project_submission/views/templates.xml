@@ -2,664 +2,625 @@
 <openerp>
 	<data>
 		<template id="offer_footer_custom" inherit_id="website.footer_default" name="Footer Offer Link">
-		    <xpath expr="//div[@id='info']/ul" position="inside">
-		    <li><a href="/offers">Appels à projets</a></li>
-		    </xpath>
+			<xpath expr="//div[@id='info']/ul" position="inside">
+				<li>
+					<a href="/offers">Appels à projets</a>
+				</li>
+			</xpath>
 		</template>
-		
 		<template id="index" name="Offers">
-		    <t t-call="website.layout">
-		        <div class="col-md-12 text-center" id="offers_grid">
-		            <div t-if="not offers">
-		                <div class="text-center text-muted">
-		                  <h4 class="css_editable_display">Aucun appel à projets touvé</h4>
-		                  <h4 class="css_editable_hidden">There isn't offer offer published now, click <a t-attf-href="/page/website.contactus">here</a> to contact us</h4>
-		                  <t groups="base.group_website_publisher">
-		                     <t  groups="base.group_project_manager">
-		                      <p>Click on "Content" to define a new project offer or "Help" for more informations.</p>
-		                      <img src="/website/static/src/img/content_here.png"/>
-		                    </t>
-		                  </t>
-		                </div>
-		         	</div>
-		            <ul class="media-list" t-if="offers">
-		                <li t-foreach="offers" t-as="offer" class="media">
-		                    <div class="media-body" t-att-data-publish="offer.website_published and 'on' or 'off'">
-		                        <h3 class="media-heading">
-		                            <a t-attf-href="/offers/detail/#{ slug(offer) }">
-		                                <span t-field="offer.name"/>
-		                            </a>
-		                        </h3>
-		
-		                        <span t-if="offer.host" t-field="offer.host" t-field-options='{
-		                            "widget": "contact",
-		                            "fields": ["address"],
-		                            "no_tag_br": true
-		                            }'/>
-		                        <span t-if="not offer.website_published" class="label label-danger">not published</span>
-		                        <div class="text-muted">
-		                            <i class="fa fa-clock-o"/> <span t-field="offer.date_open"/>
-		                        </div>
-		                    </div>
-		                </li>
-		            </ul>
+			<t t-call="website.layout">
+				<div id="wrap">
+					<div class="oe_structure">
+						<section data-snippet-id="text-block" class="mb16">
+							<div class="container">
+								<div class="row">
+									<div class="col-md-12 text-center mb16" data-snippet-id="colmd">
+										<h2>Our Job Offers</h2>
+										<h3 class="text-muted">Join us and help disrupt the enterprise market!</h3>
+									</div>
+									<div class="col-md-12" data-snippet-id="colmd">
+										<p>
+                                            With a small team of smart people, we released the most
+                                            disruptive enterprise management software in the world.
+                                            Odoo is fully open source, super easy, full featured
+                                            (3000+ apps) and its online offer is 3 times cheaper than
+                                            traditional competitors like SAP and Ms Dynamics.
+                                        </p>
+										<p>
+                                            Join us, we offer you an extraordinary chance to learn, to
+                                            develop and to be part of an exciting experience and
+                                            team.
+                                        </p>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+					<t t-if="type">
+						<div t-field="type.website_description"/>
+					</t>
+					<div class="container oe_website_offers">
+						<div class="row">
+							<div class="hidden" id="offers_grid_left"></div>
+							<div class="col-md-12 text-center" id="offers_grid">
+								<div t-if="not offers">
+									<div class="text-center text-muted">
+										<h4 class="css_editable_display">Aucun appel à projets touvé</h4>
+										<h4 class="css_editable_hidden">There isn't offer offer published now, click 
+											
+											
+											<a t-attf-href="/page/website.contactus">here</a> to contact us
+										
+										
+										</h4>
+										<t groups="base.group_website_publisher">
+											<t  groups="base.group_project_manager">
+												<p>Click on "Content" to define a new project offer or "Help" for more informations.</p>
+												<img src="/website/static/src/img/content_here.png"/>
+											</t>
+										</t>
+									</div>
+								</div>
+								<ul class="media-list text-center" t-if="offers">
+									<li t-foreach="offers" t-as="offer" class="media col-md-6 col-xs-12">
+										<div class="media-body" t-att-data-publish="offer.website_published and 'on' or 'off'">
+											<h3 class="media-heading">
+												<a t-attf-href="/offers/detail/#{ slug(offer) }">
+													<span t-field="offer.name"/>
+												</a>
+											</h3>
+											<span t-if="not offer.website_published" class="label label-danger">not published</span>
+											<div class="text-muted">
+												<i class="fa fa-clock-o"/>
+												<span t-field="offer.date_open"/>
+											</div>
+											<div>
+												<span t-field="offer.description"/>
+											</div>
+										</div>
+									</li>
+								</ul>
+							</div>
+						</div>
+					</div>
 				</div>
 			</t>
 		</template>
-		
 		<template id="detail" name='Detail'>
-		    <t t-call="website.layout">
-		    <t t-set="additional_title">Détails de l'appel à projets</t>
-		    <div id="wrap" >
-		        <div class="oe_structure"/>
-		
-		        <section class="container mt8">
-		            <div class="row">
-		              <div class="col-sm-5">
-		                  <ol class="breadcrumb mb0">
-		                      <li><br><a href="/offers">Nos appels à projets</a></br></li>
-		                      <li class="active"><span t-field="offer.name"></span></li>
-		                  </ol>
-		              </div>
-		              <div class="col-sm-7">
-		                  <t t-call="website.publish_management">
-		                      <t t-set="object" t-value="offer"/>
-		                      <t t-set="publish_edit" t-value="True"/>
-		                  </t>
-		              </div>
-		            </div>
-		        </section>
-		        
-		        <div class="oe_structure" style="clear:both;">
-		            <h1 class="text-center" t-field="offer.name"/>
-		       		<h5 class="text-center" t-field="offer.host" t-field-options='{
-		                       "widget": "contact",
-		                       "fields": ["address"],
-		                       "no_tag_br": true
-		                       }'/>
-		           <h5 class="text-center text-muted">
-		                <i class="fa fa-clock-o"/> <span t-field="offer.date_open"/>
-		            </h5>
+			<t t-call="website.layout">
+				<t t-set="additional_title">Détails de l'appel à projets</t>
+				<div id="wrap" >
+					<div class="oe_structure"/>
+					<section class="container mt8">
+						<div class="row">
+							<div class="col-sm-5">
+								<ol class="breadcrumb mb0">
+									<li>
+										<br>
+											<a href="/offers">Nos appels à projets</a>
+										</br>
+									</li>
+									<li class="active">
+										<span t-field="offer.name"></span>
+									</li>
+								</ol>
+							</div>
+							<div class="col-sm-7">
+								<t t-call="website.publish_management">
+									<t t-set="object" t-value="offer"/>
+									<t t-set="publish_edit" t-value="True"/></t>
+							</div>
+						</div>
+					</section>
+					<div class="oe_structure" style="clear:both;">
+						<h1 class="text-center" t-field="offer.name"/>
+						<h5 class="text-center text-muted">
+							<i class="fa fa-clock-o"/>
+							<span t-field="offer.date_open"/>
+						</h5>
+					</div>
+					<div t-field="offer.website_description"/>
+					<div class="oe_structure">
+						<section data-snippet-id="cta" class="mt16 mb16">
+							<div class="container">
+								<div class="row">
+									<div class="col-md-12 text-center mt16 mb16">
+										<a t-attf-href="/offers/apply/#{ offer.id}" class="btn btn-primary btn-lg">Postuler</a>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
 				</div>
-		        <div t-field="offer.website_description"/>
-		        <div class="oe_structure">
-		            <section data-snippet-id="cta" class="mt16 mb16">
-		                <div class="container">
-		                    <div class="row">
-		                        <div class="col-md-12 text-center mt16 mb16">
-		                            <a t-attf-href="/offers/apply/#{ offer.id}" class="btn btn-primary btn-lg">Postuler</a>
-		                        </div>
-		                    </div>
-		                </div>
-		            </section>
-		        </div>
-		    
-		    </div>
-		    </t>
+			</t>
 		</template>
-		
+		<template id="apply">
+			<t t-call="website.layout">
+				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + offer.name"/>
+				<div id="wrap">
+					<div class="container">
+						<h1 class="text-center">
+							<span>Formulaire de soumission: </span>
+							<span t-field="offer.name"/>
+						</h1>
+						<h2 t-if="submission" class="text-center text-muted">
+							<span t-field="submission.name"/>
+						</h2>
+						<div class="row">
+							<t t-call="website_project_submission.form_nav"/>
+							<section class="col-md-9" id="forms">
+								<t t-if="current_stage==0">
+									<t t-call="website_project_submission.apply0"/></t>
+								<t t-if="current_stage==1">
+									<t t-call="website_project_submission.apply1"/></t>
+								<t t-if="current_stage==2">
+									<t t-call="website_project_submission.apply2"/></t>
+								<t t-if="current_stage==3">
+									<t t-call="website_project_submission.apply3"/></t>
+								<t t-if="current_stage==4">
+									<t t-call="website_project_submission.apply4"/></t>
+							</section>
+						</div>
+					</div>
+				</div>
+			</t>
+		</template>
+		<!-- Esquisse du projet -->
 		<template id="apply0">
-		    <t t-call="website.layout">
-		        <t t-set="additional_title">Postuler à l'appel à projets</t>
-		        <div id="wrap">
-		            <div class="container">
-		                <h1 class="text-center">
-		                    Formulaire de soumission
-		                </h1>
-		                <h2 t-if="offer" class="text-center text-muted">
-		                    <span t-field="offer.name"/>
-		                </h2>
-		
-		                <div class="row">
-		                    <section id="forms">
-		                        <!-- TODO Multilingual form action support ? -->
-		                        <form class="form-horizontal mt32" t-att-action="'/offers/apply/%s/stage/1' % slug(offer)" method="post" enctype="multipart/form-data">
-		                            <input type="hidden" t-att-value="offer and offer.id or False" name="offer"/>
-		                            <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="name">Intitulé du projet</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="text" t-att-value="default.get('name')" class="form-control" name="name" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('acronyme') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="acronyme">Acronyme</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="text" t-att-value="default.get('acronyme')" class="form-control" name="acronyme" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('field') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="field">Thématique</label>
-		                                <div class="col-md-7 col-sm-8">
-									    	<select name="field" t-att-value="default.get('field')" id="field" class="form-control" required="True">
-								         		<option value="">Sélectionnez la thématique...</option>
-									        	<t t-foreach="fields" t-as="f">
-								            		<option t-att-value="f.id"><t t-esc="f.name"/></option>
-									        	</t>
-									    	</select>
-									    </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('duration') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="duration">Durée demandée par mois</label>
-		                                <div class="col-md-7 col-sm-8">
-									    	<select name="duration" t-att-value="default.get('duration')" id="duration" class="form-control" required="True">
-								         		<option value="">Sélectionnez la durée...</option>
-									        	<t t-foreach="duration_steps" t-as="s">
-								            		<option t-att-value="s"><span><t t-esc="s"/> mois</span></option>
-									        	</t>
-									    	</select>
-									    </div>
-		                            </div>
-		                            <div class="form-group">
-		                                <label class="col-md-3 col-sm-4 control-label" for="description">Résumé du projet (1 paragraphe de 600 mots maximum)</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <textarea  class="form-control" t-esc="default.get('description')" name="description" style="min-height: 120px"/>
-		                                </div>
-		                            </div>
-		                            <div class="form-group">
-		                                <label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation (PDF, Word)</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input class="input-file" id="fileInput" type="file" name="ufile"/>
-		                                    <span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
-		                                </div>
-		                            </div>
-		                            <div class="form-group">
-		                                <div class="col-md-12 text-right">
-		                                    <button type="submit" class="btn btn-primary">Suivant</button>
-		                                </div>
-		                            </div>
-		                        </form>
-		                    </section>
-		                </div>
-		            </div>
-		        </div>
-		    </t>
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<t t-call="website_project_submission.form_header_footer"/>
+				<h3 class="text-center text-muted">Esquisse du projet</h3>
+				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="name">Intitulé du projet</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" maxlength="250" t-att-value="default.get('name')" class="form-control" name="name" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('acronyme') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="acronyme">Acronyme</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" maxlength="100" t-att-value="default.get('acronyme')" class="form-control" name="acronyme" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('field') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="field">Thématique</label>
+					<div class="col-md-7 col-sm-8">
+						<ul name="field" id="field" required="True">
+							<li t-foreach="fields" t-as="f">
+								<label>
+									<input type="checkbox" name="fields" t-att-value="f.id" t-att-checked="'checked' if f.id in default.get('field') else None"/>
+									<t t-esc="f.name"/>
+								</label>
+							</li>
+						</ul>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('duration') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="duration">Durée du projet (en semestres)</label>
+					<div class="col-md-7 col-sm-8">
+						<select name="duration" id="duration" class="form-control" required="True">
+							<option value="">Sélectionnez la durée...</option>
+							<t t-foreach="duration_steps" t-as="s">
+								<option t-att-value="s" t-att-selected="s == default.get('duration')">
+									<span>
+										<t t-esc="s"/>
+										<span t-if="s==1"> semestre</span>
+										<span t-if="s>1"> semestres</span>
+									</span>
+								</option>
+							</t>
+						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="description">Résumé du projet (1 paragraphe de 600 mots maximum)</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="3600" class="form-control" t-esc="default.get('description')" name="description" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation (PDF, PowerPoint)</label>
+					<div class="col-md-7 col-sm-8">
+						<table class="table table-condensed" t-if="submission.documents">
+							<tr t-foreach="submission.documents" t-as="doc">
+								<td>
+									<a class="btn" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
+										<span t-field="doc.name"/>
+									</a>
+								</td>
+								<td class="text-right">
+									<a class="btn btn-default" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
+										<i class="fa fa-download"/>
+									</a>
+									<button class="btn btn-danger" type="submit" name="unlink-doc" t-att-value="doc.id">
+										<i class="fa fa-trash"/>
+									</button>
+								</td>
+							</tr>
+						</table>
+						<input t-if="not submission.documents" accept=".pdf,.ppt,.pptx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+					</div>
+				</div>
+				<t t-call="website_project_submission.form_header_footer"/>
+			</form>
 		</template>
-		
+		<!-- Coordinateur principal -->
 		<template id="apply1">
-		    <t t-call="website.layout">
-		        <t t-set="additional_title">Postuler à l'appel à projets</t>
-		        <div id="wrap">
-		            <div class="container">
-		                <h1 class="text-center">
-		                    Equipe du projet: Coordinateur principal
-		                </h1>
-		                <h2 t-if="offer" class="text-center text-muted">
-		                    <span t-field="offer.name"/>
-		                </h2>
-		                <h3 t-if="submission" class="text-center text-muted">
-		                    <span t-field="submission.name"/>
-		                </h3>
-		                <div class="row">
-		                    <section id="forms">
-		                        <!-- TODO Multilingual form action support ? -->
-		                        <form class="form-horizontal mt32" t-att-action="'/offers/apply/%s/stage/2' % slug(offer)" method="post" enctype="multipart/form-data">
-		                            <input type="hidden" t-att-value="offer and offer.id or False" name="offer"/>
-		                            <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="name">Nom &amp; Prénom</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="text" t-att-value="default.get('name')" class="form-control" name="name" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('organisme') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="organisme">Etablissement</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="text" t-att-value="default.get('organisme')" class="form-control" name="organisme" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('function') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="function">Fonction</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="text" t-att-value="default.get('function')" class="form-control" name="function" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="tel" t-att-value="default.get('phone')" class="form-control" name="phone" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('mobile') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="mobile">Mobile</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="tel" t-att-value="default.get('mobile')" class="form-control" name="mobile" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="email" t-att-value="default.get('email')" class="form-control" name="email" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div class="form-group">
-		                                <label class="col-md-3 col-sm-4 control-label" for="ufile">CV (PDF, Word)</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input class="input-file" id="fileInput" type="file" name="ufile"/>
-		                                    <span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
-		                                </div>
-		                            </div>
-		                            <div class="form-group">
-		                                <div class="col-md-6 ">
-		                    				<a style="padding: 6px 12px;" class="btn btn-default" t-att-href="'/offers/apply/%s/stage/0' % slug(offer)" >Précédent</a>
-		                                </div>
-		                                <div class="col-md-6 text-right">
-		                                    <button type="submit" class="btn btn-primary">Suivant</button>
-		                                </div>
-		                            </div>
-		                        </form>
-		                    </section>
-		                </div>
-		            </div>
-		        </div>
-		    </t>
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<t t-call="website_project_submission.form_header_footer"/>
+				<h3 class="text-center text-muted">Coordinateur principal</h3>
+				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="name">Nom &amp; Prénom</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="default.get('name')" class="form-control" name="name" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('organisme') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="organisme">Etablissement</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="default.get('organisme')" class="form-control" name="organisme" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('function') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="function">Fonction</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="default.get('function')" class="form-control" name="function" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="tel" t-att-value="default.get('phone')" class="form-control" name="phone" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('mobile') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="mobile">Mobile</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="tel" t-att-value="default.get('mobile')" class="form-control" name="mobile" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="email" t-att-value="default.get('email')" class="form-control" name="email" required="True"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">CV (PDF, Word)</label>
+					<div class="col-md-7 col-sm-8">
+						<table class="table table-condensed" t-if="candidate.self_documents">
+							<tr t-foreach="candidate.self_documents" t-as="doc">
+								<td>
+									<a class="btn" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
+										<span t-field="doc.name"/>
+									</a>
+								</td>
+								<td class="text-right">
+									<a class="btn btn-default" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
+										<i class="fa fa-download"/>
+									</a>
+									<button class="btn btn-danger" type="submit" name="unlink-doc" t-att-value="doc.id">
+										<i class="fa fa-trash"/>
+									</button>
+								</td>
+							</tr>
+						</table>
+						<input t-if="not candidate.self_documents" accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+					</div>
+				</div>
+				<t t-call="website_project_submission.form_header_footer"/>
+			</form>
 		</template>
-		
+		<!-- Partenaires -->
 		<template id="apply2">
-		    <t t-call="website.layout">
-		        <t t-set="additional_title">Equipe du projet: Partenaires</t>
-		        <div id="wrap">
-		            <div class="container">
-		                <h1 class="text-center">
-		                    Formulaire de soumission
-		                </h1>
-		                <h2 t-if="offer" class="text-center text-muted">
-		                    <span t-field="offer.name"/>
-		                </h2>
-		                <h3 t-if="submission" class="text-center text-muted">
-		                    <span t-field="submission.name"/>
-		                </h3>
-		
-		                <div class="row">
-				            <section t-if="partners" id="my-partners">
-				                <h4 class="text-center text-muted">Mes partenaires</h4>
-				                <table class="table">
-				                	<thead>
-				                		<tr>
-				                			<th>Type</th>
-				                			<th>Nom</th>
-				                			<th>Etablissement</th>
-				                			<th>Fonction</th>
-				                			<th>Téléphone</th>
-				                			<th>Mobile</th>
-				                			<th>Email</th>
-				                			<th>Financement demandé</th>
-				                			<th>Durée</th>
-				                			<th class="text-right">Total</th>
-				                		</tr>
-				                		<tbody>
-				                			<t t-set="partner_total" t-value="0"/>
-				                			<tr t-foreach="partners" t-as="s_partner">
-				                				<td>
-				                					<span t-field="s_partner.type"/>
-				                				</td>
-				                				<td>
-				                					<span t-field="s_partner.partner.name"/>
-				                				</td>
-				                				<td>
-				                					<span t-field="s_partner.partner.parent_id.name"/>
-				                				</td>
-				                				<td>
-				                					<span t-field="s_partner.partner.function"/>
-				                				</td>
-				                				<td>
-				                					<span t-field="s_partner.partner.phone"/>
-				                				</td>
-				                				<td>
-				                					<span t-field="s_partner.partner.mobile"/>
-				                				</td>
-				                				<td>
-				                					<span t-field="s_partner.partner.email"/>
-				                				</td>
-				                				<td>
-				                					<span><span t-field="s_partner.montant"/>&amp;nbsp;MAD</span>
-				                				</td>
-				                				<td>
-				                					<span t-field="s_partner.time"/>
-				                				</td>
-  												<t t-set="partner_total" t-value="partner_total + s_partner.total"/> 
-				                				<td class="text-right">
-				                					<span><strong t-field="s_partner.total"/>&amp;nbsp;MAD</span>
-				                				</td>
-				                			</tr>
-				                			<tr>
-				                				<td></td><td></td><td></td><td></td><td></td><td></td><td></td>
-				                				<td>
-              				                      <td class="text-right"><strong>Total:</strong></td>
-							                      <td class="text-right">
-							                          <span><strong t-esc="partner_total"/>&amp;nbsp;MAD</span>
-							                      </td>
-				                				</td>
-				                				
-				                			</tr>
-				                		</tbody>
-				                	</thead>
-								</table>
-		                	</section>
-		                    <section id="forms">
-		                        <!-- TODO Multilingual form action support ? -->
-		                        <form class="form-horizontal mt32" t-att-action="'/offers/apply/%s/stage/3' % slug(offer)" method="post" enctype="multipart/form-data">
-		                            <input type="hidden" t-att-value="offer and offer.id or False" name="offer"/>
-		                            <div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="type">Type de partenaire</label>
-		                                <div class="col-md-7 col-sm-8">
-									    	<select name="type" t-att-value="default.get('type')" id="type" class="form-control" required="True">
-								         		<option value="">Sélectionnez le type...</option>
-									        	<t t-foreach="types" t-as="t">
-								            		<option t-att-value="t.id"><t t-esc="t.name"/></option>
-									        	</t>
-									    	</select>
-									    </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="name">Nom &amp; Prénom</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="text" t-att-value="default.get('name')" class="form-control" name="name" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('organisme') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="organisme">Etablissement</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="text" t-att-value="default.get('organisme')" class="form-control" name="organisme" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('function') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="function">Fonction</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="text" t-att-value="default.get('function')" class="form-control" name="function" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="tel" t-att-value="default.get('phone')" class="form-control" name="phone" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('mobile') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="mobile">Mobile</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="tel" t-att-value="default.get('mobile')" class="form-control" name="mobile" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="email" t-att-value="default.get('email')" class="form-control" name="email" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('montant') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="montant">Financement demandé (MAD/Mois)</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="number" t-att-value="default.get('montant')" class="form-control" name="montant" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('time') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="time">Durée</label>
-		                                <div class="col-md-7 col-sm-8">
-									    	<select name="time" t-att-value="default.get('time')" id="duration" class="form-control" required="True">
-								         		<option value="">Sélectionnez la durée...</option>
-									        	<t t-foreach="duration_steps" t-as="s">
-								            		<option t-att-value="s"><span><t t-esc="s"/> mois</span></option>
-									        	</t>
-									    	</select>
-									    </div>
-		                            </div>
-		                            <div class="form-group">
-		                                <div class="col-md-6">
-		                    				<a style="padding: 6px 12px;" class="btn btn-default" t-att-href="'/offers/apply/%s/stage/1' % slug(offer)" >Précédent</a>
-		                                </div>
-		                                <div class="col-md-6 text-right">
-		                                    <button type="submit" name="submit" value="add" class="btn btn-info">Ajouter d'autres partenaires</button>
-		                                	<button type="submit" name="submit" value="next" class="btn btn-primary">Suivant</button>
-		                                	<a style="padding: 6px 12px;" t-if="partners" class="btn btn-primary" t-att-href="'/offers/apply/%s/stage/3' % slug(offer)">Passer</a>
-		                                </div>
-		                            </div>
-		                        </form>
-		                    </section>
-		                </div>
-		            </div>
-		        </div>
-		    </t>
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>		
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th>Nom</th>
+							<th>Etablissement</th>
+							<th>Fonction</th>
+							<th>Mobile</th>
+							<th>Email</th>
+						</tr>
+						<tbody>
+							<tr t-foreach="submission.partners" t-as="s_partner">
+								<td>
+									<span t-field="s_partner.type"/>
+								</td>
+								<td>
+									<span t-field="s_partner.name"/>
+								</td>
+								<td>
+									<span t-field="s_partner.parent_id.name"/>
+								</td>
+								<td>
+									<span t-field="s_partner.function"/>
+								</td>
+								<td>
+									<span t-field="s_partner.phone"/>
+								</td>
+								<td>
+									<span t-field="s_partner.mobile"/>
+								</td>
+								<td>
+									<span t-field="s_partner.email"/>
+								</td>
+								<td>
+									<button class="btn btn-info" type="submit" name="edit-partner" t-att-value="partner.id">
+										<i class="fa fa-pencil"/>
+									</button>
+									<button class="btn btn-danger" type="submit" name="unlink-partner" t-att-value="partner.id">
+										<i class="fa fa-trash"/>
+									</button>
+								</td>
+							</tr>
+						</tbody>
+					</thead>
+				</table>
+			</form>
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<t t-if="partner"><input type="hidden" name="partner_id" t-att-value="'%s' % partner.id"/></t>
+				<t t-call="website_project_submission.form_header_footer"/>
+				<h3 class="text-center text-muted">Partenaires</h3>
+				<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="type">Type de partenaire</label>
+					<div class="col-md-7 col-sm-8">
+						<select name="type" id="type" class="form-control" required="True">
+							<option value="">Sélectionnez le type...</option>
+							<t t-foreach="types" t-as="t">
+								<option t-att-value="t[0]" t-att-selected="t[0] == default.get('type')">
+									<t t-esc="t[1]"/>
+								</option>
+							</t>
+						</select>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="name">Nom &amp; Prénom</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="default.get('name')" class="form-control" name="name" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('organisme') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="organisme">Etablissement</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="default.get('organisme')" class="form-control" name="organisme" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('function') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="function">Fonction</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="default.get('function')" class="form-control" name="function" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="tel" t-att-value="default.get('phone')" class="form-control" name="phone" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('mobile') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="mobile">Mobile</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="tel" t-att-value="default.get('mobile')" class="form-control" name="mobile" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="email" t-att-value="default.get('email')" class="form-control" name="email" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('montant') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="montant">Financement demandé (MAD/Mois)</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" t-att-value="default.get('montant')" class="form-control" name="montant" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('time') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="time">Durée</label>
+					<div class="col-md-7 col-sm-8">
+						<select name="time" t-att-value="default.get('time')" id="duration" class="form-control" required="True">
+							<option value="">Sélectionnez la durée...</option>
+							<t t-foreach="duration_steps" t-as="s">
+								<option t-att-value="s">
+									<span><t t-esc="s"/> mois</span>
+								</option>
+							</t>
+						</select>
+					</div>
+				</div>
+				<t t-call="website_project_submission.form_header_footer"/>
+			</form>
 		</template>
-
+		<!-- Montage financier -->
 		<template id="apply3">
-		    <t t-call="website.layout">
-		        <t t-set="additional_title">Montage financier</t>
-		        <div id="wrap">
-		            <div class="container">
-		                <h1 class="text-center">
-		                    Formulaire de soumission
-		                </h1>
-		                <h2 t-if="offer" class="text-center text-muted">
-		                    <span t-field="offer.name"/>
-		                </h2>
-		                <h3 t-if="submission" class="text-center text-muted">
-		                    <span t-field="submission.name"/>
-		                </h3>
-		
-		                <div class="row">
-   				            <section t-if="submission.budget_lines" id="budget_lines">
-				                <h4 class="text-center text-muted">Récapitulatif financier</h4>
-				                <table class="table">
-				                	<thead>
-				                		<tr>
-				                			<th>Type</th>
-				                			<th class="text-right">Budget</th>
-				                			<th class="text-right">Montant propre</th>
-				                			<th class="text-right">Montant subventionné</th>
-				                			<th class="text-right">Pourcentage subventionné</th>
-				                		</tr>
-				                		<tbody>
-				                			<tr t-foreach="submission.budget_lines" t-as="line">
-				                				<td>
-				                					<span t-field="line.type"/>
-				                				</td>
-				                				<td class="text-right">
-				                					<span><span t-field="line.budget"/> MAD</span>
-				                				</td>
-				                				<td class="text-right">
-				                					<span><span t-field="line.montant_propre"/>&amp;nbsp;MAD</span>
-				                				</td> 
-				                				<td class="text-right">
-				                					<span><span t-field="line.montant_subventionne"/>&amp;nbsp;MAD</span>
-				                				</td>
-				                				<td class="text-right">
-				                					<span><strong t-esc="round(line.percent_subventionne, 2)"/>&amp;nbsp;%</span>
-				                				</td>
-				                			</tr>
-				                			<tr>
-              				                    <td class="text-right"><strong>Total:</strong></td>
-				                				<td class="text-right">
-				                					<strong><span t-field="submission.budget"/>&amp;nbsp;MAD</strong>
-				                				</td>
-				                				<td class="text-right">
-				                					<strong><span t-field="submission.montant_propre"/>&amp;nbsp;MAD</strong>
-				                				</td> 
-				                				<td class="text-right">
-				                					<strong><span t-field="submission.montant_subventionne"/>&amp;nbsp;MAD</strong>
-				                				</td>
-				                				<td class="text-right">
-				                					<strong><span t-esc="round(submission.percent_subventionne)"/>&amp;nbsp;%</strong>
-				                				</td>
-				                			</tr>
-				                		</tbody>
-				                	</thead>
-								</table>
-		                	</section>
-		                	<section id="forms">
-		                        <!-- TODO Multilingual form action support ? -->
-		                        <form class="form-horizontal mt32" t-att-action="'/offers/apply/%s/stage/4' % slug(offer)" method="post" enctype="multipart/form-data">
-		                            <input type="hidden" t-att-value="offer and offer.id or False" name="offer"/>
-		                            <div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="type">Rubrique</label>
-		                                <div class="col-md-7 col-sm-8">
-									    	<select name="type" t-att-value="default.get('type')" id="type" class="form-control" required="True">
-								         		<option value="">Sélectionnez le type...</option>
-									        	<t t-foreach="types" t-as="t">
-								            		<option t-att-value="t.id"><t t-esc="t.name"/></option>
-									        	</t>
-									    	</select>
-									    </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('budget') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="budget">Budget (MAD)</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="number" t-att-value="default.get('budget')" class="form-control" name="budget" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('montant_propre') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="montant_propre">Financement demandé (MAD)</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="number" t-att-value="default.get('montant_propre')" class="form-control" name="montant_propre" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div class="form-group">
-		                                <div class="col-md-6">
-		                    				<a style="padding: 6px 12px;" class="btn btn-default" t-att-href="'/offers/apply/%s/stage/2' % slug(offer)" >Précédent</a>
-		                                </div>
-		                                <div class="col-md-6 text-right">
-		                                    <button type="submit" name="submit" value="add" class="btn btn-info">Ajouter d'autres lignes de budget</button>
-		                                	<button type="submit" name="submit" value="next" class="btn btn-primary">Suivant</button>
-		                                	<a style="padding: 6px 12px;" t-if="submission.budget_lines" class="btn btn-primary" t-att-href="'/offers/apply/%s/stage/4' % slug(offer)">Passer</a>
-		                                </div>
-		                            </div>
-		                        </form>
-		                    </section>
-		                </div>
-		            </div>
-		        </div>
-		    </t>
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<t t-call="website_project_submission.form_header_footer"/>
+				<h3 class="text-center text-muted">Montage financier</h3>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th class="text-right">Budget</th>
+							<th class="text-right">Montant propre</th>
+							<th class="text-right">Montant subventionné</th>
+							<th class="text-right">Pourcentage subventionné</th>
+						</tr>
+						<tbody>
+							<tr t-foreach="submission.budget_lines" t-as="line">
+								<td>
+									<span t-field="line.type"/>
+								</td>
+								<td class="text-right">
+									<span>
+										<span t-field="line.budget"/> MAD</span>
+								</td>
+								<td class="text-right">
+									<span>
+										<span t-field="line.montant_propre"/>&amp;nbsp;MAD</span>
+								</td>
+								<td class="text-right">
+									<span>
+										<span t-field="line.montant_subventionne"/>&amp;nbsp;MAD</span>
+								</td>
+								<td class="text-right">
+									<span><strong t-esc="round(line.percent_subventionne, 2)"/>&amp;nbsp;%</span>
+								</td>
+							</tr>
+							<tr>
+								<td class="text-right">
+									<strong>Total:</strong>
+								</td>
+								<td class="text-right">
+									<strong><span t-field="submission.budget"/>&amp;nbsp;MAD</strong>
+								</td>
+								<td class="text-right">
+									<strong><span t-field="submission.montant_propre"/>&amp;nbsp;MAD</strong>
+								</td>
+								<td class="text-right">
+									<strong><span t-field="submission.montant_subventionne"/>&amp;nbsp;MAD</strong>
+								</td>
+								<td class="text-right">
+									<strong><span t-esc="round(submission.percent_subventionne)"/>&amp;nbsp;%</strong>
+								</td>
+							</tr>
+						</tbody>
+					</thead>
+				</table>
+				<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="type">Rubrique</label>
+					<div class="col-md-7 col-sm-8">
+						<select name="type" t-att-value="default.get('type')" id="type" class="form-control" required="True">
+							<option value="">Sélectionnez le type...</option>
+							<t t-foreach="types" t-as="t">
+								<option t-att-value="t.id">
+									<t t-esc="t.name"/>
+								</option>
+							</t>
+						</select>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('budget') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="budget">Budget (MAD)</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" t-att-value="default.get('budget')" class="form-control" name="budget" required="True"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('montant_propre') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="montant_propre">Financement demandé (MAD)</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" t-att-value="default.get('montant_propre')" class="form-control" name="montant_propre" required="True"/>
+					</div>
+				</div>
+				<t t-call="website_project_submission.form_header_footer"/>
+			</form>
 		</template>
-		
+		<!-- Tâches et livrables -->
 		<template id="apply4">
-		    <t t-call="website.layout">
-		        <t t-set="additional_title">Postuler à l'appel à projets</t>
-		        <div id="wrap">
-		            <div class="container">
-		                <h1 class="text-center">
-		                    Formulaire de soumission
-		                </h1>
-		                <h2 t-if="offer" class="text-center text-muted">
-		                    <span t-field="offer.name"/>
-		                </h2>
-		                <h3 t-if="submission" class="text-center text-muted">
-		                    <span t-field="submission.name"/>
-		                </h3>
-		
-		                <div class="row">
-		                </div>
-		            </div>
-		        </div>
-		    </t>
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<t t-call="website_project_submission.form_header_footer"/>
+				<h3 class="text-center text-muted">Tâches et livrables</h3>
+				<t t-call="website_project_submission.form_header_footer"/>
+			</form>
 		</template>
-		
-		<template id="apply5">
-		    <t t-call="website.layout">
-		        <t t-set="additional_title">Postuler à l'appel à projets</t>
-		        <div id="wrap">
-		            <div class="container">
-		                <h1 class="text-center">
-		                    Formulaire de soumission
-		                </h1>
-		                <h2 t-if="offer" class="text-center text-muted">
-		                    <span t-field="offer.name"/>
-		                </h2>
-		
-		                <div class="row">
-		                    <section id="forms">
-		                        <!-- TODO Multilingual form action support ? -->
-		                        <form class="form-horizontal mt32" action="/offers/apply2" method="post" enctype="multipart/form-data">
-		                            <input type="hidden" t-att-value="offer and offer.id or False" name="offer"/>
-		                            <div t-attf-class="form-group #{error.get('partner_name') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="name">Intitulé du projet</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input type="text" t-att-value="default.get('name')" class="form-control" name="name" required="True"/>
-		                                </div>
-		                            </div>
-		                            <div t-attf-class="form-group #{error.get('email_from') and 'has-error' or ''}">
-		                                <label class="col-md-3 col-sm-4 control-label" for="field">Thématique</label>
-		                                <div class="col-md-7 col-sm-8">
-									    	<select name="field" t-att-value="default.get('field')" id="field" class="form-control" required="True">
-								         		<option value="">Sélectionnez la thématique...</option>
-									        	<t t-foreach="fields" t-as="f">
-								            		<option t-att-value="f.id"><t t-esc="f.name"/></option>
-									        	</t>
-									    	</select>
-									    </div>
-		                            </div>
-		                            <div class="form-group">
-		                                <label class="col-md-3 col-sm-4 control-label" for="description">Short Introduction</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <textarea  class="form-control" t-esc="default.get('description')" name="description" style="min-height: 120px"/>
-		                                </div>
-		                            </div>
-		                            <div class="form-group">
-		                                <label class="col-md-3 col-sm-4 control-label" for="ufile">Resume</label>
-		                                <div class="col-md-7 col-sm-8">
-		                                    <input class="input-file" id="fileInput" type="file" name="ufile"/>
-		                                    <span t-if="error.get('ufile')">Please send again your resume.</span>
-		                                </div>
-		                            </div>
-		                            <div class="form-group">
-		                                <div class="col-md-offset-3 col-sm-offset-4 col-sm-8 col-md-7">
-		                                    <button type="submit" class="btn btn-primary">Submit</button>
-		                                </div>
-		                            </div>
-		                        </form>
-		                    </section>
-		                </div>
-		            </div>
-		        </div>
-		    </t>
-		</template>
-		
+		<!-- Récapitulatif final -->
 		<template id="thankyou">
-		    <t t-call="website.layout">
-		        <div id="wrap">
-		            <div class="oe_structure">
-		                <div class="container">
-		                    <h1>Thank you!</h1>
-		                    <p>
-		                        Your offer application has been successfully registered,
-		                        we will get back to you soon.
-		                    </p>
-		                </div>
-		                <section data-snippet-id="cta" class="oe_dark">
-		                    <div class="container">
-		                        <div class="row">
-		                            <div class="col-md-12 text-center mt16 mb16">
-		                                <a href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
-		                            </div>
-		                        </div>
-		                    </div>
-		                </section>
-		            </div>
-		        </div>
-		    </t>
+			<t t-call="website.layout">
+				<div id="wrap">
+					<div class="oe_structure">
+						<div class="container">
+							<h1>Thank you!</h1>
+							<p>
+                                Your offer application has been successfully registered,
+                                we will get back to you soon.
+                            </p>
+						</div>
+						<section data-snippet-id="cta" class="oe_dark">
+							<div class="container">
+								<div class="row">
+									<div class="col-md-12 text-center mt16 mb16">
+										<a href="/" class="btn btn-primary btn-lg">Continue To Our Website</a>
+									</div>
+								</div>
+							</div>
+						</section>
+					</div>
+				</div>
+			</t>
 		</template>
-		
 		<template id="offer_types" inherit_id="website_project_submission.index" active="False" customize_show="True" name="Filter by Type">
-		    <xpath expr="//div[@id='offers_grid_left']" position="inside">
-		        <ul class="nav nav-pills nav-stacked mb32">
-		            <t t-foreach="types" t-as="t">
-		                <li t-att-class="'active' if type and type.id == t.id else ''">
-		                    <a t-attf-href="/offers/type/#{ slug(type) }" ><span t-field="t.name"/></a>
-		                </li>
-		            </t>
-		        </ul>
-		    </xpath>
-		    <xpath expr="//div[@id='offers_grid_left']" position="attributes">
-		        <attribute name="class">col-md-3</attribute>
-		    </xpath>
-		    <xpath expr="//div[@id='offers_grid']" position="attributes">
-		        <attribute name="class">col-md-9</attribute>
-		    </xpath>
+			<xpath expr="//div[@id='offers_grid_left']" position="inside">
+				<ul class="nav nav-pills nav-stacked mb32">
+					<li t-att-class=" '' if type else 'active' ">
+						<a t-attf-href="/offers">Tous</a>
+					</li>
+					<t t-foreach="types" t-as="t">
+						<li t-att-class="'active' if type and type.id == t.id else ''">
+							<a t-attf-href="/offers/type/#{ slug(t) }" >
+								<span t-field="t.name"/>
+							</a>
+						</li>
+					</t>
+				</ul>
+			</xpath>
+			<xpath expr="//div[@id='offers_grid_left']" position="attributes">
+				<attribute name="class">col-md-3</attribute>
+			</xpath>
+			<xpath expr="//div[@id='offers_grid']" position="attributes">
+				<attribute name="class">col-md-9</attribute>
+			</xpath>
 		</template>
-		
 		<!-- User Navbar -->
 		<template id="content_new_offer_offer" inherit_id="website.user_navbar" groups="base.group_user">
-		    <xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
-		         <li><a href="/offers/add" class="js_link2post">New offer Offer</a></li>
-		    </xpath>
+			<xpath expr="//ul[@id='oe_systray']/li/ul[@class='dropdown-menu oe_content_menu']" position="inside">
+				<li>
+					<a href="/offers/add" class="js_link2post">New offer Offer</a>
+				</li>
+			</xpath>
 		</template>
-
+		<template id="form_nav">
+			<div class="col-md-3" id="form_nav_left">
+				<ul class="nav nav-pills nav-stacked mb32">
+					<li t-att-class="'active' if current_stage == 0 else ''">
+						<a t-attf-href="/offers/apply/#{ slug(offer)}/stage/0">Stage 0</a>
+					</li>
+					<li t-att-class="'active' if current_stage == 1 else ''">
+						<a t-attf-href="/offers/apply/#{ slug(offer)}/stage/1">Stage 1</a>
+					</li>
+					<li t-att-class="'active' if current_stage == 2 else ''">
+						<a t-attf-href="/offers/apply/#{ slug(offer)}/stage/2">Stage 2</a>
+					</li>
+					<li t-att-class="'active' if current_stage == 3 else ''">
+						<a t-attf-href="/offers/apply/#{ slug(offer)}/stage/3">Stage 3</a>
+					</li>
+					<li t-att-class="'active' if current_stage == 4 else ''">
+						<a t-attf-href="/offers/apply/#{ slug(offer)}/stage/4">Stage 4</a>
+					</li>
+				</ul>
+			</div>
+		</template>
+		<template id="form_header_footer">
+			<div class="form-group">
+				<div class="col-md-6">
+					<button type="submit" t-if="current_stage>0" name="submit" value="prev" class="btn btn-primary">Précédent</button>
+				</div>
+				<div class="col-md-6 text-right">
+					<button type="submit" name="submit" value="save" class="btn btn-primary">Enregistrer</button>
+					<button type="submit" name="submit" value="next" class="btn btn-primary">Suivant</button>
+				</div>
+			</div>
+		</template>
 	</data>
 </openerp>
