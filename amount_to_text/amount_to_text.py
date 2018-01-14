@@ -76,7 +76,7 @@ def french_number(val):
             mod = 1000 ** didx
             l = val // mod
             r = val - (l * mod)
-            if l == 1:
+            if l == 1 and didx <=1:
                 ret = denom_fr[didx]
             else:
                 ret = _convert_nnn_fr(l) + ' ' + denom_fr[didx]
