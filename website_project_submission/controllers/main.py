@@ -148,7 +148,7 @@ class website_project_submission(http.Controller):
                     candidate._get_attached_docs()
 
             #Stage 2: Project partners informations
-            elif current_stage == 2:
+            elif current_stage == 2 and post.get('to-save') == "1":
                 partner_organisme = env['res.partner'].create({'name': post.get('organisme')})
                 partner_value = {
                     'name': post.get('name'),
@@ -234,7 +234,18 @@ class website_project_submission(http.Controller):
             duration_steps = range(1, offer.max_time + 1)
             if post.get('edit-partner'):
                 partner = env['res.partner'].browse(int(post.get('edit-partner')))
-                vals.update({'partner': partner})
+                vals.update({'partner_id': partner.id})
+                default.update({
+                    'type': partner.type,
+                    'image': partner.image,
+                    'name': partner.name,
+                    'organisme': partner.parent_id.name,
+                    'function': partner.function,
+                    'phone': partner.phone,
+                    'mobile': partner.mobile,
+                    'fax': partner.fax,
+                    'email': partner.email,
+                })
             vals.update({
                 'duration_steps': duration_steps,
                 'types': types,

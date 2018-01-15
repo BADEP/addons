@@ -264,7 +264,7 @@ class ProjectSubmission(models.Model):
 class ResPartner(models.Model):
     _inherit = 'res.partner'
     
-    submissions = fields.Many2many('project.submissions')
+    submissions = fields.Many2many('project.submission')
     type = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')], required=True)
     
 class ProjectPartnerFunction(models.Model):

@@ -30,7 +30,7 @@
 			            <p>
 			                <strong t-if="o.partner_id.lang == 'fr_FR'">Arrêté le présent devis/commande à la somme de:</strong>
 			                <strong t-if="o.partner_id.lang == 'en_US'">This sale order is stopped at the sum of:</strong>
-			                <span t-field="o.amount_to_text"style="text-transform: uppercase; font-size: 20px;"/>
+			                <span t-field="o.amount_to_text" style="text-transform: uppercase; font-size: 20px;"/>
 			            </p>
 					</xpath>
 				</data>

@@ -319,7 +319,7 @@
 		<!-- Partenaires -->
 		<template id="apply2">
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>		
+				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<table class="table">
 					<thead>
 						<tr>
@@ -354,10 +354,10 @@
 									<span t-field="s_partner.email"/>
 								</td>
 								<td>
-									<button class="btn btn-info" type="submit" name="edit-partner" t-att-value="partner.id">
+									<button class="btn btn-info" type="submit" name="edit-partner" t-att-value="s_partner.id">
 										<i class="fa fa-pencil"/>
 									</button>
-									<button class="btn btn-danger" type="submit" name="unlink-partner" t-att-value="partner.id">
+									<button class="btn btn-danger" type="submit" name="unlink-partner" t-att-value="s_partner.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
@@ -368,6 +368,7 @@
 			</form>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<input type="hidden" name="to-save" value="1"/>
 				<t t-if="partner"><input type="hidden" name="partner_id" t-att-value="'%s' % partner.id"/></t>
 				<t t-call="website_project_submission.form_header_footer"/>
 				<h3 class="text-center text-muted">Partenaires</h3>
@@ -382,6 +383,19 @@
 								</option>
 							</t>
 						</select>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">logo</label>
+					<div class="col-md-7 col-sm-8">
+						<div t-if="default.get('image')">
+							<img class="media-object pull-left" t-att-src="default.get('image')" style="width: 50px; margin-right: 10px;"/>
+							<button class="btn btn-danger" type="submit" name="unlink-doc" t-att-value="doc.id">
+								<i class="fa fa-trash"/>
+							</button>
+						</div>
+						<input accept="image/*" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
@@ -414,29 +428,16 @@
 						<input type="tel" t-att-value="default.get('mobile')" class="form-control" name="mobile" required="True"/>
 					</div>
 				</div>
+				<div t-attf-class="form-group #{error.get('fax') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="fax">Fax</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="tel" t-att-value="default.get('fax')" class="form-control" name="fax" required="True"/>
+					</div>
+				</div>
 				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="email" t-att-value="default.get('email')" class="form-control" name="email" required="True"/>
-					</div>
-				</div>
-				<div t-attf-class="form-group #{error.get('montant') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="montant">Financement demandé (MAD/Mois)</label>
-					<div class="col-md-7 col-sm-8">
-						<input type="number" t-att-value="default.get('montant')" class="form-control" name="montant" required="True"/>
-					</div>
-				</div>
-				<div t-attf-class="form-group #{error.get('time') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="time">Durée</label>
-					<div class="col-md-7 col-sm-8">
-						<select name="time" t-att-value="default.get('time')" id="duration" class="form-control" required="True">
-							<option value="">Sélectionnez la durée...</option>
-							<t t-foreach="duration_steps" t-as="s">
-								<option t-att-value="s">
-									<span><t t-esc="s"/> mois</span>
-								</option>
-							</t>
-						</select>
 					</div>
 				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
