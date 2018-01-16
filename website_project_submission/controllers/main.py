@@ -93,7 +93,7 @@ class website_project_submission(http.Controller):
             if post.get('unlink-doc'):
                 env['ir.attachment'].browse(int(post.get('unlink-doc'))).unlink()
             if post.get('unlink-partner'):
-                submission.write({'partners': [(3, 0, int(post.get('unlink-partner')))]})
+                submission.write({'partners': [(3, int(post.get('unlink-partner')))]})
                 partner = env['res.partner'].browse(int(post.get('unlink-partner')))
                 if not partner.submissions:
                     partner.unlink()
@@ -155,22 +155,18 @@ class website_project_submission(http.Controller):
                     'function': post.get('function'),
                     'phone': post.get('phone'),
                     'mobile': post.get('mobile'),
+                    'image': post.get('image'),
+                    'fax': post.get('fax'),
                     'email': post.get('email'),
                     'parent_id': partner_organisme.id,
+                    'category': post.get('category'),
+                    'submissions': [(4, submission.id)]
                 }
-                partner = env['res.partner'].create(partner_value)
-                submission_value = {
-                    'type': post.get('type'),
-                    'function': post.get('function'),
-                    'montant': post.get('montant'),
-                    'time': post.get('time'),
-                    'submission': submission.id,
-                    'partner': partner.id,
-                }
-                env['project.submission.partner'].create(submission_value)
-                if post.get('submit') == 'add':
-                    return request.redirect("/offers/apply/%s/stage/2" % slug(offer))
-
+                if post.get('partner_id') != 'None':
+                    partner = env['res.partner'].browse(int(post.get('partner_id')))
+                    partner.write(partner_value)
+                else:
+                    partner = env['res.partner'].create(partner_value)
             #Stage 3: Project budget informations
             elif current_stage == 3:
                 value = {
@@ -230,13 +226,13 @@ class website_project_submission(http.Controller):
                 'default': default,
             })
         elif next_stage == 2:
-            types = [('scientifique', 'Scientifique'), ('industriel', 'Industriel')]
+            categories = [('scientifique', 'Scientifique'), ('industriel', 'Industriel')]
             duration_steps = range(1, offer.max_time + 1)
             if post.get('edit-partner'):
                 partner = env['res.partner'].browse(int(post.get('edit-partner')))
                 vals.update({'partner_id': partner.id})
                 default.update({
-                    'type': partner.type,
+                    'category': partner.category,
                     'image': partner.image,
                     'name': partner.name,
                     'organisme': partner.parent_id.name,
@@ -248,7 +244,7 @@ class website_project_submission(http.Controller):
                 })
             vals.update({
                 'duration_steps': duration_steps,
-                'types': types,
+                'categories': categories,
                 'error': error,
                 'default': default,
             })

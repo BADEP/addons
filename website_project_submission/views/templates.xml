@@ -333,7 +333,7 @@
 						<tbody>
 							<tr t-foreach="submission.partners" t-as="s_partner">
 								<td>
-									<span t-field="s_partner.type"/>
+									<span t-field="s_partner.category"/>
 								</td>
 								<td>
 									<span t-field="s_partner.name"/>
@@ -367,19 +367,20 @@
 				</table>
 			</form>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="partner_id" t-att-value="'%s' % partner_id"/>
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<input type="hidden" name="to-save" value="1"/>
 				<t t-if="partner"><input type="hidden" name="partner_id" t-att-value="'%s' % partner.id"/></t>
 				<t t-call="website_project_submission.form_header_footer"/>
 				<h3 class="text-center text-muted">Partenaires</h3>
-				<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="type">Type de partenaire</label>
+				<div t-attf-class="form-group #{error.get('category') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="category">Type de partenaire</label>
 					<div class="col-md-7 col-sm-8">
-						<select name="type" id="type" class="form-control" required="True">
+						<select name="category" id="category" class="form-control" required="True">
 							<option value="">Sélectionnez le type...</option>
-							<t t-foreach="types" t-as="t">
-								<option t-att-value="t[0]" t-att-selected="t[0] == default.get('type')">
-									<t t-esc="t[1]"/>
+							<t t-foreach="categories" t-as="c">
+								<option t-att-value="c[0]" t-att-selected="c[0] == default.get('category')">
+									<t t-esc="c[1]"/>
 								</option>
 							</t>
 						</select>
