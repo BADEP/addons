@@ -271,7 +271,7 @@
 								<field name="description"/>
 								<field name="partners">
 									<tree>
-										<field name="type"/>
+										<field name="category"/>
 										<field name="name"/>
 										<field name="mobile"/>
 										<field name="email"/>
@@ -551,8 +551,8 @@
 		<menuitem id="menu_project_offer" name="Offres" action="action_project_offer" parent="project_submission.menu_project_submission_main" sequence="0"/>
 		<menuitem id="menu_project_submission" name="Soumissions" action="action_project_submission" parent="project_submission.menu_project_submission_main" sequence="10"/>
 		<menuitem id="menu_project_candidate" name="Candidats" action="action_project_candidate" parent="project_submission.menu_project_submission_main" sequence="20"/>
-		<menuitem id="menu_project_request" name="Demandes de ressources" action="action_project_request" parent="project_submission.menu_project_submission_main" sequence="20"/>
-
+		<!-- <menuitem id="menu_project_request" name="Demandes de ressources" action="action_project_request" parent="project_submission.menu_project_submission_main" sequence="20"/>
+ -->
 		<menuitem id="menu_project_offer_type" name="Types d'offres" action="action_project_offer_type" parent="project_submission.menu_project_submission_config" sequence="0"/>
 		<menuitem id="menu_project_offer_field" name="Thématiques" action="action_project_offer_field" parent="project_submission.menu_project_submission_config" sequence="10"/>
 		<menuitem id="menu_project_partner_function" name="Titres" action="action_project_partner_function" parent="project_submission.menu_project_submission_config" sequence="15"/>

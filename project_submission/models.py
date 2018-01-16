@@ -24,7 +24,12 @@ from openerp import tools
 from openerp import fields, models, api
 import openerp.addons.decimal_precision as dp
 from openerp.exceptions import ValidationError
-
+try:
+    from copyleaks.copyleakscloud import CopyleaksCloud
+    from copyleaks.product import Product
+    from processoptions import ProcessOptions
+except ImportError:
+    pass
 
 AVAILABLE_PRIORITIES = [
     ('0', 'Bad'),
@@ -83,7 +88,7 @@ class ProjectOffer(models.Model):
     min_time = fields.Integer(string='Durée minimale (en semestres)')
     max_time = fields.Integer(string='Durée maximale (en semestres)')
     budget_total = fields.Float('Budget', digits_compute=dp.get_precision('Account'))
-    
+
     @api.constrains('min_time', 'max_time')
     def _check_min_max_time(self):
         if self.min_time > self.max_time:
@@ -154,6 +159,7 @@ class ProjectSubmission(models.Model):
     field = fields.Many2many('project.offer.field', string='Domaine d\'activité')
     partners = fields.Many2many('res.partner', string='Partenaires')
     description = fields.Text('Description')
+    description_score = fields.Char(_compute = '_get_description_score', store=True)
     manager = fields.Many2one('res.users', 'Responsable')
     date_submitted = fields.Datetime('Date de soumission', readonly=True)
     date_processed = fields.Datetime('Date de traitement', readonly=True)
@@ -177,6 +183,18 @@ class ProjectSubmission(models.Model):
     personnels = fields.One2many('project.submission.personnel', 'submission', string="Personnels")
     duration = fields.Integer('Durée du projet (en semestres)')
     tasks = fields.One2many('project.submission.task', 'submission', string="Tâches et livrables")
+    
+    @api.one
+    @api.depends('description')
+    def _get_description_score(self):
+        cloud = CopyleaksCloud(Product.Education, 'k.hazam@badep.ma', '9DE022AA-D59C-4785-8198-25B3909CD5BC')# You can change the product.
+        options = ProcessOptions()
+        options.setSandboxMode(True)  # Scan will not consume any credits and will return dummy results.
+        options.setHttpCallback("http://yoursite.here/callback") # Recieve a completion callback with the results. For testing purposes we recommend using http://requestb.in
+        process = cloud.createByText(self.description, options)
+        [iscompleted, percents] = process.isCompleted()
+        if iscompleted:
+            self.description_score = process.getResults()
     
     @api.one
     @api.constrains('duration')
@@ -265,7 +283,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
     
     submissions = fields.Many2many('project.submission')
-    type = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')], required=True)
+    category = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')], required=True)
     
 class ProjectPartnerFunction(models.Model):
     _name = 'project.partner.function'
