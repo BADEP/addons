@@ -151,7 +151,12 @@ class ProjectSubmission(models.Model):
     @api.onchange('offer', 'offer.manager')
     def _get_default_manager(self):
         self.manager = self.offer.manager
-    
+
+    @api.depends('partners', 'candidate')
+    @api.one
+    def _get_possible_partners_values(self):
+        self.all_partners = self.partners + self.candidate.partner_id
+
     name = fields.Char('Intitulé du projet', required=True)
     acronyme = fields.Char('Acronyme')
     offer = fields.Many2one('project.offer', string='Offre de projet', required=True)
@@ -183,6 +188,9 @@ class ProjectSubmission(models.Model):
     personnels = fields.One2many('project.submission.personnel', 'submission', string="Personnels")
     duration = fields.Integer('Durée du projet (en semestres)')
     tasks = fields.One2many('project.submission.task', 'submission', string="Tâches et livrables")
+    all_partners = fields.Many2many(
+        comodel_name='res.partner',
+        compute='_get_possible_partners_values', readonly=True)
     
     @api.one
     @api.depends('description')
@@ -293,28 +301,28 @@ class ProjectPartnerFunction(models.Model):
 class ProjectSubmissionTask(models.Model):
     _name = 'project.submission.task'
     
-    @api.depends('submission.partners')
-    @api.one
-    def _get_possible_partners_values(self):
-        self.possible_values = self.submission.partners + self.submission.candidate.partner_id
-    
     @api.one
     @api.onchange('submission', 'submission.candidate')
     def _get_default_partner(self):
         self.partner = self.submission.candidate.partner_id
+        
+    @api.depends('partners', 'submission.candidate')
+    @api.one
+    def _get_possible_partners_values(self):
+        self.all_partners = self.submission.partners + self.submission.candidate.partner_id
 
-    submission = fields.Many2one('project.submission', required=True)
+    submission = fields.Many2one('project.submission')
     name = fields.Char(string='Designation', required=True)
     type = fields.Many2one('project.submission.task.type', required=True)
     semester = fields.Integer(string='Semestre')
-    partner = fields.Many2one('res.partner', string='Responsable', required=True, domain="[('id', 'in', possible_values[0][2])]")
-    partners = fields.Many2many('res.partner', string='Partenaires impliquées', domain="[('id', 'in', possible_values[0][2])]")
+    all_partners = fields.Many2many(
+        comodel_name='res.partner',
+        compute='_get_possible_partners_values', readonly=True)
+    partner = fields.Many2one('res.partner', required=True, string='Responsable', domain="[('id', 'in', all_partners[0][2])]")
+    partners = fields.Many2many('res.partner', string='Partenaires impliquées', domain="[('id', 'in', all_partners[0][2])]")
     objectives = fields.Text(string='Objectifs')
     description = fields.Text(string='Description des tâches et rôles des partenaires')
     lots = fields.One2many('project.submission.lot', 'task', string='Livrables')
-    possible_values = fields.Many2many(
-        comodel_name='res.partner',
-        compute='_get_possible_partners_values', readonly=True)
     
 class ProjectSubmissionTaskType(models.Model):
     _name = 'project.submission.task.type'
@@ -324,7 +332,7 @@ class ProjectSubmissionTaskType(models.Model):
 class ProjectSubmissionLot(models.Model):
     _name = 'project.submission.lot'
     
-    task = fields.Many2one('project.submission.task', required=True)
+    task = fields.Many2one('project.submission.task')
     name = fields.Char('Nom', required=True)
     month_due = fields.Integer(string='Mois d\'échéance')
     type = fields.Many2one('project.lot.type', required=True)
