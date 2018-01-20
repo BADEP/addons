@@ -178,6 +178,8 @@ class website_project_submission(http.Controller):
                 env['project.submission.budgetline'].create(value)
                 if post.get('submit') == 'add':
                     return request.redirect("/offers/apply/%s/stage/3" % slug(offer))     
+            elif current_stage == 4:
+                dummy=0
         
         if next_stage == None:
             if bool(post) and post.get('submit') == 'next':
@@ -256,7 +258,13 @@ class website_project_submission(http.Controller):
                 'default': default,
             })
         elif next_stage == 4:
-            if submission.survey:  
+            types = env['project.submission.task.type'].search([])
+            vals.update({
+                'types': types,
+                'error': error,
+                'default': default,
+            })
+            """if submission.survey:  
                 if not submission.response:
                     response = env['survey.user_input'].create({'survey_id': submission.survey.id, 'partner_id': candidate.user.partner_id.id})
                     submission.write({'response': response.id})
@@ -268,6 +276,6 @@ class website_project_submission(http.Controller):
                 'submission': submission,
                 'error': error,
                 'default': default,
-            })
+            })"""
         return request.render('website_project_submission.apply', vals)
 # vim :et:

@@ -324,8 +324,7 @@
 							<field name="tasks">
 								<tree>
 									<field name="type"/>
-									<field name="date_start"/>
-									<field name="date_end"/>
+									<field name="semester"/>
 									<field name="partner"/>
 									<field name="partners"/>
 									<field name="objectives"/>
@@ -335,8 +334,7 @@
 								<form>
 									<group>
 									<field name="type"/>
-									<field name="date_start"/>
-									<field name="date_end"/>
+									<field name="semester"/>
 									<field name="submission" invisible="1"/>
 									<field name="possible_values" invisible="1"/>
 									<field name="partner"/>
@@ -347,8 +345,7 @@
 										<tree editable="bottom">
 											<field name="type"/>
 											<field name="name"/>
-											<field name="date_due"/>
-											<field name="partner"/>
+											<field name="month_due"/>
 										</tree>
 									</field></group>
 								</form>

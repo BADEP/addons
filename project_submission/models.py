@@ -306,9 +306,8 @@ class ProjectSubmissionTask(models.Model):
     submission = fields.Many2one('project.submission', required=True)
     name = fields.Char(string='Designation', required=True)
     type = fields.Many2one('project.submission.task.type', required=True)
-    date_start = fields.Date(string='Date de début')
-    date_end = fields.Date(string='Date de fin')
-    partner = fields.Many2one('res.partner', string='Coordinateur', required=True, domain="[('id', 'in', possible_values[0][2])]")
+    semester = fields.Integer(string='Semestre')
+    partner = fields.Many2one('res.partner', string='Responsable', required=True, domain="[('id', 'in', possible_values[0][2])]")
     partners = fields.Many2many('res.partner', string='Partenaires impliquées', domain="[('id', 'in', possible_values[0][2])]")
     objectives = fields.Text(string='Objectifs')
     description = fields.Text(string='Description des tâches et rôles des partenaires')
@@ -327,8 +326,7 @@ class ProjectSubmissionLot(models.Model):
     
     task = fields.Many2one('project.submission.task', required=True)
     name = fields.Char('Nom', required=True)
-    date_due = fields.Date(string='Date d\'échéance')
-    partner = fields.Many2one('res.partner', string='Coordinateur', required=True)
+    month_due = fields.Integer(string='Mois d\'échéance')
     type = fields.Many2one('project.lot.type', required=True)
     
 class ProjectLotType(models.Model):

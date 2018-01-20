@@ -39,10 +39,8 @@
            'security/project_submission_security.xml',
            'security/ir.model.access.csv'
     ],
-    'installable': True,
-    "external_dependencies": {
-        "python": ["copyleaks"],
-    },
+    'installable': True
+
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:
