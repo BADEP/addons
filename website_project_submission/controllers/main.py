@@ -92,6 +92,8 @@ class website_project_submission(http.Controller):
         if bool(post):
             if post.get('unlink-doc'):
                 env['ir.attachment'].browse(int(post.get('unlink-doc'))).unlink()
+            if post.get('unlink-task'):
+                env['project.submission.task'].browse(int(post.get('unlink-task'))).unlink()
             if post.get('unlink-partner'):
                 submission.write({'partners': [(3, int(post.get('unlink-partner')))]})
                 partner = env['res.partner'].browse(int(post.get('unlink-partner')))
@@ -180,9 +182,12 @@ class website_project_submission(http.Controller):
                 else:
                     partner = env['res.partner'].create(partner_value)
             #Stage 3: Project budget informations
-            elif current_stage == 3:
+            elif current_stage == 3 and post.get('to-save') == "1":
                 value = {
                     'type': post.get('type'),
+                    'name': post.get('name'),
+                    'montant_subventionne': float(post.get('montant_subventionne')),
+                    'percent_subventionne': float(post.get('percent_subventionne')),
                     'budget': post.get('budget'),
                     'montant_propre': float(post.get('budget')) - float(post.get('montant_propre')),
                     'submission': submission.id,
@@ -190,8 +195,19 @@ class website_project_submission(http.Controller):
                 env['project.submission.budgetline'].create(value)
                 if post.get('submit') == 'add':
                     return request.redirect("/offers/apply/%s/stage/3" % slug(offer))     
-            elif current_stage == 4:
-                dummy=0
+            elif current_stage == 4 and post.get('to-save') == "1":
+                value = {
+                    'name': post.get('name'),
+                    'type': post.get('type'),
+                    'semester': post.get('semester'),
+                    'objectives': post.get('objectives'),
+                    'description': post.get('description'),
+                    'partner': post.get('partner'),
+                }
+                env['project.submission.task'].create(value)
+                """if post.get('submit') == 'add':
+                    return request.redirect("/offers/apply/%s/stage/4" % slug(offer))"""   
+                
         
         if next_stage == None:
             if bool(post) and post.get('submit') == 'next':
@@ -266,13 +282,38 @@ class website_project_submission(http.Controller):
             })
         elif next_stage == 3:
             types = env['project.budgetline.type'].search([])
+            if post.get('edit-budget_line'):
+                budgetline = env['project.submission.budgetline'].browse(int(post.get('edit-budget_line')))
+                vals.update({'budgetline_id': budgetline.id})
+                default.update({
+                    'budget': budgetline.budget,
+                    'montant_propre': budgetline.montant_propre,
+                    'montant_subventionne': budgetline.montant_subventionne,
+                    'percent_subventionne': budgetline.percent_subventionne,
+                    'type': budgetline.type,
+                })
             vals.update({
                 'types': types,
                 'error': error,
                 'default': default,
             })
         elif next_stage == 4:
+            
             types = env['project.submission.task.type'].search([])
+            
+            if post.get('edit-task'):
+                task = env['project.submission.task'].browse(int(post.get('edit-task')))
+                vals.update({'task_id': task.id})
+                default.update({
+                    'name': task.name,
+                    'type': task.type.id,
+                    'semester': task.semester,
+                    'partners': task.partners.ids,
+                    'partner': task.partner.id,
+                    'objectives': task.objectives,
+                    'description': task.description,
+                })
+                
             vals.update({
                 'types': types,
                 'error': error,

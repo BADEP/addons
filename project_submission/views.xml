@@ -1,6 +1,86 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
+	
+	<!-- ACTIONS -->
+		<record id="action_project_offer" model="ir.actions.act_window">
+			<field name="name">Offres</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.offer</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">kanban,tree,form</field>
+		</record>
+	 	<record id="action_project_submission" model="ir.actions.act_window">
+			<field name="name">Soumissions</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.submission</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">kanban,tree,form</field>
+		</record>
+		<record id="action_project_candidate" model="ir.actions.act_window">
+			<field name="name">Candidats</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.candidate</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">kanban,tree,form</field>
+		</record>
+	   	<record id="action_project_request" model="ir.actions.act_window">
+			<field name="name">Demandes de ressources</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.request</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+
+		<record id="action_project_offer_type" model="ir.actions.act_window">
+			<field name="name">Types d'offre</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.offer.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record id="action_project_offer_field" model="ir.actions.act_window">
+			<field name="name">Thématique</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.offer.field</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record id="action_project_budgetline_type" model="ir.actions.act_window">
+			<field name="name">Types de lignes de budget</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.budgetline.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record id="action_project_request_type" model="ir.actions.act_window">
+			<field name="name">Types d'offre</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.request.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record id="action_project_partner_function" model="ir.actions.act_window">
+			<field name="name">Titres</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.partner.function</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record id="action_project_submission_task_type" model="ir.actions.act_window">
+			<field name="name">Types d'activité</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.submission.task.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
+		<record id="action_project_lot_type" model="ir.actions.act_window">
+			<field name="name">Types de livrable</field>
+			<field name="type">ir.actions.act_window</field>
+			<field name="res_model">project.lot.type</field>
+			<field name="view_type">form</field>
+			<field name="view_mode">tree,form</field>
+		</record>
 		<!-- FILTERS -->
 		<record id="view_offer_filter" model="ir.ui.view">
 			<field name="name">offer</field>
@@ -325,6 +405,7 @@
 							<field name="tasks">
 								<tree>
 									<field name="type"/>
+									<field name="name"/>
 									<field name="semester"/>
 									<field name="partner"/>
 									<field name="partners"/>
@@ -335,9 +416,10 @@
 								<form>
 									<group>
 									<field name="type"/>
+									<field name="name"/>
 									<field name="semester"/>
 									<field name="submission" invisible="1"/>
-									<field name="possible_values" invisible="1"/>
+									<field name="all_partners" invisible="1"/>
 									<field name="partner"/>
 									<field name="partners"/>
 									<field name="objectives"/>
@@ -460,85 +542,7 @@
 		</field>
 	</record>
 
-		<!-- ACTIONS -->
-		<record id="action_project_offer" model="ir.actions.act_window">
-			<field name="name">Offres</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.offer</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">kanban,tree,form</field>
-		</record>
-	 	<record id="action_project_submission" model="ir.actions.act_window">
-			<field name="name">Soumissions</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.submission</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">kanban,tree,form</field>
-		</record>
-		<record id="action_project_candidate" model="ir.actions.act_window">
-			<field name="name">Candidats</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.candidate</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">kanban,tree,form</field>
-		</record>
-	   	<record id="action_project_request" model="ir.actions.act_window">
-			<field name="name">Demandes de ressources</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.request</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-
-		<record id="action_project_offer_type" model="ir.actions.act_window">
-			<field name="name">Types d'offre</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.offer.type</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<record id="action_project_offer_field" model="ir.actions.act_window">
-			<field name="name">Thématique</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.offer.field</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<record id="action_project_budgetline_type" model="ir.actions.act_window">
-			<field name="name">Types de lignes de budget</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.budgetline.type</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<record id="action_project_request_type" model="ir.actions.act_window">
-			<field name="name">Types d'offre</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.request.type</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<record id="action_project_partner_function" model="ir.actions.act_window">
-			<field name="name">Titres</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.partner.function</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<record id="action_project_submission_task_type" model="ir.actions.act_window">
-			<field name="name">Types d'activité</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.submission.task.type</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
-		<record id="action_project_lot_type" model="ir.actions.act_window">
-			<field name="name">Types de livrable</field>
-			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.lot.type</field>
-			<field name="view_type">form</field>
-			<field name="view_mode">tree,form</field>
-		</record>
+		
 
 		<!-- MENUS -->
 		<menuitem id="menu_project_submission_root" name="Appels à projets" sequence="10"/>
