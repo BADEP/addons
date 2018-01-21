@@ -280,6 +280,7 @@
 							</group>
 							<group>
 								<field name="field" widget="many2many_tags"/>
+								<field name="tags" widget="many2many_tags"/>
 								<field name="duration"/>
 							</group>
 							<group>

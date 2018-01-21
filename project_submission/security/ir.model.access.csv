@@ -9,6 +9,8 @@ access_project_budgetline_type_all,project.budgetline.type.all,model_project_bud
 access_project_budgetline_type_manager,project.budgetline.type.manager,model_project_budgetline_type,group_manager,1,1,1,1
 access_project_partner_function_all,project.partner.function.all,model_project_partner_function,,1,0,0,0
 access_project_partner_function_manager,project.partner.function.manager,model_project_partner_function,group_manager,1,1,1,1
+access_project_submission_task_all,project.submission.task.all,model_project_submission_task,,1,1,0,0
+access_project_submission_task_manager,project.submission.task.manager,model_project_submission_task,,1,1,1,1
 
 access_project_submission_manager,project.submission.manager,model_project_submission,group_manager,1,1,1,1
 access_project_submission_budgetline_manager,project.submission.budgetline.manager,model_project_submission_budgetline,group_manager,1,1,1,1

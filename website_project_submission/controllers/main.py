@@ -99,11 +99,23 @@ class website_project_submission(http.Controller):
                     partner.unlink()
             #Stage 0: Project general informations
             if current_stage == 0:
+                new_tags = []
+                tags = request.httprequest.form.getlist('tags')
+                for tag in tags:
+                    if tag.isdigit():
+                        new_tags.append(int(tag))
+                    else:
+                        existing_tag = env['project.submission.tag'].search([('name', '=', tag)]).ids[0]
+                        if existing_tag:
+                            new_tags.append(existing_tag)
+                        else:
+                            new_tags.append(env['project.submission.tag'].create({'name': tag}).id)
                 value = {
                     'name': post.get('name'),
                     'acronyme': post.get('acronyme'),
                     'duration': post.get('duration'),
                     'field': [(6, 0, [int(x) for x in request.httprequest.form.getlist('fields')])],
+                    'tags': [(6, 0, new_tags)],
                     'description': post.get('description'),
                 }
                 submission.write(value)
@@ -202,6 +214,7 @@ class website_project_submission(http.Controller):
                 }
         if next_stage == 0:
             fields = env['project.offer.field'].search([])
+            tags = env['project.submission.tag'].search([])
             if submission:
                 default['name'] = submission.name
                 default['acronyme'] = submission.acronyme
@@ -214,6 +227,7 @@ class website_project_submission(http.Controller):
                 'default': default,
                 'duration_steps': duration_steps,
                 'fields': fields,
+                'all_tags': tags,
             })
         if next_stage == 1:
             default['name'] = candidate.name

@@ -138,6 +138,10 @@
 		<template id="apply">
 			<t t-call="website.layout">
 				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + offer.name"/>
+				<script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
+				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
+				<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 				<div id="wrap">
 					<div class="container">
 						<h1 class="text-center">
@@ -164,7 +168,11 @@
 						</div>
 					</div>
 				</div>
-			</t>
+				<script>
+				    $('.multiple-tags').select2();
+				    $('.multiple-tags-free').select2({tags: true, placeholder: "Insérez vos mots-clés"});
+				</script>
+			</t>	
 		</template>
 		<!-- Esquisse du projet -->
 		<template id="apply0">
@@ -186,14 +194,13 @@
 				<div t-attf-class="form-group #{error.get('field') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="field">Thématique</label>
 					<div class="col-md-7 col-sm-8">
-						<ul name="field" id="field" required="True">
-							<li t-foreach="fields" t-as="f">
-								<label>
-									<input type="checkbox" name="fields" t-att-value="f.id" t-att-checked="'checked' if f.id in default.get('field') else None"/>
+						<select multiple="multiple" id="field" name="fields" class="form-control multiple-tags" required="True">
+							<t t-foreach="fields" t-as="f">
+								<option name="fields" t-att-value="f.id" t-att-selected="'selected' if f.id in submission.field.ids else None">
 									<t t-esc="f.name"/>
-								</label>
-							</li>
-						</ul>
+								</option>
+							</t>
+						</select>
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('duration') and 'has-error' or ''}">
@@ -206,6 +213,18 @@
 					<label class="col-md-3 col-sm-4 control-label" for="description">Résumé du projet (1 paragraphe de 600 mots maximum)</label>
 					<div class="col-md-7 col-sm-8">
 						<textarea maxlength="3600" class="form-control" t-esc="default.get('description')" name="description" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="tags">Mots-clés</label>
+					<div class="col-md-7 col-sm-8">
+						<select multiple="multiple" name="tags" class="form-control multiple-tags-free" id="tags">
+							<t t-foreach="all_tags" t-as="tag">
+								<option t-att-value="tag.id" t-att-selected="'selected' if tag.id in submission.tags.ids else None">
+									<t t-esc="tag.name"/>
+								</option>
+							</t>
+						</select>
 					</div>
 				</div>
 				<div class="form-group">

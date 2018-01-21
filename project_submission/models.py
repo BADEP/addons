@@ -183,6 +183,7 @@ class ProjectSubmission(models.Model):
     personnels = fields.One2many('project.submission.personnel', 'submission', string="Personnels")
     duration = fields.Integer('Durée du projet (en semestres)')
     tasks = fields.One2many('project.submission.task', 'submission', string="Tâches et livrables")
+    tags = fields.Many2many('project.submission.tag', relation='project_submission_tag_rel')
     
     @api.one
     @api.depends('description')
@@ -278,6 +279,12 @@ class ProjectSubmission(models.Model):
             return self.survey.action_print_survey()
         else:
             return self.survey.with_context(survey_token = self.response.token).action_print_survey()
+
+class ProjectSubmissionTag(models.Model):
+    _name = 'project.submission.tag'
+    
+    name = fields.Char(required=True)
+    submissions = fields.Many2many('project.submission', relation='project_submission_tag_rel')
 
 class ResPartner(models.Model):
     _inherit = 'res.partner'
