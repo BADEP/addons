@@ -68,7 +68,7 @@ class ProjectOffer(models.Model):
         return self.env.user.id
 
     name = fields.Char(string='Nom', required=True)
-    description = fields.Text(string='Description')
+    description = fields.Text(string='Description', translate=True)
     documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     host =  fields.Many2one('res.partner', 'Institut hôte',default=_get_default_host)
@@ -132,13 +132,14 @@ class ProjectOfferField(models.Model):
     _name = 'project.offer.field'
     _description = u'Thématique'
     
-    name = fields.Char('Nom')
+    name = fields.Char('Nom', translate=True)
+    description = fields.Text(translate=True)
 
 class ProjectOfferType(models.Model):
     _name = 'project.offer.type'
     _description = u'Type d\'appel à projets'
     
-    name = fields.Char('Nom', required=True)
+    name = fields.Char('Nom', required=True, translate=True)
     offers = fields.One2many('project.offer', 'type')
 
 class ProjectSubmission(models.Model):
@@ -161,10 +162,19 @@ class ProjectSubmission(models.Model):
     acronyme = fields.Char('Acronyme')
     offer = fields.Many2one('project.offer', string='Offre de projet', required=True)
     candidate = fields.Many2one('project.candidate', string='Soumissionnaire', required=True)
-    field = fields.Many2many('project.offer.field', string='Domaine d\'activité')
+    field_ids = fields.Many2many('project.offer.field', string='Domaine d\'activité')
     partners = fields.Many2many('res.partner', string='Partenaires')
     description = fields.Text('Description')
-    description_score = fields.Char(_compute = '_get_description_score', store=True)
+    etat_art = fields.Text('État de l’art')
+    objective = fields.Text('Objectif global du projet')
+    objectives = fields.Text('Objectifs spécifiques')
+    fallout = fields.Text('Retombées attendues du projet')
+    perspective = fields.Text('Perspectives d’application')
+    
+    n_related_publications = fields.Integer(string='Nombre de publications')
+    n_ing_doc = fields.Integer(string='Nombre de doctorants/postdocs/ingénieurs')
+    n_master_pfe = fields.Integer(string='Nombre de Masters et PFE')
+    #description_score = fields.Char(_compute = '_get_description_score', store=True)
     manager = fields.Many2one('res.users', 'Responsable')
     date_submitted = fields.Datetime('Date de soumission', readonly=True)
     date_processed = fields.Datetime('Date de traitement', readonly=True)
@@ -193,7 +203,7 @@ class ProjectSubmission(models.Model):
         comodel_name='res.partner',
         compute='_get_possible_partners_values', readonly=True)
     
-    @api.one
+    """@api.one
     @api.depends('description')
     def _get_description_score(self):
         cloud = CopyleaksCloud(Product.Education, 'k.hazam@badep.ma', '9DE022AA-D59C-4785-8198-25B3909CD5BC')# You can change the product.
@@ -203,7 +213,7 @@ class ProjectSubmission(models.Model):
         process = cloud.createByText(self.description, options)
         [iscompleted, percents] = process.isCompleted()
         if iscompleted:
-            self.description_score = process.getResults()
+            self.description_score = process.getResults()"""
     
     @api.one
     @api.constrains('duration')
@@ -298,7 +308,7 @@ class ResPartner(models.Model):
     _inherit = 'res.partner'
     
     submissions = fields.Many2many('project.submission')
-    category = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')], required=True)
+    category = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')])
     
 class ProjectPartnerFunction(models.Model):
     _name = 'project.partner.function'
@@ -307,18 +317,13 @@ class ProjectPartnerFunction(models.Model):
 
 class ProjectSubmissionTask(models.Model):
     _name = 'project.submission.task'
-    
-    @api.depends('submission.partners')
-    @api.one
-    def _get_possible_partners_values(self):
-        self.possible_values = self.submission.partners + self.submission.candidate.partner_id
-    
+
     @api.one
     @api.onchange('submission', 'submission.candidate')
     def _get_default_partner(self):
         self.partner = self.submission.candidate.partner_id
         
-    @api.depends('partners', 'submission.candidate')
+    @api.depends('submission', 'submission.partners', 'submission.candidate')
     @api.one
     def _get_possible_partners_values(self):
         self.all_partners = self.submission.partners + self.submission.candidate.partner_id
@@ -339,7 +344,7 @@ class ProjectSubmissionTask(models.Model):
 class ProjectSubmissionTaskType(models.Model):
     _name = 'project.submission.task.type'
     
-    name = fields.Char('Nom', required=True)
+    name = fields.Char('Nom', required=True, translate=True)
     
 class ProjectSubmissionLot(models.Model):
     _name = 'project.submission.lot'
@@ -352,7 +357,7 @@ class ProjectSubmissionLot(models.Model):
 class ProjectLotType(models.Model):
     _name = 'project.lot.type'
     
-    name = fields.Char('Nom', required=True)
+    name = fields.Char('Nom', required=True, translate=True)
 
 class ProjectSubmissionPersonnel(models.Model):
     _name = 'project.submission.personnel'
@@ -402,7 +407,7 @@ class ProjectSubmissionBudgetLine(models.Model):
 class ProjectBudgetLineType(models.Model):
     _name = 'project.budgetline.type'
     
-    name = fields.Char(required=True)
+    name = fields.Char(required=True, translate=True)
 
 class ProjectCandidate(models.Model):
 
@@ -473,6 +478,6 @@ class ProjectRequestType(models.Model):
     _name = 'project.request.type'
     _description = 'Type de demande'
     
-    name = fields.Char()
+    name = fields.Char(translate=True)
     
     

@@ -110,7 +110,7 @@
 					<separator/>
 					<filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
 					<field name="offer"/>
-					<field name="field"/>
+					<field name="field_ids"/>
 					<field name="manager"/>
 					<separator/>
 					<field name="candidate"/>
@@ -156,12 +156,6 @@
 									</ul>
 								</div>
 								<div class="oe_kanban_content">
-									<t t-if="record.manager.raw_value">
-										<img t-att-src="kanban_image('res.partner', 'image_medium', record.manager.raw_value[0])" t-att-title="record.manager.value" class="oe_kanban_avatar oe_job_avatar"/>
-									</t>
-									<t t-if="record.manager.raw_value === false">
-										<img t-att-src='_s + "/base/static/src/img/avatar.png"' class="oe_kanban_avatar oe_job_avatar"/>
-									</t>
 									<div class="oe_job_detail">
 										<div class="text-center oe_job oe_name oe_kanban_ellipsis">
 											<field name="name"/>
@@ -222,7 +216,7 @@
 					<field name="state"/>
 					<field name="color"/>
 					<field name="manager"/>
-					<field name="field"/>
+					<field name="field_ids"/>
 					<field name="offer"/>
 					<field name="title_action"/>
 					<field name="date_submitted"/>
@@ -240,7 +234,7 @@
 			   		
 			   			<t t-name="kanban-tooltip">
 							<ul class="oe_kanban_tooltip">
-								<li t-if="record.field.raw_value"><b>Domaines:</b> <field name="field"/></li>
+								<li t-if="record.field.raw_value"><b>Domaines:</b> <field name="field_ids"/></li>
 								<li t-if="record.candidate.raw_value"><b>Contact:</b> <field name="candidate"/></li>
 								<li t-if="record.state.raw_value"><b>State:</b> <field name="state"/></li>
 							</ul>
@@ -270,7 +264,7 @@
 											<t t-if="record.date_action.raw_value"> : </t>
 											<field name="title_action"/>
 									</div>
-									<div style="width:240px"><field name="field"/></div>
+									<div style="width:240px"><field name="field_ids"/></div>
 									<div class="oe_kanban_bottom_right">
 										<img t-att-src="kanban_image('res.users', 'image_small', record.manager.raw_value)" t-att-title="record.manager.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
 										<div class="pull-left" groups="base.group_user">
@@ -302,6 +296,19 @@
 		</record>
 
 		<!-- FORMS -->	
+		<record id="view_project_offer_field_form" model="ir.ui.view">
+			<field name="name">project.offfer.field.form</field>
+			<field name="model">project.offer.field</field>
+			<field name="arch" type="xml">
+				<form string="Thématique">
+					<group colspan="2">
+						<field name="name"/>
+						<field name="description"/>
+					</group>
+				</form>
+			</field>
+		</record>
+
 		<record id="view_project_submission_form" model="ir.ui.view">
 			<field name="name">project.submission.form</field>
 			<field name="model">project.submission</field>
@@ -311,10 +318,10 @@
 					<field name="state" widget="statusbar"/>
 				</header>
 					<sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" class="oe_inline"/></h1>
-                        </div>
+						<div class="oe_title">
+							<label for="name" class="oe_edit_only"/>
+							<h1><field name="name" class="oe_inline"/></h1>
+						</div>
 						<div class="oe_right" name="buttons">
 							<div class="oe_button_box">
 								<button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
@@ -347,8 +354,27 @@
 							</group>
 						</group>
 						<group string="Informations générales">
+							<notebook colspan="2">
+								<page string="Description">
+									<field name="description"/>
+								</page>
+								<page string="État de l’art">
+									<field name="etat_art"/>
+								</page>
+								<page string="Objectif global du projet">
+									<field name="objective"/>
+								</page>
+								<page string="Objectifs spécifiques">
+									<field name="objectives"/>
+								</page>
+								<page string="Retombées attendues du projet">
+									<field name="fallout"/>
+								</page>
+								<page string="Perspectives d’application">
+									<field name="perspective"/>
+								</page>
+							</notebook>
 							<group colspan="2">
-								<field name="description"/>
 								<field name="partners">
 									<tree>
 										<field name="category"/>
@@ -359,11 +385,14 @@
 								</field>
 							</group>
 							<group>
-								<field name="field" widget="many2many_tags"/>
+								<field name="field_ids" widget="many2many_tags"/>
 								<field name="tags" widget="many2many_tags"/>
 								<field name="duration"/>
 							</group>
 							<group>
+								<field name="n_related_publications"/>
+								<field name="n_ing_doc"/>
+								<field name="n_master_pfe"/>
 								<field name="survey" invisible="1"/>
 								<field name="response"/>
 							</group>
@@ -450,13 +479,13 @@
 						<button name="action_close" string="Clôturer l'offre" states="open,done" type="object" class="oe_highlight" groups="base.group_user"/>
 						<field name="state" widget="statusbar" statusbar_visible="draft,open,done,closed"/>
 					</header>
-				
 					<sheet>
-                        <div class="oe_title">
-                            <label for="name" class="oe_edit_only"/>
-                            <h1><field name="name" class="oe_inline"/></h1>
-                            <field name="description"/>
-                        </div>
+						<div class="oe_title">
+							<label for="name" class="oe_edit_only"/>
+							<h1><field name="name" class="oe_inline"/></h1>
+							<label for="description"/>
+							<field name="description"/>
+						</div>
 						<div class="oe_right" name="buttons">
 							<div class="oe_button_box">
 								<button class="oe_stat_button" icon="fa-file-o" name="%(action_project_submission)d" context="{'search_default_offer': [active_id], 'default_offer': active_id}" type="action">
@@ -468,7 +497,6 @@
 							</div>
 						</div>
 					  	<group>
-                            <field name="description"/>
 					  		<group>
 								<field name="manager"/>
 								<field name="type"/>
@@ -487,10 +515,10 @@
 						</group>
 					</sheet>
 				
-		            <div class="oe_chatter">
-		                <field name="message_follower_ids" widget="mail_followers"/>
-		                <field name="message_ids" widget="mail_thread"/>
-		            </div>
+					<div class="oe_chatter">
+						<field name="message_follower_ids" widget="mail_followers"/>
+						<field name="message_ids" widget="mail_thread"/>
+					</div>
 				</form>
 			</field>
 		</record>
@@ -553,8 +581,8 @@
 		<menuitem id="menu_project_offer" name="Offres" action="action_project_offer" parent="project_submission.menu_project_submission_main" sequence="0"/>
 		<menuitem id="menu_project_submission" name="Soumissions" action="action_project_submission" parent="project_submission.menu_project_submission_main" sequence="10"/>
 		<menuitem id="menu_project_candidate" name="Candidats" action="action_project_candidate" parent="project_submission.menu_project_submission_main" sequence="20"/>
-		<!-- <menuitem id="menu_project_request" name="Demandes de ressources" action="action_project_request" parent="project_submission.menu_project_submission_main" sequence="20"/>
- -->
+		<menuitem id="menu_project_request" name="Demandes de ressources" action="action_project_request" parent="project_submission.menu_project_submission_main" sequence="20"/>
+
 		<menuitem id="menu_project_offer_type" name="Types d'offres" action="action_project_offer_type" parent="project_submission.menu_project_submission_config" sequence="0"/>
 		<menuitem id="menu_project_offer_field" name="Thématiques" action="action_project_offer_field" parent="project_submission.menu_project_submission_config" sequence="10"/>
 		<menuitem id="menu_project_partner_function" name="Titres" action="action_project_partner_function" parent="project_submission.menu_project_submission_config" sequence="15"/>

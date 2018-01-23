@@ -8,6 +8,7 @@ from openerp.http import request
 
 from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.website.models.website import slug
+from openerp.exceptions import ValidationError
 
 class website_project_submission(http.Controller):
 
@@ -67,10 +68,8 @@ class website_project_submission(http.Controller):
         
         #Get error data
         error = {}
-        default = {}
         if 'website_project_submission_error' in request.session:
             error = request.session.pop('website_project_submission_error')
-            default = request.session.pop('website_project_submission_default')
             
         #Get the candidate, if no candidate create one
         env = request.env(user=SUPERUSER_ID)
@@ -89,126 +88,144 @@ class website_project_submission(http.Controller):
         
         #Save the current stage
         current_stage = post.get('current_stage') and int(post.get('current_stage'))
-        if bool(post):
-            if post.get('unlink-doc'):
-                env['ir.attachment'].browse(int(post.get('unlink-doc'))).unlink()
-            if post.get('unlink-task'):
-                env['project.submission.task'].browse(int(post.get('unlink-task'))).unlink()
-            if post.get('unlink-partner'):
-                submission.write({'partners': [(3, int(post.get('unlink-partner')))]})
-                partner = env['res.partner'].browse(int(post.get('unlink-partner')))
-                if not partner.submissions:
-                    partner.unlink()
-            #Stage 0: Project general informations
-            if current_stage == 0:
-                new_tags = []
-                tags = request.httprequest.form.getlist('tags')
-                for tag in tags:
-                    if tag.isdigit():
-                        new_tags.append(int(tag))
-                    else:
-                        existing_tag = env['project.submission.tag'].search([('name', '=', tag)]).ids[0]
-                        if existing_tag:
-                            new_tags.append(existing_tag)
+        try:
+            if bool(post) and post.get('submit') != 'cancel':
+                if post.get('unlink-doc'):
+                    env['ir.attachment'].browse(int(post.get('unlink-doc'))).unlink()
+                if post.get('unlink-task'):
+                    env['project.submission.task'].browse(int(post.get('unlink-task'))).unlink()
+                if post.get('unlink-partner'):
+                    submission.write({'partners': [(3, int(post.get('unlink-partner')))]})
+                    partner = env['res.partner'].browse(int(post.get('unlink-partner')))
+                    if not partner.submissions:
+                        partner.unlink()
+                if post.get('unlink-budgetline'):
+                    env['project.submission.budgetline'].browse(int(post.get('unlink-budgetline'))).unlink()
+                #Stage 1: Project general informations
+                if current_stage == 1:
+                    new_tags = []
+                    tags = request.httprequest.form.getlist('tags')
+                    for tag in tags:
+                        if tag.isdigit():
+                            new_tags.append(int(tag))
                         else:
-                            new_tags.append(env['project.submission.tag'].create({'name': tag}).id)
-                value = {
-                    'name': post.get('name'),
-                    'acronyme': post.get('acronyme'),
-                    'duration': post.get('duration'),
-                    'field': [(6, 0, [int(x) for x in request.httprequest.form.getlist('fields')])],
-                    'tags': [(6, 0, new_tags)],
-                    'description': post.get('description'),
-                }
-                submission.write(value)
-                if post.get('ufile'):
-                    submission.documents.unlink()
-                    attachment_value = {
-                        'name': post['ufile'].filename,
-                        'res_name': value['name'],
-                        'res_model': 'project.submission',
-                        'res_id': submission.id,
-                        'datas': base64.encodestring(post['ufile'].read()),
-                        'datas_fname': post['ufile'].filename,
+                            existing_tag = env['project.submission.tag'].search([('name', '=', tag)])
+                            if existing_tag:
+                                new_tags.append(existing_tag.ids[0])
+                            else:
+                                new_tags.append(env['project.submission.tag'].create({'name': tag}).id)
+                    value = {
+                        'name': post.get('name'),
+                        'acronyme': post.get('acronyme'),
+                        'duration': post.get('duration'),
+                        'field_ids': [(6, 0, [int(x) for x in request.httprequest.form.getlist('fields')])],
+                        'tags': [(6, 0, new_tags)],
+                        'description': post.get('description'),
                     }
-                    env['ir.attachment'].create(attachment_value)
-                    submission._get_attached_docs()
-
-            #Stage 1: Candidate general informations
-            elif current_stage == 1:
-                value = {
-                    'name': post.get('name'),
-                    'function': post.get('function'),
-                    'phone': post.get('phone'),
-                    'mobile': post.get('mobile'),
-                    'email': post.get('email'),
-                }
-                candidate.write(value)
-                if candidate.parent_id:
-                    candidate.parent_id.write({'name': post.get('organisme')})
-                else:
-                    organisme = env['res.partner'].create({'name': post.get('organisme')})
-                    candidate.write({'parent_id': organisme.id})
-                if post.get('ufile'):
-                    attachment_value = {
-                        'name': post['ufile'].filename,
-                        'res_name': value['name'],
-                        'res_model': 'project.candidate',
-                        'res_id': candidate.id,
-                        'datas': base64.encodestring(post['ufile'].read()),
-                        'datas_fname': post['ufile'].filename,
+                    submission.write(value)
+    
+                #Stage 2: Candidate general informations
+                elif current_stage == 2:
+                    value = {
+                        'name': post.get('name'),
+                        'function': post.get('function'),
+                        'phone': post.get('phone'),
+                        'mobile': post.get('mobile'),
+                        'email': post.get('email'),
                     }
-                    env['ir.attachment'].create(attachment_value)
-                    candidate._get_attached_docs()
+                    candidate.write(value)
+                    if candidate.parent_id:
+                        candidate.parent_id.write({'name': post.get('organisme')})
+                    else:
+                        organisme = env['res.partner'].create({'name': post.get('organisme')})
+                        candidate.write({'parent_id': organisme.id})
+                    if post.get('ufile'):
+                        attachment_value = {
+                            'name': post['ufile'].filename,
+                            'res_name': value['name'],
+                            'res_model': 'project.candidate',
+                            'res_id': candidate.id,
+                            'datas': base64.encodestring(post['ufile'].read()),
+                            'datas_fname': post['ufile'].filename,
+                        }
+                        env['ir.attachment'].create(attachment_value)
+                        candidate._get_attached_docs()
+    
+                #Stage 3: Project partners informations
+                elif current_stage == 3 and post.get('to-save') == "1" and post.get('name') and post.get('category'):
+                    partner_organisme = env['res.partner'].create({'name': post.get('organisme')})
+                    partner_value = {
+                        'name': post.get('name'),
+                        'function': post.get('function'),
+                        'phone': post.get('phone'),
+                        'mobile': post.get('mobile'),
+                        'fax': post.get('fax'),
+                        'email': post.get('email'),
+                        'parent_id': partner_organisme.id,
+                        'category': post.get('category'),
+                        'submissions': [(4, submission.id)]
+                    }
+                    if post.get('partner_id') is not None:
+                        partner = env['res.partner'].browse(int(post.get('partner_id')))
+                        partner.write(partner_value)
+                    else:
+                        partner = env['res.partner'].create(partner_value)
+                #Stage 4: Additional info
+                elif current_stage == 4:
+                    value = {
+                        'etat_art': post.get('etat_art'),
+                        'objective': post.get('objective'),
+                        'objectives': post.get('objectives'),
+                        'fallout': post.get('fallout'),
+                        'perspective': post.get('perspective'),
+                    }
+                    submission.write(value)
+                    if post.get('ufile'):
+                        attachment_value = {
+                            'name': post['ufile'].filename,
+                            'res_name': submission.name,
+                            'res_model': 'project.submission',
+                            'res_id': submission.id,
+                            'datas': base64.encodestring(post['ufile'].read()),
+                            'datas_fname': post['ufile'].filename,
+                        }
+                        env['ir.attachment'].create(attachment_value)
+                        submission._get_attached_docs()
+                #Stage 5: Tasks
+                elif current_stage == 5 and post.get('to-save') == "1" and post.get('name') and post.get('type'):
+                    value = {
+                        'name': post.get('name'),
+                        'type': post.get('type'),
+                        'semester': post.get('semester'),
+                        'objectives': post.get('objectives'),
+                        'description': post.get('description'),
+                        'partner': post.get('partner'),
+                    }
+                    if post.get('task_id') is not None:
+                        task = env['project.submission.task'].browse(int(post.get('task_id')))
+                        task.write(value)
+                    else:
+                        env['project.submission.task'].create(value)
+                #Stage 6: Project budget informations
+                elif current_stage == 6 and post.get('to-save') == "1" and post.get('name') and post.get('type'):
+                    value = {
+                        'type': post.get('type'),
+                        'name': post.get('name'),
+                        'montant_subventionne': float(post.get('montant_subventionne')),
+                        'percent_subventionne': float(post.get('percent_subventionne')),
+                        'budget': post.get('budget'),
+                        'montant_propre': float(post.get('budget')) - float(post.get('montant_propre')),
+                        'submission': submission.id,
+                    }
+                    if post.get('budgetline_id') is not None:
+                        budgetline = env['project.submission.budgetline'].browse(int(post.get('budgetline_id')))
+                        budgetline.write(partner_value)
+                    else:
+                        env['project.submission.budgetline'].create(value)
+        except ValidationError:
+            next_stage = current_stage
+            pass
 
-            #Stage 2: Project partners informations
-            elif current_stage == 2 and post.get('to-save') == "1":
-                partner_organisme = env['res.partner'].create({'name': post.get('organisme')})
-                partner_value = {
-                    'name': post.get('name'),
-                    'function': post.get('function'),
-                    'phone': post.get('phone'),
-                    'mobile': post.get('mobile'),
-                    'image': post.get('image'),
-                    'fax': post.get('fax'),
-                    'email': post.get('email'),
-                    'parent_id': partner_organisme.id,
-                    'category': post.get('category'),
-                    'submissions': [(4, submission.id)]
-                }
-                if post.get('partner_id') != 'None':
-                    partner = env['res.partner'].browse(int(post.get('partner_id')))
-                    partner.write(partner_value)
-                else:
-                    partner = env['res.partner'].create(partner_value)
-            #Stage 3: Project budget informations
-            elif current_stage == 3 and post.get('to-save') == "1":
-                value = {
-                    'type': post.get('type'),
-                    'name': post.get('name'),
-                    'montant_subventionne': float(post.get('montant_subventionne')),
-                    'percent_subventionne': float(post.get('percent_subventionne')),
-                    'budget': post.get('budget'),
-                    'montant_propre': float(post.get('budget')) - float(post.get('montant_propre')),
-                    'submission': submission.id,
-                }
-                env['project.submission.budgetline'].create(value)
-                if post.get('submit') == 'add':
-                    return request.redirect("/offers/apply/%s/stage/3" % slug(offer))     
-            elif current_stage == 4 and post.get('to-save') == "1":
-                value = {
-                    'name': post.get('name'),
-                    'type': post.get('type'),
-                    'semester': post.get('semester'),
-                    'objectives': post.get('objectives'),
-                    'description': post.get('description'),
-                    'partner': post.get('partner'),
-                }
-                env['project.submission.task'].create(value)
-                """if post.get('submit') == 'add':
-                    return request.redirect("/offers/apply/%s/stage/4" % slug(offer))"""   
-                
-        
         if next_stage == None:
             if bool(post) and post.get('submit') == 'next':
                 next_stage = current_stage + 1
@@ -217,120 +234,72 @@ class website_project_submission(http.Controller):
             elif bool(post) and current_stage:
                 next_stage = current_stage
             else:
-                next_stage = 0
+                next_stage = 1
                 
         #prepare next_stage vals
         vals = {
-                'offer': offer,
                 'submission': submission,
-                'candidate': candidate,
                 'error': error,
-                'default': default,
                 'current_stage': next_stage,
                 }
-        if next_stage == 0:
+        if next_stage == 1:
             fields = env['project.offer.field'].search([])
             tags = env['project.submission.tag'].search([])
-            if submission:
-                default['name'] = submission.name
-                default['acronyme'] = submission.acronyme
-                default['field'] = submission.field.ids
-                default['duration'] = submission.duration
-                default['description'] = submission.description
             duration_steps = range(offer.min_time, offer.max_time + 1)
             vals.update({
                 'error': error,
-                'default': default,
                 'duration_steps': duration_steps,
                 'fields': fields,
                 'all_tags': tags,
             })
-        if next_stage == 1:
-            default['name'] = candidate.name
-            default['organisme'] = candidate.parent_id and candidate.parent_id.name
-            default['function'] = candidate.function
-            default['phone'] = candidate.phone
-            default['mobile'] = candidate.mobile
-            default['email'] = candidate.email if candidate.email else candidate.login
-
+        if next_stage == 2:
             vals.update({
                 'error': error,
-                'default': default,
             })
-        elif next_stage == 2:
-            categories = [('scientifique', 'Scientifique'), ('industriel', 'Industriel')]
-            duration_steps = range(1, offer.max_time + 1)
+        elif next_stage == 3:
             if post.get('edit-partner'):
                 partner = env['res.partner'].browse(int(post.get('edit-partner')))
-                vals.update({'partner_id': partner.id})
-                default.update({
-                    'category': partner.category,
-                    'image': partner.image,
-                    'name': partner.name,
-                    'organisme': partner.parent_id.name,
-                    'function': partner.function,
-                    'phone': partner.phone,
-                    'mobile': partner.mobile,
-                    'fax': partner.fax,
-                    'email': partner.email,
-                })
+                vals.update({'partner': partner})
+            if post.get('add-partner'):
+                vals.update({'new': True})
+            else:
+                vals.update({'new': False})
+            categories = [('scientifique', 'Scientifique'), ('industriel', 'Industriel')]
+            duration_steps = range(1, offer.max_time + 1)
             vals.update({
                 'duration_steps': duration_steps,
                 'categories': categories,
                 'error': error,
-                'default': default,
-            })
-        elif next_stage == 3:
-            types = env['project.budgetline.type'].search([])
-            if post.get('edit-budget_line'):
-                budgetline = env['project.submission.budgetline'].browse(int(post.get('edit-budget_line')))
-                vals.update({'budgetline_id': budgetline.id})
-                default.update({
-                    'budget': budgetline.budget,
-                    'montant_propre': budgetline.montant_propre,
-                    'montant_subventionne': budgetline.montant_subventionne,
-                    'percent_subventionne': budgetline.percent_subventionne,
-                    'type': budgetline.type,
-                })
-            vals.update({
-                'types': types,
-                'error': error,
-                'default': default,
             })
         elif next_stage == 4:
-            
+            vals.update({
+                'error': error,
+            })
+        elif next_stage == 5:
             types = env['project.submission.task.type'].search([])
-            
             if post.get('edit-task'):
                 task = env['project.submission.task'].browse(int(post.get('edit-task')))
-                vals.update({'task_id': task.id})
-                default.update({
-                    'name': task.name,
-                    'type': task.type.id,
-                    'semester': task.semester,
-                    'partners': task.partners.ids,
-                    'partner': task.partner.id,
-                    'objectives': task.objectives,
-                    'description': task.description,
-                })
-                
+                vals.update({'task': task})
+            if post.get('add-task'):
+                vals.update({'new': True})
+            else:
+                vals.update({'new': False})
             vals.update({
                 'types': types,
                 'error': error,
-                'default': default,
             })
-            """if submission.survey:  
-                if not submission.response:
-                    response = env['survey.user_input'].create({'survey_id': submission.survey.id, 'partner_id': candidate.user.partner_id.id})
-                    submission.write({'response': response.id})
-                else:
-                    response = submission.response
-                return request.redirect("/survey/fill/%s/%s" % (slug(submission.survey), response.token))
-            return request.render("website_project_submission.thankyou", {
-                'offer': offer,
-                'submission': submission,
+        elif next_stage == 6:
+            types = env['project.budgetline.type'].search([])
+            if post.get('edit-budgetline'):
+                budgetline = env['project.submission.budgetline'].browse(int(post.get('edit-budgetline')))
+                vals.update({'budgetline': budgetline})
+            if post.get('add-budgetline'):
+                vals.update({'new': True})
+            else:
+                vals.update({'new': False})
+            vals.update({
+                'types': types,
                 'error': error,
-                'default': default,
-            })"""
+            })
         return request.render('website_project_submission.apply', vals)
 # vim :et:

@@ -137,7 +137,7 @@
 		</template>
 		<template id="apply">
 			<t t-call="website.layout">
-				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + offer.name"/>
+				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + submission.offer.name"/>
 				<script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
 				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
 				<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
@@ -146,7 +146,7 @@
 					<div class="container">
 						<h1 class="text-center">
 							<span>Formulaire de soumission: </span>
-							<span t-field="offer.name"/>
+							<span t-field="submission.offer.name"/>
 						</h1>
 						<h2 t-if="submission" class="text-center text-muted">
 							<span t-field="submission.name"/>
@@ -154,8 +154,6 @@
 						<t t-call="website_project_submission.form_nav"/>
 						<div class="row">
 							<section class="col-md-12" id="forms">
-								<t t-if="current_stage==0">
-									<t t-call="website_project_submission.apply0"/></t>
 								<t t-if="current_stage==1">
 									<t t-call="website_project_submission.apply1"/></t>
 								<t t-if="current_stage==2">
@@ -164,6 +162,10 @@
 									<t t-call="website_project_submission.apply3"/></t>
 								<t t-if="current_stage==4">
 									<t t-call="website_project_submission.apply4"/></t>
+								<t t-if="current_stage==5">
+									<t t-call="website_project_submission.apply5"/></t>
+								<t t-if="current_stage==6">
+									<t t-call="website_project_submission.apply6"/></t>
 							</section>
 						</div>
 					</div>
@@ -175,28 +177,28 @@
 			</t>	
 		</template>
 		<!-- Esquisse du projet -->
-		<template id="apply0">
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+		<template id="apply1">
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<h3 class="text-center text-muted">Esquisse du projet</h3>
 				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="name">Intitulé du projet</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" maxlength="250" t-att-value="default.get('name')" class="form-control" name="name" />
+						<input type="text" maxlength="250" t-att-value="submission.name" class="form-control" name="name" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('acronyme') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="acronyme">Acronyme</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" maxlength="100" t-att-value="default.get('acronyme')" class="form-control" name="acronyme" />
+						<input type="text" maxlength="100" t-att-value="submission.acronyme" class="form-control" name="acronyme" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('field') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="field">Thématique</label>
 					<div class="col-md-7 col-sm-8">
-						<select multiple="multiple" id="field" name="fields" class="form-control multiple-tags">
+						<select multiple="multiple" id="fields" name="fields" class="form-control multiple-tags">
 							<t t-foreach="fields" t-as="f">
-								<option name="fields" t-att-value="f.id" t-att-selected="'selected' if f.id in submission.field.ids else None">
+								<option name="fields" t-att-value="f.id" t-att-selected="'selected' if f.id in submission.field_ids.ids else None">
 									<t t-esc="f.name"/>
 								</option>
 							</t>
@@ -206,13 +208,13 @@
 				<div t-attf-class="form-group #{error.get('duration') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="duration">Durée du projet (en semestres)</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="number" t-att-value="default.get('duration')" t-attf-min="#{offer.min_time}" t-attf-max="#{offer.max_time}" class="form-control" name="duration"/>
+						<input type="number" t-att-value="submission.duration" t-attf-min="#{submission.offer.min_time}" t-attf-max="#{submission.offer.max_time}" class="form-control" name="duration"/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="description">Résumé du projet (1 paragraphe de 600 mots maximum)</label>
 					<div class="col-md-7 col-sm-8">
-						<textarea maxlength="3600" class="form-control" t-esc="default.get('description')" name="description" style="min-height: 120px"/>
+						<textarea maxlength="3600" class="form-control" t-esc="submission.description" name="description" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -227,7 +229,7 @@
 						</select>
 					</div>
 				</div>
-				<div class="form-group">
+				<!-- <div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation (PDF, PowerPoint)</label>
 					<div class="col-md-7 col-sm-8">
 						<table class="table table-condensed" t-if="submission.documents">
@@ -250,56 +252,56 @@
 						<input t-if="not submission.documents" accept=".pdf,.ppt,.pptx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
 						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
-				</div>
+				</div> -->
 				<t t-call="website_project_submission.form_header_footer"/>
 			</form>
 		</template>
 		<!-- Coordinateur principal -->
-		<template id="apply1">
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+		<template id="apply2">
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<h3 class="text-center text-muted">Coordinateur principal</h3>
 				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="name">Nom &amp; Prénom</label>
+					<label class="col-md-3 col-sm-4 control-label" for="name">Nom et Prénom</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="default.get('name')" class="form-control" name="name" />
+						<input type="text" t-att-value="submission.candidate.name" class="form-control" name="name" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('organisme') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="organisme">Etablissement</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="default.get('organisme')" class="form-control" name="organisme" />
+						<input type="text" t-att-value="submission.candidate.parent_id.name" class="form-control" name="organisme" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('function') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="function">Fonction</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="default.get('function')" class="form-control" name="function" />
+						<input type="text" t-att-value="submission.candidate.function" class="form-control" name="function" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel" t-att-value="default.get('phone')" class="form-control" name="phone" />
+						<input type="tel" t-att-value="submission.candidate.phone" class="form-control" name="phone" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('mobile') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="mobile">Mobile</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel" t-att-value="default.get('mobile')" class="form-control" name="mobile" />
+						<input type="tel" t-att-value="submission.candidate.mobile" class="form-control" name="mobile" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="email" t-att-value="default.get('email')" class="form-control" name="email" />
+						<input type="email" t-att-value="submission.candidate.email" class="form-control" name="email" />
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">CV (PDF, Word)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Pièces jointes: CV, publications (PDF, Word)</label>
 					<div class="col-md-7 col-sm-8">
-						<table class="table table-condensed" t-if="candidate.self_documents">
-							<tr t-foreach="candidate.self_documents" t-as="doc">
+						<table class="table table-condensed" t-if="submission.candidate.self_documents">
+							<tr t-foreach="submission.candidate.self_documents" t-as="doc">
 								<td>
 									<a class="btn" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
 										<span t-field="doc.name"/>
@@ -315,7 +317,7 @@
 								</td>
 							</tr>
 						</table>
-						<input t-if="not candidate.self_documents" accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<input accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
 						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
 				</div>
@@ -323,10 +325,11 @@
 			</form>
 		</template>
 		<!-- Partenaires -->
-		<template id="apply2">
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+		<template id="apply3">
+			<h3 class="text-center text-muted">Partenaires</h3>
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-				<table class="table">
+				<table t-if="submission.partners" class="table">
 					<thead>
 						<tr>
 							<th>Type</th>
@@ -371,178 +374,155 @@
 						</tbody>
 					</thead>
 				</table>
+				<t  t-if="not new and not partner" ><div class="form-group text-center"><button class="btn btn-primary" type="submit" name="add-partner" value="1">
+					<i class="fa fa-plus" style="font-size: 2em; padding: 10px;"/>
+				</button></div>
+				<t t-call="website_project_submission.form_header_footer"/></t>
 			</form>
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
-				<t t-if="partner_id"><input type="hidden" name="partner_id" t-att-value="'%s' % partner_id"/></t>
+			<t t-if="new or partner"><form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
+				<t t-if="partner"><input type="hidden" name="partner_id" t-att-value="'%s' % partner.id"/></t>
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<input type="hidden" name="to-save" value="1"/>
-				<t t-if="partner"><input type="hidden" name="partner_id" t-att-value="'%s' % partner.id"/></t>
-				<h3 class="text-center text-muted">Partenaires</h3>
 				<div t-attf-class="form-group #{error.get('category') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="category">Type de partenaire</label>
 					<div class="col-md-7 col-sm-8">
 						<select name="category" id="category" class="form-control" >
 							<option value="">Sélectionnez le type...</option>
 							<t t-foreach="categories" t-as="c">
-								<option t-att-value="c[0]" t-att-selected="c[0] == default.get('category')">
+								<option t-att-value="c[0]" t-att-selected="partner and c[0] == partner.category">
 									<t t-esc="c[1]"/>
 								</option>
 							</t>
 						</select>
 					</div>
 				</div>
-				<div class="form-group">
+				<!--<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="ufile">logo</label>
 					<div class="col-md-7 col-sm-8">
-						<div t-if="default.get('image')">
+						<div t-if="partner">
 							<img class="media-object pull-left" t-att-src="default.get('image')" style="width: 50px; margin-right: 10px;"/>
-							<button class="btn btn-danger" type="submit" name="unlink-doc" t-att-value="doc.id">
+							<button class="btn btn-danger" type="submit" name="del-picture" t-att-value="partner.id">
 								<i class="fa fa-trash"/>
 							</button>
 						</div>
 						<input accept="image/*" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
 						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
-				</div>
+				</div>-->
 				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="name">Nom &amp; Prénom</label>
+					<label class="col-md-3 col-sm-4 control-label" for="name">Nom et Prénom</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="default.get('name')" class="form-control" name="name" />
+						<input type="text" t-att-value="partner and partner.name" class="form-control" name="name" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('organisme') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="organisme">Etablissement</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="default.get('organisme')" class="form-control" name="organisme" />
+						<input type="text" t-att-value="partner and partner.parent_id.name" class="form-control" name="organisme" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('function') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="function">Fonction</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="default.get('function')" class="form-control" name="function" />
+						<input type="text" t-att-value="partner and partner.function" class="form-control" name="function" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel" t-att-value="default.get('phone')" class="form-control" name="phone" />
+						<input type="tel" t-att-value="partner and partner.phone" class="form-control" name="phone" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('mobile') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="mobile">Mobile</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel" t-att-value="default.get('mobile')" class="form-control" name="mobile" />
+						<input type="tel" t-att-value="partner and partner.mobile" class="form-control" name="mobile" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('fax') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="fax">Fax</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel" t-att-value="default.get('fax')" class="form-control" name="fax" />
+						<input type="tel" t-att-value="partner and partner.fax" class="form-control" name="fax" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="email" t-att-value="default.get('email')" class="form-control" name="email" />
+						<input type="email" t-att-value="partner and partner.email" class="form-control" name="email" />
 					</div>
 				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
-			</form>
+			</form></t>
 		</template>
-		<!-- Montage financier -->
-		<template id="apply3">
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+
+		<!-- Descriptif detaillé -->
+		<template id="apply4">
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-				<h3 class="text-center text-muted">Montage financier</h3>
-				<table class="table">
-					<thead>
-						<tr>
-							<th>Type</th>
-							<th class="text-right">Budget</th>
-							<th class="text-right">Montant propre</th>
-							<th class="text-right">Montant subventionné</th>
-							<th class="text-right">Pourcentage subventionné</th>
-						</tr>
-						<tbody>
-							<tr t-foreach="submission.budget_lines" t-as="line">
+				<h3 class="text-center text-muted">Descriptif detaillé</h3>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="etat_art">État de l’art (max : 800 mots)</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="5600" class="form-control" t-esc="submission.etat_art" name="etat_art" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="objective">Objectif global du projet (max : 600 mots)</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="4200" class="form-control" t-esc="submission.objective" name="objective" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectif global du projet (max : 600 mots)</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="5600" class="form-control" t-esc="submission.objectives" name="objectives" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="fallout">Retombées attendues du projet (max : 1000 mots)</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="7000" class="form-control" t-esc="submission.fallout" name="fallout" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="perspective">Perspectives d’application au Maroc et en Afrique</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="7000" class="form-control" t-esc="submission.perspective" name="perspective" style="min-height: 120px"/>
+					</div>
+				</div>
+
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation (PDF, PowerPoint)</label>
+					<div class="col-md-7 col-sm-8">
+						<table class="table table-condensed" t-if="submission.documents">
+							<tr t-foreach="submission.documents" t-as="doc">
 								<td>
-									<span t-field="line.type"/>
+									<a class="btn" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
+										<span t-field="doc.name"/>
+									</a>
 								</td>
 								<td class="text-right">
-									<span>
-										<span t-field="line.budget"/> MAD</span>
-								</td>
-								<td class="text-right">
-									<span>
-										<span t-field="line.montant_propre"/>&amp;nbsp;MAD</span>
-								</td>
-								<td class="text-right">
-									<span>
-										<span t-field="line.montant_subventionne"/>&amp;nbsp;MAD</span>
-								</td>
-								<td class="text-right">
-									<span><strong t-esc="round(line.percent_subventionne, 2)"/>&amp;nbsp;%</span>
-								</td>
-								<td>
-									<button class="btn btn-info" type="submit" name="edit-budget_line" t-att-value="line.id">
-										<i class="fa fa-pencil"/>
-									</button>
-									<button class="btn btn-danger" type="submit" name="unlink-budget_line" t-att-value="line.id">
+									<a class="btn btn-default" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
+										<i class="fa fa-download"/>
+									</a>
+									<button class="btn btn-danger" type="submit" name="unlink-doc" t-att-value="doc.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
 							</tr>
-							<tr>
-								<td class="text-right">
-									<strong>Total:</strong>
-								</td>
-								<td class="text-right">
-									<strong><span t-field="submission.budget"/>&amp;nbsp;MAD</strong>
-								</td>
-								<td class="text-right">
-									<strong><span t-field="submission.montant_propre"/>&amp;nbsp;MAD</strong>
-								</td>
-								<td class="text-right">
-									<strong><span t-field="submission.montant_subventionne"/>&amp;nbsp;MAD</strong>
-								</td>
-								<td class="text-right">
-									<strong><span t-esc="round(submission.percent_subventionne)"/>&amp;nbsp;%</strong>
-								</td>
-							</tr>
-						</tbody>
-					</thead>
-				</table>
-				<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="type">Rubrique</label>
-					<div class="col-md-7 col-sm-8">
-						<select name="type" t-att-value="default.get('type')" id="type" class="form-control" >
-							<option value="">Sélectionnez le type...</option>
-							<t t-foreach="types" t-as="t">
-								<option t-att-value="t.id">
-									<t t-esc="t.name"/>
-								</option>
-							</t>
-						</select>
-					</div>
-				</div>
-				<div t-attf-class="form-group #{error.get('budget') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="budget">Budget (MAD)</label>
-					<div class="col-md-7 col-sm-8">
-						<input type="number" t-att-value="default.get('budget')" class="form-control" name="budget" />
-					</div>
-				</div>
-				<div t-attf-class="form-group #{error.get('montant_propre') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="montant_propre">Financement demandé (MAD)</label>
-					<div class="col-md-7 col-sm-8">
-						<input type="number" t-att-value="default.get('montant_propre')" class="form-control" name="montant_propre" />
+						</table>
+						<input accept=".pdf,.ppt,.pptx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
 				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
 			</form>
 		</template>
+
 		<!-- Tâches et livrables -->
-		<template id="apply4">
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+		<template id="apply5">
+			<h3 class="text-center text-muted">Tâches et livrables</h3>
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<table class="table">
 					<thead>
@@ -590,16 +570,19 @@
 						</tbody>
 					</thead>
 				</table>
+				<t  t-if="not new and not task" ><div class="form-group text-center"><button class="btn btn-primary" type="submit" name="add-task" value="1">
+					<i class="fa fa-plus" style="font-size: 2em; padding: 10px;"/>
+				</button></div>
+				<t t-call="website_project_submission.form_header_footer"/></t>
 			</form>
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(offer)" method="post" enctype="multipart/form-data">
+			<t t-if="new or task"><form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<input type="hidden" name="to-save" value="1"/>
-				<t t-if="task_id"><input type="hidden" name="task_id" t-att-value="'%s' % task_id"/></t>
-				<h3 class="text-center text-muted">Tâches et livrables</h3>
+				<t t-if="task"><input type="hidden" name="task_id" t-att-value="'%s' % task.id"/></t>
 				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="name">Désignation</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="default.get('name')" class="form-control" name="name"/>
+						<input type="text" t-att-value="task and task.name" class="form-control" name="name"/>
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
@@ -608,7 +591,7 @@
 						<select name="type" id="type" class="form-control">
 							<option value="">Sélectionnez le type...</option>
 							<t t-foreach="types" t-as="t">
-								<option t-att-value="t.id" t-att-selected="t.id == default.get('type')">
+								<option t-att-value="t.id" t-att-selected="task and t.id == task.type.id">
 									<t t-esc="t.name"/>
 								</option>
 							</t>
@@ -618,7 +601,7 @@
 				<div t-attf-class="form-group #{error.get('semester') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="semester">Semestre</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="number" t-att-value="default.get('semester')" min="1" t-attf-max="#{submission.duration}" class="form-control" name="semester"/>
+						<input type="number" t-att-value="task and task.semester" min="1" t-attf-max="#{submission.duration}" class="form-control" name="semester"/>
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('partner') and 'has-error' or ''}">
@@ -627,7 +610,7 @@
 						<select name="partner" id="partner" class="form-control">
 							<option value="">Sélectionnez le responsable...</option>
 							<t t-foreach="submission.all_partners" t-as="p">
-								<option t-att-value="p.id" t-att-selected="p.id == default.get('partner')">
+								<option t-att-value="p.id" t-att-selected="p.id == task and task.partner">
 									<t t-esc="p.name"/>
 								</option>
 							</t>
@@ -637,10 +620,9 @@
 				<div t-attf-class="form-group #{error.get('all_partners') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="partner">Partenaires impliqués</label>
 					<div class="col-md-7 col-sm-8">
-						<select multiple="all_partners" name="all_partner" id="all_partner" class="form-control">
-							<option value="">Sélectionnez les partenaires impliqués...</option>
+						<select multiple="all_partners" name="all_partner" id="all_partner" class="form-control multiple-tags">
 							<t t-foreach="submission.all_partners" t-as="p">
-								<option t-att-value="p.id" t-att-selected="default.get('partners') and (p.id in default.get('partners'))">
+								<option t-att-value="p.id" t-att-selected="task and task.partners and (p.id in task.partners.ids)">
 									<t t-esc="p.name"/>
 								</option>
 							</t>
@@ -650,18 +632,120 @@
 				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectives</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="default.get('objectives')" class="form-control" name="objectives"/>
+						<input type="text" t-att-value="task and task.objectives" class="form-control" name="objectives"/>
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="description">Description</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="default.get('description')" class="form-control" name="description"/>
+						<input type="text" t-att-value="task and task.description" class="form-control" name="description"/>
 					</div>
 				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
-			</form>
+			</form></t>
 		</template>
+
+		<!-- Montage financier -->
+		<template id="apply6">
+			<h3 class="text-center text-muted">Montage financier</h3>
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<table class="table">
+					<thead>
+						<tr>
+							<th>Type</th>
+							<th class="text-right">Budget</th>
+							<th class="text-right">Financement propre</th>
+							<th class="text-right">Montant subventionné</th>
+							<th class="text-right">Pourcentage subventionné</th>
+						</tr>
+						<tbody>
+							<tr t-foreach="submission.budget_lines" t-as="line">
+								<td>
+									<span t-field="line.type"/>
+								</td>
+								<td class="text-right">
+									<span>
+										<span t-field="line.budget"/> MAD</span>
+								</td>
+								<td class="text-right">
+									<span>
+										<span t-field="line.montant_propre"/>&amp;nbsp;MAD</span>
+								</td>
+								<td class="text-right">
+									<span>
+										<span t-field="line.montant_subventionne"/>&amp;nbsp;MAD</span>
+								</td>
+								<td class="text-right">
+									<span><strong t-esc="round(line.percent_subventionne, 2)"/>&amp;nbsp;%</span>
+								</td>
+								<td>
+									<button class="btn btn-info" type="submit" name="edit-budgetline" t-att-value="line.id">
+										<i class="fa fa-pencil"/>
+									</button>
+									<button class="btn btn-danger" type="submit" name="unlink-budgetline" t-att-value="line.id">
+										<i class="fa fa-trash"/>
+									</button>
+								</td>
+							</tr>
+							<tr>
+								<td class="text-right">
+									<strong>Total:</strong>
+								</td>
+								<td class="text-right">
+									<strong><span t-field="submission.budget"/>&amp;nbsp;MAD</strong>
+								</td>
+								<td class="text-right">
+									<strong><span t-field="submission.montant_propre"/>&amp;nbsp;MAD</strong>
+								</td>
+								<td class="text-right">
+									<strong><span t-field="submission.montant_subventionne"/>&amp;nbsp;MAD</strong>
+								</td>
+								<td class="text-right">
+									<strong><span t-esc="round(submission.percent_subventionne)"/>&amp;nbsp;%</strong>
+								</td>
+							</tr>
+						</tbody>
+					</thead>
+				</table>
+				<t  t-if="not new and not budgetline" ><div class="form-group text-center"><button class="btn btn-primary" type="submit" name="add-budgetline" value="1">
+					<i class="fa fa-plus" style="font-size: 2em; padding: 10px;"/>
+				</button></div>
+				<t t-call="website_project_submission.form_header_footer"/></t>
+			</form>
+			<t t-if="new or budgetline"><form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<input type="hidden" name="to-save" value="1"/>
+				<t t-if="budgetline"><input type="hidden" name="budgetline_id" t-att-value="'%s' % budgetline.id"/></t>
+				<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="type">Rubrique</label>
+					<div class="col-md-7 col-sm-8">
+						<select name="type" t-att-value="budgetline and budgetline.type" id="type" class="form-control" >
+							<option value="">Sélectionnez la rubrique...</option>
+							<t t-foreach="types" t-as="t">
+								<option t-att-value="t.id">
+									<t t-esc="t.name"/>
+								</option>
+							</t>
+						</select>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('budget') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="budget">Budget (MAD)</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" t-att-value="budgetline and budgetline.budget" class="form-control" name="budget" />
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('montant_propre') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="montant_propre">Financement demandé (MAD)</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" t-att-value="budgetline and budgetline.montant_propre" class="form-control" name="montant_propre" />
+					</div>
+				</div>
+				<t t-call="website_project_submission.form_header_footer"/>
+			</form></t>
+		</template>
+
 		<!-- Récapitulatif final -->
 		<template id="thankyou">
 			<t t-call="website.layout">
@@ -720,44 +804,44 @@
 		<template id="form_nav">
 			<div class="container">
 	            <div class="row bs-wizard" style="border-bottom:0;">
-	                <div class="col-xs-2 bs-wizard-step complete">
-	                  <div class="text-center bs-wizard-stepnum">Step 0</div>
+	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 1 else 'col-xs-2 bs-wizard-step active' if current_stage == 1 else 'col-xs-2 bs-wizard-step disabled'">
+	                  <div class="text-center bs-wizard-stepnum">Etape 1</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
-	                  <a t-attf-href="/offers/apply/#{ slug(offer)}/stage/0" class="bs-wizard-dot"></a>
-	                  <div class="bs-wizard-info text-center">Lorem ipsum dolor sit amet.</div>
+	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/1" class="bs-wizard-dot"></a>
+	                  <div class="bs-wizard-info text-center">Esquisse du projet</div>
 	                </div>
-	                <div class="col-xs-2 bs-wizard-step complete">
-	                  <div class="text-center bs-wizard-stepnum">Step 1</div>
+	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 2 else 'col-xs-2 bs-wizard-step active' if current_stage == 2 else 'col-xs-2 bs-wizard-step disabled'">
+	                  <div class="text-center bs-wizard-stepnum">Etape 2</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
-	                  <a t-attf-href="/offers/apply/#{ slug(offer)}/stage/1" class="bs-wizard-dot"></a>
-	                  <div class="bs-wizard-info text-center">Lorem ipsum dolor sit amet.</div>
-	                </div>
-	                
-	                <div class="col-xs-2 bs-wizard-step complete"><!-- complete -->
-	                  <div class="text-center bs-wizard-stepnum">Step 2</div>
-	                  <div class="progress"><div class="progress-bar"></div></div>
-	                  <a t-attf-href="/offers/apply/#{ slug(offer)}/stage/2" class="bs-wizard-dot"></a>
-	                  <div class="bs-wizard-info text-center">Nam mollis tristique erat vel tristique. Aliquam erat volutpat. Mauris et vestibulum nisi. Duis molestie nisl sed scelerisque vestibulum. Nam placerat tristique placerat</div>
+	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/2" class="bs-wizard-dot"></a>
+	                  <div class="bs-wizard-info text-center">Coordinateur principal</div>
 	                </div>
 	                
-	                <div class="col-xs-2 bs-wizard-step active"><!-- complete -->
-	                  <div class="text-center bs-wizard-stepnum">Step 3</div>
+	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 3 else 'col-xs-2 bs-wizard-step active' if current_stage == 3 else 'col-xs-2 bs-wizard-step disabled'"><!-- complete -->
+	                  <div class="text-center bs-wizard-stepnum">Etape 3</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
-	                  <a t-attf-href="/offers/apply/#{ slug(offer)}/stage/3" class="bs-wizard-dot"></a>
-	                  <div class="bs-wizard-info text-center">Integer semper dolor ac auctor rutrum. Duis porta ipsum vitae mi bibendum bibendum</div>
+	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/3" class="bs-wizard-dot"></a>
+	                  <div class="bs-wizard-info text-center">Partenaires</div>
 	                </div>
 	                
-	                <div class="col-xs-2 bs-wizard-step disabled"><!-- active -->
-	                  <div class="text-center bs-wizard-stepnum">Step 4</div>
+	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 4 else 'col-xs-2 bs-wizard-step active' if current_stage == 4 else 'col-xs-2 bs-wizard-step disabled'"><!-- complete -->
+	                  <div class="text-center bs-wizard-stepnum">Etape 4</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
-	                  <a t-attf-href="/offers/apply/#{ slug(offer)}/stage/4" class="bs-wizard-dot"></a>
-	                  <div class="bs-wizard-info text-center"> Curabitur mollis magna at blandit vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae</div>
+	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/4" class="bs-wizard-dot"></a>
+	                  <div class="bs-wizard-info text-center">Descriptif détaillé</div>
 	                </div>
-	                <div class="col-xs-2 bs-wizard-step disabled"><!-- active -->
-	                  <div class="text-center bs-wizard-stepnum">Step 5</div>
+	                
+	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 5 else 'col-xs-2 bs-wizard-step active' if current_stage == 5 else 'col-xs-2 bs-wizard-step disabled'"><!-- active -->
+	                  <div class="text-center bs-wizard-stepnum">Etape 5</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
-	                  <a t-attf-href="/offers/apply/#{ slug(offer)}/stage/5" class="bs-wizard-dot"></a>
-	                  <div class="bs-wizard-info text-center"> Curabitur mollis magna at blandit vestibulum. Vestibulum ante ipsum primis in faucibus orci luctus et ultrices posuere cubilia Curae</div>
+	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/5" class="bs-wizard-dot"></a>
+	                  <div class="bs-wizard-info text-center">Tâches et livrables</div>
+	                </div>
+	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 6 else 'col-xs-2 bs-wizard-step active' if current_stage == 6 else 'col-xs-2 bs-wizard-step disabled'"><!-- active -->
+	                  <div class="text-center bs-wizard-stepnum">Etape 6</div>
+	                  <div class="progress"><div class="progress-bar"></div></div>
+	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/6" class="bs-wizard-dot"></a>
+	                  <div class="bs-wizard-info text-center">Montage financier</div>
 	                </div>
 	            </div>
 			</div>
@@ -786,11 +870,12 @@
 		<template id="form_header_footer">
 			<div class="form-group">
 				<div class="col-md-6">
-					<button type="submit" t-if="current_stage>0" name="submit" value="prev" class="btn btn-primary">Précédent</button>
+					<button type="submit" t-if="current_stage != 1" name="submit" value="prev" class="btn btn-primary">Précédent</button>
 				</div>
 				<div class="col-md-6 text-right">
+					<button type="submit" name="submit" value="cancel" class="btn btn-danger">Annuler</button>
 					<button type="submit" name="submit" value="save" class="btn btn-primary">Enregistrer</button>
-					<button type="submit" name="submit" value="next" class="btn btn-primary">Suivant</button>
+					<button type="submit" t-if="current_stage != 6" name="submit" value="next" class="btn btn-primary">Suivant</button>
 				</div>
 			</div>
 		</template>
