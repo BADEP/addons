@@ -138,10 +138,14 @@
 		<template id="apply">
 			<t t-call="website.layout">
 				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + submission.offer.name"/>
-				<script src="//code.jquery.com/jquery-3.1.1.min.js"></script>
-				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/select2-bootstrap-theme/0.1.0-beta.10/select2-bootstrap.min.css" />
-				<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+				<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/css/fileinput.min.css" />
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/js/fileinput.min.js"></script>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/js/locales/fr.min.js"></script>
+				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.min.js"></script>
+				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/css/bootstrap-formhelpers.min.css" />
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/js/bootstrap-formhelpers.min.js"></script>
 				<div id="wrap">
 					<div class="container">
 						<h1 class="text-center">
@@ -158,10 +162,8 @@
 									<t t-call="website_project_submission.apply1"/></t>
 								<t t-if="current_stage==2">
 									<t t-call="website_project_submission.apply2"/></t>
-								<t t-if="current_stage==3">
-									<t t-call="website_project_submission.apply3"/></t>
-								<t t-if="current_stage==4">
-									<t t-call="website_project_submission.apply4"/></t>
+								<t t-if="current_stage==3 or current_stage==4">
+									<t t-call="website_project_submission.apply34"/></t>
 								<t t-if="current_stage==5">
 									<t t-call="website_project_submission.apply5"/></t>
 								<t t-if="current_stage==6">
@@ -171,9 +173,27 @@
 					</div>
 				</div>
 				<script>
-				    $('.multiple-tags').select2();
-				    $('.multiple-tags-free').select2({tags: true, placeholder: "Insérez vos mots-clés"});
+				    $('.multiple-tags').multiselect({
+				    	'numberDisplayed': 50,
+				    	'enableFiltering': true,
+				    	'filterPlaceholder': 'Rechercher',
+				    	'buttonWidth': '100%',
+				    });
+				    $(".input-file").fileinput({
+				    	'language': 'fr',
+				    	'showPreview': false,
+				    	'showUpload': false,
+				    });
+				    $('[data-toggle="tooltip"]').tooltip();
 				</script>
+				<style type="text/css">
+					@font-face {
+						font-family: 'Glyphicons Halflings';
+						src: url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.eot');
+						src: url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
+					}
+					.multiselect-search, .multiselect-clear-filter, button.btn.btn-default.btn-secondary.fileinput-remove.fileinput-remove-button, .btn.btn-primary.btn-file, .multiselect {padding: 6px !important}
+				</style>
 			</t>	
 		</template>
 		<!-- Esquisse du projet -->
@@ -208,51 +228,27 @@
 				<div t-attf-class="form-group #{error.get('duration') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="duration">Durée du projet (en semestres)</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="number" t-att-value="submission.duration" t-attf-min="#{submission.offer.min_time}" t-attf-max="#{submission.offer.max_time}" class="form-control" name="duration"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="description">Résumé du projet (1 paragraphe de 600 mots maximum)</label>
-					<div class="col-md-7 col-sm-8">
-						<textarea maxlength="3600" class="form-control" t-esc="submission.description" name="description" style="min-height: 120px"/>
-					</div>
-				</div>
-				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="tags">Mots-clés</label>
-					<div class="col-md-7 col-sm-8">
-						<select multiple="multiple" name="tags" class="form-control multiple-tags-free" id="tags">
-							<t t-foreach="all_tags" t-as="tag">
-								<option t-att-value="tag.id" t-att-selected="'selected' if tag.id in submission.tags.ids else None">
-									<t t-esc="tag.name"/>
+						<select id="duration" name="duration" data-nonSelectedText="Sélectionnez la durée" class="form-control multiple-tags">
+							<t t-foreach="duration_steps" t-as="d">
+								<option name="duration" t-att-value="d" t-att-selected="'selected' if d == submission.duration else None">
+									<t t-esc="d"/><t t-if="d==1"> Semestre</t><t t-if="d!=1"> Semestres</t>
 								</option>
 							</t>
 						</select>
 					</div>
 				</div>
-				<!-- <div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation (PDF, PowerPoint)</label>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="description">Résumé du projet<br/><span class="text-muted">(1 paragraphe de 600 mots maximum)</span></label>
 					<div class="col-md-7 col-sm-8">
-						<table class="table table-condensed" t-if="submission.documents">
-							<tr t-foreach="submission.documents" t-as="doc">
-								<td>
-									<a class="btn" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
-										<span t-field="doc.name"/>
-									</a>
-								</td>
-								<td class="text-right">
-									<a class="btn btn-default" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
-										<i class="fa fa-download"/>
-									</a>
-									<button class="btn btn-danger" type="submit" name="unlink-doc" t-att-value="doc.id">
-										<i class="fa fa-trash"/>
-									</button>
-								</td>
-							</tr>
-						</table>
-						<input t-if="not submission.documents" accept=".pdf,.ppt,.pptx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
-						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+						<textarea maxlength="3600" class="form-control" t-esc="submission.description" name="description" style="min-height: 120px"/>
 					</div>
-				</div> -->
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="keywords">Mots-clés</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="submission.keywords" class="form-control" name="duration"/>
+					</div>
+				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
 			</form>
 		</template>
@@ -282,13 +278,13 @@
 				<div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel" t-att-value="submission.candidate.phone" class="form-control" name="phone" />
+						<input type="tel bfh-phone" data-format="+212 (ddd) dd-dd-dd" t-att-value="submission.candidate.phone" class="form-control" name="phone" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('mobile') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="mobile">Mobile</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel" t-att-value="submission.candidate.mobile" class="form-control" name="mobile" />
+						<input type="tel bfh-phone" data-format="+212 (ddd) dd-dd-dd" t-att-value="submission.candidate.mobile" class="form-control" name="mobile" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
@@ -298,20 +294,15 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Pièces jointes: CV, publications (PDF, Word)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Pièces jointes: CV, publications (5 publications au minimum)</label>
 					<div class="col-md-7 col-sm-8">
 						<table class="table table-condensed" t-if="submission.candidate.self_documents">
 							<tr t-foreach="submission.candidate.self_documents" t-as="doc">
 								<td>
-									<a class="btn" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
-										<span t-field="doc.name"/>
-									</a>
+									<span t-field="doc.name"/>
 								</td>
 								<td class="text-right">
-									<a class="btn btn-default" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
-										<i class="fa fa-download"/>
-									</a>
-									<button class="btn btn-danger" type="submit" name="unlink-doc" t-att-value="doc.id">
+									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer le fichier" type="submit" name="unlink-doc" t-att-value="doc.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
@@ -325,14 +316,18 @@
 			</form>
 		</template>
 		<!-- Partenaires -->
-		<template id="apply3">
-			<h3 class="text-center text-muted">Partenaires</h3>
+		<template id="apply34">
+			<t t-if="current_stage==3"><h3 class="text-center text-muted">Partenaires scientifiques</h3></t>
+			<t t-if="current_stage==4"><h3 class="text-center text-muted">Partenaires industriels</h3></t>
+			<h4 t-if="not partners">Au moins un partenaire (ajouter autant de partenaires que vous voulez)</h4>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-				<table t-if="submission.partners" class="table">
+				<t t-if="current_stage==3"><t t-set="category" t-value="scientifique"/></t>
+				<t t-if="current_stage==4"><t t-set="category" t-value="industriel"/></t>
+				<t t-if="not partners"><t t-set="new" t-value="1"/></t>
+				<table t-if="partners" class="table">
 					<thead>
 						<tr>
-							<th>Type</th>
 							<th>Nom</th>
 							<th>Etablissement</th>
 							<th>Fonction</th>
@@ -340,10 +335,7 @@
 							<th>Email</th>
 						</tr>
 						<tbody>
-							<tr t-foreach="submission.partners" t-as="s_partner">
-								<td>
-									<span t-field="s_partner.category"/>
-								</td>
+							<tr t-foreach="partners" t-as="s_partner">
 								<td>
 									<span t-field="s_partner.name"/>
 								</td>
@@ -354,19 +346,16 @@
 									<span t-field="s_partner.function"/>
 								</td>
 								<td>
-									<span t-field="s_partner.phone"/>
-								</td>
-								<td>
 									<span t-field="s_partner.mobile"/>
 								</td>
 								<td>
 									<span t-field="s_partner.email"/>
 								</td>
 								<td>
-									<button class="btn btn-info" type="submit" name="edit-partner" t-att-value="s_partner.id">
+									<button class="btn btn-info" data-toggle="tooltip" title="Modifier le partenaire" type="submit" name="edit-partner" t-att-value="s_partner.id">
 										<i class="fa fa-pencil"/>
 									</button>
-									<button class="btn btn-danger" type="submit" name="unlink-partner" t-att-value="s_partner.id">
+									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer le partenaire" type="submit" name="unlink-partner" t-att-value="s_partner.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
@@ -383,19 +372,6 @@
 				<t t-if="partner"><input type="hidden" name="partner_id" t-att-value="'%s' % partner.id"/></t>
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<input type="hidden" name="to-save" value="1"/>
-				<div t-attf-class="form-group #{error.get('category') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="category">Type de partenaire</label>
-					<div class="col-md-7 col-sm-8">
-						<select name="category" id="category" class="form-control" >
-							<option value="">Sélectionnez le type...</option>
-							<t t-foreach="categories" t-as="c">
-								<option t-att-value="c[0]" t-att-selected="partner and c[0] == partner.category">
-									<t t-esc="c[1]"/>
-								</option>
-							</t>
-						</select>
-					</div>
-				</div>
 				<!--<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="ufile">logo</label>
 					<div class="col-md-7 col-sm-8">
@@ -451,67 +427,81 @@
 						<input type="email" t-att-value="partner and partner.email" class="form-control" name="email" />
 					</div>
 				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Pièces jointes: CV, publications</label>
+					<div class="col-md-7 col-sm-8">
+						<table class="table table-condensed" t-if="documents">
+							<tr t-foreach="documents" t-as="doc">
+								<td>
+									<span t-field="doc.name"/>
+								</td>
+								<td class="text-right">
+									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer le fichier" type="submit" name="unlink-doc" t-att-value="doc.id">
+										<i class="fa fa-trash"/>
+									</button>
+								</td>
+							</tr>
+						</table>
+						<input accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+					</div>
+				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
 			</form></t>
 		</template>
 
 		<!-- Descriptif detaillé -->
-		<template id="apply4">
+		<template id="apply5">
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<h3 class="text-center text-muted">Descriptif detaillé</h3>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="etat_art">État de l’art (max : 800 mots)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="etat_art">État de l’art<br/><span class="text-muted">(max: 800 mots)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<textarea maxlength="5600" class="form-control" t-esc="submission.etat_art" name="etat_art" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="objective">Objectif global du projet (max : 600 mots)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="objective">Objectif global du projet<br/><span class="text-muted">(max : 600 mots)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<textarea maxlength="4200" class="form-control" t-esc="submission.objective" name="objective" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectif global du projet (max : 600 mots)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectif global du projet<br/><span class="text-muted">(max : 600 mots)</span></label>
 					<div class="col-md-7 col-sm-8">
-						<textarea maxlength="5600" class="form-control" t-esc="submission.objectives" name="objectives" style="min-height: 120px"/>
+						<textarea maxlength="4200" class="form-control" t-esc="submission.objectives" name="objectives" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="fallout">Retombées attendues du projet (max : 1000 mots)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="fallout">Retombées attendues du projet<br/><span class="text-muted">(max : 1000 mots)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<textarea maxlength="7000" class="form-control" t-esc="submission.fallout" name="fallout" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="perspective">Perspectives d’application au Maroc et en Afrique</label>
+					<label class="col-md-3 col-sm-4 control-label" for="perspective">Perspectives d’application au Maroc et en Afrique<br/><span class="text-muted">(max : 500 mots)</span></label>
 					<div class="col-md-7 col-sm-8">
-						<textarea maxlength="7000" class="form-control" t-esc="submission.perspective" name="perspective" style="min-height: 120px"/>
+						<textarea maxlength="3500" class="form-control" t-esc="submission.perspective" name="perspective" style="min-height: 120px"/>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation (PDF, PowerPoint)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation (PowerPoint)</label>
 					<div class="col-md-7 col-sm-8">
 						<table class="table table-condensed" t-if="submission.documents">
 							<tr t-foreach="submission.documents" t-as="doc">
 								<td>
-									<a class="btn" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
-										<span t-field="doc.name"/>
-									</a>
+									<span t-field="doc.name"/>
 								</td>
 								<td class="text-right">
-									<a class="btn btn-default" style="padding: 6px 12px;" t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">
-										<i class="fa fa-download"/>
-									</a>
 									<button class="btn btn-danger" type="submit" name="unlink-doc" t-att-value="doc.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
 							</tr>
 						</table>
-						<input accept=".pdf,.ppt,.pptx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<input accept=".ppt,.pptx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
 						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
 				</div>
@@ -520,17 +510,19 @@
 		</template>
 
 		<!-- Tâches et livrables -->
-		<template id="apply5">
+		<template id="apply6">
 			<h3 class="text-center text-muted">Tâches et livrables</h3>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-				<table class="table">
+				<t t-if="not submission.tasks"><t t-set="new" t-value="1"/></t>
+				
+				<table t-if="submission.tasks" class="table">
 					<thead>
 						<tr>
 							<th>Type</th>
 							<th>Nom</th>
 							<th>Partenaires</th>
-							<th>Date Debut</th>
+							<th>Semestre</th>
 							<th>Objectives</th>
 							<th>Description</th>
 							<th>Lots</th>
@@ -601,16 +593,22 @@
 				<div t-attf-class="form-group #{error.get('semester') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="semester">Semestre</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="number" t-att-value="task and task.semester" min="1" t-attf-max="#{submission.duration}" class="form-control" name="semester"/>
+						<select id="semester" name="semester" data-nonSelectedText="Sélectionnez le semestre" class="form-control multiple-tags">
+							<t t-foreach="duration_steps" t-as="d">
+								<option name="semester" t-att-value="d" t-att-selected="'selected' if task and d == task.semester else None">
+									<span>S<t t-esc="d"/></span>
+								</option>
+							</t>
+						</select>
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('partner') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="partner">Responsable du lot</label>
+					<label class="col-md-3 col-sm-4 control-label" for="partner">Responsable du WP</label>
 					<div class="col-md-7 col-sm-8">
 						<select name="partner" id="partner" class="form-control">
 							<option value="">Sélectionnez le responsable...</option>
 							<t t-foreach="submission.all_partners" t-as="p">
-								<option t-att-value="p.id" t-att-selected="p.id == task and task.partner">
+								<option t-att-value="p.id" t-att-selected="'selected' if task and p.id == task.partner.id else None">
 									<t t-esc="p.name"/>
 								</option>
 							</t>
@@ -620,9 +618,9 @@
 				<div t-attf-class="form-group #{error.get('all_partners') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="partner">Partenaires impliqués</label>
 					<div class="col-md-7 col-sm-8">
-						<select multiple="all_partners" name="all_partner" id="all_partner" class="form-control multiple-tags">
+						<select multiple="multiple" name="partners" id="partners" class="form-control multiple-tags">
 							<t t-foreach="submission.all_partners" t-as="p">
-								<option t-att-value="p.id" t-att-selected="task and task.partners and (p.id in task.partners.ids)">
+								<option t-att-value="p.id" t-att-selected="'selected' if task and task.partners and (p.id in task.partners.ids) else None">
 									<t t-esc="p.name"/>
 								</option>
 							</t>
@@ -630,7 +628,7 @@
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectives</label>
+					<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectifs</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="task and task.objectives" class="form-control" name="objectives"/>
 					</div>
@@ -646,7 +644,7 @@
 		</template>
 
 		<!-- Montage financier -->
-		<template id="apply6">
+		<template id="apply7">
 			<h3 class="text-center text-muted">Montage financier</h3>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
@@ -821,27 +819,27 @@
 	                  <div class="text-center bs-wizard-stepnum">Etape 3</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
 	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/3" class="bs-wizard-dot"></a>
-	                  <div class="bs-wizard-info text-center">Partenaires</div>
+	                  <div class="bs-wizard-info text-center">Partenaires scientifiques</div>
 	                </div>
 	                
 	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 4 else 'col-xs-2 bs-wizard-step active' if current_stage == 4 else 'col-xs-2 bs-wizard-step disabled'"><!-- complete -->
 	                  <div class="text-center bs-wizard-stepnum">Etape 4</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
 	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/4" class="bs-wizard-dot"></a>
-	                  <div class="bs-wizard-info text-center">Descriptif détaillé</div>
+	                  <div class="bs-wizard-info text-center">Partenaires industriels</div>
 	                </div>
 	                
 	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 5 else 'col-xs-2 bs-wizard-step active' if current_stage == 5 else 'col-xs-2 bs-wizard-step disabled'"><!-- active -->
 	                  <div class="text-center bs-wizard-stepnum">Etape 5</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
 	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/5" class="bs-wizard-dot"></a>
-	                  <div class="bs-wizard-info text-center">Tâches et livrables</div>
+	                  <div class="bs-wizard-info text-center">Descriptif détaillé</div>
 	                </div>
 	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 6 else 'col-xs-2 bs-wizard-step active' if current_stage == 6 else 'col-xs-2 bs-wizard-step disabled'"><!-- active -->
 	                  <div class="text-center bs-wizard-stepnum">Etape 6</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
 	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/6" class="bs-wizard-dot"></a>
-	                  <div class="bs-wizard-info text-center">Montage financier</div>
+	                  <div class="bs-wizard-info text-center">Tâches et livrables</div>
 	                </div>
 	            </div>
 			</div>
@@ -873,7 +871,7 @@
 					<button type="submit" t-if="current_stage != 1" name="submit" value="prev" class="btn btn-primary">Précédent</button>
 				</div>
 				<div class="col-md-6 text-right">
-					<button type="submit" name="submit" value="cancel" class="btn btn-danger">Annuler</button>
+					<!-- <button type="submit" name="submit" value="cancel" class="btn btn-danger">Annuler</button> -->
 					<button type="submit" name="submit" value="save" class="btn btn-primary">Enregistrer</button>
 					<button type="submit" t-if="current_stage != 6" name="submit" value="next" class="btn btn-primary">Suivant</button>
 				</div>

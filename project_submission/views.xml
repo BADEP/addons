@@ -386,7 +386,7 @@
 							</group>
 							<group>
 								<field name="field_ids" widget="many2many_tags"/>
-								<field name="tags" widget="many2many_tags"/>
+								<field name="keywords"/>
 								<field name="duration"/>
 							</group>
 							<group>

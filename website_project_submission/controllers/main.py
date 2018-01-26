@@ -9,6 +9,16 @@ from openerp.http import request
 from openerp.addons.web.controllers.main import login_redirect
 from openerp.addons.website.models.website import slug
 from openerp.exceptions import ValidationError
+from openerp.addons.auth_signup.controllers.main import AuthSignupHome
+from openerp.addons.web.controllers.main import ensure_db
+
+class WebInherit(AuthSignupHome):
+    @http.route()
+    def web_login(self, *args, **kw):
+        ensure_db()
+        response = super(WebInherit, self).web_login(*args, **kw)
+        response.qcontext.update({'redirect': '/offers'})
+        return response
 
 class website_project_submission(http.Controller):
 
@@ -64,6 +74,7 @@ class website_project_submission(http.Controller):
         #TODO: Redirect to submission page if offer variable is in session
         if not request.session.uid:
             request.session['offer'] = offer.id
+            return request.redirect("/web/signup")
             return login_redirect()
         
         #Get error data
@@ -103,27 +114,15 @@ class website_project_submission(http.Controller):
                     env['project.submission.budgetline'].browse(int(post.get('unlink-budgetline'))).unlink()
                 #Stage 1: Project general informations
                 if current_stage == 1:
-                    new_tags = []
-                    tags = request.httprequest.form.getlist('tags')
-                    for tag in tags:
-                        if tag.isdigit():
-                            new_tags.append(int(tag))
-                        else:
-                            existing_tag = env['project.submission.tag'].search([('name', '=', tag)])
-                            if existing_tag:
-                                new_tags.append(existing_tag.ids[0])
-                            else:
-                                new_tags.append(env['project.submission.tag'].create({'name': tag}).id)
                     value = {
                         'name': post.get('name'),
                         'acronyme': post.get('acronyme'),
                         'duration': post.get('duration'),
                         'field_ids': [(6, 0, [int(x) for x in request.httprequest.form.getlist('fields')])],
-                        'tags': [(6, 0, new_tags)],
+                        'keywords': post.get('keywords'),
                         'description': post.get('description'),
                     }
                     submission.write(value)
-    
                 #Stage 2: Candidate general informations
                 elif current_stage == 2:
                     value = {
@@ -152,7 +151,7 @@ class website_project_submission(http.Controller):
                         candidate._get_attached_docs()
     
                 #Stage 3: Project partners informations
-                elif current_stage == 3 and post.get('to-save') == "1" and post.get('name') and post.get('category'):
+                elif (current_stage == 3 or current_stage == 4) and post.get('to-save') == "1" and post.get('name'):
                     partner_organisme = env['res.partner'].create({'name': post.get('organisme')})
                     partner_value = {
                         'name': post.get('name'),
@@ -162,7 +161,7 @@ class website_project_submission(http.Controller):
                         'fax': post.get('fax'),
                         'email': post.get('email'),
                         'parent_id': partner_organisme.id,
-                        'category': post.get('category'),
+                        'category': 'scientifique' if current_stage == 3 else 'industriel',
                         'submissions': [(4, submission.id)]
                     }
                     if post.get('partner_id') is not None:
@@ -170,8 +169,18 @@ class website_project_submission(http.Controller):
                         partner.write(partner_value)
                     else:
                         partner = env['res.partner'].create(partner_value)
+                    if post.get('ufile'):
+                        attachment_value = {
+                            'name': post['ufile'].filename,
+                            'res_name': partner.name,
+                            'res_model': 'res.partner',
+                            'res_id': partner.id,
+                            'datas': base64.encodestring(post['ufile'].read()),
+                            'datas_fname': post['ufile'].filename,
+                        }
+                        env['ir.attachment'].create(attachment_value)
                 #Stage 4: Additional info
-                elif current_stage == 4:
+                elif current_stage == 5:
                     value = {
                         'etat_art': post.get('etat_art'),
                         'objective': post.get('objective'),
@@ -192,7 +201,7 @@ class website_project_submission(http.Controller):
                         env['ir.attachment'].create(attachment_value)
                         submission._get_attached_docs()
                 #Stage 5: Tasks
-                elif current_stage == 5 and post.get('to-save') == "1" and post.get('name') and post.get('type'):
+                elif current_stage == 6 and post.get('to-save') == "1" and post.get('name') and post.get('type'):
                     value = {
                         'name': post.get('name'),
                         'type': post.get('type'),
@@ -200,6 +209,8 @@ class website_project_submission(http.Controller):
                         'objectives': post.get('objectives'),
                         'description': post.get('description'),
                         'partner': post.get('partner'),
+                        'submission': submission.id,
+                        'partners': [(6, 0, [int(x) for x in request.httprequest.form.getlist('partners')])],
                     }
                     if post.get('task_id') is not None:
                         task = env['project.submission.task'].browse(int(post.get('task_id')))
@@ -207,7 +218,7 @@ class website_project_submission(http.Controller):
                     else:
                         env['project.submission.task'].create(value)
                 #Stage 6: Project budget informations
-                elif current_stage == 6 and post.get('to-save') == "1" and post.get('name') and post.get('type'):
+                elif current_stage == 7 and post.get('to-save') == "1" and post.get('name') and post.get('type'):
                     value = {
                         'type': post.get('type'),
                         'name': post.get('name'),
@@ -244,38 +255,37 @@ class website_project_submission(http.Controller):
                 }
         if next_stage == 1:
             fields = env['project.offer.field'].search([])
-            tags = env['project.submission.tag'].search([])
             duration_steps = range(offer.min_time, offer.max_time + 1)
             vals.update({
                 'error': error,
                 'duration_steps': duration_steps,
                 'fields': fields,
-                'all_tags': tags,
             })
         if next_stage == 2:
             vals.update({
                 'error': error,
             })
-        elif next_stage == 3:
+        elif next_stage == 3 or next_stage == 4:
             if post.get('edit-partner'):
                 partner = env['res.partner'].browse(int(post.get('edit-partner')))
-                vals.update({'partner': partner})
+                documents = env['ir.attachment'].search([('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)])
+                vals.update({
+                    'partner': partner,
+                    'documents': documents
+                })
             if post.get('add-partner'):
                 vals.update({'new': True})
             else:
                 vals.update({'new': False})
-            categories = [('scientifique', 'Scientifique'), ('industriel', 'Industriel')]
-            duration_steps = range(1, offer.max_time + 1)
-            vals.update({
-                'duration_steps': duration_steps,
-                'categories': categories,
-                'error': error,
-            })
-        elif next_stage == 4:
             vals.update({
                 'error': error,
+                'partners': submission.partners.filtered(lambda p: p.category == ('scientifique' if next_stage == 3 else 'industriel'))
             })
         elif next_stage == 5:
+            vals.update({
+                'error': error,
+            })
+        elif next_stage == 6:
             types = env['project.submission.task.type'].search([])
             if post.get('edit-task'):
                 task = env['project.submission.task'].browse(int(post.get('edit-task')))
@@ -284,11 +294,13 @@ class website_project_submission(http.Controller):
                 vals.update({'new': True})
             else:
                 vals.update({'new': False})
+            duration_steps = range(1, submission.duration + 1)
             vals.update({
+                'duration_steps': duration_steps,
                 'types': types,
                 'error': error,
             })
-        elif next_stage == 6:
+        elif next_stage == 7:
             types = env['project.budgetline.type'].search([])
             if post.get('edit-budgetline'):
                 budgetline = env['project.submission.budgetline'].browse(int(post.get('edit-budgetline')))

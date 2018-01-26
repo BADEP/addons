@@ -198,7 +198,7 @@ class ProjectSubmission(models.Model):
     personnels = fields.One2many('project.submission.personnel', 'submission', string="Personnels")
     duration = fields.Integer('Durée du projet (en semestres)')
     tasks = fields.One2many('project.submission.task', 'submission', string="Tâches et livrables")
-    tags = fields.Many2many('project.submission.tag', relation='project_submission_tag_rel')
+    keywords = fields.Char(string='Mots-clés')
     all_partners = fields.Many2many(
         comodel_name='res.partner',
         compute='_get_possible_partners_values', readonly=True)
@@ -298,12 +298,6 @@ class ProjectSubmission(models.Model):
         else:
             return self.survey.with_context(survey_token = self.response.token).action_print_survey()
 
-class ProjectSubmissionTag(models.Model):
-    _name = 'project.submission.tag'
-    
-    name = fields.Char(required=True)
-    submissions = fields.Many2many('project.submission', relation='project_submission_tag_rel')
-
 class ResPartner(models.Model):
     _inherit = 'res.partner'
     
@@ -335,7 +329,7 @@ class ProjectSubmissionTask(models.Model):
     all_partners = fields.Many2many(
         comodel_name='res.partner',
         compute='_get_possible_partners_values', readonly=True)
-    partner = fields.Many2one('res.partner', required=True, string='Responsable', domain="[('id', 'in', all_partners[0][2])]")
+    partner = fields.Many2one('res.partner', required=True, string='Responsable', domain="[('id', 'in', all_partners[0][2])]", ondelete='cascade')
     partners = fields.Many2many('res.partner', string='Partenaires impliquées', domain="[('id', 'in', all_partners[0][2])]")
     objectives = fields.Text(string='Objectifs')
     description = fields.Text(string='Description des tâches et rôles des partenaires')
