@@ -159,12 +159,18 @@ class website_project_submission(http.Controller):
                 #Stage 3: Project partners informations
                 elif (current_stage == 3 or current_stage == 4) and post.get('to-save') == "1" and post.get('name'):
                     #partner_organisme = env['res.partner'].create({'name': post.get('organisme')})
+                    category_id = False
+                    if post.get('category_id'):
+                        category_id = env['res.partner.category'].search([('name', '=', post.get('category_id'))])
+                        if not category_id:
+                            category_id = env['res.partner.category'].create({'name': post.get('category_id')})
                     partner_value = {
                         'name': post.get('name'),
-                        'country': post.get('country'),
+                        'country_id': post.get('partner_country'),
                         'city': post.get('city'),
                         'zip': post.get('zip'),
                         'street': post.get('street'),
+                        'street2': post.get('street2'),
                         'email': post.get('email'),
                         'phone': post.get('phone'),
                         'fax': post.get('fax'),
@@ -175,7 +181,7 @@ class website_project_submission(http.Controller):
                         'capital': post.get('capital'),
                         'partner_references': post.get('partner_references'),
                         'rc': post.get('rc'),
-                        'category_id': [(6, 0, [int(x) for x in request.httprequest.form.getlist('category_id')])],
+                        'category_id': category_id and [(6, 0, [category_id.id])],
                         'title': post.get('title'),
                         'date': post.get('date'),
                         'effectif_doc': post.get('effectif_doc'),
@@ -321,7 +327,8 @@ class website_project_submission(http.Controller):
             vals.update({
                 'error': error,
                 'partners': submission.partners.filtered(lambda p: p.category == ('scientifique' if next_stage == 3 else 'industriel')),
-                'countries': env['res.country'].search([])
+                'countries': env['res.country'].search([]),
+                'titles': env['res.partner.title'].search([('domain', '=', 'partner')])
             })
         elif next_stage == 5:
             vals.update({

@@ -9,7 +9,7 @@ OpenERP Contact Form
 
         """,
     'author': 'BADEP',
-    'depends': ['project_submission', 'website_mail'],
+    'depends': ['project_submission', 'website_mail', 'website_portal'],
     'data': [
         'security/ir.model.access.csv',
         'security/website_project_submission_security.xml',

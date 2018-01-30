@@ -9,7 +9,14 @@
 			</xpath>
 		</template>
 		<template id="assets_frontend" inherit_id="website.layout">
-			<xpath expr="//body" position="inside">
+			<xpath expr="//head" position="inside">
+				<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+				<!-- <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js"></script>-->
+				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/css/fileinput.min.css" />
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/js/fileinput.min.js"></script>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/js/locales/fr.min.js"></script>
+				<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
 			</xpath>
 		</template>
 		<template id="index" name="Offers">
@@ -141,13 +148,7 @@
 		</template>
 		<template id="apply">
 			<t t-call="website.layout">
-				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + submission.offer.name"/><script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
-				<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
-				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/css/fileinput.min.css" />
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/js/fileinput.min.js"></script>
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/js/locales/fr.min.js"></script>
-				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.min.js"></script>
+				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + submission.offer.name"/>
 				<div id="wrap">
 					<div class="container text-right mt8">
 						<a class="btn btn-danger" href="/web/session/logout">Se déconnecter</a>
@@ -185,22 +186,14 @@
 					</div>
 				</div>
 				<script>
-				    $('.multiple-tags').multiselect({
-				    	'numberDisplayed': 50,
-				    	'enableFiltering': true,
-				    	'filterPlaceholder': 'Rechercher',
-				    	'buttonWidth': '100%',
-				    	'allSelectedText': 'Tous',
-				    	'nonSelectedText': 'Sélectionnez une valeur',
-				    	
-				    });
+				    $('.multiple-tags').select2();
 				    $(".input-file").fileinput({
 				    	'language': 'fr',
 				    	'showPreview': false,
 				    	'showUpload': true,
 						'uploadTitle': 'Insérer',
 				    });
-				    $('[data-toggle="tooltip"]').tooltip();
+				    //$('[data-toggle="tooltip"]').tooltip();
 				</script>
 				<style type="text/css">
 					@font-face {
@@ -445,43 +438,50 @@
 						<input type="number" t-att-value="partner and partner.effectif_doc" class="form-control" name="effectif_doc" />
 					</div>
 				</div>
-				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('ca') and 'has-error' or ''}">
+				<div t-if="current_stage==4" t-attf-class="form-group #{error.get('ca') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaire</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" t-att-value="partner and partner.ca" class="form-control" name="ca" />
 					</div>
 				</div>
-				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('date') and 'has-error' or ''}">
+				<div t-if="current_stage==4" t-attf-class="form-group #{error.get('date') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="date">Date de création</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="date" t-att-value="partner and partner.date" class="form-control" name="date" />
 					</div>
 				</div>
-				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('capital') and 'has-error' or ''}">
+				<div t-if="current_stage==4" t-attf-class="form-group #{error.get('capital') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="capital">Capital</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" t-att-value="partner and partner.capital" class="form-control" name="capital" />
 					</div>
 				</div>
-				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('title') and 'has-error' or ''}">
+				<div t-if="current_stage==4" t-attf-class="form-group #{error.get('title') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="title">Forme juridique</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="partner and partner.title" class="form-control" name="title" />
+						<select id="title" name="title" class="form-control">
+							<option>Sélectionnez une valeur...</option>
+							<t t-foreach="titles" t-as="t">
+								<option name="title" t-att-value="t.id" t-att-selected="partner and t.id  == partner.title.id">
+									<t t-esc="t.name"/>
+								</option>
+							</t>
+						</select>
 					</div>
 				</div>
-				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('category_id') and 'has-error' or ''}">
+				<div t-if="current_stage==4" t-attf-class="form-group #{error.get('category_id') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="category_id">Domaine d'activité</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="partner and partner.category_id" class="form-control" name="category_id" />
 					</div>
 				</div>
-				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('cnss') and 'has-error' or ''}">
+				<div t-if="current_stage==4" t-attf-class="form-group #{error.get('cnss') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="cnss">N° de CNSS<br/><span class="text-muted">(pour les partenaires marocains)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="partner and partner.cnss" class="form-control" name="cnss" />
 					</div>
 				</div>
-				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('rc') and 'has-error' or ''}">
+				<div t-if="current_stage==4" t-attf-class="form-group #{error.get('rc') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="rc">N° de registre de commerce</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="partner and partner.rc" class="form-control" name="rc" />
@@ -557,25 +557,25 @@
 				<div t-attf-class="form-group #{error.get('contact_name') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="contact_function">Non du représentant</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="partner and partner.function" class="form-control" name="contact_name" />
+						<input type="text" t-att-value="partner and partner.child_ids and partner.child_ids[0].name" class="form-control" name="contact_name" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('contact_function') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="contact_function">Fonction du représentant</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="partner and partner.function" class="form-control" name="contact_function" />
+						<input type="text" t-att-value="partner and partner.child_ids and partner.child_ids[0].function" class="form-control" name="contact_function" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('contact_phone') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="contact_function">Téléphone du représentant</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel" t-att-value="partner and partner.function" class="form-control" name="contact_phone" />
+						<input type="tel" t-att-value="partner and partner.child_ids and partner.child_ids[0].phone" class="form-control" name="contact_phone" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('contact_email') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="contact_function">Adresse électronique du représentant</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="email" t-att-value="partner and partner.function" class="form-control" name="contact_email" />
+						<input type="email" t-att-value="partner and partner.child_ids and partner.child_ids[0].email" class="form-control" name="contact_email" />
 					</div>
 				</div>
 				<div class="form-group">

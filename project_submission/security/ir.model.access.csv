@@ -15,8 +15,6 @@ access_project_submission_task_type_all,project.submission.task.type.all,model_p
 access_project_submission_task_type_manager,project.submission.task.type.manager,model_project_submission_task_type,group_manager,1,1,1,1
 access_project_lot_type_all,project.lot.type.all,model_project_lot_type,,1,0,0,0
 access_project_lot_type_manager,project.lot.type.manager,model_project_lot_type,group_manager,1,1,1,1
-access_project_submission_tag_all,project.submission.tag.all,model_project_submission_tag,,1,0,0,0
-access_project_submission_tag_manager,project.submission.tag.manager,model_project_submission_tag,group_manager,1,1,1,1
 
 access_project_submission_manager,project.submission.manager,model_project_submission,group_manager,1,1,1,1
 access_project_submission_budgetline_manager,project.submission.budgetline.manager,model_project_submission_budgetline,group_manager,1,1,1,1
