@@ -309,7 +309,8 @@ class ResPartner(models.Model):
     effectif_chercheur = fields.Integer('Effectif de chercheurs')
     effectif_doc = fields.Integer('Effectif de doctorants')
     capital = fields.Integer('Capital')
-    cnss = fields.Char()
+    cnss = fields.Char('CNSS')
+    rc = fields.Char('Registre de commerce')
     ca = fields.Char('Chiffre d\'affaire')
 
 class ProjectPartnerFunction(models.Model):
