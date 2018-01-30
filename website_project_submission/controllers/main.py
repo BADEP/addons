@@ -155,15 +155,19 @@ class website_project_submission(http.Controller):
     
                 #Stage 3: Project partners informations
                 elif (current_stage == 3 or current_stage == 4) and post.get('to-save') == "1" and post.get('name'):
-                    partner_organisme = env['res.partner'].create({'name': post.get('organisme')})
+                    #partner_organisme = env['res.partner'].create({'name': post.get('organisme')})
                     partner_value = {
                         'name': post.get('name'),
-                        'function': post.get('function'),
+                        'country': post.get('country'),
+                        'city': post.get('city'),
+                        'zip': post.get('zip'),
+                        'street': post.get('street'),
+                        'email': post.get('email'),
                         'phone': post.get('phone'),
-                        'mobile': post.get('mobile'),
                         'fax': post.get('fax'),
                         'email': post.get('email'),
-                        'parent_id': partner_organisme.id,
+                        'website': post.get('website'),
+                        #'parent_id': partner_organisme.id,
                         'category': 'scientifique' if current_stage == 3 else 'industriel',
                         'submissions': [(4, submission.id)]
                     }
@@ -172,6 +176,20 @@ class website_project_submission(http.Controller):
                         partner.write(partner_value)
                     else:
                         partner = env['res.partner'].create(partner_value)
+                    contact_value = {
+                        'name': post.get('contact_name'),
+                        'function': post.get('contact_function'),
+                        'phone': post.get('contact_phone'),
+                        'email': post.get('contact_email'),
+                        'parent_id': partner.id,
+                        'category': 'scientifique' if current_stage == 3 else 'industriel',
+                        'submissions': [(4, submission.id)]
+                    }
+                    contact = partner.child_ids.filtered(lambda c: c.name == post.get('contact_name'))
+                    if contact:
+                        contact[0].write(contact_value)
+                    else:
+                        contact = env['res.partner'].create(contact_value)
                     if post.get('ufile'):
                         attachment_value = {
                             'name': post['ufile'].filename,
