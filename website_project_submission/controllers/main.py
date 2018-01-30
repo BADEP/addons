@@ -298,20 +298,18 @@ class website_project_submission(http.Controller):
             if post.get('edit-partner'):
                 partner = env['res.partner'].browse(int(post.get('edit-partner'))) if post.get('edit-partner') else env['res.partner'].browse(int(post.get('partner_id')))
                 documents = env['ir.attachment'].search([('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)])
-                countries = env['res.country'].search()
                 vals.update({
                     'partner': partner,
-                    'documents': documents,
-                    'countries': countries
+                    'documents': documents
                 })
-                
             if post.get('add-partner'):
                 vals.update({'new': True})
             else:
                 vals.update({'new': False})
             vals.update({
                 'error': error,
-                'partners': submission.partners.filtered(lambda p: p.category == ('scientifique' if next_stage == 3 else 'industriel'))
+                'partners': submission.partners.filtered(lambda p: p.category == ('scientifique' if next_stage == 3 else 'industriel')),
+                'countries': env['res.country'].search([])
             })
         elif next_stage == 5:
             vals.update({

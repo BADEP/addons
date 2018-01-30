@@ -246,7 +246,8 @@
 				<div t-attf-class="form-group #{error.get('duration') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="duration">Durée du projet<br/><span class="text-muted">(Entre <span t-field="submission.offer.min_time"/> et <span t-field="submission.offer.max_time"/> semestres)</span></label>
 					<div class="col-md-7 col-sm-8">
-						<select id="duration" name="duration" class="form-control multiple-tags">
+						<select id="duration" name="duration" class="form-control">
+							<option>Sélectionnez une valeur...</option>
 							<t t-foreach="duration_steps" t-as="d">
 								<option name="duration" t-att-value="d" t-att-selected="d == submission.duration">
 									<t t-esc="d"/><t t-if="d==1"> Semestre</t><t t-if="d!=1"> Semestres</t>
@@ -453,10 +454,10 @@
 				<div t-attf-class="form-group #{error.get('country') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="country">Pays</label>
 					<div class="col-md-7 col-sm-8">
-						<select id="country" name="country" class="form-control">
+						<select id="partner_country" name="partner_country" class="form-control">
+							<option>Sélectionnez une valeur...</option>
 							<t t-foreach="countries" t-as="c">
-								<option>Sélectionnez un pays...</option>
-								<option name="country" t-att-value="c.id" t-att-selected="c.id  == partner.country_id.id">
+								<option name="partner_country" t-att-value="c.id" t-att-selected="partner and c.id  == partner.country_id.id">
 									<t t-esc="c.name"/>
 								</option>
 							</t>
@@ -688,7 +689,8 @@
 				<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="type">Type d'activité</label>
 					<div class="col-md-7 col-sm-8">
-						<select name="type" id="type" class="form-control multiple-tags">
+						<select name="type" id="type" class="form-control">
+							<option>Sélectionnez une valeur...</option>
 							<t t-foreach="types" t-as="t">
 								<option t-att-value="t.id" t-att-selected="task and t.id == task.type.id">
 									<t t-esc="t.name"/>
@@ -700,7 +702,8 @@
 				<div t-attf-class="form-group #{error.get('semester') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="semester">Semestre</label>
 					<div class="col-md-7 col-sm-8">
-						<select id="semester" name="semester" class="form-control multiple-tags">
+						<select id="semester" name="semester" class="form-control">
+							<option>Sélectionnez une valeur...</option>
 							<t t-foreach="duration_steps" t-as="d">
 								<option name="semester" t-att-value="d" t-att-selected="task and d == task.semester">
 									<span>S<t t-esc="d"/></span>
@@ -712,7 +715,8 @@
 				<div t-attf-class="form-group #{error.get('partner') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="partner">Responsable du WP</label>
 					<div class="col-md-7 col-sm-8">
-						<select name="partner" id="partner" class="form-control  multiple-tags">
+						<select name="partner" id="partner" class="form-control">
+							<option>Sélectionnez une valeur...</option>
 							<t t-foreach="submission.all_partners" t-as="p">
 								<option t-att-value="p.id" t-att-selected="task and p.id == task.partner.id">
 									<t t-esc="p.name"/>
@@ -831,7 +835,8 @@
 				<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="type">Rubrique</label>
 					<div class="col-md-7 col-sm-8">
-						<select name="type" t-att-value="budgetline and budgetline.type" id="type" class="form-control multiple-tags" >
+						<select name="type" t-att-value="budgetline and budgetline.type" id="type" class="form-control" >
+							<option>Sélectionnez une valeur...</option>
 							<t t-foreach="types" t-as="t">
 								<option t-att-value="t.id"  t-att-selected="budgetline and t.id == budgetline.type">
 									<t t-esc="t.name"/>
