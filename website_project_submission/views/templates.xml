@@ -736,7 +736,7 @@
 							<th>Semestre</th>
 							<th>Objectives</th>
 							<th>Description</th>
-							<th>Lots</th>
+							<th>Livrables</th>
 							<th>Actions</th>
 						</tr>
 						<tbody>
@@ -847,12 +847,6 @@
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('description') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="description">Description</label>
-					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="task and task.description" class="form-control" name="description"/>
-					</div>
-				</div>
-				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="description">Description</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="task and task.description" class="form-control" name="description"/>
