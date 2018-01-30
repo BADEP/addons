@@ -507,7 +507,7 @@
 					</div>
 				</div>
 				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('ca') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaire</label>
+					<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaires</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" t-att-value="partner and partner.ca" class="form-control" name="ca" />
 					</div>
