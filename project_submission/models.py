@@ -383,9 +383,9 @@ class ProjectSubmissionBudgetLine(models.Model):
     _name = 'project.submission.budgetline'
     
     submission = fields.Many2one('project.submission', required=True, ondelete='cascade')
-    budget = fields.Float(digital_precision=dp.get_precision('Account'), required=True)
+    montant_subventionne = fields.Float(digital_precision=dp.get_precision('Account'), required=True)
     montant_propre = fields.Float(digital_precision=dp.get_precision('Account'), required=True)
-    montant_subventionne = fields.Float(compute='_get_amount', store=True, digital_precision=dp.get_precision('Account'))
+    budget = fields.Float(compute='_get_amount', store=True, digital_precision=dp.get_precision('Account'))
     percent_subventionne = fields.Float(compute='_get_amount', digital_precision=2, store=True)
     type = fields.Many2one('project.budgetline.type', required=True)
     
@@ -396,16 +396,10 @@ class ProjectSubmissionBudgetLine(models.Model):
     ]
     
     @api.one
-    @api.depends('budget', 'montant_propre')
+    @api.depends('montant_subventionne', 'montant_propre')
     def _get_amount(self):
-        self.montant_subventionne = self.budget - self.montant_propre
+        self.budget = self.montant_subventionne + self.montant_propre
         self.percent_subventionne = (self.montant_subventionne / self.budget)*100 if self.budget != 0 else 0
-    
-    @api.one
-    @api.constrains('budget', 'montant_propre')
-    def _check_amounts(self):
-        if self.budget < self.montant_propre:
-            raise ValidationError("Le financement propre ne peut être supérieur au budget.")
 
 class ProjectBudgetLineType(models.Model):
     _name = 'project.budgetline.type'
