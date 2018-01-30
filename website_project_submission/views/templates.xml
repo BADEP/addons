@@ -410,6 +410,12 @@
 						<input type="text" t-att-value="partner and partner.name" class="form-control" name="name" />
 					</div>
 				</div>
+				<div t-attf-class="form-group #{error.get('country') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="email">Pays</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="email" t-att-value="partner and partner.email" class="form-control" name="country" />
+					</div>
+				</div>
 				<div t-attf-class="form-group #{error.get('city') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="email">Ville</label>
 					<div class="col-md-7 col-sm-8">
