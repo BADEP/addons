@@ -429,25 +429,67 @@
 				<div t-attf-class="form-group #{error.get('effectif') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="effectif">Effectif</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
+						<input type="number" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
 					</div>
 				</div>
 				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('effectif_chercheur') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="effectif_chercheur">Effectif de chercheurs</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="partner and partner.effectif_chercheur" class="form-control" name="effectif_chercheur" />
+						<input type="number" t-att-value="partner and partner.effectif_chercheur" class="form-control" name="effectif_chercheur" />
 					</div>
 				</div>
 				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('effectif_doc') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="effectif_doc">Effectif de doctorants</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="partner and partner.effectif_doc" class="form-control" name="effectif_doc" />
+						<input type="number" t-att-value="partner and partner.effectif_doc" class="form-control" name="effectif_doc" />
+					</div>
+				</div>
+				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('ca') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaire</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" t-att-value="partner and partner.ca" class="form-control" name="ca" />
+					</div>
+				</div>
+				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('date') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="date">Date de création</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="date" t-att-value="partner and partner.date" class="form-control" name="date" />
+					</div>
+				</div>
+				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('capital') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="capital">Capital</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" t-att-value="partner and partner.capital" class="form-control" name="capital" />
+					</div>
+				</div>
+				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('title') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="title">Forme juridique</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="partner and partner.title" class="form-control" name="title" />
+					</div>
+				</div>
+				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('category_id') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="category_id">Domaine d'activité</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="partner and partner.category_id" class="form-control" name="category_id" />
+					</div>
+				</div>
+				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('cnss') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="cnss">N° de CNSS<br/><span class="text-muted">(pour les partenaires marocains)</span></label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="partner and partner.cnss" class="form-control" name="cnss" />
+					</div>
+				</div>
+				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('rc') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="rc">N° de registre de commerce</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="partner and partner.rc" class="form-control" name="rc" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('partner_references') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="partner_references">Références du partenaire</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="partner and partner.partner_references" class="form-control" name="partner_references" />
+						<textarea t-esc="partner and partner.partner_references" class="form-control" name="partner_references" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('country') and 'has-error' or ''}">
