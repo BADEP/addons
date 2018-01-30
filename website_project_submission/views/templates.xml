@@ -8,6 +8,10 @@
 				</li>
 			</xpath>
 		</template>
+		<template id="assets_frontend" inherit_id="website.layout">
+			<xpath expr="//body" position="inside">
+			</xpath>
+		</template>
 		<template id="index" name="Offers">
 			<t t-call="website.layout">
 				<div id="wrap">
@@ -72,8 +76,8 @@
 											</h3>
 											<span t-if="not offer.website_published" class="label label-danger">not published</span>
 											<div class="text-muted">
-												<i class="fa fa-clock-o"/>
-												<span t-field="offer.date_open"/>
+												<i class="fa fa-clock-o"/> Date limite de clotûre
+												<span t-field="offer.date_closed"/>
 											</div>
 											<div>
 												<span t-field="offer.description"/>
@@ -137,27 +141,31 @@
 		</template>
 		<template id="apply">
 			<t t-call="website.layout">
-				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + submission.offer.name"/>
-				<script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + submission.offer.name"/><script src="//code.jquery.com/jquery-3.2.1.min.js"></script>
+				<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/js/bootstrap.min.js" integrity="sha384-Tc5IQib027qvyjSMfHjOMaLkfuWVxZxUPnCJA7l2mCWNIpG9mGCD8wGNIcPD7Txa" crossorigin="anonymous"></script>
 				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/css/fileinput.min.css" />
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/js/fileinput.min.js"></script>
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/js/locales/fr.min.js"></script>
 				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.min.js"></script>
-				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/css/bootstrap-formhelpers.min.css" />
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-formhelpers/2.3.0/js/bootstrap-formhelpers.min.js"></script>
 				<div id="wrap">
+					<div class="container text-right mt8">
+						<a class="btn btn-danger" href="/web/session/logout">Se déconnecter</a>
+					</div>
 					<div class="container">
-						<h1 class="text-center">
-							<span>Formulaire de soumission: </span>
+						<h1 class="text-center text-primary">
 							<span t-field="submission.offer.name"/>
 						</h1>
-						<h2 t-if="submission" class="text-center text-muted">
-							<span t-field="submission.name"/>
-						</h2>
+						<h2 class="text-center">1<sup>ère</sup> phase de soumission en ligne<br/>ESQUISSE PROJET</h2>
+						<h3 t-if="submission" class="text-center text-muted">
+							Projet: <span class="text-primary" t-field="submission.name"/>
+						</h3>
 						<t t-call="website_project_submission.form_nav"/>
 						<div class="row">
 							<section class="col-md-12" id="forms">
+								<t t-if="error.get('main')">
+								<div class="bg-danger"><span t-esc="error.get('main')"/></div>
+								</t>
 								<t t-if="current_stage==1">
 									<t t-call="website_project_submission.apply1"/></t>
 								<t t-if="current_stage==2">
@@ -168,6 +176,10 @@
 									<t t-call="website_project_submission.apply5"/></t>
 								<t t-if="current_stage==6">
 									<t t-call="website_project_submission.apply6"/></t>
+								<t t-if="current_stage==7">
+									<t t-call="website_project_submission.apply7"/></t>
+								<t t-if="current_stage==8">
+									<t t-call="website_project_submission.apply8"/></t>
 							</section>
 						</div>
 					</div>
@@ -178,11 +190,14 @@
 				    	'enableFiltering': true,
 				    	'filterPlaceholder': 'Rechercher',
 				    	'buttonWidth': '100%',
+				    	'allSelectedText': 'Tous',
+				    	'nonSelectedText': 'Sélectionnez une valeur',
+				    	
 				    });
 				    $(".input-file").fileinput({
 				    	'language': 'fr',
 				    	'showPreview': false,
-				    	'showUpload': false,
+				    	'showUpload': true,
 				    });
 				    $('[data-toggle="tooltip"]').tooltip();
 				</script>
@@ -193,6 +208,8 @@
 						src: url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.eot?#iefix') format('embedded-opentype'), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.woff2') format('woff2'), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.woff') format('woff'), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.ttf') format('truetype'), url('/web/static/lib/bootstrap/fonts/glyphicons-halflings-regular.svg#glyphicons_halflingsregular') format('svg');
 					}
 					.multiselect-search, .multiselect-clear-filter, button.btn.btn-default.btn-secondary.fileinput-remove.fileinput-remove-button, .btn.btn-primary.btn-file, .multiselect {padding: 6px !important}
+					//b.caret {float: right; margin: 10px;}
+					span.multiselect-selected-text {text-transform: initial;}
 				</style>
 			</t>	
 		</template>
@@ -200,7 +217,7 @@
 		<template id="apply1">
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-				<h3 class="text-center text-muted">Esquisse du projet</h3>
+				<h4 class="text-center text-muted">Résumé du projet</h4>
 				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="name">Intitulé du projet</label>
 					<div class="col-md-7 col-sm-8">
@@ -214,11 +231,11 @@
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('field') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="field">Thématique</label>
+					<label class="col-md-3 col-sm-4 control-label" for="field">Thématiques</label>
 					<div class="col-md-7 col-sm-8">
 						<select multiple="multiple" id="fields" name="fields" class="form-control multiple-tags">
 							<t t-foreach="fields" t-as="f">
-								<option name="fields" t-att-value="f.id" t-att-selected="'selected' if f.id in submission.field_ids.ids else None">
+								<option name="fields" t-att-value="f.id" t-att-selected="f.id in submission.field_ids.ids">
 									<t t-esc="f.name"/>
 								</option>
 							</t>
@@ -226,11 +243,11 @@
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('duration') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="duration">Durée du projet (en semestres)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="duration">Durée du projet<br/><span class="text-muted">(Entre <span t-field="submission.offer.min_time"/> et <span t-field="submission.offer.max_time"/> semestres)</span></label>
 					<div class="col-md-7 col-sm-8">
-						<select id="duration" name="duration" data-nonSelectedText="Sélectionnez la durée" class="form-control multiple-tags">
+						<select id="duration" name="duration" class="form-control multiple-tags">
 							<t t-foreach="duration_steps" t-as="d">
-								<option name="duration" t-att-value="d" t-att-selected="'selected' if d == submission.duration else None">
+								<option name="duration" t-att-value="d" t-att-selected="d == submission.duration">
 									<t t-esc="d"/><t t-if="d==1"> Semestre</t><t t-if="d!=1"> Semestres</t>
 								</option>
 							</t>
@@ -238,7 +255,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="description">Résumé du projet<br/><span class="text-muted">(1 paragraphe de 600 mots maximum)</span></label>
+					<label class="col-md-3 col-sm-4 control-label" for="description">Résumé du projet<br/><span class="text-muted">(max 600 mots)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<textarea maxlength="3600" class="form-control" t-esc="submission.description" name="description" style="min-height: 120px"/>
 					</div>
@@ -246,7 +263,7 @@
 				<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="keywords">Mots-clés</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="submission.keywords" class="form-control" name="duration"/>
+						<input type="text" t-att-value="submission.keywords" class="form-control" name="keywords"/>
 					</div>
 				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
@@ -256,7 +273,7 @@
 		<template id="apply2">
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-				<h3 class="text-center text-muted">Coordinateur principal</h3>
+				<h4 class="text-center text-muted">Coordinateur principal</h4>
 				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="name">Nom et Prénom</label>
 					<div class="col-md-7 col-sm-8">
@@ -278,7 +295,7 @@
 				<div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel bfh-phone" data-format="+212 (ddd) dd-dd-dd" t-att-value="submission.candidate.phone" class="form-control" name="phone" />
+						<input type="tel bfh-phone" t-att-value="submission.candidate.phone" class="form-control" name="phone" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('mobile') and 'has-error' or ''}">
@@ -294,7 +311,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Pièces jointes: CV, publications (5 publications au minimum)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre CV<br/>Joindre publications<br/><span class="text-muted">(5 minimum)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<table class="table table-condensed" t-if="submission.candidate.self_documents">
 							<tr t-foreach="submission.candidate.self_documents" t-as="doc">
@@ -302,7 +319,7 @@
 									<span t-field="doc.name"/>
 								</td>
 								<td class="text-right">
-									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer le fichier" type="submit" name="unlink-doc" t-att-value="doc.id">
+									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-doc" t-att-value="doc.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
@@ -317,15 +334,15 @@
 		</template>
 		<!-- Partenaires -->
 		<template id="apply34">
-			<t t-if="current_stage==3"><h3 class="text-center text-muted">Partenaires scientifiques</h3></t>
-			<t t-if="current_stage==4"><h3 class="text-center text-muted">Partenaires industriels</h3></t>
-			<h4 t-if="not partners">Au moins un partenaire (ajouter autant de partenaires que vous voulez)</h4>
+			<t t-if="current_stage==3"><h4 class="text-center text-muted">Partenaires scientifiques</h4></t>
+			<t t-if="current_stage==4"><h4 class="text-center text-muted">Partenaires industriels</h4></t>
+			<h5 class="text-center"></h5>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<t t-if="current_stage==3"><t t-set="category" t-value="scientifique"/></t>
 				<t t-if="current_stage==4"><t t-set="category" t-value="industriel"/></t>
 				<t t-if="not partners"><t t-set="new" t-value="1"/></t>
-				<table t-if="partners" class="table">
+				<table t-if="partners" class="table table-hover">
 					<thead>
 						<tr>
 							<th>Nom</th>
@@ -333,9 +350,10 @@
 							<th>Fonction</th>
 							<th>Mobile</th>
 							<th>Email</th>
+							<th>Actions</th>
 						</tr>
 						<tbody>
-							<tr t-foreach="partners" t-as="s_partner">
+							<t t-foreach="partners" t-as="s_partner"><tr t-att-class="'info' if partner and partner.id == s_partner.id else None">
 								<td>
 									<span t-field="s_partner.name"/>
 								</td>
@@ -352,19 +370,19 @@
 									<span t-field="s_partner.email"/>
 								</td>
 								<td>
-									<button class="btn btn-info" data-toggle="tooltip" title="Modifier le partenaire" type="submit" name="edit-partner" t-att-value="s_partner.id">
+									<button class="btn btn-info" data-toggle="tooltip" title="Editer" type="submit" name="edit-partner" t-att-value="s_partner.id">
 										<i class="fa fa-pencil"/>
 									</button>
-									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer le partenaire" type="submit" name="unlink-partner" t-att-value="s_partner.id">
+									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-partner" t-att-value="s_partner.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
-							</tr>
+							</tr></t>
 						</tbody>
 					</thead>
 				</table>
-				<t  t-if="not new and not partner" ><div class="form-group text-center"><button class="btn btn-primary" type="submit" name="add-partner" value="1">
-					<i class="fa fa-plus" style="font-size: 2em; padding: 10px;"/>
+				<t t-if="not new and not partner" ><div class="form-group text-center"><button class="btn btn-primary" type="submit" name="add-partner" value="1">
+					<i class="fa fa-plus"/> Ajouter un partenaire
 				</button></div>
 				<t t-call="website_project_submission.form_header_footer"/></t>
 			</form>
@@ -428,7 +446,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Pièces jointes: CV, publications</label>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre CV<br/>Joindre publications</label>
 					<div class="col-md-7 col-sm-8">
 						<table class="table table-condensed" t-if="documents">
 							<tr t-foreach="documents" t-as="doc">
@@ -436,7 +454,7 @@
 									<span t-field="doc.name"/>
 								</td>
 								<td class="text-right">
-									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer le fichier" type="submit" name="unlink-doc" t-att-value="doc.id">
+									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-doc" t-att-value="doc.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
@@ -454,7 +472,7 @@
 		<template id="apply5">
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-				<h3 class="text-center text-muted">Descriptif detaillé</h3>
+				<h4 class="text-center text-muted">Descriptif detaillé</h4>
 				<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="etat_art">État de l’art<br/><span class="text-muted">(max: 800 mots)</span></label>
 					<div class="col-md-7 col-sm-8">
@@ -468,7 +486,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectif global du projet<br/><span class="text-muted">(max : 600 mots)</span></label>
+					<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectifs spécifiques du projet<br/><span class="text-muted">(max : 600 mots)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<textarea maxlength="4200" class="form-control" t-esc="submission.objectives" name="objectives" style="min-height: 120px"/>
 					</div>
@@ -480,14 +498,14 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="perspective">Perspectives d’application au Maroc et en Afrique<br/><span class="text-muted">(max : 500 mots)</span></label>
+					<label class="col-md-3 col-sm-4 control-label" for="perspective">Perspectives d’application au Maroc et ailleurs<br/><span class="text-muted">(max : 500 mots)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<textarea maxlength="3500" class="form-control" t-esc="submission.perspective" name="perspective" style="min-height: 120px"/>
 					</div>
 				</div>
 
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation (PowerPoint)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation du projet<br/><span class="text-muted">(PowerPoint, 10 slides max)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<table class="table table-condensed" t-if="submission.documents">
 							<tr t-foreach="submission.documents" t-as="doc">
@@ -511,11 +529,10 @@
 
 		<!-- Tâches et livrables -->
 		<template id="apply6">
-			<h3 class="text-center text-muted">Tâches et livrables</h3>
+			<h4 class="text-center text-muted">Tâches et livrables</h4>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<t t-if="not submission.tasks"><t t-set="new" t-value="1"/></t>
-				
 				<table t-if="submission.tasks" class="table">
 					<thead>
 						<tr>
@@ -526,6 +543,7 @@
 							<th>Objectives</th>
 							<th>Description</th>
 							<th>Lots</th>
+							<th>Actions</th>
 						</tr>
 						<tbody>
 							<tr t-foreach="submission.tasks" t-as="s_task">
@@ -551,10 +569,10 @@
 									<t t-foreach="s_task.lots" t-as="l"><span t-esc="', '.join(s_task.lots.mapped('name'))"/></t>
 								</td>
 								<td>
-									<button class="btn btn-info" type="submit" name="edit-task" t-att-value="s_task.id">
+									<button class="btn btn-info" data-toggle="tooltip" title="Editer" type="submit" name="edit-task" t-att-value="s_task.id">
 										<i class="fa fa-pencil"/>
 									</button>
-									<button class="btn btn-danger" type="submit" name="unlink-task" t-att-value="s_task.id">
+									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-task" t-att-value="s_task.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
@@ -563,7 +581,7 @@
 					</thead>
 				</table>
 				<t  t-if="not new and not task" ><div class="form-group text-center"><button class="btn btn-primary" type="submit" name="add-task" value="1">
-					<i class="fa fa-plus" style="font-size: 2em; padding: 10px;"/>
+					<i class="fa fa-plus"/> Ajouter une tâche
 				</button></div>
 				<t t-call="website_project_submission.form_header_footer"/></t>
 			</form>
@@ -580,8 +598,7 @@
 				<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="type">Type d'activité</label>
 					<div class="col-md-7 col-sm-8">
-						<select name="type" id="type" class="form-control">
-							<option value="">Sélectionnez le type...</option>
+						<select name="type" id="type" class="form-control multiple-tags">
 							<t t-foreach="types" t-as="t">
 								<option t-att-value="t.id" t-att-selected="task and t.id == task.type.id">
 									<t t-esc="t.name"/>
@@ -593,9 +610,9 @@
 				<div t-attf-class="form-group #{error.get('semester') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="semester">Semestre</label>
 					<div class="col-md-7 col-sm-8">
-						<select id="semester" name="semester" data-nonSelectedText="Sélectionnez le semestre" class="form-control multiple-tags">
+						<select id="semester" name="semester" class="form-control multiple-tags">
 							<t t-foreach="duration_steps" t-as="d">
-								<option name="semester" t-att-value="d" t-att-selected="'selected' if task and d == task.semester else None">
+								<option name="semester" t-att-value="d" t-att-selected="task and d == task.semester">
 									<span>S<t t-esc="d"/></span>
 								</option>
 							</t>
@@ -605,10 +622,9 @@
 				<div t-attf-class="form-group #{error.get('partner') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="partner">Responsable du WP</label>
 					<div class="col-md-7 col-sm-8">
-						<select name="partner" id="partner" class="form-control">
-							<option value="">Sélectionnez le responsable...</option>
+						<select name="partner" id="partner" class="form-control  multiple-tags">
 							<t t-foreach="submission.all_partners" t-as="p">
-								<option t-att-value="p.id" t-att-selected="'selected' if task and p.id == task.partner.id else None">
+								<option t-att-value="p.id" t-att-selected="task and p.id == task.partner.id">
 									<t t-esc="p.name"/>
 								</option>
 							</t>
@@ -620,7 +636,7 @@
 					<div class="col-md-7 col-sm-8">
 						<select multiple="multiple" name="partners" id="partners" class="form-control multiple-tags">
 							<t t-foreach="submission.all_partners" t-as="p">
-								<option t-att-value="p.id" t-att-selected="'selected' if task and task.partners and (p.id in task.partners.ids) else None">
+								<option t-att-value="p.id" t-att-selected="task and task.partners and (p.id in task.partners.ids)">
 									<t t-esc="p.name"/>
 								</option>
 							</t>
@@ -631,6 +647,12 @@
 					<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectifs</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="task and task.objectives" class="form-control" name="objectives"/>
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('description') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="description">Description</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="task and task.description" class="form-control" name="description"/>
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
@@ -645,10 +667,10 @@
 
 		<!-- Montage financier -->
 		<template id="apply7">
-			<h3 class="text-center text-muted">Montage financier</h3>
+			<h4 class="text-center text-muted">Montage financier</h4>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-				<table class="table">
+				<table t-if="submission.budget_lines" class="table">
 					<thead>
 						<tr>
 							<th>Type</th>
@@ -656,6 +678,7 @@
 							<th class="text-right">Financement propre</th>
 							<th class="text-right">Montant subventionné</th>
 							<th class="text-right">Pourcentage subventionné</th>
+							<th class="text-right">Actions</th>
 						</tr>
 						<tbody>
 							<tr t-foreach="submission.budget_lines" t-as="line">
@@ -707,7 +730,7 @@
 					</thead>
 				</table>
 				<t  t-if="not new and not budgetline" ><div class="form-group text-center"><button class="btn btn-primary" type="submit" name="add-budgetline" value="1">
-					<i class="fa fa-plus" style="font-size: 2em; padding: 10px;"/>
+					<i class="fa fa-plus"/> Ajouter une ligne
 				</button></div>
 				<t t-call="website_project_submission.form_header_footer"/></t>
 			</form>
@@ -718,10 +741,9 @@
 				<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="type">Rubrique</label>
 					<div class="col-md-7 col-sm-8">
-						<select name="type" t-att-value="budgetline and budgetline.type" id="type" class="form-control" >
-							<option value="">Sélectionnez la rubrique...</option>
+						<select name="type" t-att-value="budgetline and budgetline.type" id="type" class="form-control multiple-tags" >
 							<t t-foreach="types" t-as="t">
-								<option t-att-value="t.id">
+								<option t-att-value="t.id"  t-att-selected="budgetline and t.id == budgetline.type">
 									<t t-esc="t.name"/>
 								</option>
 							</t>
@@ -743,7 +765,18 @@
 				<t t-call="website_project_submission.form_header_footer"/>
 			</form></t>
 		</template>
-
+		<!-- Descriptif detaillé -->
+		<template id="apply8">
+			<h4 class="text-center text-muted">Soumission</h4>
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
+				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<div class="form-group">
+					<div class="col-md-12 text-center">
+						<button type="submit" name="submit" value="submit" class="btn btn-primary">Valider ma soumission</button>
+					</div>
+				</div>
+			</form>
+		</template>
 		<!-- Récapitulatif final -->
 		<template id="thankyou">
 			<t t-call="website.layout">
@@ -803,50 +836,62 @@
 			<div class="container">
 	            <div class="row bs-wizard" style="border-bottom:0;">
 	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 1 else 'col-xs-2 bs-wizard-step active' if current_stage == 1 else 'col-xs-2 bs-wizard-step disabled'">
-	                  <div class="text-center bs-wizard-stepnum">Etape 1</div>
+	                  <div class="text-center bs-wizard-stepnum text-primary" style="font-weight: bold">Etape 1</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
 	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/1" class="bs-wizard-dot"></a>
-	                  <div class="bs-wizard-info text-center">Esquisse du projet</div>
+	                  <div class="bs-wizard-info text-center">Résumé du projet</div>
 	                </div>
 	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 2 else 'col-xs-2 bs-wizard-step active' if current_stage == 2 else 'col-xs-2 bs-wizard-step disabled'">
-	                  <div class="text-center bs-wizard-stepnum">Etape 2</div>
+	                  <div class="text-center bs-wizard-stepnum text-primary" style="font-weight: bold">Etape 2</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
 	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/2" class="bs-wizard-dot"></a>
 	                  <div class="bs-wizard-info text-center">Coordinateur principal</div>
 	                </div>
 	                
 	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 3 else 'col-xs-2 bs-wizard-step active' if current_stage == 3 else 'col-xs-2 bs-wizard-step disabled'"><!-- complete -->
-	                  <div class="text-center bs-wizard-stepnum">Etape 3</div>
+	                  <div class="text-center bs-wizard-stepnum text-primary" style="font-weight: bold">Etape 3</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
 	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/3" class="bs-wizard-dot"></a>
 	                  <div class="bs-wizard-info text-center">Partenaires scientifiques</div>
 	                </div>
 	                
 	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 4 else 'col-xs-2 bs-wizard-step active' if current_stage == 4 else 'col-xs-2 bs-wizard-step disabled'"><!-- complete -->
-	                  <div class="text-center bs-wizard-stepnum">Etape 4</div>
+	                  <div class="text-center bs-wizard-stepnum text-primary" style="font-weight: bold">Etape 4</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
 	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/4" class="bs-wizard-dot"></a>
 	                  <div class="bs-wizard-info text-center">Partenaires industriels</div>
 	                </div>
 	                
 	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 5 else 'col-xs-2 bs-wizard-step active' if current_stage == 5 else 'col-xs-2 bs-wizard-step disabled'"><!-- active -->
-	                  <div class="text-center bs-wizard-stepnum">Etape 5</div>
+	                  <div class="text-center bs-wizard-stepnum text-primary" style="font-weight: bold">Etape 5</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
 	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/5" class="bs-wizard-dot"></a>
 	                  <div class="bs-wizard-info text-center">Descriptif détaillé</div>
 	                </div>
 	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 6 else 'col-xs-2 bs-wizard-step active' if current_stage == 6 else 'col-xs-2 bs-wizard-step disabled'"><!-- active -->
-	                  <div class="text-center bs-wizard-stepnum">Etape 6</div>
+	                  <div class="text-center bs-wizard-stepnum text-primary" style="font-weight: bold">Etape 6</div>
 	                  <div class="progress"><div class="progress-bar"></div></div>
 	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/6" class="bs-wizard-dot"></a>
 	                  <div class="bs-wizard-info text-center">Tâches et livrables</div>
+	                </div>
+	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 7 else 'col-xs-2 bs-wizard-step active' if current_stage == 7 else 'col-xs-2 bs-wizard-step disabled'"><!-- active -->
+	                  <div class="text-center bs-wizard-stepnum text-primary" style="font-weight: bold">Etape 7</div>
+	                  <div class="progress"><div class="progress-bar"></div></div>
+	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/7" class="bs-wizard-dot"></a>
+	                  <div class="bs-wizard-info text-center">Montage financier</div>
+	                </div>
+	                <div t-att-class="'col-xs-2 bs-wizard-step complete' if current_stage &gt; 8 else 'col-xs-2 bs-wizard-step active' if current_stage == 8 else 'col-xs-2 bs-wizard-step disabled'"><!-- active -->
+	                  <div class="text-center bs-wizard-stepnum text-primary" style="font-weight: bold">Etape 8</div>
+	                  <div class="progress"><div class="progress-bar"></div></div>
+	                  <a t-attf-href="/offers/apply/#{ slug(submission.offer)}/stage/8" class="bs-wizard-dot"></a>
+	                  <div class="bs-wizard-info text-center">Soumission</div>
 	                </div>
 	            </div>
 			</div>
 			<style type="text/css">
 				.bs-wizard {margin-top: 40px;}
 				.bs-wizard {border-bottom: solid 1px #e0e0e0; padding: 0 0 10px 0;}
-				.bs-wizard > .bs-wizard-step {padding: 0; position: relative;}
+				.bs-wizard > .bs-wizard-step {padding: 0; position: relative; width: 12.5%;}
 				.bs-wizard > .bs-wizard-step + .bs-wizard-step {}
 				.bs-wizard > .bs-wizard-step .bs-wizard-stepnum {color: #595959; font-size: 16px; margin-bottom: 5px;}
 				.bs-wizard > .bs-wizard-step .bs-wizard-info {color: #999; font-size: 14px;}
@@ -873,7 +918,8 @@
 				<div class="col-md-6 text-right">
 					<!-- <button type="submit" name="submit" value="cancel" class="btn btn-danger">Annuler</button> -->
 					<button type="submit" name="submit" value="save" class="btn btn-primary">Enregistrer</button>
-					<button type="submit" t-if="current_stage != 6" name="submit" value="next" class="btn btn-primary">Suivant</button>
+					<button type="submit" t-if="current_stage != 8" name="submit" value="next" class="btn btn-primary">Suivant</button>
+					<button type="submit" t-if="current_stage == 8" name="submit" value="next" class="btn btn-primary">Valider</button>
 				</div>
 			</div>
 		</template>

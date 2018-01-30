@@ -17,7 +17,10 @@ class WebInherit(AuthSignupHome):
     def web_login(self, *args, **kw):
         ensure_db()
         response = super(WebInherit, self).web_login(*args, **kw)
-        response.qcontext.update({'redirect': '/offers'})
+        if request.session.get('offer'):
+            response.qcontext.update({'redirect': '/offers/apply/' + str(request.session['offer'])})
+        else:
+            response.qcontext.update({'redirect': '/my/home/'})
         return response
 
 class website_project_submission(http.Controller):
@@ -73,8 +76,7 @@ class website_project_submission(http.Controller):
         #If no user connected, force connection
         #TODO: Redirect to submission page if offer variable is in session
         if not request.session.uid:
-            request.session['offer'] = offer.id
-            return request.redirect("/web/signup")
+            request.session.update({'offer': offer.id})
             return login_redirect()
         
         #Get error data
@@ -97,6 +99,7 @@ class website_project_submission(http.Controller):
                                                            'offer': offer.id,
                                                            'candidate': candidate.id,})
         
+        has_exception = False
         #Save the current stage
         current_stage = post.get('current_stage') and int(post.get('current_stage'))
         try:
@@ -218,24 +221,29 @@ class website_project_submission(http.Controller):
                     else:
                         env['project.submission.task'].create(value)
                 #Stage 6: Project budget informations
-                elif current_stage == 7 and post.get('to-save') == "1" and post.get('name') and post.get('type'):
+                elif current_stage == 7 and post.get('to-save') == "1" and post.get('type') and post.get('budget') and post.get('montant_propre'):
                     value = {
                         'type': post.get('type'),
-                        'name': post.get('name'),
-                        'montant_subventionne': float(post.get('montant_subventionne')),
-                        'percent_subventionne': float(post.get('percent_subventionne')),
                         'budget': post.get('budget'),
-                        'montant_propre': float(post.get('budget')) - float(post.get('montant_propre')),
+                        'montant_propre': float(post.get('montant_propre')),
                         'submission': submission.id,
                     }
                     if post.get('budgetline_id') is not None:
                         budgetline = env['project.submission.budgetline'].browse(int(post.get('budgetline_id')))
-                        budgetline.write(partner_value)
+                        budgetline.write(value)
                     else:
                         env['project.submission.budgetline'].create(value)
-        except ValidationError:
+        except ValidationError, e:
             next_stage = current_stage
-            pass
+            if post.get('partner_id'):
+                post.update({'edit-partner': post.get('partner_id')})
+            if post.get('task_id'):
+                post.update({'edit-task': post.get('task_id')})
+            if post.get('budgetline_id'):
+                post.update({'edit-budgetline': post.get('budgetline_id')})
+            env.cr.rollback()
+            env.invalidate_all()
+            error.update({'main': e.value})
 
         if next_stage == None:
             if bool(post) and post.get('submit') == 'next':
@@ -267,12 +275,13 @@ class website_project_submission(http.Controller):
             })
         elif next_stage == 3 or next_stage == 4:
             if post.get('edit-partner'):
-                partner = env['res.partner'].browse(int(post.get('edit-partner')))
+                partner = env['res.partner'].browse(int(post.get('edit-partner'))) if post.get('edit-partner') else env['res.partner'].browse(int(post.get('partner_id')))
                 documents = env['ir.attachment'].search([('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)])
                 vals.update({
                     'partner': partner,
                     'documents': documents
                 })
+                
             if post.get('add-partner'):
                 vals.update({'new': True})
             else:
