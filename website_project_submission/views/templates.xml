@@ -945,16 +945,16 @@
 						</select>
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('budget') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="budget">Budget global (MAD)</label>
-					<div class="col-md-7 col-sm-8">
-						<input type="number" t-att-value="budgetline and budgetline.budget" class="form-control" name="budget" />
-					</div>
-				</div>
 				<div t-attf-class="form-group #{error.get('montant_propre') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="montant_propre">Financement propre (MAD)</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" t-att-value="budgetline and budgetline.montant_propre" class="form-control" name="montant_propre" />
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('montant_subventionne') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="montant_subventionne">Financement demandé (MAD)</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" t-att-value="budgetline and budgetline.montant_subventionne" class="form-control" name="montant_subventionne" />
 					</div>
 				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
