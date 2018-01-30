@@ -303,7 +303,15 @@ class ResPartner(models.Model):
     
     submissions = fields.Many2many('project.submission')
     category = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')])
-    
+    entite_recherche = fields.Char('Entité de recherche')
+    partner_references = fields.Text('Références du partenaire')
+    effectif = fields.Integer('Effectif global')
+    effectif_chercheur = fields.Integer('Effectif de chercheurs')
+    effectif_doc = fields.Integer('Effectif de doctorants')
+    capital = fields.Integer('Capital')
+    cnss = fields.Char()
+    ca = fields.Char('Chiffre d\'affaire')
+
 class ProjectPartnerFunction(models.Model):
     _name = 'project.partner.function'
     

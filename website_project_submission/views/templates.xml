@@ -262,6 +262,24 @@
 					</div>
 				</div>
 				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="n_related_publications">Nombre de publications internationales indexées en relation avec les thématiques proposées</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" class="form-control" t-att-value="submission.n_related_publications" name="n_related_publications"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="n_ing_doc">Nombre de doctorants/postdocs/ingénieurs proposés</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" class="form-control" t-att-value="submission.n_ing_doc" name="n_ing_doc"/>
+					</div>
+				</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="n_master_pfe">Nombre de Masters et PFE</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" class="form-control" t-att-value="submission.n_master_pfe" name="n_master_pfe"/>
+					</div>
+				</div>
+				<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="keywords">Mots-clés</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="submission.keywords" class="form-control" name="keywords"/>
@@ -347,8 +365,6 @@
 					<thead>
 						<tr>
 							<th>Nom</th>
-							<th>Etablissement</th>
-							<th>Fonction</th>
 							<th>Mobile</th>
 							<th>Email</th>
 							<th>Actions</th>
@@ -357,12 +373,6 @@
 							<t t-foreach="partners" t-as="s_partner"><tr t-att-class="'info' if partner and partner.id == s_partner.id else None">
 								<td>
 									<span t-field="s_partner.name"/>
-								</td>
-								<td>
-									<span t-field="s_partner.parent_id.name"/>
-								</td>
-								<td>
-									<span t-field="s_partner.function"/>
 								</td>
 								<td>
 									<span t-field="s_partner.mobile"/>
@@ -410,28 +420,71 @@
 						<input type="text" t-att-value="partner and partner.name" class="form-control" name="name" />
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('country') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="email">Pays</label>
+				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('entite_recherche') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="entite_recherche">Entité de recherche</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="email" t-att-value="partner and partner.email" class="form-control" name="country" />
+						<input type="text" t-att-value="partner and partner.entite_recherche" class="form-control" name="entite_recherche" />
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('effectif') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="effectif">Effectif</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
+					</div>
+				</div>
+				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('effectif_chercheur') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="effectif_chercheur">Effectif de chercheurs</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="partner and partner.effectif_chercheur" class="form-control" name="effectif_chercheur" />
+					</div>
+				</div>
+				<div t-if="current_stage==3" t-attf-class="form-group #{error.get('effectif_doc') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="effectif_doc">Effectif de doctorants</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="partner and partner.effectif_doc" class="form-control" name="effectif_doc" />
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('partner_references') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="partner_references">Références du partenaire</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="partner and partner.partner_references" class="form-control" name="partner_references" />
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('country') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="country">Pays</label>
+					<div class="col-md-7 col-sm-8">
+						<select id="country" name="country" class="form-control">
+							<t t-foreach="countries" t-as="c">
+								<option>Sélectionnez un pays...</option>
+								<option name="country" t-att-value="c.id" t-att-selected="c.id  == partner.country_id.id">
+									<t t-esc="c.name"/>
+								</option>
+							</t>
+						</select>
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('city') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="email">Ville</label>
+					<label class="col-md-3 col-sm-4 control-label" for="city">Ville</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="email" t-att-value="partner and partner.email" class="form-control" name="city" />
+						<input type="text" t-att-value="partner and partner.city" class="form-control" name="city" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="email">Code postal</label>
+					<label class="col-md-3 col-sm-4 control-label" for="zip">Code postal</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="email" t-att-value="partner and partner.email" class="form-control" name="zip" />
+						<input type="text" t-att-value="partner and partner.zip" class="form-control" name="zip" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('street') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="email">Adresse</label>
+					<label class="col-md-3 col-sm-4 control-label" for="street">Adresse</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="email" t-att-value="partner and partner.email" class="form-control" name="street" />
+						<input type="text" t-att-value="partner and partner.street" class="form-control" name="street" />
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="street2"></label>
+					<div class="col-md-7 col-sm-8">
+						<input type="text" t-att-value="partner and partner.street2" class="form-control" name="street2" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
@@ -455,11 +508,11 @@
 				<div t-attf-class="form-group #{error.get('website') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="email">Site web</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="email" t-att-value="partner and partner.email" class="form-control" name="website" />
+						<input type="text" t-att-value="partner and partner.email" class="form-control" name="website" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('contact_name') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="contact_function">Représentant du partenaire dans le projet</label>
+					<label class="col-md-3 col-sm-4 control-label" for="contact_function">Non du représentant</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="partner and partner.function" class="form-control" name="contact_name" />
 					</div>
@@ -473,13 +526,13 @@
 				<div t-attf-class="form-group #{error.get('contact_phone') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="contact_function">Téléphone du représentant</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="partner and partner.function" class="form-control" name="contact_phone" />
+						<input type="tel" t-att-value="partner and partner.function" class="form-control" name="contact_phone" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('contact_email') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="contact_function">Adresse électronique du représentant</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="partner and partner.function" class="form-control" name="contact_email" />
+						<input type="email" t-att-value="partner and partner.function" class="form-control" name="contact_email" />
 					</div>
 				</div>
 				<div class="form-group">
@@ -711,10 +764,10 @@
 					<thead>
 						<tr>
 							<th>Type</th>
-							<th class="text-right">Budget</th>
+							<th class="text-right">Budget global</th>
 							<th class="text-right">Financement propre</th>
-							<th class="text-right">Montant subventionné</th>
-							<th class="text-right">Pourcentage subventionné</th>
+							<th class="text-right">Financement demandé</th>
+							<th class="text-right">Pourcentage demandé</th>
 							<th class="text-right">Actions</th>
 						</tr>
 						<tbody>
@@ -788,13 +841,13 @@
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('budget') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="budget">Budget (MAD)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="budget">Budget global (MAD)</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" t-att-value="budgetline and budgetline.budget" class="form-control" name="budget" />
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('montant_propre') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="montant_propre">Financement demandé (MAD)</label>
+					<label class="col-md-3 col-sm-4 control-label" for="montant_propre">Financement propre (MAD)</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" t-att-value="budgetline and budgetline.montant_propre" class="form-control" name="montant_propre" />
 					</div>

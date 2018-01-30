@@ -124,6 +124,9 @@ class website_project_submission(http.Controller):
                         'field_ids': [(6, 0, [int(x) for x in request.httprequest.form.getlist('fields')])],
                         'keywords': post.get('keywords'),
                         'description': post.get('description'),
+                        'n_related_publications': post.get('n_related_publications'),
+                        'n_ing_doc': post.get('n_ing_doc'),
+                        'n_master_pfe': post.get('n_master_pfe'),
                     }
                     submission.write(value)
                 #Stage 2: Candidate general informations
@@ -295,9 +298,11 @@ class website_project_submission(http.Controller):
             if post.get('edit-partner'):
                 partner = env['res.partner'].browse(int(post.get('edit-partner'))) if post.get('edit-partner') else env['res.partner'].browse(int(post.get('partner_id')))
                 documents = env['ir.attachment'].search([('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)])
+                countries = env['res.country'].search()
                 vals.update({
                     'partner': partner,
-                    'documents': documents
+                    'documents': documents,
+                    'countries': countries
                 })
                 
             if post.get('add-partner'):
