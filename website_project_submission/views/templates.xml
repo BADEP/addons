@@ -489,7 +489,10 @@
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('effectif') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="effectif">Effectif</label>
+					<label class="col-md-3 col-sm-4 control-label" for="effectif">
+						<t t-if="current_stage==3">Effectif</t>
+						<t t-if="current_stage==4">Nombre d'employés<br/><span class="text-muted">(Supérieur ou égal à 12)</t>
+					</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
 					</div>
