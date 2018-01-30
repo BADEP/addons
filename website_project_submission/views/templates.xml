@@ -1,6 +1,67 @@
 <?xml version="1.0" encoding="utf-8"?>
 <openerp>
 	<data>
+		    <template id="portal_my_home_menu_submission" name="Portal layout : submissions menu entries" inherit_id="website_portal.portal_layout" priority="25">
+        <xpath expr="//ul[contains(@class,'o_portal_submenu')]" position="inside">
+            <li>
+                <a href="/my/submissions">Soumissions</a>
+            </li>
+        </xpath>
+    </template>
+
+    <template id="portal_my_home_submission" name="Portal My Home : submissions entries" inherit_id="website_portal.portal_my_home" priority="25">
+        <xpath expr="//div[contains(@class,'o_my_home_content')]" position="inside">
+            <h3 class="page-header">
+                <a href="/my/submissions">Mes soumissions
+                    <small class="ml8">
+                        <t t-if="submission_count">
+                            <span class='badge'><t t-esc="submission_count"/></span>
+                        </t>
+                        <t t-if="not submission_count">
+                            Vous n'avez aucune soumission, merci de consulter les offres en cours.
+                        </t>
+                    </small>
+                </a>
+            </h3>
+        </xpath>
+    </template>
+
+    <template id="portal_my_submissions" name="My submissions">
+      <t t-call="website_portal.portal_layout">
+        <h3 class="page-header">Vos soumissions</h3>
+        <t t-if="not submissions">
+            <p>Vous n'avez aucune soumission, merci de consulter les offres en cours.</p>
+        </t>
+        <t t-if="submissions">
+            <table class="table table-hover o_my_status_table">
+                <thead>
+                  <tr class="active">
+                      <th>Titre</th>
+                      <th>Offre</th>
+			<th>statut</th>
+                    </tr>
+                </thead>
+                <t t-foreach="submissions" t-as="submission">
+                    <tr>
+                        <td>
+                            <a t-attf-href="/my/orders/#{submission.id}?#{keep_query()}"><t t-esc="submission.name"/></a>
+                        </td>
+                        <td><span t-field="submission.acronyme"/></td>
+                        <td>
+			<td><span t-field="submission.offer.name"/></td>
+                        <td>	
+                          <t t-if="submission.state == 'cancel'">
+                            <span class="label label-default"><i class="fa fa-fw fa-remove"/> Cancelled</span>
+                          </t>
+                    </tr>
+                </t>
+            </table>
+            <div t-if="pager" class="o_portal_pager text-center">
+              <t t-call="website.pager"/>
+            </div>
+        </t>
+      </t>
+    </template>
 		<template id="offer_footer_custom" inherit_id="website.footer_default" name="Footer Offer Link">
 			<xpath expr="//div[@id='info']/ul" position="inside">
 				<li>
@@ -421,7 +482,10 @@
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('effectif') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="effectif">Effectif</label>
+					<label class="col-md-3 col-sm-4 control-label" for="effectif">
+						<t t-if="current_stage==3">Effectif</t>
+						<t t-if="current_stage==4">Nombre d'employés<br/><span class="text-muted">(Supérieur ou égal à 12)</t>
+					</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
 					</div>
@@ -439,7 +503,7 @@
 					</div>
 				</div>
 				<div t-if="current_stage==4" t-attf-class="form-group #{error.get('ca') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaire</label>
+					<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaires</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" t-att-value="partner and partner.ca" class="form-control" name="ca" />
 					</div>
@@ -675,7 +739,7 @@
 							<th>Semestre</th>
 							<th>Objectives</th>
 							<th>Description</th>
-							<th>Lots</th>
+							<th>Livrables</th>
 							<th>Actions</th>
 						</tr>
 						<tbody>
@@ -791,12 +855,6 @@
 						<input type="text" t-att-value="task and task.description" class="form-control" name="description"/>
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="description">Description</label>
-					<div class="col-md-7 col-sm-8">
-						<input type="text" t-att-value="task and task.description" class="form-control" name="description"/>
-					</div>
-				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
 			</form></t>
 		</template>
@@ -887,16 +945,16 @@
 						</select>
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('budget') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="budget">Budget global (MAD)</label>
-					<div class="col-md-7 col-sm-8">
-						<input type="number" t-att-value="budgetline and budgetline.budget" class="form-control" name="budget" />
-					</div>
-				</div>
 				<div t-attf-class="form-group #{error.get('montant_propre') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="montant_propre">Financement propre (MAD)</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" t-att-value="budgetline and budgetline.montant_propre" class="form-control" name="montant_propre" />
+					</div>
+				</div>
+				<div t-attf-class="form-group #{error.get('montant_subventionne') and 'has-error' or ''}">
+					<label class="col-md-3 col-sm-4 control-label" for="montant_subventionne">Financement demandé (MAD)</label>
+					<div class="col-md-7 col-sm-8">
+						<input type="number" t-att-value="budgetline and budgetline.montant_subventionne" class="form-control" name="montant_subventionne" />
 					</div>
 				</div>
 				<t t-call="website_project_submission.form_header_footer"/>

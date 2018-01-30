@@ -260,10 +260,10 @@ class website_project_submission(http.Controller):
                     else:
                         env['project.submission.task'].create(value)
                 #Stage 6: Project budget informations
-                elif current_stage == 7 and post.get('to-save') == "1" and post.get('type') and post.get('budget') and post.get('montant_propre'):
+                elif current_stage == 7 and post.get('to-save') == "1" and post.get('type') and post.get('montant_subventionne') and post.get('montant_propre'):
                     value = {
                         'type': post.get('type'),
-                        'budget': post.get('budget'),
+                        'budget': post.get('montant_subventionne'),
                         'montant_propre': float(post.get('montant_propre')),
                         'submission': submission.id,
                     }
