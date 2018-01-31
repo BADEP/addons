@@ -40,9 +40,10 @@ AVAILABLE_PRIORITIES = [
 ]
 
 SUBMISS_ETAT= [
-    ('draft', 'Brouillon'),
+    ('draft', 'En cours de rédaction'),
     ('submitted', 'Soumis'),
-    ('pending', 'En cours d\'étude'),
+    ('pending', 'En cours d\'évaluation'),
+    ('preselected', 'Préselectionné 1ère phase'),
     ('accepted', 'Aprouvé'),
     ('rejected', 'Refusé')
 ]
@@ -161,7 +162,7 @@ class ProjectSubmission(models.Model):
     name = fields.Char('Intitulé du projet', required=True)
     acronyme = fields.Char('Acronyme')
     offer = fields.Many2one('project.offer', string='Offre de projet', required=True)
-    candidate = fields.Many2one('project.candidate', string='Soumissionnaire', required=True)
+    candidate = fields.Many2one('res.users', string='Soumissionnaire', required=True)
     field_ids = fields.Many2many('project.offer.field', string='Domaine d\'activité')
     partners = fields.Many2many('res.partner', string='Partenaires')
     description = fields.Text('Description')
@@ -284,7 +285,7 @@ class ProjectSubmission(models.Model):
         # create a response and link it to this applicant
         if self.survey:
             if not self.response:
-                response = self.env['survey.user_input'].create({'survey_id': self.survey.id, 'partner_id': self.candidate.user.partner_id.id})
+                response = self.env['survey.user_input'].create({'survey_id': self.survey.id, 'partner_id': self.candidate.partner_id.id})
                 self.write({'response': response.id})
             else:
                 response = self.response
@@ -406,15 +407,9 @@ class ProjectBudgetLineType(models.Model):
     
     name = fields.Char(required=True, translate=True)
 
-class ProjectCandidate(models.Model):
+class ResUser(models.Model):
+    _inherit = ['res.users']
 
-    """hr.employee"""
-    _inherit = ['mail.thread']
-    _inherits = {"res.users": 'user'}
-    _name = 'project.candidate'
-    _description = u'Soumissionaire'
-
-    user = fields.Many2one('res.users', 'Utilisateur lié', required=True, ondelete='restrict')
     submissions = fields.One2many('project.submission', 'candidate', 'Soumissions')
     submissions_count =  fields.Integer(compute='_count_all', string='Soumissions')
     self_documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
@@ -423,31 +418,13 @@ class ProjectCandidate(models.Model):
     color = fields.Integer('Color Index', default=0)
     
     @api.one
-    def onchange_type(self, is_company):
-        if self.user:
-            return self.user.onchange_type(is_company)
-    
-    @api.one
-    def onchange_address(self, use_parent_address, parent_id):
-        if self.user:
-            return self.user.onchange_address(use_parent_address, parent_id)
-    @api.one
-    def onchange_state(self, state_id):
-        if self.user:
-            return self.user.onchange_state(state_id)
-    @api.one
-    def action_reset_password(self):
-        if self.user:
-            return self.user.action_reset_password()
-    
-    @api.one
     def _count_all(self):
         self.documents_count = len(self.documents)
         self.submissions_count = len(self.submissions)
     
     @api.one
     def _get_attached_docs(self):
-        res = self.env['ir.attachment'].search([('res_model', '=', 'project.candidate'), ('res_id', '=', self.id)])
+        res = self.env['ir.attachment'].search([('res_model', '=', 'res.users'), ('res_id', '=', self.id)])
         res2 = self.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', 'in', self.submissions.ids)])
         self.self_documents = res.ids
         self.documents =  res.ids + res2.ids
@@ -456,7 +433,7 @@ class ProjectCandidate(models.Model):
     def action_get_attachment_tree_view(self):
         action = self.env.ref('base.action_attachment').read()[0]
         action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0]}
-        action['domain'] = str(['|', '&', ('res_model', '=', 'project.candidate'), ('res_id', 'in', self.ids), '&', ('res_model', '=', 'project.submission'), ('res_id', 'in', self.submissions.ids)])
+        action['domain'] = str(['|', '&', ('res_model', '=', 'res.users'), ('res_id', 'in', self.ids), '&', ('res_model', '=', 'project.submission'), ('res_id', 'in', self.submissions.ids)])
         return action
     
 class ProjectRequest(models.Model):  

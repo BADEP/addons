@@ -11,6 +11,33 @@ from openerp.addons.website.models.website import slug
 from openerp.exceptions import ValidationError
 from openerp.addons.auth_signup.controllers.main import AuthSignupHome
 from openerp.addons.web.controllers.main import ensure_db
+from openerp.addons.website_portal.controllers.main import WebsiteAccount
+
+class PortalSubmissionWebsiteAccount(WebsiteAccount):
+    
+    
+    @http.route(['/my/home/submissions'], type='http', auth="user", website=True)
+    def submissions(self, **kw):
+        submissions = {'submissions': request.env.user.submissions}
+        return request.website.render(
+            'website_project_submission.submissions_only', submissions)
+
+    @http.route(['/my/home'], type='http', auth="user", website=True)
+    def account(self, **kw):
+        response = super(PortalSubmissionWebsiteAccount, self).account(**kw)
+        response.qcontext.update({
+            'submissions': request.env.user.submissions,
+        })
+        return response
+    
+    @http.route(['/my/submissions/<int:submission_id>'], type='http', auth="user", website=True)
+    def submissions_followup(self, submission_id=None):
+        submission = request.env.user.submissions.filtered(lambda s: s.id == submission_id)
+        if not submission:
+            return request.website.render("website.404")
+        return request.website.render("website_portal_sale.submissions_followup", {
+            'submission': submission,
+        })
 
 class WebInherit(AuthSignupHome):
     @http.route()
@@ -23,7 +50,7 @@ class WebInherit(AuthSignupHome):
             response.qcontext.update({'redirect': '/my/home/'})
         return response
 
-class website_project_submission(http.Controller):
+class WebsiteProjectSubmission(http.Controller):
 
 
     @http.route([
@@ -69,9 +96,12 @@ class website_project_submission(http.Controller):
         })
 
     @http.route(['/offers/apply/<model("project.offer"):offer>',
-                 '/offers/apply/<model("project.offer"):offer>/stage/<int:next_stage>'
+                 '/offers/apply/<model("project.offer"):offer>/<string:is_new>',
+                 '/offers/apply/<model("project.offer"):offer>/stage/<int:next_stage>',
+                 '/offers/apply/<model("project.offer"):offer>/submission/<model("project.submission"):submission>',
+                 '/offers/apply/<model("project.offer"):offer>/submission/<model("project.submission"):submission>/stage/<int:next_stage>'
                  ], type='http', auth="public", website=True)
-    def offers_apply(self, offer=None, next_stage=None, **post):
+    def offers_apply(self, offer=None, next_stage=None, submission=None, is_new=None, **post):
         
         #If no user connected, force connection
         #TODO: Redirect to submission page if offer variable is in session
@@ -85,27 +115,29 @@ class website_project_submission(http.Controller):
             error = request.session.pop('website_project_submission_error')
             
         #Get the candidate, if no candidate create one
-        env = request.env(user=SUPERUSER_ID)
-        user = env['res.users'].browse(request.session.uid)
-        candidate = env['project.candidate'].search([('user','=', user.id)])
-        if candidate.id == False:
-            candidate = env['project.candidate'].create({'user': user.id})
+        sudo_env = request.env(user=SUPERUSER_ID)
+        env = request.env()
+        candidate = env.user
 
         #Get the submission, if no submission call creation template
-        submission = env['project.submission'].search([('offer', '=', offer.id), ('candidate', '=', candidate.id)])
         if not submission:
-            submission = env['project.submission'].create({
+            if request.session.get('submission'):
+                submission = candidate.submissions.filtered(lambda s: s.id == int(request.session.get('submission')))
+            if not submission or is_new == 'new':
+                submission = env['project.submission'].create({
                                                            'name': '/',
                                                            'offer': offer.id,
                                                            'candidate': candidate.id,})
         
+        request.session.update({'submission': submission.id})
         has_exception = False
         #Save the current stage
         current_stage = post.get('current_stage') and int(post.get('current_stage'))
         try:
             if bool(post) and post.get('submit') != 'cancel':
                 if post.get('unlink-doc'):
-                    env['ir.attachment'].browse(int(post.get('unlink-doc'))).unlink()
+                    #TODO: call with adequate access right. Sudo might e dangerous if the id passed is wrong
+                    sudo_env['ir.attachment'].browse(int(post.get('unlink-doc'))).unlink()
                 if post.get('unlink-task'):
                     env['project.submission.task'].browse(int(post.get('unlink-task'))).unlink()
                 if post.get('unlink-partner'):
@@ -142,13 +174,13 @@ class website_project_submission(http.Controller):
                     if candidate.parent_id:
                         candidate.parent_id.write({'name': post.get('organisme')})
                     else:
-                        organisme = env['res.partner'].create({'name': post.get('organisme')})
+                        organisme = sudo_env['res.partner'].create({'name': post.get('organisme')})
                         candidate.write({'parent_id': organisme.id})
                     if post.get('ufile'):
                         attachment_value = {
                             'name': post['ufile'].filename,
                             'res_name': value['name'],
-                            'res_model': 'project.candidate',
+                            'res_model': 'res.users',
                             'res_id': candidate.id,
                             'datas': base64.encodestring(post['ufile'].read()),
                             'datas_fname': post['ufile'].filename,
@@ -167,6 +199,7 @@ class website_project_submission(http.Controller):
                     partner_value = {
                         'name': post.get('name'),
                         'country_id': post.get('partner_country'),
+                        'is_company': True,
                         'city': post.get('city'),
                         'zip': post.get('zip'),
                         'street': post.get('street'),
@@ -193,10 +226,10 @@ class website_project_submission(http.Controller):
                         'submissions': [(4, submission.id)]
                     }
                     if post.get('partner_id') is not None:
-                        partner = env['res.partner'].browse(int(post.get('partner_id')))
+                        partner = sudo_env['res.partner'].browse(int(post.get('partner_id')))
                         partner.write(partner_value)
                     else:
-                        partner = env['res.partner'].create(partner_value)
+                        partner = sudo_env['res.partner'].create(partner_value)
                     contact_value = {
                         'name': post.get('contact_name'),
                         'function': post.get('contact_function'),
@@ -210,7 +243,7 @@ class website_project_submission(http.Controller):
                     if contact:
                         contact[0].write(contact_value)
                     else:
-                        contact = env['res.partner'].create(contact_value)
+                        contact = sudo_env['res.partner'].create(contact_value)
                     if post.get('ufile'):
                         attachment_value = {
                             'name': post['ufile'].filename,
@@ -220,7 +253,7 @@ class website_project_submission(http.Controller):
                             'datas': base64.encodestring(post['ufile'].read()),
                             'datas_fname': post['ufile'].filename,
                         }
-                        env['ir.attachment'].create(attachment_value)
+                        sudo_env['ir.attachment'].create(attachment_value)
                 #Stage 4: Additional info
                 elif current_stage == 5:
                     value = {
@@ -263,7 +296,7 @@ class website_project_submission(http.Controller):
                 elif current_stage == 7 and post.get('to-save') == "1" and post.get('type') and post.get('montant_subventionne') and post.get('montant_propre'):
                     value = {
                         'type': post.get('type'),
-                        'budget': post.get('montant_subventionne'),
+                        'montant_subventionne': post.get('montant_subventionne'),
                         'montant_propre': float(post.get('montant_propre')),
                         'submission': submission.id,
                     }
@@ -314,8 +347,8 @@ class website_project_submission(http.Controller):
             })
         elif next_stage == 3 or next_stage == 4:
             if post.get('edit-partner'):
-                partner = env['res.partner'].browse(int(post.get('edit-partner'))) if post.get('edit-partner') else env['res.partner'].browse(int(post.get('partner_id')))
-                documents = env['ir.attachment'].search([('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)])
+                partner = sudo_env['res.partner'].browse(int(post.get('edit-partner'))) if post.get('edit-partner') else env['res.partner'].browse(int(post.get('partner_id')))
+                documents = sudo_env['ir.attachment'].search([('res_model', '=', 'res.partner'), ('res_id', '=', partner.id)])
                 vals.update({
                     'partner': partner,
                     'documents': documents

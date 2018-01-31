@@ -20,7 +20,7 @@
 		<record id="action_project_candidate" model="ir.actions.act_window">
 			<field name="name">Candidats</field>
 			<field name="type">ir.actions.act_window</field>
-			<field name="res_model">project.candidate</field>
+			<field name="res_model">res.users</field>
 			<field name="view_type">form</field>
 			<field name="view_mode">kanban,tree,form</field>
 		</record>
@@ -287,7 +287,7 @@
 
 		<record model="ir.ui.view" id="view_project_candidate_kanban">
 			<field name="name">project.candidate.kanban</field>
-			<field name="model">project.candidate</field>
+			<field name="model">res.users</field>
 			<field name="mode">primary</field>
 			<field name="inherit_id" ref="base.res_partner_kanban_view"></field>
 			<field name="arch" type="xml">
@@ -525,7 +525,7 @@
 	
 		<record id="view_project_candidate_form" model="ir.ui.view">
 		<field name="name">project.candidate.form</field>
-		<field name="model">project.candidate</field>
+		<field name="model">res.users</field>
 		<field name="mode">primary</field>
 		<field name="inherit_id" ref="base.view_partner_form"/>
 		<field name="arch" type="xml">

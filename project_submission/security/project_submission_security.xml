@@ -35,32 +35,42 @@
 
     <record id="candidate_personal_rule" model="ir.rule">
         <field name="name">Candidat</field>
-        <field ref="model_project_candidate" name="model_id"/>
+        <field ref="model_res_users" name="model_id"/>
         <field name="domain_force">[('id','=',user.id)]</field>
         <field name="groups" eval="[(4, ref('group_candidate'))]"/>
     </record>
     <record id="candidate_submission_personal_rule" model="ir.rule">
         <field name="name">Candidatures personnels</field>
         <field ref="model_project_submission" name="model_id"/>
-        <field name="domain_force">[('candidate.user','=',user.id)]</field>
+        <field name="domain_force">[('candidate','=',user.id)]</field>
         <field name="groups" eval="[(4, ref('group_candidate'))]"/>
+    </record>
+    <record id="candidate_attachment_personal_rule" model="ir.rule">
+        <field name="name">Fichiers personnels</field>
+        <field ref="base.model_ir_attachment" name="model_id"/>
+        <field name="domain_force">[('user_id','=',user.id)]</field>
+        <field name="groups" eval="[(4, ref('group_candidate'))]"/>
+        <field name="perm_read" eval="0"/>
+        <field name="perm_create" eval="1"/>
+        <field name="perm_write" eval="1"/>
+        <field name="perm_unlink" eval="1"/>
     </record>
     <record id="candidate_submission_personnel_personal_rule" model="ir.rule">
         <field name="name">Candidatures partenaires personnels</field>
         <field ref="model_project_submission_personnel" name="model_id"/>
-        <field name="domain_force">[('submission.candidate.user','=',user.id)]</field>
+        <field name="domain_force">[('submission.candidate','=',user.id)]</field>
         <field name="groups" eval="[(4, ref('group_candidate'))]"/>
     </record>
     <record id="candidate_submission_budgetline_personal_rule" model="ir.rule">
         <field name="name">Lignes de budget personnels</field>
         <field ref="model_project_submission_budgetline" name="model_id"/>
-        <field name="domain_force">[('submission.candidate.user','=',user.id)]</field>
+        <field name="domain_force">[('submission.candidate','=',user.id)]</field>
         <field name="groups" eval="[(4, ref('group_candidate'))]"/>
     </record>
     <!-- <record id="candidate_submission_task_personal_rule" model="ir.rule">
         <field name="name">Tâches personnelles</field>
         <field ref="model_project_submission_task" name="model_id"/>
-        <field name="domain_force">[('submission.candidate.user','=',user.id)]</field>
+        <field name="domain_force">[('submission.candidate','=',user.id)]</field>
         <field name="groups" eval="[(4, ref('group_candidate'))]"/>
     </record>-->
 </data>
