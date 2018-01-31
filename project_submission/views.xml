@@ -404,7 +404,7 @@
 							</group>
 							<group>
 								<field name="montant_subventionne"/>
-								<field name="percent_subventionne"/>
+								<field name="percent_propre"/>
 							</group>
 							<group colspan="2" string="Répartition financière">
 								<field name="budget_lines">
@@ -413,7 +413,7 @@
 										<field name="budget"/>
 										<field name="montant_propre"/>
 										<field name="montant_subventionne"/>
-										<field name="percent_subventionne"/>
+										<field name="percent_propre"/>
 									</tree>
 								</field>
 							</group>
@@ -424,7 +424,8 @@
 										<field name="function"/>
 										<field name="number"/>
 										<field name="time"/>
-										<field name="montant"/>
+										<field name="montant_propre"/>
+										<field name="montant_demande"/>
 										<field name="total"/>
 									</tree>
 								</field>

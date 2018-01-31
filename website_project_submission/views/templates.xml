@@ -99,8 +99,6 @@
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/js/locales/fr.min.js"></script>
 				<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
-				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/css/bootstrap-multiselect.css" />
-				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-multiselect/0.9.13/js/bootstrap-multiselect.min.js"></script>
 			</xpath>
 		</template>
 		<template id="index" name="Offers">
@@ -232,25 +230,22 @@
 			<t t-call="website.layout">
 				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + submission.offer.name"/>
 				<div id="wrap">
-					<div class="container text-right mt8">
+					<div class="container text-right mt4">
 						<a class="btn btn-danger" href="/web/session/logout">Se déconnecter</a>
 					</div>
 					<div class="container">
-						<h1 class="text-center text-primary">
-							<span t-field="submission.offer.name"/>
-						</h1>
-						<h2 class="text-center">1<sup>ère</sup> phase de soumission en ligne<br/>ESQUISSE PROJET</h2>
-						<h4 class="text-center">Télécharger les documents associés</h4>
+						<span class="text-center">
+							<h2><span t-field="submission.offer.name"/> / <span class="text-primary" t-field="submission.acronyme"/></h2>
+						</span>
+						<h3 class="text-center">1<sup>ère</sup> phase de soumission en ligne: ESQUISSE PROJET</h3>
 						<table class="table table-condensed text-center" t-if="submission.offer.documents">
-							<tr t-foreach="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'CDC')" t-as="doc">
+							<h4 class="text-center text-muted">Documents associés</h4>
+							<tr t-foreach="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'CDC' or d.parent_id == False)" t-as="doc">
 								<td>
-									<a t-att-href="'https://iresen.badep.ma/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id"><span t-field="doc.name"/></a>
+									<a t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id"><span t-field="doc.name"/></a>
 								</td>
 							</tr>
 						</table>
-						<h3 t-if="submission" class="text-center text-muted">
-							Projet: <span class="text-primary" t-field="submission.name"/>
-						</h3>
 						<t t-call="website_project_submission.form_nav"/>
 						<div class="row">
 							<section class="col-md-12" id="forms">
@@ -278,23 +273,13 @@
 					</div>
 				</div>
 				<script>
-				    //$('.multiple-tags').select2();
+				    $('.multiple-tags').select2();
 				    $(".input-file").fileinput({
 				    	'language': 'fr',
 				    	'showPreview': false,
-				    	'showUpload': true,
+				    	'showUpload': false,
 						'uploadTitle': 'Insérer',
 				    });
-   				    $('.multiple-tags').multiselect({
-				    	'numberDisplayed': 50,
-				    	'enableFiltering': true,
-				    	'filterPlaceholder': 'Rechercher',
-				    	'buttonWidth': '100%',
-				    	'allSelectedText': 'Tous',
-				    	'nonSelectedText': 'Sélectionnez une valeur',
-				    	
-				    });
-				    //$('[data-toggle="tooltip"]').tooltip();
 				</script>
 				<style type="text/css">
 					@font-face {
@@ -369,19 +354,19 @@
 				<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="n_related_publications">Nombre de publications internationales indexées en relation avec les thématiques proposées</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="number" class="form-control" t-att-value="submission.n_related_publications" name="n_related_publications"/>
+						<input type="number" min="0" class="form-control" t-att-value="submission.n_related_publications" name="n_related_publications"/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="n_ing_doc">Nombre de doctorants/postdocs/ingénieurs proposés</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="number" class="form-control" t-att-value="submission.n_ing_doc" name="n_ing_doc"/>
+						<input type="number" min="0" class="form-control" t-att-value="submission.n_ing_doc" name="n_ing_doc"/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="n_master_pfe">Nombre de Masters et PFE</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="number" class="form-control" t-att-value="submission.n_master_pfe" name="n_master_pfe"/>
+						<input type="number" min="0" class="form-control" t-att-value="submission.n_master_pfe" name="n_master_pfe"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -477,7 +462,8 @@
 					<thead>
 						<tr>
 							<th>Nom</th>
-							<th>Mobile</th>
+							<th t-if="current_stage==3">Entité</th>
+							<th>Représentant</th>
 							<th>Email</th>
 							<th>Actions</th>
 						</tr>
@@ -487,8 +473,11 @@
 									<td>
 										<span t-field="s_partner.name"/>
 									</td>
+									<td t-if="current_stage==3">
+										<span t-field="s_partner.entite_recherche"/>
+									</td>
 									<td>
-										<span t-field="s_partner.mobile"/>
+										<span t-field="s_partner.child_ids and s_partner.child_ids[0].name"/>
 									</td>
 									<td>
 										<span t-field="s_partner.email"/>
@@ -536,6 +525,24 @@
 							<input type="text" t-att-value="partner and partner.entite_recherche" class="form-control" name="entite_recherche" />
 						</div>
 					</div>
+					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('date') and 'has-error' or ''}">
+						<label class="col-md-3 col-sm-4 control-label" for="date">Date de création</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="date" t-att-value="partner and partner.date" class="form-control" name="date" />
+						</div>
+					</div>
+					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('capital') and 'has-error' or ''}">
+						<label class="col-md-3 col-sm-4 control-label" for="capital">Capital</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="number" min="0" t-att-value="partner and partner.capital" class="form-control" name="capital" />
+						</div>
+					</div>
+					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('ca') and 'has-error' or ''}">
+						<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaires<br/><span class="text-muted">Année antérieure</span></label>
+						<div class="col-md-7 col-sm-8">
+							<input type="number" min="0" t-att-value="partner and partner.ca" class="form-control" name="ca" />
+						</div>
+					</div>
 					<div t-attf-class="form-group #{error.get('effectif') and 'has-error' or ''}">
 						<label class="col-md-3 col-sm-4 control-label" for="effectif">
 							<t t-if="current_stage==3">Effectif</t>
@@ -546,37 +553,19 @@
 							</t>
 						</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="number" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
+							<input type="number" min="0" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
 						</div>
 					</div>
 					<div t-if="current_stage==3" t-attf-class="form-group #{error.get('effectif_chercheur') and 'has-error' or ''}">
 						<label class="col-md-3 col-sm-4 control-label" for="effectif_chercheur">Effectif de chercheurs</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="number" t-att-value="partner and partner.effectif_chercheur" class="form-control" name="effectif_chercheur" />
+							<input type="number" min="0" t-att-value="partner and partner.effectif_chercheur" class="form-control" name="effectif_chercheur" />
 						</div>
 					</div>
 					<div t-if="current_stage==3" t-attf-class="form-group #{error.get('effectif_doc') and 'has-error' or ''}">
 						<label class="col-md-3 col-sm-4 control-label" for="effectif_doc">Effectif de doctorants</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="number" t-att-value="partner and partner.effectif_doc" class="form-control" name="effectif_doc" />
-						</div>
-					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('ca') and 'has-error' or ''}">
-						<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaires</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="number" t-att-value="partner and partner.ca" class="form-control" name="ca" />
-						</div>
-					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('date') and 'has-error' or ''}">
-						<label class="col-md-3 col-sm-4 control-label" for="date">Date de création</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="date" t-att-value="partner and partner.date" class="form-control" name="date" />
-						</div>
-					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('capital') and 'has-error' or ''}">
-						<label class="col-md-3 col-sm-4 control-label" for="capital">Capital</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="number" t-att-value="partner and partner.capital" class="form-control" name="capital" />
+							<input type="number" min="0" t-att-value="partner and partner.effectif_doc" class="form-control" name="effectif_doc" />
 						</div>
 					</div>
 					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('title') and 'has-error' or ''}">
@@ -682,7 +671,7 @@
 						</div>
 					</div>
 					<div t-attf-class="form-group #{error.get('contact_name') and 'has-error' or ''}">
-						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Non du représentant</label>
+						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Nom du représentant</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.child_ids and partner.child_ids[0].name" class="form-control" name="contact_name" />
 						</div>
@@ -700,22 +689,22 @@
 						</div>
 					</div>
 					<div t-attf-class="form-group #{error.get('contact_email') and 'has-error' or ''}">
-						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Adresse électronique du représentant</label>
+						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Email du représentant</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="email" t-att-value="partner and partner.child_ids and partner.child_ids[0].email" class="form-control" name="contact_email" />
 						</div>
 					</div>
 				<div class="form-group">
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-12 text-center" t-if="current_stage==4">
 						<table class="table table-condensed" t-if="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Engagements')">
 							<tr t-foreach="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Engagements')" t-as="doc">
 								<td>
-									<a t-att-href="'https://iresen.badep.ma/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">Télécharger <span t-field="doc.name"/></a>
+									<a t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">Télécharger <span t-field="doc.name"/></a>
 								</td>
 							</tr>
 						</table>
 					</div>
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre CV<br/>Joindre publications<br/>Joindre lettre d'engagement signée et scannée<br/></label>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre CV<br/>Joindre publications<br/><span t-if="current_stage==4">Joindre lettre d'engagement signée et scannée</span><br/></label>
 					<div class="col-md-7 col-sm-8">
 						<table class="table table-condensed" t-if="documents">
 							<tr t-foreach="documents" t-as="doc">
@@ -793,13 +782,11 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation du projet
-						
-						<br/>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation du projet<br/>
 						<span class="text-muted">(PowerPoint, 10 slides max)</span>
 					</label>
 					<div class="col-md-7 col-sm-8">
-						<table class="table table-condensed" t-if="submission.documents">
+						<table class="table table-condensed" t-if="submission.documents.filtered(lambda d: d.parent_id == False)">
 							<tr t-foreach="submission.documents" t-as="doc">
 								<td>
 									<span t-field="doc.name"/>
@@ -823,8 +810,7 @@
 			<h4 class="text-center text-muted">Tâches et livrables</h4>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-				<t t-if="not submission.tasks">
-					<t t-set="new" t-value="1"/></t>
+				<t t-if="not submission.tasks"><t t-set="new" t-value="1"/></t>
 				<table t-if="submission.tasks" class="table">
 					<thead>
 						<tr>
@@ -832,9 +818,7 @@
 							<th>Nom</th>
 							<th>Partenaires</th>
 							<th>Semestre</th>
-							<th>Objectives</th>
-							<th>Description</th>
-							<th>Livrables</th>
+							<!--<th>Livrables</th>-->
 							<th>Actions</th>
 						</tr>
 						<tbody>
@@ -851,17 +835,11 @@
 								<td>
 									<span t-field="s_task.semester"/>
 								</td>
-								<td>
-									<span t-field="s_task.objectives"/>
-								</td>
-								<td>
-									<span t-field="s_task.description"/>
-								</td>
-								<td>
+								<!-- <td>
 									<t t-foreach="s_task.lots" t-as="l">
 										<span t-esc="', '.join(s_task.lots.mapped('name'))"/>
 									</t>
-								</td>
+								</td> -->
 								<td>
 									<button class="btn btn-info" data-toggle="tooltip" title="Editer" type="submit" name="edit-task" t-att-value="s_task.id">
 										<i class="fa fa-pencil"/>
@@ -878,11 +856,10 @@
 					<div class="form-group text-center">
 						<button class="btn btn-primary" type="submit" name="add-task" value="1">
 							<i class="fa fa-plus"/> Ajouter une tâche
-				
-						
 						</button>
 					</div>
-					<t t-call="website_project_submission.form_header_footer"/></t>
+					<t t-call="website_project_submission.form_header_footer"/>
+				</t>
 			</form>
 			<t t-if="new or task">
 				<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
@@ -917,10 +894,7 @@
 								<!--<option>Sélectionnez une valeur...</option>-->
 								<t t-foreach="duration_steps" t-as="d">
 									<option name="semester" t-att-value="d" t-att-selected="task and d == task.semester">
-										<span>S
-											
-											<t t-esc="d"/>
-										</span>
+										<span>S<t t-esc="d"/></span>
 									</option>
 								</t>
 							</select>
@@ -952,15 +926,15 @@
 						</div>
 					</div>
 					<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
-						<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectifs</label>
+						<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectifs<br/><span class="text-muted">(Max. 600 mots)</span></label>
 						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="task and task.objectives" class="form-control" name="objectives"/>
+							<textarea maxlength="3600" t-esc="task and task.objectives" class="form-control" name="objectives"/>
 						</div>
 					</div>
 					<div t-attf-class="form-group #{error.get('description') and 'has-error' or ''}">
-						<label class="col-md-3 col-sm-4 control-label" for="description">Description</label>
+						<label class="col-md-3 col-sm-4 control-label" for="description">Description<br/><span class="text-muted">(Max. 800 mots)</span></label>
 						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="task and task.description" class="form-control" name="description"/>
+							<textarea maxlength="4200" t-esc="task and task.description" class="form-control" name="description"/>
 						</div>
 					</div>
 					<t t-call="website_project_submission.form_header_footer"/>
@@ -973,7 +947,7 @@
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<div>
-					<h5>Récapitulatif financière du projet</h5>
+					<h5 class="text-center">Répartition financière du projet</h5>
 					<table t-if="submission.budget_lines" class="table">
 						<thead>
 							<tr>
@@ -981,7 +955,7 @@
 								<th class="text-right">Financement propre</th>
 								<th class="text-right">Financement demandé</th>
 								<th class="text-right">Budget global</th>
-								<th class="text-right">Pourcentage demandé</th>
+								<th class="text-right">Pourcentage propre</th>
 							</tr>
 							<tbody>
 								<tr t-foreach="submission.budget_lines" t-as="line">
@@ -999,7 +973,7 @@
 									</td>
 									<td class="text-right">
 										<span>
-											<strong t-esc="round(line.percent_subventionne, 2)"/>&amp;nbsp;%
+											<strong t-esc="round(line.percent_propre, 2)"/>&amp;nbsp;%
 										</span>
 									</td>
 								</tr>
@@ -1027,10 +1001,134 @@
 									</td>
 									<td class="text-right">
 										<strong>
-											<span t-esc="round(submission.percent_subventionne)"/>&amp;nbsp;%
+											<span t-esc="round(submission.percent_propre, 2)"/>&amp;nbsp;%
 										</strong>
 									</td>
 								</tr>
+							</tbody>
+						</thead>
+					</table>
+				</div>
+				<div>
+					<h5 class="text-center">Détail du coût du personnel relevant du partenaire scientifique</h5>
+					<table t-if="submission.personnels" class="table">
+						<thead>
+							<tr>
+								<th>Titre</th>
+								<th class="text-right">Effectif</th>
+								<th class="text-right">Durée (en mois)</th>
+								<th class="text-right">Financement propre (MAD/Mois)</th>
+								<th class="text-right">Financement demandé (MAD/Mois)</th>
+								<th class="text-right">Total</th>
+							</tr>
+							<tbody>
+								<!-- <t t-set="tot_effectif" t-value="0"/>
+								<t t-set="tot_montant" t-value="0"/>-->
+								<tr t-foreach="submission.personnels.filtered(lambda p: p.type == 'scientifique')" t-as="line">
+									<td>
+										<span t-field="line.function"/>
+									</td>
+									<td>
+										<input type="number" min="0" t-att-name="str(line.id) + 'number'" t-att-value="line.number"/>
+										<!-- <t t-set="tot_effectif" t-att-value="float(tot_effectif) + line.number"/>-->
+									</td>
+									<td class="text-right">
+										<input type="number" min="0" t-att-name="str(line.id) + 'time'" t-att-value="line.time"/>
+									</td>
+									<td class="text-right">
+										<input type="number" min="0" t-att-name="str(line.id) + 'montant_propre_personnel'" t-att-value="line.montant_propre"/>
+									</td>
+									<td class="text-right">
+										<input type="number" min="0" t-att-name="str(line.id) + 'montant_demande_personnel'" t-att-value="line.montant_demande"/>
+									</td>
+									<td class="text-right">
+										<span t-field="line.total"/>
+										<!-- <t t-set="tot_montant" t-esc="tot_montant + line.total"/>-->
+									</td>
+								</tr>
+								<!-- <tr>
+									<td class="text-right">
+										<strong>Total:</strong>
+									</td>
+									<td class="text-right">
+										<strong>
+											<t t-esc="tot_effectif"/>&amp;nbsp;MAD
+										</strong>
+									</td>
+									<td class="text-right">
+									</td>
+									<td class="text-right">
+									</td>
+									<td class="text-right">
+									</td>
+									<td class="text-right">
+										<strong>
+											<span t-esc="tot_montant"/>&amp;nbsp;%
+										</strong>
+									</td>
+								</tr> -->
+							</tbody>
+						</thead>
+					</table>
+				</div>
+				<div>
+					<h5 class="text-center">Détail du coût du personnel relevant du partenaire industriel</h5>
+					<table t-if="submission.personnels" class="table">
+						<thead>
+							<tr>
+								<th>Titre</th>
+								<th class="text-right">Effectif</th>
+								<th class="text-right">Durée (en mois)</th>
+								<th class="text-right">Financement propre (MAD/Mois)</th>
+								<th class="text-right">Financement demandé (MAD/Mois)</th>
+								<th class="text-right">Total</th>
+							</tr>
+							<tbody>
+								<!-- <t t-set="tot_effectif" t-value="0"/>
+								<t t-set="tot_montant" t-value="0"/>-->
+								<tr t-foreach="submission.personnels.filtered(lambda p: p.type == 'industriel')" t-as="line">
+									<td>
+										<span t-field="line.function"/>
+									</td>
+									<td>
+										<input type="number" min="0" t-att-name="str(line.id) + 'number'" t-att-value="line.number"/>
+										<!-- <t t-set="tot_effectif" t-att-value="float(tot_effectif) + line.number"/> -->
+									</td>
+									<td class="text-right">
+										<input type="number" min="0" t-att-name="str(line.id) + 'time'" t-att-value="line.time"/>
+									</td>
+									<td class="text-right">
+										<input type="number" min="0" t-att-name="str(line.id) + 'montant_propre_personnel'" t-att-value="line.montant_propre"/>
+									</td>
+									<td class="text-right">
+										<input type="number" min="0" t-att-name="str(line.id) + 'montant_demande_personnel'" t-att-value="line.montant_demande"/>
+									</td>
+									<td class="text-right">
+										<span t-field="line.total"/>
+										<!-- <t t-set="tot_montant" t-esc="float(tot_montant) + line.total"/> -->
+									</td>
+								</tr>
+								<!-- <tr>
+									<td class="text-right">
+										<strong>Total:</strong>
+									</td>
+									<td class="text-right">
+										<strong>
+											<t t-esc="tot_effectif"/>&amp;nbsp;MAD
+										</strong>
+									</td>
+									<td class="text-right">
+									</td>
+									<td class="text-right">
+									</td>
+									<td class="text-right">
+									</td>
+									<td class="text-right">
+										<strong>
+											<span t-esc="tot_montant"/>&amp;nbsp;%
+										</strong>
+									</td>
+								</tr> -->
 							</tbody>
 						</thead>
 					</table>
@@ -1042,34 +1140,34 @@
 		<template id="apply8">
 			<h4 class="text-center text-muted">Soumission</h4>
 			<h3 class="text-center">Joindre la convention de collaboration</h3>
-			<div class="col-md-7 col-sm-8">
-						<table class="table table-condensed" t-if="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Conventions')">
-							<tr t-foreach="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Conventions')" t-as="doc">
-								<td>
-									<a t-att-href="'https://iresen.badep.ma/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">Télécharger <span t-field="doc.name"/></a>
-								</td>
-							</tr>
-						</table>
-					</div>
-			<label class="text-center">Merci de remplir, signer, scanner et insérer la convention de collaboration<br/><span class="text-muted">(vous pouvez télécharger le modèle de convention de collaboration)</span></label>
-			
-						<table class="table table-condensed" t-if="documents">
-							<tr t-foreach="documents" t-as="doc">
-								<td>
-									<span t-field="doc.name"/>
-								</td>
-								<td class="text-right">
-									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-doc" t-att-value="doc.id">
-										<i class="fa fa-trash"/>
-									</button>
-								</td>
-							</tr>
-						</table>
-						<input accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
-						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
-			
+			<div class="col-md-12">
+				<table class="table table-condensed" t-if="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Conventions')">
+					<tr t-foreach="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Conventions')" t-as="doc">
+						<td>
+							<a t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">Télécharger <span t-field="doc.name"/></a>
+						</td>
+					</tr>
+				</table>
+			</div>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<div class="form-group">
+					<label class="text-center">Merci de remplir, signer, scanner en PDF et insérer la convention de collaboration<br/><span class="text-muted">(vous pouvez télécharger le modèle de convention de collaboration)</span></label>
+					<table class="table table-condensed" t-if="submission.documents.filtered(lambda d: d.parent_id.name == 'Conventions')">
+						<tr t-foreach="documents" t-as="doc">
+							<td>
+								<span t-field="doc.name"/>
+							</td>
+							<td class="text-right">
+								<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-doc" t-att-value="doc.id">
+									<i class="fa fa-trash"/>
+								</button>
+							</td>
+						</tr>
+					</table>
+					<input accept=".pdf" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+					<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+				</div>
 				<div class="form-group">
 					<div class="col-md-12 text-center">
 						<button type="submit" name="submit" value="submit" class="btn btn-primary">Valider ma soumission</button>

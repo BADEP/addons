@@ -194,7 +194,7 @@ class ProjectSubmission(models.Model):
     budget = fields.Float(compute='_get_amounts', store=False, digital_precision=dp.get_precision('Account'))
     montant_subventionne = fields.Float(compute='_get_amounts', string="Montant subventionné", store=False, digital_precision=dp.get_precision('Account'))
     montant_propre = fields.Float(compute='_get_amounts', string="Financement propre", store=False, digital_precision=dp.get_precision('Account'))
-    percent_subventionne = fields.Float(compute='_get_amounts', digital_precision=2, string="Pourcentage subventionné (%)", store=True)
+    percent_propre = fields.Float(compute='_get_amounts', digital_precision=2, string="Pourcentage propre (%)", store=True)
     budget_lines = fields.One2many('project.submission.budgetline', 'submission', string="Lignes de budget")
     personnels = fields.One2many('project.submission.personnel', 'submission', string="Personnels")
     duration = fields.Integer('Durée du projet (en semestres)')
@@ -231,7 +231,7 @@ class ProjectSubmission(models.Model):
         self.budget = sum(self.budget_lines.mapped('budget'))
         self.montant_subventionne = sum(self.budget_lines.mapped('montant_subventionne'))
         self.montant_propre = sum(self.budget_lines.mapped('montant_propre'))
-        self.percent_subventionne = (self.montant_subventionne / self.budget)*100 if self.budget != 0 else 0
+        self.percent_propre = (self.montant_propre / self.budget)*100 if self.budget != 0 else 0
   
     @api.one
     def _get_attached_docs(self):
@@ -309,15 +309,17 @@ class ResPartner(models.Model):
     effectif = fields.Integer('Effectif global')
     effectif_chercheur = fields.Integer('Effectif de chercheurs')
     effectif_doc = fields.Integer('Effectif de doctorants')
-    capital = fields.Integer('Capital')
+    capital = fields.Float('Capital')
     cnss = fields.Char('CNSS')
     rc = fields.Char('Registre de commerce')
-    ca = fields.Char('Chiffre d\'affaire')
+    ca = fields.Float('Chiffre d\'affaires')
 
 class ProjectPartnerFunction(models.Model):
     _name = 'project.partner.function'
     
     name = fields.Char(required=True, string='Nom')
+    is_scientifique = fields.Boolean(default=True, string='Scientifique')
+    is_industriel = fields.Boolean(default=True, string='Industriel')
 
 class ProjectSubmissionTask(models.Model):
     _name = 'project.submission.task'
@@ -370,24 +372,25 @@ class ProjectSubmissionPersonnel(models.Model):
     
     type = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')], required=True)
     function = fields.Many2one('project.partner.function', string='Titre')
-    number = fields.Integer(string='Effectif')
-    time = fields.Integer(string='Durée (mois)', required=True)
-    montant = fields.Float(digital_precision=dp.get_precision('Account'), required=True, string='Financement demandé / mois')
+    number = fields.Integer(string='Effectif', default=0)
+    time = fields.Integer(string='Durée (mois)', required=True, default=0)
+    montant_propre = fields.Float(digital_precision=dp.get_precision('Account'), required=True, string='Financement propre / mois', default=0)
+    montant_demande = fields.Float(digital_precision=dp.get_precision('Account'), required=True, string='Financement demandé / mois', default=0)
     total = fields.Float(digital_precision=dp.get_precision('Account'), compute='_get_total', store=True)
     
     @api.one
-    @api.depends('time', 'montant')
+    @api.depends('time', 'montant_propre', 'montant_demande')
     def _get_total(self):
-        self.total = self.time * self.montant
+        self.total = self.time * (self.montant_propre + self.montant_demande)
 
 class ProjectSubmissionBudgetLine(models.Model):
     _name = 'project.submission.budgetline'
     
     submission = fields.Many2one('project.submission', required=True, ondelete='cascade')
-    montant_subventionne = fields.Float(digital_precision=dp.get_precision('Account'), required=True)
-    montant_propre = fields.Float(digital_precision=dp.get_precision('Account'), required=True)
+    montant_subventionne = fields.Float(digital_precision=dp.get_precision('Account'), required=True, default=0)
+    montant_propre = fields.Float(digital_precision=dp.get_precision('Account'), required=True, default=0)
     budget = fields.Float(compute='_get_amount', store=True, digital_precision=dp.get_precision('Account'))
-    percent_subventionne = fields.Float(compute='_get_amount', digital_precision=2, store=True)
+    percent_propre = fields.Float(compute='_get_amount', digital_precision=2, store=True, string='Pourcentage propre')
     type = fields.Many2one('project.budgetline.type', required=True)
     
     _sql_constraints = [
@@ -400,7 +403,7 @@ class ProjectSubmissionBudgetLine(models.Model):
     @api.depends('montant_subventionne', 'montant_propre')
     def _get_amount(self):
         self.budget = self.montant_subventionne + self.montant_propre
-        self.percent_subventionne = (self.montant_subventionne / self.budget)*100 if self.budget != 0 else 0
+        self.percent_propre = (self.montant_propre / self.budget)*100 if self.budget != 0 else 0
 
 class ProjectBudgetLineType(models.Model):
     _name = 'project.budgetline.type'

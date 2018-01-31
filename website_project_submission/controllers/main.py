@@ -197,30 +197,29 @@ class WebsiteProjectSubmission(http.Controller):
                         if not category_id:
                             category_id = env['res.partner.category'].create({'name': post.get('category_id')})
                     partner_value = {
-                        'name': post.get('name'),
-                        'country_id': post.get('partner_country'),
+                        'name': post.get('name') and post.get('name'),
+                        'country_id': post.get('partner_country') and post.get('partner_country'),
                         'is_company': True,
-                        'city': post.get('city'),
-                        'zip': post.get('zip'),
-                        'street': post.get('street'),
-                        'street2': post.get('street2'),
-                        'email': post.get('email'),
-                        'phone': post.get('phone'),
-                        'fax': post.get('fax'),
-                        'email': post.get('email'),
-                        'website': post.get('website'),
-                        'cnss': post.get('cnss'),
-                        'ca': post.get('ca'),
-                        'capital': post.get('capital'),
-                        'partner_references': post.get('partner_references'),
-                        'rc': post.get('rc'),
+                        'city': post.get('city') and post.get('city'),
+                        'zip': post.get('zip') and post.get('zip'),
+                        'street': post.get('street') and post.get('street'),
+                        'street2': post.get('street2') and post.get('street2'),
+                        'email': post.get('email') and post.get('email'),
+                        'phone': post.get('phone') and post.get('phone'),
+                        'fax': post.get('fax') and post.get('fax'),
+                        'website': post.get('website') and post.get('website'),
+                        'cnss': post.get('cnss') and post.get('cnss'),
+                        'ca': post.get('ca') and post.get('ca'),
+                        'capital': post.get('capital') and post.get('capital'),
+                        'partner_references': post.get('partner_references') and post.get('partner_references'),
+                        'rc': post.get('rc') and post.get('rc'),
                         'category_id': category_id and [(6, 0, [category_id.id])],
-                        'title': post.get('title'),
-                        'date': post.get('date'),
-                        'effectif_doc': post.get('effectif_doc'),
-                        'effectif': post.get('effectif'),
-                        'effectif_chercheur': post.get('effectif_chercheur'),
-                        'entite_recherche': post.get('entite_recherche'),
+                        'title': post.get('title') and post.get('title'),
+                        'date': post.get('date') != '' and post.get('date'),
+                        'effectif_doc': post.get('effectif_doc') and post.get('effectif_doc'),
+                        'effectif': post.get('effectif') and post.get('effectif'),
+                        'effectif_chercheur': post.get('effectif_chercheur') and post.get('effectif_chercheur'),
+                        'entite_recherche': post.get('entite_recherche') and post.get('entite_recherche'),
                         #'parent_id': partner_organisme.id,
                         'category': 'scientifique' if current_stage == 3 else 'industriel',
                         'submissions': [(4, submission.id)]
@@ -299,6 +298,26 @@ class WebsiteProjectSubmission(http.Controller):
                             'montant_subventionne': post.get(str(line.id)+'montant_subventionne') and float(post.get(str(line.id)+'montant_subventionne'))
                         }
                         line.write(vals)
+                    for line in submission.personnels:
+                        vals = {
+                            'time': post.get(str(line.id) + 'time') and int(post.get(str(line.id) + 'time')),
+                            'number': post.get(str(line.id) + 'number') and float(post.get(str(line.id) + 'number')),
+                            'montant_propre': post.get(str(line.id)+'montant_propre_personnel') and float(post.get(str(line.id) + 'montant_propre_personnel')),
+                            'montant_demande': post.get(str(line.id)+'montant_demande_personnel') and float(post.get(str(line.id) + 'montant_demande_personnel'))
+                        }
+                        line.write(vals)
+                elif current_stage == 8:
+                    if post.get('ufile'):
+                        attachment_value = {
+                            'name': post['ufile'].filename,
+                            'res_name': submission.name,
+                            'res_model': 'project.submission',
+                            'res_id': submission.id,
+                            'datas': base64.encodestring(post['ufile'].read()),
+                            'datas_fname': post['ufile'].filename,
+                            'parent_id': sudo_env['document.directory'].search([('name', '=', 'Conventions')]) and sudo_env['document.directory'].search([('name', '=', 'Conventions')]).ids[0]
+                        }
+                        sudo_env['ir.attachment'].create(attachment_value)
         except ValidationError, e:
             next_stage = current_stage
             if post.get('partner_id'):
@@ -382,18 +401,24 @@ class WebsiteProjectSubmission(http.Controller):
             for missing_type in missing_types:
                 env['project.submission.budgetline'].create({
                     'submission': submission.id,
-                    'montant_subventionne': 0,
-                    'montant_propre': 0,
                     'type': missing_type.id
                 })
-            """if post.get('edit-budgetline'):
-                budgetline = env['project.submission.budgetline'].browse(int(post.get('edit-budgetline')))
-                vals.update({'budgetline': budgetline})
-            if post.get('add-budgetline'):
-                vals.update({'new': True})
-            else:
-                vals.update({'new': False})"""
-            
+            scientifique_functions = env['project.partner.function'].search([('is_scientifique', '=', True)])
+            missing_scientifique_functions = scientifique_functions - submission.personnels.filtered(lambda p: p.type == 'scientifique').mapped('function')
+            for missing_function in missing_scientifique_functions:
+                env['project.submission.personnel'].create({
+                    'type': 'scientifique',
+                    'function': missing_function.id,
+                    'submission': submission.id,
+                })
+            industriel_functions = env['project.partner.function'].search([('is_industriel', '=', True)])
+            missing_industriel_functions = industriel_functions - submission.personnels.filtered(lambda p: p.type == 'industriel').mapped('function')
+            for missing_function in missing_industriel_functions:
+                env['project.submission.personnel'].create({
+                    'type': 'industriel',
+                    'function': missing_function.id,
+                    'submission': submission.id,
+                })
             vals.update({
                 'error': error,
             })
