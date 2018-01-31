@@ -23,9 +23,9 @@
 					<table class="table table-hover o_my_status_table">
 						<thead>
 							<tr class="active">
-								<th>Nom</th>
-								<th>Offre</th>
+								<th>Projet</th>
 								<th>Acronyme</th>
+								<th>Appel à projets</th>
 								<th>Statut</th>
 							</tr>
 						</thead>
@@ -37,10 +37,10 @@
 									</a>
 								</td>
 								<td>
-									<span t-field="submission.offer.name"/>
+									<span t-field="submission.acronyme"/>
 								</td>
 								<td>
-									<span t-field="submission.acronyme"/>
+									<span t-field="submission.offer.name"/>
 								</td>
 								<td>
 									<span t-field="submission.state"/>
@@ -50,12 +50,14 @@
 					</table>
 				</div>
 			</t>
+			<div class="col-xs-12 mt8"><a class="btn btn-primary" href="/offers">Soumettre un nouveau projet</a></div>
 		</template>
 		
 		<template id="submissions_only">
 			<t t-call="website.layout">
 				<div id="wrap">
 					<div class="container mb64">
+						<t t-call="submissions"/>
 					</div>
 				</div>
 			</t>
@@ -237,17 +239,17 @@
 						<h1 class="text-center text-primary">
 							<span t-field="submission.offer.name"/>
 						</h1>
-						<h2 class="text-center">1
-							
-							<sup>ère</sup> phase de soumission en ligne
-							
-							<br/>ESQUISSE PROJET
-						
-						</h2>
+						<h2 class="text-center">1<sup>ère</sup> phase de soumission en ligne<br/>ESQUISSE PROJET</h2>
+						<h4 class="text-center">Télécharger les documents associés</h4>
+						<table class="table table-condensed text-center" t-if="submission.offer.documents">
+							<tr t-foreach="submission.offer.documents" t-as="doc">
+								<td>
+									<a t-att-href="'https://iresen.badep.ma/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id"><span t-field="doc.name"/></a>
+								</td>
+							</tr>
+						</table>
 						<h3 t-if="submission" class="text-center text-muted">
-							Projet: 
-							
-							<span class="text-primary" t-field="submission.name"/>
+							Projet: <span class="text-primary" t-field="submission.name"/>
 						</h3>
 						<t t-call="website_project_submission.form_nav"/>
 						<div class="row">
@@ -324,7 +326,7 @@
 					</div>
 				</div>
 				<div t-attf-class="form-group #{error.get('field') and 'has-error' or ''}">
-					<label class="col-md-3 col-sm-4 control-label" for="field">Thématiques</label>
+					<label class="col-md-3 col-sm-4 control-label" for="field">Thématiques<br/><span class="text-muted">(Vous pouvez ajouter plusieurs thématiques)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<select multiple="multiple" id="fields" name="fields" class="form-control multiple-tags">
 							<t t-foreach="fields" t-as="f">
@@ -359,11 +361,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="description">Résumé du projet
-						
-						<br/>
-						<span class="text-muted">(max 600 mots)</span>
-					</label>
+					<label class="col-md-3 col-sm-4 control-label" for="description">Résumé du projet<br/><span class="text-muted">(max 600 mots)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<textarea maxlength="3600" class="form-control" t-esc="submission.description" name="description" style="min-height: 120px"/>
 					</div>
@@ -437,13 +435,7 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre CV
-						
-						<br/>Joindre publications
-						
-						<br/>
-						<span class="text-muted">(5 minimum)</span>
-					</label>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre CV<br/>Joindre publications<br/><span class="text-muted">(5 minimum)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<table class="table table-condensed" t-if="submission.candidate.self_documents">
 							<tr t-foreach="submission.candidate.self_documents" t-as="doc">
@@ -713,29 +705,25 @@
 							<input type="email" t-att-value="partner and partner.child_ids and partner.child_ids[0].email" class="form-control" name="contact_email" />
 						</div>
 					</div>
-					<div class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre CV
-							
-							<br/>Joindre publications
-						
-						</label>
-						<div class="col-md-7 col-sm-8">
-							<table class="table table-condensed" t-if="documents">
-								<tr t-foreach="documents" t-as="doc">
-									<td>
-										<span t-field="doc.name"/>
-									</td>
-									<td class="text-right">
-										<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-doc" t-att-value="doc.id">
-											<i class="fa fa-trash"/>
-										</button>
-									</td>
-								</tr>
-							</table>
-							<input accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
-							<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
-						</div>
+				<div class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre CV<br/>Joindre publications<br/>Joindre lettre d'engagement<br/></label>
+					<div class="col-md-7 col-sm-8">
+						<table class="table table-condensed" t-if="documents">
+							<tr t-foreach="documents" t-as="doc">
+								<td>
+									<span t-field="doc.name"/>
+								</td>
+								<td class="text-right">
+									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-doc" t-att-value="doc.id">
+										<i class="fa fa-trash"/>
+									</button>
+								</td>
+							</tr>
+						</table>
+						<input accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
+				</div>
 					<t t-call="website_project_submission.form_header_footer"/>
 				</form>
 			</t>
@@ -975,127 +963,93 @@
 			<h4 class="text-center text-muted">Montage financier</h4>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-				<table t-if="submission.budget_lines" class="table">
-					<thead>
-						<tr>
-							<th>Type</th>
-							<th class="text-right">Budget global</th>
-							<th class="text-right">Financement propre</th>
-							<th class="text-right">Financement demandé</th>
-							<th class="text-right">Pourcentage demandé</th>
-							<th class="text-right">Actions</th>
-						</tr>
-						<tbody>
-							<tr t-foreach="submission.budget_lines" t-as="line">
-								<td>
-									<span t-field="line.type"/>
-								</td>
-								<td class="text-right">
-									<span>
-										<span t-field="line.budget"/> MAD</span>
-								</td>
-								<td class="text-right">
-									<span>
-										<span t-field="line.montant_propre"/>&amp;nbsp;MAD</span>
-								</td>
-								<td class="text-right">
-									<span>
-										<span t-field="line.montant_subventionne"/>&amp;nbsp;MAD</span>
-								</td>
-								<td class="text-right">
-									<span>
-										<strong t-esc="round(line.percent_subventionne, 2)"/>&amp;nbsp;%
-									
-									</span>
-								</td>
-								<td>
-									<button class="btn btn-info" type="submit" name="edit-budgetline" t-att-value="line.id">
-										<i class="fa fa-pencil"/>
-									</button>
-									<button class="btn btn-danger" type="submit" name="unlink-budgetline" t-att-value="line.id">
-										<i class="fa fa-trash"/>
-									</button>
-								</td>
-							</tr>
+				<div>
+					<h5>Récapitulatif financière du projet</h5>
+					<table t-if="submission.budget_lines" class="table">
+						<thead>
 							<tr>
-								<td class="text-right">
-									<strong>Total:</strong>
-								</td>
-								<td class="text-right">
-									<strong>
-										<span t-field="submission.budget"/>&amp;nbsp;MAD
-									
-									</strong>
-								</td>
-								<td class="text-right">
-									<strong>
-										<span t-field="submission.montant_propre"/>&amp;nbsp;MAD
-									
-									</strong>
-								</td>
-								<td class="text-right">
-									<strong>
-										<span t-field="submission.montant_subventionne"/>&amp;nbsp;MAD
-									
-									</strong>
-								</td>
-								<td class="text-right">
-									<strong>
-										<span t-esc="round(submission.percent_subventionne)"/>&amp;nbsp;%
-									
-									</strong>
-								</td>
+								<th>Type</th>
+								<th class="text-right">Financement propre</th>
+								<th class="text-right">Financement demandé</th>
+								<th class="text-right">Budget global</th>
+								<th class="text-right">Pourcentage demandé</th>
 							</tr>
-						</tbody>
-					</thead>
-				</table>
-				<t  t-if="not new and not budgetline" >
-					<div class="form-group text-center">
-						<button class="btn btn-primary" type="submit" name="add-budgetline" value="1">
-							<i class="fa fa-plus"/> Ajouter une ligne
-						</button>
-					</div>
-					<t t-call="website_project_submission.form_header_footer"/></t>
+							<tbody>
+								<tr t-foreach="submission.budget_lines" t-as="line">
+									<td>
+										<span t-field="line.type"/>
+									</td>
+									<td class="text-right">
+										<input type="number" min="0" t-att-name="str(line.id) + 'montant_propre'" t-att-value="line.montant_propre"/>
+									</td>
+									<td class="text-right">
+										<input type="number" min="0" t-att-name="str(line.id) + 'montant_subventionne'" t-att-value="line.montant_subventionne"/>
+									</td>
+									<td class="text-right">
+										<span t-field="line.budget"/>
+									</td>
+									<td class="text-right">
+										<span>
+											<strong t-esc="round(line.percent_subventionne, 2)"/>&amp;nbsp;%
+										</span>
+									</td>
+								</tr>
+								<tr>
+									<td class="text-right">
+										<strong>Total:</strong>
+									</td>
+									<td class="text-right">
+										<strong>
+											<span t-field="submission.montant_propre"/>&amp;nbsp;MAD
+										
+										</strong>
+									</td>
+									<td class="text-right">
+										<strong>
+											<span t-field="submission.montant_subventionne"/>&amp;nbsp;MAD
+										
+										</strong>
+									</td>
+									<td class="text-right">
+										<strong>
+											<span t-field="submission.budget"/>&amp;nbsp;MAD
+										
+										</strong>
+									</td>
+									<td class="text-right">
+										<strong>
+											<span t-esc="round(submission.percent_subventionne)"/>&amp;nbsp;%
+										</strong>
+									</td>
+								</tr>
+							</tbody>
+						</thead>
+					</table>
+				</div>
+				<t t-call="website_project_submission.form_header_footer"/>
 			</form>
-			<t t-if="new or budgetline">
-				<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-					<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-					<input type="hidden" name="to-save" value="1"/>
-					<t t-if="budgetline">
-						<input type="hidden" name="budgetline_id" t-att-value="'%s' % budgetline.id"/>
-					</t>
-					<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
-						<label class="col-md-3 col-sm-4 control-label" for="type">Rubrique</label>
-						<div class="col-md-7 col-sm-8">
-							<select name="type" t-att-value="budgetline and budgetline.type" id="type" class="form-control" >
-								<!--<option>Sélectionnez une valeur...</option>-->
-								<t t-foreach="types - submission.budget_lines.mapped('type')" t-as="t">
-									<option t-att-value="t.id"  t-att-selected="budgetline and t.id == budgetline.type">
-										<t t-esc="t.name"/>
-									</option>
-								</t>
-							</select>
-						</div>
-					</div>
-					<div t-attf-class="form-group #{error.get('montant_propre') and 'has-error' or ''}">
-						<label class="col-md-3 col-sm-4 control-label" for="montant_propre">Financement propre (MAD)</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="number" t-att-value="budgetline and budgetline.montant_propre" class="form-control" name="montant_propre" />
-						</div>
-					</div>
-					<div t-attf-class="form-group #{error.get('montant_subventionne') and 'has-error' or ''}">
-						<label class="col-md-3 col-sm-4 control-label" for="montant_subventionne">Financement demandé (MAD)</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="number" t-att-value="budgetline and budgetline.montant_subventionne" class="form-control" name="montant_subventionne" />
-						</div>
-					</div>
-					<t t-call="website_project_submission.form_header_footer"/>
-				</form>
-			</t>
 		</template>
 		<!-- Descriptif detaillé -->
 		<template id="apply8">
 			<h4 class="text-center text-muted">Soumission</h4>
+			<h3 class="text-center">Joindre la convention de collaboration</h3>
+			<label class="text-center">Merci de remplir, signer, scanner et insérer la convention de collaboration<br/><span class="text-muted">(vous pouvez télécharger le modèle de convention de collaboration)</span></label>
+			
+						<table class="table table-condensed" t-if="documents">
+							<tr t-foreach="documents" t-as="doc">
+								<td>
+									<span t-field="doc.name"/>
+								</td>
+								<td class="text-right">
+									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-doc" t-att-value="doc.id">
+										<i class="fa fa-trash"/>
+									</button>
+								</td>
+							</tr>
+						</table>
+						<input accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+			
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<div class="form-group">

@@ -236,8 +236,7 @@ class WebsiteProjectSubmission(http.Controller):
                         'phone': post.get('contact_phone'),
                         'email': post.get('contact_email'),
                         'parent_id': partner.id,
-                        'category': 'scientifique' if current_stage == 3 else 'industriel',
-                        'submissions': [(4, submission.id)]
+                        'category': 'scientifique' if current_stage == 3 else 'industriel'
                     }
                     contact = partner.child_ids.filtered(lambda c: c.name == post.get('contact_name'))
                     if contact:
@@ -293,18 +292,13 @@ class WebsiteProjectSubmission(http.Controller):
                     else:
                         env['project.submission.task'].create(value)
                 #Stage 6: Project budget informations
-                elif current_stage == 7 and post.get('to-save') == "1" and post.get('type') and post.get('montant_subventionne') and post.get('montant_propre'):
-                    value = {
-                        'type': post.get('type'),
-                        'montant_subventionne': post.get('montant_subventionne'),
-                        'montant_propre': float(post.get('montant_propre')),
-                        'submission': submission.id,
-                    }
-                    if post.get('budgetline_id') is not None:
-                        budgetline = env['project.submission.budgetline'].browse(int(post.get('budgetline_id')))
-                        budgetline.write(value)
-                    else:
-                        env['project.submission.budgetline'].create(value)
+                elif current_stage == 7:
+                    for line in submission.budget_lines:
+                        vals = {
+                            'montant_propre': post.get(str(line.id)+'montant_propre') and float(post.get(str(line.id)+'montant_propre')),
+                            'montant_subventionne': post.get(str(line.id)+'montant_subventionne') and float(post.get(str(line.id)+'montant_subventionne'))
+                        }
+                        line.write(vals)
         except ValidationError, e:
             next_stage = current_stage
             if post.get('partner_id'):
@@ -384,15 +378,23 @@ class WebsiteProjectSubmission(http.Controller):
             })
         elif next_stage == 7:
             types = env['project.budgetline.type'].search([])
-            if post.get('edit-budgetline'):
+            missing_types = types - submission.budget_lines.mapped('type')
+            for missing_type in missing_types:
+                env['project.submission.budgetline'].create({
+                    'submission': submission.id,
+                    'montant_subventionne': 0,
+                    'montant_propre': 0,
+                    'type': missing_type.id
+                })
+            """if post.get('edit-budgetline'):
                 budgetline = env['project.submission.budgetline'].browse(int(post.get('edit-budgetline')))
                 vals.update({'budgetline': budgetline})
             if post.get('add-budgetline'):
                 vals.update({'new': True})
             else:
-                vals.update({'new': False})
+                vals.update({'new': False})"""
+            
             vals.update({
-                'types': types,
                 'error': error,
             })
         return request.render('website_project_submission.apply', vals)
