@@ -242,7 +242,7 @@
 						<h2 class="text-center">1<sup>ère</sup> phase de soumission en ligne<br/>ESQUISSE PROJET</h2>
 						<h4 class="text-center">Télécharger les documents associés</h4>
 						<table class="table table-condensed text-center" t-if="submission.offer.documents">
-							<tr t-foreach="submission.offer.documents" t-as="doc">
+							<tr t-foreach="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'CDC')" t-as="doc">
 								<td>
 									<a t-att-href="'https://iresen.badep.ma/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id"><span t-field="doc.name"/></a>
 								</td>
@@ -706,7 +706,16 @@
 						</div>
 					</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre CV<br/>Joindre publications<br/>Joindre lettre d'engagement<br/></label>
+					<div class="col-md-7 col-sm-8">
+						<table class="table table-condensed" t-if="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Engagements')">
+							<tr t-foreach="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Engagements')" t-as="doc">
+								<td>
+									<a t-att-href="'https://iresen.badep.ma/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">Télécharger <span t-field="doc.name"/></a>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre CV<br/>Joindre publications<br/>Joindre lettre d'engagement signée et scannée<br/></label>
 					<div class="col-md-7 col-sm-8">
 						<table class="table table-condensed" t-if="documents">
 							<tr t-foreach="documents" t-as="doc">
@@ -1033,6 +1042,15 @@
 		<template id="apply8">
 			<h4 class="text-center text-muted">Soumission</h4>
 			<h3 class="text-center">Joindre la convention de collaboration</h3>
+			<div class="col-md-7 col-sm-8">
+						<table class="table table-condensed" t-if="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Conventions')">
+							<tr t-foreach="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Conventions')" t-as="doc">
+								<td>
+									<a t-att-href="'https://iresen.badep.ma/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">Télécharger <span t-field="doc.name"/></a>
+								</td>
+							</tr>
+						</table>
+					</div>
 			<label class="text-center">Merci de remplir, signer, scanner et insérer la convention de collaboration<br/><span class="text-muted">(vous pouvez télécharger le modèle de convention de collaboration)</span></label>
 			
 						<table class="table table-condensed" t-if="documents">
