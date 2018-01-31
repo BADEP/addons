@@ -972,10 +972,9 @@
 		<!-- Descriptif detaillé -->
 		<template id="apply8">
 			<h4 class="text-center text-muted">Soumission</h4>
-			<div class="form-group">
-				
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre la convention de collaboration<br/></label>
-					<div class="col-md-7 col-sm-8">
+			<h3 class="text-center">Joindre la convention de collaboration</h3>
+			<label class="text-center">Merci de remplir, signer, scanner et insérer la convention de collaboration<br/><span class="text-muted">(vous pouvez télécharger le modèle de convention de collaboration)</span></label>
+			
 						<table class="table table-condensed" t-if="documents">
 							<tr t-foreach="documents" t-as="doc">
 								<td>
@@ -990,8 +989,7 @@
 						</table>
 						<input accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
 						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
-					</div>
-				</div>
+			
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<div class="form-group">
