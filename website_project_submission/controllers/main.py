@@ -307,6 +307,30 @@ class WebsiteProjectSubmission(http.Controller):
                         }
                         line.write(vals)
                 elif current_stage == 8:
+                    invalid_stages = []
+                    invalid_stages[0] = {
+                        'L`\'acronyme du projet est manquant': submission.acronyme == False or submission.acronyme == '',
+                        'L`\'intitulé du projet est manquant': submission.name == False or submission.name == '',
+                        'La thématique du projet est manquante': submission.field_ids == False or submission.field_ids == '',
+                        'Le partenaire du projet est manquant': submission.partners == False or submission.partners == '',
+                        'La description du projet est manquant': submission.description == False or submission.description == '',
+                        'L`\'état de l art du projet est manquant': submission.etat_art == False or submission.etat_art == '',
+                        'L`\'objectif global du projet est manquant': submission.objective == False or submission.objective == '',
+                        'Les objectifs spécifiques du projet est manquant': submission.objectives == False or submission.objectives == '',
+                        'Les retombées attendues du projet sont manquants': submission.fallout == False or submission.fallout == '',
+                        'Les perspectives du projet sont manquants': submission.perspective == False or submission.perspective == '',
+                        'Le nombre de publication du projet est manquant': submission.n_related_publications == False or submission.n_related_publications == '',
+                        'Le nombre de doctorant du projet est manquant': submission.n_ing_doc == False or submission.n_ing_doc == '',
+                        'Le nombre de pfe et master du projet est manquant': submission.n_master_pfe == False or submission.n_master_pfe == '',
+                        'Le nombre des documents joints doit être supérieur ou égal à 7': submission.documents_count < 7,
+                        'Le montant subventionné du projet est manquant': submission.montant_subventionne == False or submission.montant_subventionne == '',
+                        'Le montant propre du projet est manquant': submission.montant_propre == False or submission.montant_propre == '',
+                        'Le pourcentage propre doit être supérieur ou égal à 30': submission.percent_propre < 30 ,
+                        'Le personnel du projet est manquant': submission.personnels == False or submission.personnels == '',
+                        'La durée projet est manquante': submission.duration == False or submission.duration == '',
+                        'Les tâches et livrables du projet sont manquants': submission.tasks == False or submission.tasks == '',
+                    }
+                    
                     if post.get('ufile'):
                         attachment_value = {
                             'name': post['ufile'].filename,
