@@ -176,6 +176,17 @@ class WebsiteProjectSubmission(http.Controller):
                     else:
                         organisme = sudo_env['res.partner'].create({'name': post.get('organisme')})
                         candidate.write({'parent_id': organisme.id})
+                    inventor_value = {
+                        'name': post.get('inventor'),
+                        'phone': post.get('inventor_phone'),
+                        'mobile': post.get('inventor_mobile'),
+                        'email': post.get('inventor_email'),
+                    }
+                    if submission.inventor:
+                        submission.inventor.write(inventor_value)
+                    else:
+                        inventor = sudo_env['res.partner'].create(inventor_value)
+                        submission.write({'inventor': inventor.id})
                     if post.get('ufile'):
                         attachment_value = {
                             'name': post['ufile'].filename,
@@ -419,6 +430,9 @@ class WebsiteProjectSubmission(http.Controller):
                     'function': missing_function.id,
                     'submission': submission.id,
                 })
+                
+            partners = submission.partners.filtered(lambda p: p.category == 'industriel')
+            
             vals.update({
                 'error': error,
             })

@@ -69,6 +69,7 @@ class ProjectOffer(models.Model):
         return self.env.user.id
 
     name = fields.Char(string='Nom', required=True)
+    category = fields.Selection([('innoproject', 'Inno-PROJECT'), ('innoboost', 'Inno-BOOST')])
     description = fields.Text(string='Description', translate=True)
     documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
@@ -163,6 +164,7 @@ class ProjectSubmission(models.Model):
     acronyme = fields.Char('Acronyme')
     offer = fields.Many2one('project.offer', string='Offre de projet', required=True)
     candidate = fields.Many2one('res.users', string='Soumissionnaire', required=True)
+    inventor = fields.Many2one('res.partner', string='Inventeur')
     field_ids = fields.Many2many('project.offer.field', string='Domaine d\'activité')
     partners = fields.Many2many('res.partner', string='Partenaires')
     description = fields.Text('Description')
@@ -171,6 +173,15 @@ class ProjectSubmission(models.Model):
     objectives = fields.Text('Objectifs spécifiques')
     fallout = fields.Text('Retombées attendues du projet')
     perspective = fields.Text('Perspectives d’application')
+    produits_services_process = fields.Text('Produit/ Service / Process')
+    analyse_macro = fields.Text('Analyse macro-environnementale')
+    analyse_marche = fields.Text('Analyse macro-environnementale')
+    cible = fields.Text('Cible')
+    analyse_competitive = fields.Text('Analyse compétitive')
+    proposition_valeur = fields.Text('Proposition de valeur pour le client')
+    business_model = fields.Text('Business model initial')
+    invest_retour = fields.Text('Investissement et retour sur investissement')
+    plan = fields.Text('Plan du projet')
     
     n_related_publications = fields.Integer(string='Nombre de publications')
     n_ing_doc = fields.Integer(string='Nombre de doctorants/postdocs/ingénieurs')
@@ -200,6 +211,7 @@ class ProjectSubmission(models.Model):
     duration = fields.Integer('Durée du projet (en semestres)')
     tasks = fields.One2many('project.submission.task', 'submission', string="Tâches et livrables")
     keywords = fields.Char(string='Mots-clés')
+    costs = fields.One2many('project.submission.cost', 'submission', string='Détail du coût du financement propre')
     all_partners = fields.Many2many(
         comodel_name='res.partner',
         compute='_get_possible_partners_values', readonly=True)
@@ -299,6 +311,21 @@ class ProjectSubmission(models.Model):
         else:
             return self.survey.with_context(survey_token = self.response.token).action_print_survey()
 
+class ProjectSubmissionCost(models.Model):
+    _name = 'project.submission.cost'
+
+    @api.depends('submission', 'submission.partners', 'submission.candidate')
+    @api.one
+    def _get_possible_partners_values(self):
+        self.all_partners = self.submission.partners.filtered(lambda p: p.category == 'industriel')
+
+    submission = fields.Many2one('project.submission')
+    partner = fields.Many2one('res.partner', required=True, string='Partenaire', domain="[('id', 'in', all_partners[0][2])]", ondelete='cascade')
+    budget_type = fields.Many2one('project.submission.budgetline.type', string='Rubrique')
+    all_partners = fields.Many2many(
+        comodel_name='res.partner',
+        compute='_get_possible_partners_values', readonly=True)
+    
 class ResPartner(models.Model):
     _inherit = 'res.partner'
     

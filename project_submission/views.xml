@@ -500,6 +500,7 @@
 					  	<group>
 					  		<group>
 								<field name="manager"/>
+								<field name="category"/>
 								<field name="type"/>
 								<field name="host"/>
 								<field name="budget_total"/>
