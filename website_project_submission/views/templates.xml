@@ -767,7 +767,7 @@
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<h4 class="text-center text-muted">Descriptif detaillé</h4>
-				<div class="form-group">
+				<div t-if="submission.offer.category=='innoproject'" class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="etat_art">État de l’art
 						
 						<br/>
@@ -777,7 +777,7 @@
 						<textarea maxlength="5600" class="form-control" t-esc="submission.etat_art" name="etat_art" style="min-height: 120px"/>
 					</div>
 				</div>
-				<div class="form-group">
+				<div t-if="submission.offer.category=='innoproject'" class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="objective">Objectif global du projet
 						
 						<br/>
@@ -787,7 +787,7 @@
 						<textarea maxlength="4200" class="form-control" t-esc="submission.objective" name="objective" style="min-height: 120px"/>
 					</div>
 				</div>
-				<div class="form-group">
+				<div t-if="submission.offer.category=='innoproject'" class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectifs spécifiques du projet
 						
 						<br/>
@@ -807,7 +807,7 @@
 						<textarea maxlength="7000" class="form-control" t-esc="submission.fallout" name="fallout" style="min-height: 120px"/>
 					</div>
 				</div>
-				<div class="form-group">
+				<div t-if="submission.offer.category=='innoproject'" class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="perspective">Perspectives d’application au Maroc et ailleurs
 						
 						<br/>
@@ -817,7 +817,63 @@
 						<textarea maxlength="3500" class="form-control" t-esc="submission.perspective" name="perspective" style="min-height: 120px"/>
 					</div>
 				</div>
-				<div class="form-group">
+				<div t-if="submission.offer.category=='innoboost'" class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="produits_services_process">Produit/ Service / Process <br/>
+						<span class="text-muted">(max : 500 mots)</span>
+					</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="3500" class="form-control" t-esc="submission.produits_services_process" name="produits_services_process" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div t-if="submission.offer.category=='innoboost'" class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="analyse_macro">Analyse macro-environnementale <br/>
+						<span class="text-muted">(max : 600 mots)</span>
+					</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="4200" class="form-control" t-esc="submission.analyse_macro" name="analyse_macro" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div t-if="submission.offer.category=='innoboost'" class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="analyse_marche">Analyse de marché <br/>
+						<span class="text-muted">(max : 2000 mots)</span>
+					</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="14000" class="form-control" t-esc="submission.analyse_marche" name="analyse_marche" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div t-if="submission.offer.category=='innoboost'" class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="cible">Cible <br/>
+						<span class="text-muted">(max : 250 mots)</span>
+					</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="1750" class="form-control" t-esc="submission.cible" name="cible" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div t-if="submission.offer.category=='innoboost'" class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="analyse_competitive">Analyse compétitive <br/>
+						<span class="text-muted">(max : 2000 mots)</span>
+					</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="14000" class="form-control" t-esc="submission.analyse_competitive" name="analyse_competitive" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div t-if="submission.offer.category=='innoboost'" class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="proposition_valeur">Proposition de valeur pour le client <br/>
+						<span class="text-muted">(max : 1000 mots)</span>
+					</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="7000" class="form-control" t-esc="submission.proposition_valeur" name="proposition_valeur" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div t-if="submission.offer.category=='innoboost'" class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="invest_retour">Investissement et retour sur investissement <br/>
+						<span class="text-muted">(max : 1000 mots)</span>
+					</label>
+					<div class="col-md-7 col-sm-8">
+						<textarea maxlength="7000" class="form-control" t-esc="submission.invest_retour" name="invest_retour" style="min-height: 120px"/>
+					</div>
+				</div>
+				<div t-if="submission.offer.category=='innoproject'" class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation du projet<br/>
 						<span class="text-muted">(PowerPoint, 10 slides max)</span>
 					</label>
@@ -835,6 +891,30 @@
 							</tr>
 						</table>
 						<input accept=".ppt,.pptx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+					</div>
+				</div>
+				<div t-if="submission.offer.category=='innoboost'" class="form-group">
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation du projet<br/>
+						<span class="text-muted">(PowerPoint, 10 slides max)</span>
+					</label>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Business Model<br/>
+						<span class="text-muted">(Excel)</span>
+					</label>
+					<div class="col-md-7 col-sm-8">
+						<table class="table table-condensed" t-if="submission.documents.filtered(lambda d: d.parent_id == False)">
+							<tr t-foreach="submission.documents" t-as="doc">
+								<td>
+									<span t-field="doc.name"/>
+								</td>
+								<td class="text-right">
+									<button class="btn btn-danger" type="submit" name="unlink-doc" t-att-value="doc.id">
+										<i class="fa fa-trash"/>
+									</button>
+								</td>
+							</tr>
+						</table>
+						<input accept=".ppt,.pptx,.xls,.xlsx,.xlsm" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
 						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
 				</div>
@@ -1053,7 +1133,6 @@
 								<th>Titre</th>
 								<th class="text-right">Effectif</th>
 								<th class="text-right">Durée (en mois)</th>
-								<th class="text-right">Financement propre (MAD/Mois)</th>
 								<th class="text-right">Financement demandé (MAD/Mois)</th>
 								<th class="text-right">Total</th>
 							</tr>
@@ -1070,9 +1149,6 @@
 									</td>
 									<td class="text-right">
 										<input type="number" min="0" t-att-name="str(line.id) + 'time'" t-att-value="line.time"/>
-									</td>
-									<td class="text-right">
-										<input type="number" min="0" t-att-name="str(line.id) + 'montant_propre_personnel'" t-att-value="line.montant_propre"/>
 									</td>
 									<td class="text-right">
 										<input type="number" min="0" t-att-name="str(line.id) + 'montant_demande_personnel'" t-att-value="line.montant_demande"/>
