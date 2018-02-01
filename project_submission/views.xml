@@ -430,6 +430,15 @@
 									</tree>
 								</field>
 							</group>
+							<group colspan="2" string="Coûts de financement propre">
+								<field name="costs">
+									<tree editable="bottom">
+										<field name="partner"/>
+										<field name="type"/>
+										<field name="montant"/>
+									</tree>
+								</field>
+							</group>
 						</group>
 						<group colspan="2" string="Tâches et livrables">
 							<field name="tasks">
@@ -506,6 +515,7 @@
 								<field name="budget_total"/>
 								<field name="min_time"/>
 								<field name="max_time"/>
+								<field name="task_types" widget="many2many_tags"/>
 							</group>
 						  	<group>
 								<field name="date_open"/>

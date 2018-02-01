@@ -302,7 +302,7 @@
 		<!-- Esquisse du projet -->
 		<template id="apply1">
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<h4 class="text-center text-muted">Résumé du projet</h4>
 				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="name">Intitulé du projet</label>
@@ -319,7 +319,7 @@
 				<div t-attf-class="form-group #{error.get('field') and 'has-error' or ''}">
 					<label class="col-md-3 col-sm-4 control-label" for="field">Thématiques<br/><span class="text-muted">(Vous pouvez ajouter plusieurs thématiques)</span></label>
 					<div class="col-md-7 col-sm-8">
-						<select multiple="multiple" id="fields" name="fields" class="form-control multiple-tags">
+						<select multiple="multiple" t-att-disabled="submission.state != 'draft'">id="fields" name="fields" class="form-control multiple-tags">
 							<t t-foreach="fields" t-as="f">
 								<option name="fields" t-att-value="f.id" t-att-selected="f.id in submission.field_ids.ids">
 									<t t-esc="f.name"/>
@@ -362,7 +362,8 @@
 					<label t-if="submission.offer.category=='innoproject'" class="col-md-3 col-sm-4 control-label" for="n_related_publications">Nombre de publications internationales indexées en relation avec les thématiques proposées</label>
 					<label t-if="submission.offer.category=='innoboost'" class="col-md-3 col-sm-4 control-label" for="n_related_publications">Niveau de préparation technologique (TRL)<br/><span class="text-muted">(entre 6 et 9)</span></label>
 					<div class="col-md-7 col-sm-8">
-						<input type="number" min="0" class="form-control" t-att-value="submission.n_related_publications" name="n_related_publications"/>
+						<input t-if="submission.offer.category=='innoproject'" type="number" min="0" class="form-control" t-att-value="submission.n_related_publications" name="n_related_publications"/>
+						<input t-if="submission.offer.category=='innoboost'" type="number" min="6" max="9" class="form-control" t-att-value="submission.n_related_publications" name="n_related_publications"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -384,12 +385,12 @@
 					</div>
 				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
-			</form>
+			</fieldset></form>
 		</template>
 		<!-- Coordinateur principal -->
 		<template id="apply2">
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<h4 t-if="submission.offer.category=='innoproject'" class="text-center text-muted">Coordinateur principal</h4>
 				<h4 t-if="submission.offer.category=='innoboost'" class="text-center text-muted">Porteur du projet</h4>
 				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
@@ -475,7 +476,7 @@
 					</div>
 				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
-			</form>
+			</fieldset></form>
 		</template>
 		<!-- Partenaires -->
 		<template id="apply34">
@@ -487,7 +488,7 @@
 			</t>
 			<h5 class="text-center">Vous pouvez ajouter autant de partenaires que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<t t-if="current_stage==3">
 					<t t-set="category" t-value="scientifique"/></t>
 				<t t-if="current_stage==4">
@@ -540,10 +541,10 @@
 						</button>
 					</div>
 					<t t-call="website_project_submission.form_header_footer"/></t>
-			</form>
+			</fieldset></form>
 			<t t-if="new or partner">
 				<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-					<t t-if="partner">
+					<fieldset t-att-disabled="submission.state != 'draft'"><t t-if="partner">
 						<input type="hidden" name="partner_id" t-att-value="'%s' % partner.id"/>
 					</t>
 					<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
@@ -759,7 +760,7 @@
 					</div>
 				</div>
 					<t t-call="website_project_submission.form_header_footer"/>
-				</form>
+				</fieldset></form>
 			</t>
 		</template>
 		<!-- Descriptif detaillé -->
@@ -878,7 +879,7 @@
 						<span class="text-muted">(PowerPoint, 10 slides max)</span>
 					</label>
 					<div class="col-md-7 col-sm-8">
-						<table class="table table-condensed" t-if="submission.documents.filtered(lambda d: d.parent_id == False)">
+						<table class="table table-condensed" t-if="submission.documents.filtered(lambda d: not d.parent_id)">
 							<tr t-foreach="submission.documents" t-as="doc">
 								<td>
 									<span t-field="doc.name"/>
@@ -895,14 +896,12 @@
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation du projet<br/>
-						<span class="text-muted">(PowerPoint, 10 slides max)</span>
-					</label>
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Business Model<br/>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre présentation du projet<br/>
+						<span class="text-muted">(PowerPoint, 10 slides max)</span><br/>Joindre Business Model<br/>
 						<span class="text-muted">(Excel)</span>
 					</label>
 					<div class="col-md-7 col-sm-8">
-						<table class="table table-condensed" t-if="submission.documents.filtered(lambda d: d.parent_id == False)">
+						<table class="table table-condensed" t-if="submission.documents.filtered(lambda d: not d.parent_id)">
 							<tr t-foreach="submission.documents" t-as="doc">
 								<td>
 									<span t-field="doc.name"/>
@@ -924,6 +923,7 @@
 		<!-- Tâches et livrables -->
 		<template id="apply6">
 			<h4 class="text-center text-muted">Tâches et livrables</h4>
+			<h5 class="text-center">Vous pouvez ajouter autant de tâches que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<t t-if="not submission.tasks"><t t-set="new" t-value="1"/></t>
@@ -995,7 +995,7 @@
 						<div class="col-md-7 col-sm-8">
 							<select name="type" id="type" class="form-control">
 								<!--<option>Sélectionnez une valeur...</option>-->
-								<t t-foreach="types" t-as="t">
+								<t t-foreach="submission.offer.task_types" t-as="t">
 									<option t-att-value="t.id" t-att-selected="task and t.id == task.type.id">
 										<t t-esc="t.name"/>
 									</option>
@@ -1061,7 +1061,7 @@
 		<template id="apply7">
 			<h4 class="text-center text-muted">Montage financier</h4>
 			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+				<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<div>
 					<h5 class="text-center">Répartition financière du projet</h5>
 					<table t-if="submission.budget_lines" class="table">
@@ -1126,7 +1126,7 @@
 					</table>
 				</div>
 				<div>
-					<h5 class="text-center">Détail du coût du personnel relevant du partenaire scientifique</h5>
+					<h5 class="text-center">Détail du coût du personnel relevant des partenaires scientifiques</h5>
 					<table t-if="submission.personnels" class="table">
 						<thead>
 							<tr>
@@ -1184,7 +1184,7 @@
 					</table>
 				</div>
 				<div>
-					<h5 class="text-center">Détail du coût du personnel relevant du partenaire industriel</h5>
+					<h5 class="text-center">Détail du coût du personnel relevant des partenaires industriels</h5>
 					<table t-if="submission.personnels" class="table">
 						<thead>
 							<tr>
@@ -1245,8 +1245,56 @@
 						</thead>
 					</table>
 				</div>
+				<div>
+					<h5 class="text-center">Détail du coût du financement propre par partenaire industriel</h5>
+					<table t-if="submission.costs" class="table">
+						<thead>
+							<tr>
+								<th>Partenaire</th>
+								<th>Rubrique</th>
+								<th class="text-right">Montant (MAD)</th>
+							</tr>
+							<tbody>
+								<!-- <t t-set="tot_effectif" t-value="0"/>
+								<t t-set="tot_montant" t-value="0"/>-->
+								<tr t-foreach="submission.costs" t-as="line">
+									<td>
+										<span t-field="line.partner.name"/>
+									</td>
+									<td>
+										<span t-field="line.type.name"/>
+									</td>
+									<td class="text-right">
+										<input type="number" min="0" t-att-name="str(line.id) + 'montant_cout'" t-att-value="line.montant"/>
+									</td>
+								</tr>
+								<!-- <tr>
+									<td class="text-right">
+										<strong>Total:</strong>
+									</td>
+									<td class="text-right">
+										<strong>
+											<t t-esc="tot_effectif"/>&amp;nbsp;MAD
+										</strong>
+									</td>
+									<td class="text-right">
+									</td>
+									<td class="text-right">
+									</td>
+									<td class="text-right">
+									</td>
+									<td class="text-right">
+										<strong>
+											<span t-esc="tot_montant"/>&amp;nbsp;%
+										</strong>
+									</td>
+								</tr> -->
+							</tbody>
+						</thead>
+					</table>
+				</div>
 				<t t-call="website_project_submission.form_header_footer"/>
-			</form>
+			</fieldset></form>
 		</template>
 		<!-- Descriptif detaillé -->
 		<template id="apply8">
@@ -1261,7 +1309,7 @@
 					</tr>
 				</table>
 			</div>
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data"><fieldset t-att-disabled="submission.state != 'draft'">
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<div class="form-group">
 					<label class="text-center">Merci de remplir, signer, scanner en PDF et insérer la convention de collaboration<br/><span class="text-muted">(vous pouvez télécharger le modèle de convention de collaboration)</span></label>
@@ -1280,13 +1328,14 @@
 					<input t-if="not submission.documents.filtered(lambda d: d.parent_id.name == 'Conventions')" accept=".pdf" class="input-file2 form-control" id="fileInput" type="file" name="ufile"/>
 					<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 				</div>
+				<t t-call="website_project_submission.form_header_footer"/>
 				<div class="form-group">
 					<div class="col-md-12 text-center">
-						<div class="bg-info mb8">La validation des projets sera lancée très prochainement. Vous pouvez continuer à modifier votre soumission et créer de nouvelles soumissions et vous serez notifié par email une fois la validation lancée</div>
-						<button disabled="disabled" type="submit" name="submit" value="submit" class="btn btn-primary">Valider ma soumission</button>
+						<div class="bg-warning mb8">Une fois votre soumission envoyée, vous ne pouvez plus la modifier. Veuillez vous assurer que vous avez saisis toutes les informations nécessaires.</div>
+						<button type="submit" name="submit" value="confirm" class="btn btn-primary">Envoyer ma soumission</button>
 					</div>
 				</div>
-			</form>
+			</fieldset></form>
 		</template>
 		<!-- Récapitulatif final -->
 		<template id="thankyou">
@@ -1449,7 +1498,7 @@
 					<!-- <button type="submit" name="submit" value="cancel" class="btn btn-danger">Annuler</button> -->
 					<button type="submit" name="submit" value="save" class="btn btn-primary">Enregistrer</button>
 					<button type="submit" t-if="current_stage != 8" name="submit" value="next" class="btn btn-primary">Suivant</button>
-					<button type="submit" t-if="current_stage == 8" name="submit" value="next" class="btn btn-primary">Valider</button>
+					<button type="submit" t-if="current_stage == 8" name="submit" value="confirm" class="btn btn-primary">Valider</button>
 				</div>
 			</div>
 		</template>

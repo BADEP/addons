@@ -33,3 +33,4 @@ access_project_submission_lot_candidate,project.submission.lot.candidate,model_p
 access_ir_attachment_candidate,ir.attachment.candidate,base.model_ir_attachment,group_candidate,1,1,1,1
 access_res_partner_candidate,res.partner.candidate,base.model_res_partner,group_candidate,1,1,1,1
 access_mail_message_candidate,mail.message.candidate,mail.model_mail_message,group_candidate,1,1,1,1
+access_project_submission_cost_candidate,project.submission.cost.candidate,model_project_submission_cost,group_candidate,1,1,1,1

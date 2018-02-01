@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 import base64
-
+import time
 from openerp import SUPERUSER_ID
 from openerp import http
 from openerp.tools.translate import _
@@ -176,17 +176,18 @@ class WebsiteProjectSubmission(http.Controller):
                     else:
                         organisme = sudo_env['res.partner'].create({'name': post.get('organisme')})
                         candidate.write({'parent_id': organisme.id})
-                    inventor_value = {
-                        'name': post.get('inventor'),
-                        'phone': post.get('inventor_phone'),
-                        'mobile': post.get('inventor_mobile'),
-                        'email': post.get('inventor_email'),
-                    }
-                    if submission.inventor:
-                        submission.inventor.write(inventor_value)
-                    else:
-                        inventor = sudo_env['res.partner'].create(inventor_value)
-                        submission.write({'inventor': inventor.id})
+                    if post.get('inventor'):
+                        inventor_value = {
+                            'name': post.get('inventor'),
+                            'phone': post.get('inventor_phone'),
+                            'mobile': post.get('inventor_mobile'),
+                            'email': post.get('inventor_email'),
+                        }
+                        if submission.inventor:
+                            submission.inventor.write(inventor_value)
+                        else:
+                            inventor = sudo_env['res.partner'].create(inventor_value)
+                            submission.write({'inventor': inventor.id})
                     if post.get('ufile'):
                         attachment_value = {
                             'name': post['ufile'].filename,
@@ -273,11 +274,11 @@ class WebsiteProjectSubmission(http.Controller):
                         'produits_services_process': post.get('produits_services_process'),
                         'analyse_macro': post.get('analyse_macro'),
                         'analyse_marche': post.get('analyse_marche'),
-                        'cible ': post.get('cible '),
-                        'analyse_competitive ': post.get('analyse_competitive '),
-                        'proposition_valeur ': post.get('proposition_valeur '),
-                        'business_model ': post.get('business_model '),
-                        'invest_retour ': post.get('invest_retour '),
+                        'cible': post.get('cible'),
+                        'analyse_competitive': post.get('analyse_competitive'),
+                        'proposition_valeur': post.get('proposition_valeur'),
+                        'business_model': post.get('business_model'),
+                        'invest_retour': post.get('invest_retour'),
                         'plan': post.get('plan'),
                     }
                     submission.write(value)
@@ -325,9 +326,15 @@ class WebsiteProjectSubmission(http.Controller):
                             'montant_demande': post.get(str(line.id)+'montant_demande_personnel') and float(post.get(str(line.id) + 'montant_demande_personnel'))
                         }
                         line.write(vals)
+                    for line in submission.costs:
+                        vals = {
+                            'montant': post.get(str(line.id)+'montant_cout') and float(post.get(str(line.id) + 'montant_cout'))
+                        }
+                        line.write(vals)
+                    
                 elif current_stage == 8:
                     invalid_stages = []
-                    invalid_stages[0] = {
+                    """invalid_stages[0] = {
                         'L`\'acronyme du projet est manquant': submission.acronyme == False or submission.acronyme == '',
                         'L`\'intitulé du projet est manquant': submission.name == False or submission.name == '',
                         'La thématique du projet est manquante': submission.field_ids == False or submission.field_ids == '',
@@ -348,11 +355,11 @@ class WebsiteProjectSubmission(http.Controller):
                         'Le personnel du projet est manquant': submission.personnels == False or submission.personnels == '',
                         'La durée projet est manquante': submission.duration == False or submission.duration == '',
                         'Les tâches et livrables du projet sont manquants': submission.tasks == False or submission.tasks == '',
-                    }
+                    }"""
                     
                     if post.get('ufile'):
                         attachment_value = {
-                            'name': post['ufile'].filename,
+                            'name': str(time.time()) + '_' + post['ufile'].filename,
                             'res_name': submission.name,
                             'res_model': 'project.submission',
                             'res_id': submission.id,
@@ -361,6 +368,8 @@ class WebsiteProjectSubmission(http.Controller):
                             'parent_id': sudo_env['document.directory'].search([('name', '=', 'Conventions')]) and sudo_env['document.directory'].search([('name', '=', 'Conventions')]).ids[0]
                         }
                         sudo_env['ir.attachment'].create(attachment_value)
+                    if post.get('submit') == 'confirm':
+                        submission.state = 'submitted'
         except ValidationError, e:
             next_stage = current_stage
             if post.get('partner_id'):
@@ -424,7 +433,6 @@ class WebsiteProjectSubmission(http.Controller):
                 'error': error,
             })
         elif next_stage == 6:
-            types = env['project.submission.task.type'].search([])
             if post.get('edit-task'):
                 task = env['project.submission.task'].browse(int(post.get('edit-task')))
                 vals.update({'task': task})
@@ -435,7 +443,6 @@ class WebsiteProjectSubmission(http.Controller):
             duration_steps = range(1, submission.duration + 1)
             vals.update({
                 'duration_steps': duration_steps,
-                'types': types,
                 'error': error,
             })
         elif next_stage == 7:
@@ -462,9 +469,16 @@ class WebsiteProjectSubmission(http.Controller):
                     'function': missing_function.id,
                     'submission': submission.id,
                 })
-                
-            partners = submission.partners.filtered(lambda p: p.category == 'industriel')
             
+            partners = submission.partners.filtered(lambda p: p.category == 'industriel')
+            for partner in partners:
+                for t in types:
+                    if len(submission.costs.filtered(lambda c: c.partner == partner and c.type == t)) == 0:
+                        env['project.submission.cost'].create({
+                            'partner': partner.id,
+                            'type': t.id,
+                            'submission': submission.id
+                        })
             vals.update({
                 'error': error,
             })

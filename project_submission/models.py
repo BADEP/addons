@@ -90,6 +90,7 @@ class ProjectOffer(models.Model):
     min_time = fields.Integer(string='Durée minimale (en semestres)')
     max_time = fields.Integer(string='Durée maximale (en semestres)')
     budget_total = fields.Float('Budget', digits_compute=dp.get_precision('Account'))
+    task_types = fields.Many2many('project.submission.task.type')
 
     @api.constrains('min_time', 'max_time')
     def _check_min_max_time(self):
@@ -321,7 +322,8 @@ class ProjectSubmissionCost(models.Model):
 
     submission = fields.Many2one('project.submission')
     partner = fields.Many2one('res.partner', required=True, string='Partenaire', domain="[('id', 'in', all_partners[0][2])]", ondelete='cascade')
-    budget_type = fields.Many2one('project.submission.budgetline.type', string='Rubrique')
+    type = fields.Many2one('project.budgetline.type', string='Rubrique')
+    montant = fields.Float(default=0)
     all_partners = fields.Many2many(
         comodel_name='res.partner',
         compute='_get_possible_partners_values', readonly=True)
