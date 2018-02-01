@@ -270,7 +270,15 @@ class WebsiteProjectSubmission(http.Controller):
                         'objective': post.get('objective'),
                         'objectives': post.get('objectives'),
                         'fallout': post.get('fallout'),
-                        'perspective': post.get('perspective'),
+                        'produits_services_process': post.get('produits_services_process'),
+                        'analyse_macro': post.get('analyse_macro'),
+                        'analyse_marche': post.get('analyse_marche'),
+                        'cible ': post.get('cible '),
+                        'analyse_competitive ': post.get('analyse_competitive '),
+                        'proposition_valeur ': post.get('proposition_valeur '),
+                        'business_model ': post.get('business_model '),
+                        'invest_retour ': post.get('invest_retour '),
+                        'plan': post.get('plan'),
                     }
                     submission.write(value)
                     if post.get('ufile'):
