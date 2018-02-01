@@ -769,113 +769,182 @@
 				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<h4 class="text-center text-muted">Descriptif detaillé</h4>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="etat_art">État de l’art
-						
-						<br/>
-						<span class="text-muted">(max: 800 mots)</span>
+					<label class="col-md-12 control-label" for="etat_art">
+						État de l’art<span class="text-muted">(max: 800 mots)</span>
+						<p>Apporter un état de l'art pertinent et la bibliographie associée. Positionner votre projet en apportant des éléments sur le caractère novateur ou original du projet. Décriver toutes les réalisations antérieures ou les études pilotes qui ont été menées par vous (votre équipe) dans le cadre du projet. Il convient de mentionner vos publications internationales pertinentes, brevets et anciennes subventions de recherche en relation avec projet.</p>
 					</label>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-12">
 						<textarea maxlength="5600" class="form-control" t-esc="submission.etat_art" name="etat_art" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="objective">Objectif global du projet
-						
-						<br/>
+					<label class="col-md-12 control-label" for="objective">Objectif global du projet
 						<span class="text-muted">(max : 600 mots)</span>
+						<p>Approche et méthodologie: Décrire l’objectif global et comment votre projet sera mis en œuvre, y compris votre approche scientifique générale (plan de travail), les activités, les méthodes et les intrants du projet.</p>
 					</label>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-12">
 						<textarea maxlength="4200" class="form-control" t-esc="submission.objective" name="objective" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectifs spécifiques du projet
-						
-						<br/>
+					<label class="col-md-12 control-label" for="objectives">Objectifs spécifiques du projet
 						<span class="text-muted">(max : 600 mots)</span>
+						<p>Le projet doit aboutir à un brevet national/international en relation avec lle développement d’un nouveau produit/service/process à fort potentiel commercial, et ce avant la fin le semestre 4. L’octroi dudit Brevet conditione le GO/NO GO gate du projet et par la suite conditionne la poursuite du financement de la troisième année du projet.</p>
 					</label>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-12">
 						<textarea maxlength="4200" class="form-control" t-esc="submission.objectives" name="objectives" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="fallout">Retombées attendues du projet
-						
-						<br/>
+					<label class="col-md-12 control-label" for="fallout">Retombées attendues du projet
 						<span class="text-muted">(max : 1000 mots)</span>
+						<ul>
+<li><strong><em><u>Technologiques, Economiques et industrielles :</u></em></strong>
+<ul>
+<li><em>D&eacute;crire les produits/services/process issus des r&eacute;sultats du projet et les mod&egrave;les &eacute;conomiques envisag&eacute;s,</em></li>
+<li><em>D&eacute;crire les principaux march&eacute;s vis&eacute;s, leurs tailles estimatives, les acteurs d&eacute;j&agrave; pr&eacute;sents et les solutions concurrentes. Le cas &eacute;ch&eacute;ant, fournir les r&eacute;f&eacute;rences des &eacute;tudes de march&eacute; justifiant ces estimations</em></li>
+<li><em>Analyser le co&ucirc;t complet de la solution d&eacute;velopp&eacute;e</em></li>
+</ul>
+</li>
+<li><strong><em><u>Environnementales : </u></em></strong></li>
+</ul>
+<p><em>les impacts positifs, neutres ou n&eacute;gatifs et leurs &eacute;l&eacute;ments de quantification, et les moyens d'&eacute;valuation et de suivi pouvant &ecirc;tre mis en &oelig;uvre</em></p>
+<ul>
+<li><strong><em><u>Sociales et soci&eacute;tales : </u></em></strong></li>
+</ul>
+<p><em>Indiquer la localisation des activit&eacute;s li&eacute;es au projet et la localisation des activit&eacute;s industrielles et commerciales futures (Localisation de l&rsquo;exp&eacute;rimentation : activit&eacute;s li&eacute;es au projet, Localisation des retomb&eacute;es &eacute;conomiques : activit&eacute;s industrielles et commerciales futures)</em></p>
+<p><em>Distinguer le nombre d&rsquo;emplois directs et indirects cr&eacute;&eacute;s et/ou maintenus lors de la phase d&rsquo;ex&eacute;cution du projet, puis lors de la phase d&rsquo;exploitation des r&eacute;sultats du projet.</em></p>
 					</label>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-12">
 						<textarea maxlength="7000" class="form-control" t-esc="submission.fallout" name="fallout" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="perspective">Perspectives d’application au Maroc et ailleurs
-						
-						<br/>
+					<label class="col-md-12 control-label" for="perspective">Perspectives d’application au Maroc et ailleurs
 						<span class="text-muted">(max : 500 mots)</span>
+						<ul>
+<li><strong><em><u>Technologiques, Economiques et industrielles :</u></em></strong>
+<ul>
+<li><em>D&eacute;crire les produits/services/process issus des r&eacute;sultats du projet et les mod&egrave;les &eacute;conomiques envisag&eacute;s,</em></li>
+<li><em>D&eacute;crire les principaux march&eacute;s vis&eacute;s, leurs tailles estimatives, les acteurs d&eacute;j&agrave; pr&eacute;sents et les solutions concurrentes. Le cas &eacute;ch&eacute;ant, fournir les r&eacute;f&eacute;rences des &eacute;tudes de march&eacute; justifiant ces estimations</em></li>
+<li><em>Analyser le co&ucirc;t complet de la solution d&eacute;velopp&eacute;e</em></li>
+</ul>
+</li>
+<li><strong><em><u>Environnementales : </u></em></strong></li>
+</ul>
+<p><em>les impacts positifs, neutres ou n&eacute;gatifs et leurs &eacute;l&eacute;ments de quantification, et les moyens d'&eacute;valuation et de suivi pouvant &ecirc;tre mis en &oelig;uvre</em></p>
+<ul>
+<li><strong><em><u>Sociales et soci&eacute;tales : </u></em></strong></li>
+</ul>
+<p><em>Indiquer la localisation des activit&eacute;s li&eacute;es au projet et la localisation des activit&eacute;s industrielles et commerciales futures (Localisation de l&rsquo;exp&eacute;rimentation : activit&eacute;s li&eacute;es au projet, Localisation des retomb&eacute;es &eacute;conomiques : activit&eacute;s industrielles et commerciales futures)</em></p>
+<p><em>Distinguer le nombre d&rsquo;emplois directs et indirects cr&eacute;&eacute;s et/ou maintenus lors de la phase d&rsquo;ex&eacute;cution du projet, puis lors de la phase d&rsquo;exploitation des r&eacute;sultats du projet.</em></p>
 					</label>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-12">
 						<textarea maxlength="3500" class="form-control" t-esc="submission.perspective" name="perspective" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="produits_services_process">Produit/ Service / Process <br/>
+					<label class="col-md-12 control-label" for="produits_services_process">Produit/ Service / Process
 						<span class="text-muted">(max : 500 mots)</span>
+						<ul>
+<li><em>Quelle est la probl&eacute;matique que le nouveau produit/service/process peut r&eacute;soudre ?</em></li>
+<li><em>Quel est le besoin que peut satisfaire le nouveau produit/service/process ?</em></li>
+<li><em>Dans quel &eacute;tat se trouve votre produit / service / process (validation de concept, prototypage , d&eacute;monstration, &hellip;)</em></li>
+</ul>
 					</label>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-12">
 						<textarea maxlength="3500" class="form-control" t-esc="submission.produits_services_process" name="produits_services_process" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="analyse_macro">Analyse macro-environnementale <br/>
+					<label class="col-md-12 control-label" for="analyse_macro">Analyse macro-environnementale
 						<span class="text-muted">(max : 600 mots)</span>
+						<ul>
+<li>
+<ul>
+<li><em>Comment les facteurs macro-environnementaux affectent-ils votre produit/ service /process ?</em></li>
+<li><em>D&eacute;crivez la cha&icirc;ne de valeur li&eacute;e &agrave; votre produit / service /process. Les diff&eacute;rents acteurs sont-ils disponibles et connect&eacute;s?</em></li>
+</ul>
+<em>La cha&icirc;ne de valeur doit-elle &ecirc;tre modifi&eacute;e pour pr&eacute;senter vos produits / services / process? Si oui, comment vous attendez-vous &agrave; faire face &agrave; cela?</em></li>
+</ul>
 					</label>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-12">
 						<textarea maxlength="4200" class="form-control" t-esc="submission.analyse_macro" name="analyse_macro" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="analyse_marche">Analyse de marché <br/>
+					<label class="col-md-12 control-label" for="analyse_marche">Analyse de marché
 						<span class="text-muted">(max : 2000 mots)</span>
+						<ul>
+<li><em>Taille actuelle du march&eacute; et croissance dans les 5 prochaines ann&eacute;es</em></li>
+<li><em>Structure du march&eacute; et part du march&eacute; (%)</em></li>
+<li><em>Tendances du march&eacute; (5 ans) et % de croissance (par technologie et g&eacute;ographie)</em></li>
+</ul>
 					</label>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-12">
 						<textarea maxlength="14000" class="form-control" t-esc="submission.analyse_marche" name="analyse_marche" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="cible">Cible <br/>
+					<label class="col-md-12 control-label" for="cible">Cible
 						<span class="text-muted">(max : 250 mots)</span>
-					</label>
-					<div class="col-md-7 col-sm-8">
+					</label>Qui sont vos clients et quelles sont leurs caractéristiques?
+Quels sont leurs besoins par rapport au produit / service /process? Comment sont-ils actuellement couverts?
+Quels segments de marché identifiez-vous?
+Quels segments de marché ciblez-vous?
+Démontrer le caractère généralisable de la solution innovante développée et la présence d’un marché rendant possible sa diffusion au Maroc, en Afrique ou ailleurs,
+					<div class="col-md-12">
 						<textarea maxlength="1750" class="form-control" t-esc="submission.cible" name="cible" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="analyse_competitive">Analyse compétitive <br/>
+					<label class="col-md-12 control-label" for="analyse_competitive">Analyse compétitive
 						<span class="text-muted">(max : 2000 mots)</span>
+						<ul>
+<li><em>Existe-t-il des produits similaires sur le march&eacute;? Veuillez pr&eacute;ciser votre avantage concurrentiel.</em></li>
+<li><em>Quels sont les principaux acteurs (concurrents) dans les diff&eacute;rents segments du march&eacute;?</em></li>
+<li><em>Comparaison des produits cl&eacute;s des concurrents par caract&eacute;ristiques</em></li>
+<li><em>D&eacute;finissez le cartographie de positionnement en fonction des variables qui vous diff&eacute;rencient des concurrents et qui sont utiles pour vos clients</em></li>
+<li><em>Menaces de produits / services / process de substitution</em></li>
+<li><em>La menace de nouveaux participants. Connaissez-vous d'autres produits similaires en cours de d&eacute;veloppement?</em></li>
+</ul>
 					</label>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-12">
 						<textarea maxlength="14000" class="form-control" t-esc="submission.analyse_competitive" name="analyse_competitive" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="proposition_valeur">Proposition de valeur pour le client <br/>
+					<label class="col-md-12 control-label" for="proposition_valeur">Proposition de valeur pour le client
 						<span class="text-muted">(max : 1000 mots)</span>
 					</label>
-					<div class="col-md-7 col-sm-8">
+					<ul>
+<li><em>Pourquoi le client ach&egrave;tera-t-il votre solution et que sacrifiera-t-il?</em></li>
+<li><em>Quantifier l'impact de votre produit / service / process pour le client</em></li>
+<li><em>Pr&eacute;ciser les caract&eacute;ristiques et les attributs du produit / service / process &agrave; d&eacute;velopper</em></li>
+<li><em>Qu'est-ce qui est innovant sur le produit / service / process? Quelles sont les caract&eacute;ristiques de diff&eacute;rentiation de votre produit / service / process? Dans quelle mesure est-il unique?</em></li>
+<li><em>Quel sera l'&eacute;tat de d&eacute;veloppement du produit &agrave; la fin du projet?</em></li>
+<li><em>D&eacute;crire les choix envisag&eacute;s pour justifier le positionnement et les avantages comp&eacute;titifs esp&eacute;r&eacute;s (cibles de client&egrave;le, zones g&eacute;ographiques, prix, etc.)</em></li>
+</ul>
+					<div class="col-md-12">
 						<textarea maxlength="7000" class="form-control" t-esc="submission.proposition_valeur" name="proposition_valeur" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="invest_retour">Investissement et retour sur investissement <br/>
+					<label class="col-md-12 control-label" for="invest_retour">Investissement et retour sur investissement
 						<span class="text-muted">(max : 1000 mots)</span>
+						<ul>
+<li><em>Quels investissements sont n&eacute;cessaires&nbsp;?</em></li>
+<li><em>Envisagez-vous recourir au Fond PPP &laquo;&nbsp;Green INNOV-INVEST&nbsp;&raquo;&nbsp;? &agrave; partir de quelle moment&nbsp;?</em></li>
+<li><em>A partir de quelle ann&eacute;e envisager vous la mise sur le march&eacute; de votre produit / service / process&nbsp;?</em></li>
+<li><em>Les royalties pr&eacute;vues et le remboursement de la partie cr&eacute;dit pour IRESEN&nbsp;?</em></li>
+</ul>
 					</label>
-					<div class="col-md-7 col-sm-8">
+					<div class="col-md-12">
 						<textarea maxlength="7000" class="form-control" t-esc="submission.invest_retour" name="invest_retour" style="min-height: 120px"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Présentation du projet<br/>
+					<label class="col-md-12 control-label" for="ufile">Présentation du projet<br/>
 						<span class="text-muted">(PowerPoint, 10 slides max)</span>
 					</label>
 					<div class="col-md-7 col-sm-8">
