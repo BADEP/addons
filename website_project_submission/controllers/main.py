@@ -19,6 +19,7 @@ class PortalSubmissionWebsiteAccount(WebsiteAccount):
     @http.route(['/my/home/submissions'], type='http', auth="user", website=True)
     def submissions(self, **kw):
         submissions = {'submissions': request.env.user.submissions}
+        #open_offers = 
         return request.website.render(
             'website_project_submission.submissions_only', submissions)
 
@@ -271,6 +272,7 @@ class WebsiteProjectSubmission(http.Controller):
                         'objective': post.get('objective'),
                         'objectives': post.get('objectives'),
                         'fallout': post.get('fallout'),
+                        'perspective': post.get('perspective'),
                         'produits_services_process': post.get('produits_services_process'),
                         'analyse_macro': post.get('analyse_macro'),
                         'analyse_marche': post.get('analyse_marche'),
@@ -334,8 +336,8 @@ class WebsiteProjectSubmission(http.Controller):
                     
                 elif current_stage == 8:
                     invalid_stages = []
-                    """invalid_stages[0] = {
-                        'L`\'acronyme du projet est manquant': submission.acronyme == False or submission.acronyme == '',
+                    invalid_stages[0] = {
+                        submission._columns['acronyme'].string: submission.acronyme == False or submission.acronyme == '',
                         'L`\'intitulé du projet est manquant': submission.name == False or submission.name == '',
                         'La thématique du projet est manquante': submission.field_ids == False or submission.field_ids == '',
                         'Le partenaire du projet est manquant': submission.partners == False or submission.partners == '',
@@ -355,7 +357,7 @@ class WebsiteProjectSubmission(http.Controller):
                         'Le personnel du projet est manquant': submission.personnels == False or submission.personnels == '',
                         'La durée projet est manquante': submission.duration == False or submission.duration == '',
                         'Les tâches et livrables du projet sont manquants': submission.tasks == False or submission.tasks == '',
-                    }"""
+                    }
                     
                     if post.get('ufile'):
                         attachment_value = {
