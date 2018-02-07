@@ -335,43 +335,6 @@ class WebsiteProjectSubmission(http.Controller):
                         line.write(vals)
                     
                 elif current_stage == 8:
-                    invalid_stages = []
-                    invalid_stages[0] = {
-                        submission._columns['acronyme'].string: submission.acronyme == False or submission.acronyme == '',
-                        submission._columns['name'].string: submission.name == False or submission.name == '',
-                        submission._columns['field_ids'].string: submission.field_ids == False or submission.field_ids == '',
-                        submission._columns['duration'].string: submission.duration == False or submission.duration == '',
-                        submission._columns['n_related_publications'].string: submission.n_related_publications == False or submission.n_related_publications == '',
-                        submission._columns['n_ing_doc'].string: submission.n_ing_doc == False or submission.n_ing_doc == '',
-                        submission._columns['n_master_pfe'].string: submission.n_master_pfe == False or submission.n_master_pfe == '',
-                        }
-                    invalid_stages[1] = {
-                        submission._columns['patners'].string: submission.partners == False or submission.partners == '',
-                        submission._columns['description'].string: submission.description == False or submission.description == '',
-                        submission._columns['fallout'].string: submission.fallout == False or submission.fallout == '',
-                        submission._columns['perspective'].string: submission.perspective == False or submission.perspective == '',
-                        'Le nombre des documents joints doit être supérieur ou égal à 7': submission.documents_count < 7,
-                        submission._columns['montant_subventionne'].string: submission.montant_subventionne == False or submission.montant_subventionne == '',
-                        submission._columns['montant_propre'].string: submission.montant_propre == False or submission.montant_propre == '',
-                        'Le pourcentage propre doit être supérieur ou égal à 30': submission.percent_propre < 30 ,
-                        submission._columns['personnels'].string: submission.personnels == False or submission.personnels == '',
-                        submission._columns['tasks'].string: submission.tasks == False or submission.tasks == '',
-                    }
-                    invalid_stages[2] = {
-                        }
-                    invalid_stages[3] = {
-                        }
-                    invalid_stages[4] = {
-                        submission._columns['etat_art'].string: submission.etat_art == False or submission.etat_art == '',
-                        submission._columns['objective'].string: submission.objective == False or submission.objective == '',
-                        submission._columns['objectives'].string: submission.objectives == False or submission.objectives == '',
-                        }
-                    invalid_stages[5] = {
-                        }
-                    invalid_stages[6] = {
-                        }
-                    invalid_stages[7] = {
-                        }
                     
                     if post.get('ufile'):
                         attachment_value = {
@@ -498,5 +461,51 @@ class WebsiteProjectSubmission(http.Controller):
             vals.update({
                 'error': error,
             })
+        elif next_stage == 8:
+            error.update({
+                'stage1': {
+                    submission._fields['name'].string: submission.name == '',
+                    submission._fields['acronyme'].string: submission.acronyme == '',
+                    submission._fields['field_ids'].string: submission.field_ids.ids == False,
+                    submission._fields['duration'].string: submission.duration == 0,
+                    submission._fields['description'].string: submission.description == '',
+                    submission._fields['n_related_publications'].string: submission.n_related_publications == 0,
+                    submission._fields['n_ing_doc'].string: submission.n_ing_doc == 0,
+                    submission._fields['n_master_pfe'].string: submission.n_master_pfe == 0,
+                    submission._fields['keywords'].string: submission.keywords == '',
+                },
+                'stage2': {
+                    candidate._fields['name'].string: candidate.name == '',
+                    candidate._fields['parent_id'].string: candidate.parent_id.id == False,
+                    candidate._fields['function'].string: candidate.function == '',
+                    candidate._fields['phone'].string: candidate.phone == '',
+                    candidate._fields['mobile'].string: candidate.mobile == '',
+                    candidate._fields['email'].string: candidate.email == '',
+                    submission.inventor._fields['name'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.name == ''),
+                    submission.inventor._fields['phone'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.phone == ''),
+                    submission.inventor._fields['mobile'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.mobile == ''),
+                    submission.inventor._fields['email'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.email == ''),
+                    candidate._fields['documents_count'].string: candidate.documents_count == 0,
+                },
+                'stage3': {
+                    submission._fields['partners'].string: submission.partners.ids == False,
+                },
+                'stage5': {
+                    submission._fields['etat_art'].string: submission.etat_art == False or submission.etat_art == '',
+                    submission._fields['objective'].string: submission.objective == False or submission.objective == '',
+                    submission._fields['objectives'].string: submission.objectives == False or submission.objectives == '',
+                    submission._fields['description'].string: submission.description == False or submission.description == '',
+                    submission._fields['fallout'].string: submission.fallout == False or submission.fallout == '',
+                    submission._fields['perspective'].string: submission.perspective == False or submission.perspective == '',
+                    'Le nombre des documents joints doit être supérieur ou égal à 7': submission.documents_count < 7,
+                    'Le pourcentage propre doit être supérieur ou égal à 30': submission.percent_propre < 30 ,
+                    submission._fields['personnels'].string: submission.personnels == False or submission.personnels == '',
+                    submission._fields['tasks'].string: submission.tasks == False or submission.tasks == '',
+                }
+            })
+            vals.update({
+                'error': error,
+            })
+            
         return request.render('website_project_submission.apply', vals)
 # vim :et:

@@ -254,6 +254,8 @@
 										<span t-esc="error.get('main')"/>
 									</div>
 								</t>
+			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
+				<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 								<t t-if="current_stage==1">
 									<t t-call="website_project_submission.apply1"/></t>
 								<t t-if="current_stage==2">
@@ -268,6 +270,9 @@
 									<t t-call="website_project_submission.apply7"/></t>
 								<t t-if="current_stage==8">
 									<t t-call="website_project_submission.apply8"/></t>
+									
+				<t t-call="website_project_submission.form_header_footer"/>
+									</fieldset></form>
 							</section>
 						</div>
 					</div>
@@ -301,22 +306,20 @@
 		</template>
 		<!-- Esquisse du projet -->
 		<template id="apply1">
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-				<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<h4 class="text-center text-muted">Résumé du projet</h4>
-				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="name">Intitulé du projet</label>
 					<div class="col-md-7 col-sm-8">
 						<input required="1" type="text" maxlength="250" t-att-value="submission.name != '/' and submission.name" class="form-control" name="name" />
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('acronyme') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="acronyme">Acronyme</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" maxlength="100" t-att-value="submission.acronyme" class="form-control" name="acronyme" />
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('field') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="field">Thématiques<br/><span class="text-muted">(Vous pouvez ajouter plusieurs thématiques)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<select multiple="multiple" t-att-disabled="submission.state != 'draft'" id="fields" name="fields" class="form-control multiple-tags">
@@ -328,7 +331,7 @@
 						</select>
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('duration') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="duration">Durée du projet
 						
 						<br/>
@@ -384,13 +387,9 @@
 						<input type="text" t-att-value="submission.keywords" class="form-control" name="keywords"/>
 					</div>
 				</div>
-				<t t-call="website_project_submission.form_header_footer"/>
-			</fieldset></form>
 		</template>
 		<!-- Coordinateur principal -->
 		<template id="apply2">
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-				<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<h4 t-if="submission.offer.category=='innoproject'" class="text-center text-muted">Coordinateur principal</h4>
 				<h4 t-if="submission.offer.category=='innoboost'" class="text-center text-muted">Porteur du projet</h4>
 				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
@@ -475,8 +474,6 @@
 						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
 				</div>
-				<t t-call="website_project_submission.form_header_footer"/>
-			</fieldset></form>
 		</template>
 		<!-- Partenaires -->
 		<template id="apply34">
@@ -486,9 +483,7 @@
 			<t t-if="current_stage==4">
 				<h4 class="text-center text-muted">Partenaires industriels</h4>
 			</t>
-			<h5 class="text-center">Vous pouvez ajouter autant de partenaires que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-				<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+			<h5 class="text-center" t-if="not new and not partner">Vous pouvez ajouter autant de partenaires que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
 				<t t-if="current_stage==3">
 					<t t-set="category" t-value="scientifique"/></t>
 				<t t-if="current_stage==4">
@@ -532,17 +527,13 @@
 						</tbody>
 					</thead>
 				</table>
-				<t t-if="not new and not partner" >
+				<t t-if="not new and not partner">
 					<div class="form-group text-center">
 						<button class="btn btn-primary" type="submit" name="add-partner" value="1">
 							<span><i class="fa fa-plus"/> Ajouter un partenaire</span>
 						</button>
-					</div>
-					<t t-call="website_project_submission.form_header_footer"/></t>
-			</fieldset></form>
+					</div></t>
 			<t t-if="new or partner">
-				<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-					<fieldset t-att-disabled="submission.state != 'draft'">
 					<t t-if="partner">
 						<input type="hidden" name="partner_id" t-att-value="'%s' % partner.id"/>
 					</t>
@@ -758,14 +749,10 @@
 						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
 				</div>
-					<t t-call="website_project_submission.form_header_footer"/>
-				</fieldset></form>
 			</t>
 		</template>
 		<!-- Descriptif detaillé -->
 		<template id="apply5">
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<h4 class="text-center text-muted">Descriptif detaillé</h4>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
 					<label class="col-md-12" for="etat_art">
@@ -1003,15 +990,11 @@
 						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
 				</div>
-				<t t-call="website_project_submission.form_header_footer"/>
-			</form>
 		</template>
 		<!-- Tâches et livrables -->
 		<template id="apply6">
 			<h4 class="text-center text-muted">Tâches et livrables</h4>
 			<h5 class="text-center">Vous pouvez ajouter autant de tâches que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<t t-if="not submission.tasks"><t t-set="new" t-value="1"/></t>
 				<table t-if="submission.tasks" class="table">
 					<thead>
@@ -1060,12 +1043,8 @@
 							<span><i class="fa fa-plus"/> Ajouter une tâche</span>
 						</button>
 					</div>
-					<t t-call="website_project_submission.form_header_footer"/>
 				</t>
-			</form>
 			<t t-if="new or task">
-				<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-					<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 					<input type="hidden" name="to-save" value="1"/>
 					<t t-if="task">
 						<input type="hidden" name="task_id" t-att-value="'%s' % task.id"/>
@@ -1139,15 +1118,11 @@
 							<textarea maxlength="4200" t-esc="task and task.description" class="form-control" name="description"/>
 						</div>
 					</div>
-					<t t-call="website_project_submission.form_header_footer"/>
-				</form>
 			</t>
 		</template>
 		<!-- Montage financier -->
 		<template id="apply7">
 			<h4 class="text-center text-muted">Montage financier</h4>
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-				<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 				<div>
 					<h5 class="text-center">Répartition financière du projet</h5>
 					<table t-if="submission.budget_lines" class="table">
@@ -1379,8 +1354,6 @@
 						</thead>
 					</table>
 				</div>
-				<t t-call="website_project_submission.form_header_footer"/>
-			</fieldset></form>
 		</template>
 		<!-- Descriptif detaillé -->
 		<template id="apply8">
@@ -1395,8 +1368,9 @@
 					</tr>
 				</table>
 			</div>
-			<form class="form-horizontal mt32 col-md-12 mt8" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data"><fieldset t-att-disabled="submission.state != 'draft'">
-				<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+			<t t-foreach="error['stage1'].items()" t-as="err">
+				<t t-if="err[1]"><t t-esc="err[0]"/></t>
+			</t>
 				<div class="form-group">
 					<label class="text-center">Merci de remplir, signer, scanner en PDF et insérer la convention de collaboration<br/><span class="text-muted">(vous pouvez télécharger le modèle de convention de collaboration)</span></label>
 					<table class="table table-condensed" t-if="submission.documents.filtered(lambda d: d.parent_id.name == 'Conventions')">
@@ -1421,7 +1395,6 @@
 						<button type="submit" name="submit" value="confirm" class="btn btn-primary">Envoyer ma soumission</button>
 					</div>
 				</div>
-			</fieldset></form>
 		</template>
 		<!-- Récapitulatif final -->
 		<template id="thankyou">
