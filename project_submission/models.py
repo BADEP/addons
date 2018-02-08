@@ -165,6 +165,7 @@ class ProjectSubmission(models.Model):
     acronyme = fields.Char('Acronyme')
     offer = fields.Many2one('project.offer', string='Offre de projet', required=True)
     candidate = fields.Many2one('res.users', string='Soumissionnaire', required=True)
+    partner = fields.Many2one('res.partner', related='candidate.partner_id', string='Fiche partenaire', required=True)
     inventor = fields.Many2one('res.partner', string='Inventeur')
     field_ids = fields.Many2many('project.offer.field', string='Thématiques')
     partners = fields.Many2many('res.partner', string='Partenaires')
@@ -201,6 +202,8 @@ class ProjectSubmission(models.Model):
     color = fields.Integer('Couleur', default=0)
     documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
+    all_documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents associés')
+    all_documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     survey = fields.Many2one('survey.survey', related='offer.survey')
     response = fields.Many2one('survey.user_input', string="Réponse au formulaire")
     budget = fields.Float(compute='_get_amounts', store=False, digital_precision=dp.get_precision('Account'))
@@ -249,7 +252,11 @@ class ProjectSubmission(models.Model):
     @api.one
     def _get_attached_docs(self):
         self.documents = self.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', '=', self.id)]).ids
-        
+        res1 = self.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', '=', self.id)])
+        res2 = self.env['ir.attachment'].search([('res_model', '=', 'res.users'), ('res_id', '=', self.candidate.id)])
+        res3 = self.env['ir.attachment'].search([('res_model', '=', 'res.partner'), ('res_id', 'in', self.partners.ids)])
+        self.documents = res1.ids
+        self.all_documents =  res1.ids + res2.ids + res3.ids
         
     @api.multi
     def action_get_attachment_tree_view(self):
@@ -258,10 +265,18 @@ class ProjectSubmission(models.Model):
         action['domain'] = str([('res_model', '=', 'project.submission'), ('res_id', 'in', self.ids)])
         return action
 
+    @api.multi
+    def action_get_all_attachment_tree_view(self):
+        action = self.env.ref('base.action_attachment').read()[0]
+        action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0]}
+        action['domain'] = str(['|','&',('res_model', '=', 'project.submission'), ('res_id', 'in', self.ids),'&',('res_model', '=', 'res.partner'), ('res_id', 'in', self.partners.ids),'&',('res_model', '=', 'res.users'), ('res_id', 'in', self.candidate.id)])
+        return action
+
     @api.one
     @api.depends('documents')
     def _count_all(self):
         self.documents_count = len(self.documents)
+        self.all_documents_count = len(self.all_documents)
     
     @api.one
     def get_early_stage(self):
@@ -333,6 +348,7 @@ class ResPartner(models.Model):
     
     submissions = fields.Many2many('project.submission')
     category = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')])
+    documents_count =  fields.Integer(compute='_count_all', string='Nombre de soumissions')
     entite_recherche = fields.Char('Entité de recherche')
     partner_references = fields.Text('Références du partenaire')
     effectif = fields.Integer('Effectif global')
@@ -342,6 +358,19 @@ class ResPartner(models.Model):
     cnss = fields.Char('CNSS')
     rc = fields.Char('Registre de commerce')
     ca = fields.Float('Chiffre d\'affaires')
+    documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
+    documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
+    submissions_count =  fields.Integer(compute='_count_all', string='Nombre de soumissions')
+
+    @api.one
+    def _count_all(self):
+        self.documents_count = len(self.documents)
+        self.submissions_count = len(self.submissions)
+    
+    @api.one
+    def _get_attached_docs(self):
+        res = self.env['ir.attachment'].search([('res_model', '=', 'res.partner'), ('res_id', '=', self.id)])
+        self.documents =  res.ids
 
 class ProjectPartnerFunction(models.Model):
     _name = 'project.partner.function'

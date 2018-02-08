@@ -488,10 +488,10 @@ class WebsiteProjectSubmission(http.Controller):
                     candidate._fields['documents_count'].string: candidate.documents_count == 0,
                 },
                 'stage3': {
-                    submission._fields['partners'].string: submission.partners.filtered(lambda p: p.category='scientifique') == False,
-                },                
+                    submission._fields['partners'].string: submission.partners.filtered(lambda p: p.category=='scientifique') == False,
+                },
                 'stage4': {
-                    submission._fields['partners'].string: submission.partners.filtered(lambda p: p.category='industriel') == False,
+                    submission._fields['partners'].string: submission.partners.filtered(lambda p: p.category=='industriel') == False,
                 },
                 'stage5': {
                     submission._fields['etat_art'].string: offer.category == 'innoproject' and submission.etat_art == '',

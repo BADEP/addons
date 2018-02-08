@@ -88,6 +88,7 @@
 			<field name="arch" type="xml">
 				<search string="offers">
 					<filter domain="[('state','=','open')]" string="In Position"/>
+					<field name="name"/>
 					<field name="host"/>
 					<group expand="0" string="Group By">
 						
@@ -101,7 +102,8 @@
 			<field name="model">project.submission</field>
 			<field name="arch" type="xml">
 				<search string="Rechercher les soumissions">
-					<field name="candidate" filter_domain="['|','|',('name','ilike',self),('candidate','ilike',self),('email_from','ilike',self)]" string="Candidat"/>
+					<field name="name"/>
+					<field name="candidate"/>
 					<filter string="My" domain="[('manager', '=', uid)]"/>
 					<filter string="Non assigné" domain="[('manager', '=', False)]"/>
 					<separator/>
@@ -113,15 +115,24 @@
 					<field name="field_ids"/>
 					<field name="manager"/>
 					<separator/>
-					<field name="candidate"/>
-					<separator/>
 					<group expand="0" string="Group By">
 						<filter string="Etat" domain="[]"  context="{'group_by':'state'}"/>
+						<filter string="Candidat" domain="[]"  context="{'group_by':'candidate'}"/>
 						<filter string="Responsable" domain="[]"  context="{'group_by':'manager'}"/>
 						<filter string="Offre" domain="[]" context="{'group_by':'offer'}"/>
-						<filter string="Thématique" domain="[]" context="{'group_by':'field'}"/>
 					</group>
 			   </search>
+			</field>
+		</record>
+
+		<record id="view_ir_attachment_filter" model="ir.ui.view">
+			<field name="name">Documents</field>
+			<field name="model">ir.attachment</field>
+			<field name="inherit_id" ref="base.view_attachment_search"></field>
+			<field name="arch" type="xml">
+				<group position="inside">
+					<filter string="Répertoire" domain="[]"  context="{'group_by':'parent_id'}"/>
+				</group>
 			</field>
 		</record>
 
@@ -229,14 +240,15 @@
 					<field name="message_summary"/>
 					<field name="priority"/>
 					<field name="partner_mobile"/>
+					<field name="acronyme"/>
 				   
 			   		<templates>
 			   		
 			   			<t t-name="kanban-tooltip">
 							<ul class="oe_kanban_tooltip">
-								<li t-if="record.field.raw_value"><b>Domaines:</b> <field name="field_ids"/></li>
-								<li t-if="record.candidate.raw_value"><b>Contact:</b> <field name="candidate"/></li>
-								<li t-if="record.state.raw_value"><b>State:</b> <field name="state"/></li>
+								<li t-if="record.field.raw_value"><b>Thématiques:</b> <field name="field_ids"/></li>
+								<li t-if="record.candidate.raw_value"><b>Candidat:</b> <field name="candidate"/></li>
+								<li t-if="record.state.raw_value"><b>Etat:</b> <field name="state"/></li>
 							</ul>
 						</t>
 						<t t-name="kanban-box">
@@ -244,8 +256,8 @@
 								<div class="oe_dropdown_toggle oe_dropdown_kanban">
 									<span class="oe_e">i</span>
 									<ul class="oe_dropdown_menu">
-										<t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Delete</a></li></t>
-										<li><a name="action_makeMeeting" type="object">Schedule Interview</a></li>
+										<t t-if="widget.view.is_action_enabled('delete')"><li><a type="delete">Supprimer</a></li></t>
+										<li><a name="action_makeMeeting" type="object">Programmer un rendez-vous</a></li>
 										<li><ul class="oe_kanban_colorpicker" data-field="color"/></li>
 									</ul>
 	
@@ -253,8 +265,8 @@
 								
 								<div class="oe_kanban_content" tooltip="kanban-tooltip">
 									<div>
-										<!--<t t-if="record.partner_name.raw_value"><b><field name="partner_name"/></b><br/></t>-->
-										<i><field name="name"/></i><br/>
+										<t t-if="record.candidate.raw_value"><b><field name="candidate"/></b><br/></t>
+										<i><b><field name="name"/></b> - <field name="acronyme"/></i><br/>
 										<field name="offer"/><br/>
 										<t t-if="record.partner_mobile.raw_value">Mobile: <field name="partner_mobile"/><br/></t>
 									</div>
@@ -264,7 +276,8 @@
 											<t t-if="record.date_action.raw_value"> : </t>
 											<field name="title_action"/>
 									</div>
-									<div style="width:240px"><field name="field_ids"/></div>
+									<div style="width:240px">Thématiques: <field name="field_ids"/></div>
+									<div style="width:240px">Partenaires: <field name="partners"/></div>
 									<div class="oe_kanban_bottom_right">
 										<img t-att-src="kanban_image('res.users', 'image_small', record.manager.raw_value)" t-att-title="record.manager.value" width="24" height="24" class="oe_kanban_avatar pull-right"/>
 										<div class="pull-left" groups="base.group_user">
@@ -275,7 +288,6 @@
 										<t t-raw="record.message_summary.raw_value"/>
 										<a t-if="record.documents_count" name="action_get_attachment_tree_view" type="object" style="margin-right: 10px"> <field name="documents_count"/> Documents</a>
 									</div>
-	
 								</div>
 								<div class="oe_clear"></div>
 							</div>
@@ -309,6 +321,21 @@
 			</field>
 		</record>
 
+		<record id="view_project_submission_tree" model="ir.ui.view">
+			<field name="name">project.submission.tree</field>
+			<field name="model">project.submission</field>
+			<field name="arch" type="xml">
+				<tree string="Soumissions">
+					<field name="name"/>
+					<field name="offer"/>
+					<field name="candidate"/>
+					<field name="acronyme"/>
+					<field name="field_ids"/>
+					<field name="partners"/>
+					<field name="budget"/>
+				</tree>
+			</field>
+		</record>
 		<record id="view_project_submission_form" model="ir.ui.view">
 			<field name="name">project.submission.form</field>
 			<field name="model">project.submission</field>
@@ -327,11 +354,8 @@
 								<button class="oe_stat_button" icon="fa-book" name="action_get_attachment_tree_view" type="object">
 									<field name="documents_count" widget="statinfo" string="Documents"/>
 								</button>
-								<button name="action_start_survey" attrs="{'invisible': [('survey','=',False)]}" class="oe_stat_button" icon="fa-user" type="object" help="Answer related job question">
-									<div>Start<br/>Interview</div>
-								</button>
-								<button name="action_print_survey" attrs="{'invisible': [('survey','=',False)]}" class="oe_stat_button" icon="fa-print" type="object" help="Print interview report">
-									<div>Print<br/>Interview</div>
+								<button class="oe_stat_button" icon="fa-book" name="action_get_all_attachment_tree_view" type="object">
+									<field name="all_documents_count" widget="statinfo" string="Documents associés"/>
 								</button>
 							</div>
 						</div>
@@ -340,6 +364,7 @@
 								<field name="acronyme"/>
 								<field name="offer"/>
 								<field name="candidate"/>
+								<field name="partner" readonly="1"/>
 								<field name="partner_mobile"/>
 								<field name="organisme"/>
 								<field name="manager"/>
@@ -558,13 +583,6 @@
 				<field name="name" position="after">
 					<field name="login" placeholder="Login"/>
 				</field>
-				<field name="user_id" position="replace"/>
-				<xpath expr="//page[@name='sales_purchases']//field[@name='customer']" position="attributes">
-					<attribute name="invisible">1</attribute>
-				</xpath>
-				<xpath expr="//page[@name='sales_purchases']//field[@name='supplier']" position="attributes">
-	 			 	<attribute name="invisible">1</attribute>
-				</xpath>
 			   </data>
 		</field>
 	</record>
@@ -576,7 +594,6 @@
 			<form string="Types Offre">
 				<sheet>
 					<field name="name"/>
-					<!-- <field name="note"/>-->
 				</sheet>
 			</form>
 		</field>

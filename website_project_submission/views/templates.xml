@@ -372,13 +372,13 @@
 				<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="n_ing_doc">Nombre de doctorants/postdocs/ingénieurs proposés</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="number" min="0" class="form-control" t-att-value="submission.n_ing_doc" name="n_ing_doc"/>
+						<input type="number" min="0" max="2" class="form-control" t-att-value="submission.n_ing_doc" name="n_ing_doc"/>
 					</div>
 				</div>
 				<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="n_master_pfe">Nombre de Masters et PFE proposés</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="number" min="0" class="form-control" t-att-value="submission.n_master_pfe" name="n_master_pfe"/>
+						<input type="number" min="0" max="3" class="form-control" t-att-value="submission.n_master_pfe" name="n_master_pfe"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -392,63 +392,64 @@
 		<template id="apply2">
 				<h4 t-if="submission.offer.category=='innoproject'" class="text-center text-muted">Coordinateur principal</h4>
 				<h4 t-if="submission.offer.category=='innoboost'" class="text-center text-muted">Porteur du projet</h4>
-				<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label t-if="submission.offer.category=='innoproject'" class="col-md-3 col-sm-4 control-label" for="name">Nom et Prénom</label>
 					<label t-if="submission.offer.category=='innoboost'" class="col-md-3 col-sm-4 control-label" for="name">Porteur du projet</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="submission.candidate.name" class="form-control" name="name" />
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('organisme') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label t-if="submission.offer.category=='innoproject'" class="col-md-3 col-sm-4 control-label" for="organisme">Etablissement</label>
 					<label t-if="submission.offer.category=='innoboost'" class="col-md-3 col-sm-4 control-label" for="organisme">Entreprise</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="submission.candidate.parent_id.name" class="form-control" name="organisme" />
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('function') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="function">Fonction</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="submission.candidate.function" class="form-control" name="function" />
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="tel bfh-phone" t-att-value="submission.candidate.phone" class="form-control" name="phone" />
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('mobile') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="mobile">Mobile</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="tel bfh-phone" data-format="+212 (ddd) dd-dd-dd" t-att-value="submission.candidate.mobile" class="form-control" name="mobile" />
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="email" t-att-value="submission.candidate.email" class="form-control" name="email" />
 					</div>
 				</div>
-				<t t-if="submission.offer.category=='innoboost'"><div t-attf-class="form-group #{error.get('inventor') and 'has-error' or ''}">
+				<t t-if="submission.offer.category=='innoboost'">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="inventor">Nom et prénom de l'inventeur</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="text" t-att-value="submission.inventor and submission.inventor.name" class="form-control" name="inventor" />
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('inventor_phone') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="tel bfh-phone" t-att-value="submission.inventor and submission.inventor.phone" class="form-control" name="inventor_phone" />
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('inventor_mobile') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="inventor_mobile">Mobile</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="tel bfh-phone" data-format="+212 (ddd) dd-dd-dd" t-att-value="submission.inventor and submission.inventor.mobile" class="form-control" name="inventor_mobile" />
 					</div>
 				</div>
-				<div t-attf-class="form-group #{error.get('inventor_email') and 'has-error' or ''}">
+				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="inventor_email">Email</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="email" t-att-value="submission.inventor and submission.inventor.email" class="form-control" name="inventor_email" />
@@ -540,37 +541,37 @@
 					<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 					<input type="hidden" name="to-save" value="1"/>
 					<!--<div class="form-group"><label class="col-md-3 col-sm-4 control-label" for="ufile">logo</label><div class="col-md-7 col-sm-8"><div t-if="partner"><img class="media-object pull-left" t-att-src="default.get('image')" style="width: 50px; margin-right: 10px;"/><button class="btn btn-danger" type="submit" name="del-picture" t-att-value="partner.id"><i class="fa fa-trash"/></button></div><input accept="image/*" class="input-file form-control" id="fileInput" type="file" name="ufile"/><span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span></div></div>-->
-					<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="name">Etablissement</label>
 						<div class="col-md-7 col-sm-8">
 							<input required="1" type="text" t-att-value="partner and partner.name" class="form-control" name="name" />
 						</div>
 					</div>
-					<div t-if="current_stage==3" t-attf-class="form-group #{error.get('entite_recherche') and 'has-error' or ''}">
+					<div t-if="current_stage==3" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="entite_recherche">Entité de recherche</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.entite_recherche" class="form-control" name="entite_recherche" />
 						</div>
 					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('date') and 'has-error' or ''}">
+					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="date">Date de création</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="date" t-att-value="partner and partner.date" class="form-control" name="date" />
 						</div>
 					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('capital') and 'has-error' or ''}">
+					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="capital">Capital</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="number" min="0" t-att-value="partner and partner.capital" class="form-control" name="capital" />
 						</div>
 					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('ca') and 'has-error' or ''}">
+					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaires<br/><span class="text-muted">Année antérieure</span></label>
 						<div class="col-md-7 col-sm-8">
 							<input type="number" min="0" t-att-value="partner and partner.ca" class="form-control" name="ca" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('effectif') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="effectif">
 							<t t-if="current_stage==3">Effectif</t>
 							<t t-if="current_stage==4">Nombre d'employés
@@ -583,19 +584,19 @@
 							<input type="number" min="0" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
 						</div>
 					</div>
-					<div t-if="current_stage==3" t-attf-class="form-group #{error.get('effectif_chercheur') and 'has-error' or ''}">
+					<div t-if="current_stage==3" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="effectif_chercheur">Effectif chercheurs</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="number" min="0" t-att-value="partner and partner.effectif_chercheur" class="form-control" name="effectif_chercheur" />
 						</div>
 					</div>
-					<div t-if="current_stage==3" t-attf-class="form-group #{error.get('effectif_doc') and 'has-error' or ''}">
+					<div t-if="current_stage==3" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="effectif_doc">Effectif doctorants</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="number" min="0" t-att-value="partner and partner.effectif_doc" class="form-control" name="effectif_doc" />
 						</div>
 					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('title') and 'has-error' or ''}">
+					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="title">Forme juridique</label>
 						<div class="col-md-7 col-sm-8">
 							<select id="title" name="title" class="form-control">
@@ -608,13 +609,13 @@
 							</select>
 						</div>
 					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('category_id') and 'has-error' or ''}">
+					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="category_id">Domaine d'activité</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.category_id" class="form-control" name="category_id" />
 						</div>
 					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('cnss') and 'has-error' or ''}">
+					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="cnss">N° de CNSS
 							
 							<br/>
@@ -624,98 +625,98 @@
 							<input type="text" t-att-value="partner and partner.cnss" class="form-control" name="cnss" />
 						</div>
 					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group #{error.get('rc') and 'has-error' or ''}">
+					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="rc">N° de registre de commerce</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.rc" class="form-control" name="rc" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('partner_references') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="partner_references">Références du partenaire</label>
 						<div class="col-md-7 col-sm-8">
 							<textarea t-esc="partner and partner.partner_references" class="form-control" name="partner_references" style="min-height: 120px"/>
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('country') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="country">Pays</label>
 						<div class="col-md-7 col-sm-8">
 							<select id="partner_country" name="partner_country" class="form-control">
 								<!--<option>Sélectionnez une valeur...</option>-->
 								<t t-foreach="countries" t-as="c">
-									<option name="partner_country" t-att-value="c.id" t-att-selected="partner and c.id  == partner.country_id.id or c.id == offer.host.country_id.id">
+									<option name="partner_country" t-att-value="c.id" t-att-selected="partner and c.id  == partner.country_id.id or c.id == submission.offer.host.country_id.id">
 										<t t-esc="c.name"/>
 									</option>
 								</t>
 							</select>
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('city') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="city">Ville</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.city" class="form-control" name="city" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('zip') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="zip">Code postal</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.zip" class="form-control" name="zip" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('street') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="street">Adresse</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.street" class="form-control" name="street" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('street2') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="street2"></label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.street2" class="form-control" name="street2" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="email" t-att-value="partner and partner.email" class="form-control" name="email" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('phone') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="tel" t-att-value="partner and partner.phone" class="form-control" name="phone" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('fax') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="fax">Fax</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="tel" t-att-value="partner and partner.fax" class="form-control" name="fax" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('website') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="email">Site web</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.email" class="form-control" name="website" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('contact_name') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Nom et prénom du représentant</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.child_ids and partner.child_ids[0].name" class="form-control" name="contact_name" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('contact_function') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Fonction du représentant</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.child_ids and partner.child_ids[0].function" class="form-control" name="contact_function" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('contact_phone') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Téléphone du représentant</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="tel" t-att-value="partner and partner.child_ids and partner.child_ids[0].phone" class="form-control" name="contact_phone" />
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('contact_email') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Email du représentant</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="email" t-att-value="partner and partner.child_ids and partner.child_ids[0].email" class="form-control" name="contact_email" />
@@ -1049,13 +1050,13 @@
 					<t t-if="task">
 						<input type="hidden" name="task_id" t-att-value="'%s' % task.id"/>
 					</t>
-					<div t-attf-class="form-group #{error.get('name') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="name">Désignation</label>
 						<div class="col-md-7 col-sm-8">
 							<input required="1" type="text" t-att-value="task and task.name" class="form-control" name="name"/>
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('type') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="type">Type d'activité</label>
 						<div class="col-md-7 col-sm-8">
 							<select required="1" name="type" id="type" class="form-control">
@@ -1068,7 +1069,7 @@
 							</select>
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('semester') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="semester">Semestre</label>
 						<div class="col-md-7 col-sm-8">
 							<select id="semester" name="semester" class="form-control">
@@ -1081,7 +1082,7 @@
 							</select>
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('partner') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="partner">Responsable du WP</label>
 						<div class="col-md-7 col-sm-8">
 							<select name="partner" id="partner" class="form-control">
@@ -1094,7 +1095,7 @@
 							</select>
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('all_partners') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="partner">Partenaires impliqués</label>
 						<div class="col-md-7 col-sm-8">
 							<select multiple="multiple" required="1" name="partners" id="partners" class="form-control multiple-tags">
@@ -1106,13 +1107,13 @@
 							</select>
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('email') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="objectives">Objectifs<br/><span class="text-muted">(Max. 600 mots)</span></label>
 						<div class="col-md-7 col-sm-8">
 							<textarea maxlength="3600" required="1" t-esc="task and task.objectives" class="form-control" name="objectives"/>
 						</div>
 					</div>
-					<div t-attf-class="form-group #{error.get('description') and 'has-error' or ''}">
+					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="description">Description<br/><span class="text-muted">(Max. 800 mots)</span></label>
 						<div class="col-md-7 col-sm-8">
 							<textarea maxlength="4200" required="1" t-esc="task and task.description" class="form-control" name="description"/>
@@ -1388,7 +1389,6 @@
 					<input t-if="not submission.documents.filtered(lambda d: d.parent_id.name == 'Conventions')" accept=".pdf" class="input-file2 form-control" id="fileInput" type="file" name="ufile"/>
 					<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 				</div>
-				<t t-call="website_project_submission.form_header_footer"/>
 				<div class="form-group">
 					<div class="col-md-12 text-center">
 						<div class="bg-warning mb8">Une fois votre soumission envoyée, vous ne pouvez plus la modifier. Veuillez vous assurer que vous avez saisis toutes les informations nécessaires.</div>
