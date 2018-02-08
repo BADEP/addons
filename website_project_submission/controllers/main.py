@@ -140,8 +140,9 @@ class WebsiteProjectSubmission(http.Controller):
                     #TODO: call with adequate access right. Sudo might e dangerous if the id passed is wrong
                     sudo_env['ir.attachment'].browse(int(post.get('unlink-doc'))).unlink()
                 if post.get('unlink-task'):
-                    env['project.submission.task'].browse(int(post.get('unlink-task'))).unlink()
+                    submission.tasks.filtered(lambda t: t.id == int(post.get('unlink-task'))).unlink()
                 if post.get('unlink-partner'):
+                    submission.costs.filtered(lambda c: c.partner.id == int(post.get('unlink-partner'))).unlink()
                     submission.write({'partners': [(3, int(post.get('unlink-partner')))]})
                     partner = env['res.partner'].browse(int(post.get('unlink-partner')))
                     if not partner.submissions:
@@ -250,11 +251,10 @@ class WebsiteProjectSubmission(http.Controller):
                         'parent_id': partner.id,
                         'category': 'scientifique' if current_stage == 3 else 'industriel'
                     }
-                    contact = partner.child_ids.filtered(lambda c: c.name == post.get('contact_name'))
-                    if contact:
-                        contact[0].write(contact_value)
+                    if partner.child_ids.ids:
+                        partner.child_ids[0].write(contact_value)
                     else:
-                        contact = sudo_env['res.partner'].create(contact_value)
+                        sudo_env['res.partner'].create(contact_value)
                     if post.get('ufile'):
                         attachment_value = {
                             'name': post['ufile'].filename,

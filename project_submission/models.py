@@ -370,7 +370,7 @@ class ProjectSubmissionTask(models.Model):
     all_partners = fields.Many2many(
         comodel_name='res.partner',
         compute='_get_possible_partners_values', readonly=True)
-    partner = fields.Many2one('res.partner', required=True, string='Responsable', domain="[('id', 'in', all_partners[0][2])]", ondelete='cascade')
+    partner = fields.Many2one('res.partner', string='Responsable', domain="[('id', 'in', all_partners[0][2])]", ondelete='cascade')
     partners = fields.Many2many('res.partner', string='Partenaires impliquées', domain="[('id', 'in', all_partners[0][2])]")
     objectives = fields.Text(string='Objectifs')
     description = fields.Text(string='Description des tâches et rôles des partenaires')
