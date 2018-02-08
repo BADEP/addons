@@ -488,20 +488,36 @@ class WebsiteProjectSubmission(http.Controller):
                     candidate._fields['documents_count'].string: candidate.documents_count == 0,
                 },
                 'stage3': {
-                    submission._fields['partners'].string: submission.partners.ids == False,
+                    submission._fields['partners'].string: submission.partners.filtered(lambda p: p.category='scientifique') == False,
+                },                
+                'stage4': {
+                    submission._fields['partners'].string: submission.partners.filtered(lambda p: p.category='industriel') == False,
                 },
                 'stage5': {
-                    submission._fields['etat_art'].string: submission.etat_art == False or submission.etat_art == '',
-                    submission._fields['objective'].string: submission.objective == False or submission.objective == '',
-                    submission._fields['objectives'].string: submission.objectives == False or submission.objectives == '',
-                    submission._fields['description'].string: submission.description == False or submission.description == '',
-                    submission._fields['fallout'].string: submission.fallout == False or submission.fallout == '',
-                    submission._fields['perspective'].string: submission.perspective == False or submission.perspective == '',
-                    'Le nombre des documents joints doit être supérieur ou égal à 7': submission.documents_count < 7,
-                    'Le pourcentage propre doit être supérieur ou égal à 30': submission.percent_propre < 30 ,
-                    submission._fields['personnels'].string: submission.personnels == False or submission.personnels == '',
-                    submission._fields['tasks'].string: submission.tasks == False or submission.tasks == '',
-                }
+                    submission._fields['etat_art'].string: offer.category == 'innoproject' and submission.etat_art == '',
+                    submission._fields['objective'].string: offer.category == 'innoproject' and submission.objective == '',
+                    submission._fields['objectives'].string: offer.category == 'innoproject' and submission.objectives == '',
+                    submission._fields['perspective'].string: offer.category == 'innoproject' and submission.perspective == '', 
+                    submission._fields['fallout'].string: submission.fallout == '',
+                    submission._fields['produits_services_process'].string: offer.category == 'innoboost' and submission.produits_services_process == '',
+                    submission._fields['produits_services_process'].string: offer.category == 'innoboost' and submission.produits_services_process == '',
+                    submission._fields['analyse_macro'].string: offer.category == 'innoboost' and submission.analyse_macro == '',
+                    submission._fields['analyse_marche'].string: offer.category == 'innoboost' and submission.analyse_marche == '',
+                    submission._fields['cible'].string: offer.category == 'innoboost' and submission.cible == '',
+                    submission._fields['analyse_competitive'].string: offer.category == 'innoboost' and submission.analyse_competitive == '',
+                    submission._fields['proposition_valeur'].string: offer.category == 'innoboost' and submission.proposition_valeur == '',
+                    submission._fields['invest_retour'].string: offer.category == 'innoboost' and submission.invest_retour == '',
+                },
+                'stage6': {
+                    submission._fields['tasks'].string: submission.tasks.ids == False,
+
+                    },
+                'stage7': {
+                    submission._fields['personnels'].string: submission.personnels.ids == False,
+                    },
+                'stage8': {
+                    
+                    }
             })
             vals.update({
                 'error': error,
