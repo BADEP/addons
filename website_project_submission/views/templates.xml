@@ -307,7 +307,7 @@
 		</template>
 		<!-- Esquisse du projet -->
 		<template id="apply1">
-				<h4 class="text-center text-muted">Résumé du projet</h4>
+				<h4 class="text-center">Résumé du projet</h4>
 				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="name">Intitulé du projet</label>
 					<div class="col-md-7 col-sm-8">
@@ -484,10 +484,10 @@
 		<!-- Partenaires -->
 		<template id="apply34">
 			<t t-if="current_stage==3">
-				<h4 class="text-center text-muted">Partenaires scientifiques</h4>
+				<h4 class="text-center">Partenaires scientifiques</h4>
 			</t>
 			<t t-if="current_stage==4">
-				<h4 class="text-center text-muted">Partenaires industriels</h4>
+				<h4 class="text-center">Partenaires industriels</h4>
 			</t>
 			<h5 class="text-center hidden-print" t-if="not new and not partner">Vous pouvez ajouter autant de partenaires que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
 				<t t-if="current_stage==3">
@@ -759,7 +759,7 @@
 		</template>
 		<!-- Descriptif detaillé -->
 		<template id="apply5">
-				<h4 class="text-center text-muted">Descriptif detaillé</h4>
+				<h4 class="text-center">Descriptif detaillé</h4>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
 					<label class="col-md-12" for="etat_art">
 						État de l’art<span class="text-muted">(max: 800 mots)</span>
@@ -999,8 +999,8 @@
 		</template>
 		<!-- Tâches et livrables -->
 		<template id="apply6">
-			<h4 class="text-center text-muted">Tâches et livrables</h4>
-			<h5 class="text-center">Vous pouvez ajouter autant de tâches que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
+			<h4 class="text-center">Tâches et livrables</h4>
+			<h5 class="text-center hidden-print">Vous pouvez ajouter autant de tâches que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
 				<t t-if="not submission.tasks"><t t-set="new" t-value="1"/></t>
 				<table t-if="submission.tasks" class="table">
 					<thead>
@@ -1032,10 +1032,10 @@
 									</t>
 								</td> -->
 								<td>
-									<button class="btn btn-info" data-toggle="tooltip" title="Editer" type="submit" name="edit-task" t-att-value="s_task.id">
+									<button class="btn btn-info hidden-print" data-toggle="tooltip" title="Editer" type="submit" name="edit-task" t-att-value="s_task.id">
 										<i class="fa fa-pencil"/>
 									</button>
-									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-task" t-att-value="s_task.id">
+									<button class="btn btn-danger hidden-print" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-task" t-att-value="s_task.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
@@ -1046,7 +1046,7 @@
 				<t  t-if="not new and not task" >
 					<div class="form-group text-center">
 						<button class="btn btn-primary" type="submit" name="add-task" value="1">
-							<span><i class="fa fa-plus"/> Ajouter une tâche</span>
+							<span><i class="fa fa-plus hidden-print"/> Ajouter une tâche</span>
 						</button>
 					</div>
 				</t>
@@ -1128,7 +1128,7 @@
 		</template>
 		<!-- Montage financier -->
 		<template id="apply7">
-			<h4 class="text-center text-muted">Montage financier</h4>
+			<h4 class="text-center">Montage financier</h4>
 				<div>
 					<h5 class="text-center">Répartition financière du projet</h5>
 					<table t-if="submission.budget_lines" class="table">
@@ -1363,7 +1363,7 @@
 		</template>
 		<!-- Descriptif detaillé -->
 		<template id="apply8">
-			<h4 class="text-center text-muted">Soumission</h4>
+			<h4 class="text-center">Soumission</h4>
 			<h5 class="text-center">Joindre la convention de collaboration</h5>
 			<div class="col-md-12">
 				<table class="table table-condensed" t-if="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Conventions')">
