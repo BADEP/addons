@@ -126,7 +126,6 @@ class WebsiteProjectSubmission(http.Controller):
                                                            'candidate': candidate.id,})
         error = {}
         request.session.update({'submission': submission.id})
-        has_exception = False
         #Save the current stage
         current_stage = post.get('current_stage') and int(post.get('current_stage'))
         try:
@@ -139,7 +138,7 @@ class WebsiteProjectSubmission(http.Controller):
                 if post.get('unlink-partner'):
                     submission.costs.filtered(lambda c: c.partner.id == int(post.get('unlink-partner'))).unlink()
                     submission.write({'partners': [(3, int(post.get('unlink-partner')))]})
-                    partner = env['res.partner'].browse(int(post.get('unlink-partner')))
+                    partner = sudo_env['res.partner'].browse(int(post.get('unlink-partner')))
                     if not partner.submissions:
                         partner.unlink()
                 if post.get('unlink-budgetline'):
@@ -391,12 +390,8 @@ class WebsiteProjectSubmission(http.Controller):
                 'current_stage': next_stage,
                 }
         if next_stage == 1:
-            fields = env['project.offer.field'].search([])
-            duration_steps = range(offer.min_time, offer.max_time + 1)
             vals.update({
                 'error': error,
-                'duration_steps': duration_steps,
-                'fields': fields,
             })
         if next_stage == 2:
             vals.update({
@@ -415,10 +410,7 @@ class WebsiteProjectSubmission(http.Controller):
             else:
                 vals.update({'new': False})
             vals.update({
-                'error': error,
-                'partners': submission.partners.filtered(lambda p: p.category == ('scientifique' if next_stage == 3 else 'industriel')),
-                'countries': env['res.country'].search([]),
-                'titles': env['res.partner.title'].search([('domain', '=', 'partner')])
+                'error': error
             })
         elif next_stage == 5:
             vals.update({
@@ -432,9 +424,7 @@ class WebsiteProjectSubmission(http.Controller):
                 vals.update({'new': True})
             else:
                 vals.update({'new': False})
-            duration_steps = range(1, submission.duration + 1)
             vals.update({
-                'duration_steps': duration_steps,
                 'error': error,
             })
         elif next_stage == 7:
@@ -534,7 +524,6 @@ class WebsiteProjectSubmission(http.Controller):
                     
                     }
             })
-            has_error = any([v for d in [error.get('stage'+str(x)) for x in range(1,9)] for v in d.values()])
             vals.update({
                 'error': error,
             })

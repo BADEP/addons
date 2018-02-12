@@ -623,5 +623,104 @@
 		<menuitem id="menu_project_lot_type" name="Types de livrable" action="action_project_lot_type" parent="project_submission.menu_project_submission_config" sequence="26"/>
 		<menuitem id="menu_project_budgetline_type" name="Types de lignes de budget" action="action_project_budgetline_type" parent="project_submission.menu_project_submission_config" sequence="30"/>
 
+		<!-- REPORTS -->
+
+    		<template id="report_submission_document">
+		    <t t-call="report.internal_layout">
+		        <div class="page">
+			        <script type="text/javascript">
+				        $('textarea').each(function() {
+				            $(this).height($(this).prop('scrollHeight'));
+				        });
+					</script>
+					<style type="text/css">
+						input, select, textarea {
+							box-shadow: none !important;
+							border: 1px solid black !important;
+							border-radius: none !important;
+						}
+						select {
+						    -moz-appearance: none;
+						    -webkit-appearance:none !important;
+    						appearance: none !important;
+						}
+						select::-ms-expand {
+						    display: none !important;
+						}
+						.hidden-print, .text-muted {
+							display: none !important;
+						}
+					</style>
+		            <div class="oe_structure"/>
+					<t t-set="submission" t-value="o"/>
+					<t t-set="error" t-value="{}"/>
+		            <h2>
+		                <span>Rapport de soumission</span>
+		                <span t-field="o.name"/>
+		            </h2>
+		
+		            <div class="row mt32 mb32" id="informations">
+		                <div t-if="o.acronyme" class="col-xs-3">
+		                    <strong>Acronyme:</strong>
+		                    <p t-field="o.acronyme"/>
+		                </div>
+		                <div t-if="o.candidate" class="col-xs-3">
+		                    <strong>Candidat: </strong>
+		                    <p t-field="o.candidate"/>
+		                </div>
+		                <div t-if="o.offer" class="col-xs-3">
+		                    <strong>Appel à projets:</strong>
+		                    <p t-field="o.offer"/>
+		                </div>
+		                <div t-if="o.date_submitted" class="col-xs-3">
+		                    <strong>Date de soumission:</strong>
+		                    <p t-field="o.date_submitted"/>
+		                </div>
+		            </div>
+		            <div class="row mt32">
+		            	<t t-foreach="range(1,9)" t-as="current_stage">
+	            			<t t-if="current_stage==1">
+								<t t-call="website_project_submission.apply1"/></t>
+                    		<p style="page-break-before:always;"> </p>
+							<t t-if="current_stage==2">
+								<t t-call="website_project_submission.apply2"/></t>
+                    		<p style="page-break-before:always;"> </p>
+							<t t-if="current_stage==3 or current_stage==4">
+								<t t-call="website_project_submission.apply34"/></t>
+                    		<p style="page-break-before:always;"> </p>
+							<t t-if="current_stage==5">
+								<t t-call="website_project_submission.apply5"/></t>
+             				<p style="page-break-before:always;"> </p>
+							<t t-if="current_stage==6">
+								<t t-call="website_project_submission.apply6"/></t>
+               			    <p style="page-break-before:always;"> </p>
+							<t t-if="current_stage==7">
+								<t t-call="website_project_submission.apply7"/></t>
+                		    <p style="page-break-before:always;"> </p>
+							<t t-if="current_stage==8">
+								<t t-call="website_project_submission.apply8"/></t>
+		            	</t>
+		            </div>
+		            <div class="oe_structure"/>
+		        </div>
+		    </t>
+		</template>
+		
+		<template id="report_submission">
+		    <t t-call="report.html_container">
+		        <t t-foreach="doc_ids" t-as="doc_id">
+		            <t t-raw="translate_doc(doc_id, doc_model, 'candidate.lang', 'project_submission.report_submission_document')"/>
+		        </t>
+		    </t>
+		</template>
+
+        <report 
+            id="report_poject_submission"
+            string="Rapport de soumission"
+            model="project.submission" 
+            report_type="qweb-pdf"
+            file="project_submission.report_submission" 
+            name="project_submission.report_submission"
+        />
 	</data>
 </openerp>

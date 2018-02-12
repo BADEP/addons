@@ -254,8 +254,8 @@
 										<span t-esc="error.get('main')"/>
 									</div>
 								</t>
-			<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-				<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+						<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
+							<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
 								<t t-if="current_stage==1">
 									<t t-call="website_project_submission.apply1"/></t>
 								<t t-if="current_stage==2">
@@ -270,8 +270,7 @@
 									<t t-call="website_project_submission.apply7"/></t>
 								<t t-if="current_stage==8">
 									<t t-call="website_project_submission.apply8"/></t>
-									
-				<t t-call="website_project_submission.form_header_footer"/>
+								<t t-call="website_project_submission.form_header_footer"/>
 									</fieldset></form>
 							</section>
 						</div>
@@ -323,7 +322,7 @@
 					<label class="col-md-3 col-sm-4 control-label" for="field">Thématiques<br/><span class="text-muted">(Vous pouvez ajouter plusieurs thématiques)</span></label>
 					<div class="col-md-7 col-sm-8">
 						<select multiple="multiple" t-att-disabled="submission.state != 'draft'" id="fields" name="fields" class="form-control multiple-tags">
-							<t t-foreach="fields" t-as="f">
+							<t t-foreach="submission.env['project.offer.field'].search([])" t-as="f">
 								<option name="fields" t-att-value="f.id" t-att-selected="f.id in submission.field_ids.ids">
 									<t t-esc="f.name"/>
 								</option>
@@ -345,7 +344,7 @@
 					<div class="col-md-7 col-sm-8">
 						<select id="duration" name="duration" class="form-control">
 							<!--<option>Sélectionnez une valeur...</option>-->
-							<t t-foreach="duration_steps" t-as="d">
+							<t t-foreach="range(submission.offer.min_time, submission.offer.max_time + 1)" t-as="d">
 								<option name="duration" t-att-value="d" t-att-selected="d == submission.duration">
 									<t t-esc="d"/>
 									<t t-if="d==1"> Semestre</t>
@@ -468,7 +467,7 @@
 								<td>
 									<span t-field="doc.name"/>
 								</td>
-								<td class="text-right">
+								<td class="text-right hidden-print no-print">
 									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-doc" t-att-value="doc.id">
 										<i class="fa fa-trash"/>
 									</button>
@@ -489,6 +488,8 @@
 				<h4 class="text-center text-muted">Partenaires industriels</h4>
 			</t>
 			<h5 class="text-center" t-if="not new and not partner">Vous pouvez ajouter autant de partenaires que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
+				<t t-if="current_stage==3"><t t-set="partners" t-value="submission.partners.filtered(lambda p: p.category == 'scientifique')"/></t>
+				<t t-if="current_stage==4"><t t-set="partners" t-value="submission.partners.filtered(lambda p: p.category == 'industriel')"/></t>
 				<t t-if="current_stage==3">
 					<t t-set="category" t-value="scientifique"/></t>
 				<t t-if="current_stage==4">
@@ -605,7 +606,7 @@
 						<div class="col-md-7 col-sm-8">
 							<select id="title" name="title" class="form-control">
 								<!--<option>Sélectionnez une valeur...</option>-->
-								<t t-foreach="titles" t-as="t">
+								<t t-foreach="submission.env['res.partner.title'].search([('domain', '=', 'partner')])" t-as="t">
 									<option name="title" t-att-value="t.id" t-att-selected="partner and t.id  == partner.title.id">
 										<t t-esc="t.name"/>
 									</option>
@@ -646,7 +647,7 @@
 						<div class="col-md-7 col-sm-8">
 							<select id="partner_country" name="partner_country" class="form-control">
 								<!--<option>Sélectionnez une valeur...</option>-->
-								<t t-foreach="countries" t-as="c">
+								<t t-foreach="submission.env['res.country'].search([])" t-as="c">
 									<option name="partner_country" t-att-value="c.id" t-att-selected="partner and c.id  == partner.country_id.id or c.id == submission.offer.host.country_id.id">
 										<t t-esc="c.name"/>
 									</option>
@@ -1078,7 +1079,7 @@
 						<div class="col-md-7 col-sm-8">
 							<select id="semester" name="semester" class="form-control">
 								<!--<option>Sélectionnez une valeur...</option>-->
-								<t t-foreach="duration_steps" t-as="d">
+								<t t-foreach="range(1, submission.duration + 1)" t-as="d">
 									<option name="semester" t-att-value="d" t-att-selected="task and d == task.semester">
 										<span>S<t t-esc="d"/></span>
 									</option>
@@ -1390,7 +1391,7 @@
 				<input t-if="not submission.documents.filtered(lambda d: d.parent_id.name == 'Conventions')" accept=".pdf" class="input-file2 form-control" id="fileInput" type="file" name="ufile"/>
 				<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 			</div>
-			<t t-set="has_errors" t-value="any([v for d in [error.get('stage'+str(x)) for x in range(1,9)] for v in d.values()])"/>
+			<t t-if="error"><t t-set="has_errors" t-value="any([v for d in [error.get('stage'+str(x)) for x in range(1,9)] for v in d.values()])"/>
 			<div class="col-md-12">
 				<span>Votre soumission n'est pas complétée. les champs suivants sont manquants:</span>
 				<t t-foreach="range(1,9)" t-as="i">
@@ -1403,7 +1404,7 @@
 						</p>
 					</t>
 				</t>
-			</div>
+			</div></t>
 			<div class="form-group col-md-12 text-center">
 				<div class="bg-warning mb8">Une fois votre soumission envoyée, vous ne pouvez plus la modifier. Veuillez vous assurer que vous avez saisis toutes les informations nécessaires.</div>
 				<button t-att-disabled="has_errors" type="submit" name="submit" value="confirm" class="btn btn-primary">Envoyer ma soumission</button>
