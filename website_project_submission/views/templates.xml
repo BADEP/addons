@@ -238,6 +238,7 @@
 							<h2><span t-field="submission.offer.name"/> / <span class="text-primary" t-field="submission.acronyme"/></h2>
 						</span>
 						<h3 class="text-center">1<sup>ère</sup> phase de soumission en ligne: ESQUISSE PROJET</h3>
+						<h4 class="text-center text-warning">Date limite de soumission : 31 Mars 2018</h4>
 						<table class="table table-condensed text-center" t-if="submission.offer.documents">
 							<h4 class="text-center text-muted">Documents associés</h4>
 							<tr t-foreach="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'CDC' or d.parent_id == False)" t-as="doc">
