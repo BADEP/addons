@@ -184,6 +184,7 @@ class ProjectSubmission(models.Model):
     business_model = fields.Text('Business model initial')
     invest_retour = fields.Text('Investissement et retour sur investissement')
     plan = fields.Text('Plan du projet')
+    trl = fields.Integer()
     
     n_related_publications = fields.Integer(string='Nombre de publications')
     n_ing_doc = fields.Integer(string='Nombre de doctorants/postdocs/ingénieurs')
@@ -195,7 +196,7 @@ class ProjectSubmission(models.Model):
     date_action = fields.Datetime('Date de la prochaine action')
     title_action = fields.Char('Prochaine action', size=64)
     partner_mobile = fields.Char(related='candidate.mobile', store=False)
-    organisme = fields.Many2one('res.partner', related='candidate.parent_id', string='Organisme', store=False)
+    organisme = fields.Many2one('res.partner', related='candidate.parent_id', string='Organisme', store=True)
     project = fields.Many2one('project.project', string='Projet')
     state = fields.Selection(SUBMISS_ETAT, 'Etat', track_visibility='always', default='draft')
     priority = fields.Selection(AVAILABLE_PRIORITIES, 'Appréciation')
@@ -268,8 +269,8 @@ class ProjectSubmission(models.Model):
     @api.multi
     def action_get_all_attachment_tree_view(self):
         action = self.env.ref('base.action_attachment').read()[0]
-        action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0]}
-        action['domain'] = str(['|','&',('res_model', '=', 'project.submission'), ('res_id', 'in', self.ids),'&',('res_model', '=', 'res.partner'), ('res_id', 'in', self.partners.ids),'&',('res_model', '=', 'res.users'), ('res_id', 'in', self.candidate.id)])
+        action['context'] = {'default_res_model': self._name, 'default_res_id': self.ids[0], 'search_default_group_by': 'parent_id'}
+        action['domain'] = str(['|','|','&',('res_model', '=', 'project.submission'), ('res_id', '=', self.ids),'&',('res_model', '=', 'res.partner'), ('res_id', 'in', self.partners.ids),'&',('res_model', '=', 'res.users'), ('res_id', '=', self.candidate.id)])
         return action
 
     @api.one

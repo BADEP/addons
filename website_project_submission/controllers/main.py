@@ -109,11 +109,6 @@ class WebsiteProjectSubmission(http.Controller):
         if not request.session.uid:
             request.session.update({'offer': offer.id})
             return login_redirect()
-        
-        #Get error data
-        error = {}
-        if 'website_project_submission_error' in request.session:
-            error = request.session.pop('website_project_submission_error')
             
         #Get the candidate, if no candidate create one
         sudo_env = request.env(user=SUPERUSER_ID)
@@ -129,7 +124,7 @@ class WebsiteProjectSubmission(http.Controller):
                                                            'name': '/',
                                                            'offer': offer.id,
                                                            'candidate': candidate.id,})
-        
+        error = {}
         request.session.update({'submission': submission.id})
         has_exception = False
         #Save the current stage
@@ -159,6 +154,7 @@ class WebsiteProjectSubmission(http.Controller):
                         'keywords': post.get('keywords'),
                         'description': post.get('description'),
                         'n_related_publications': post.get('n_related_publications'),
+                        'trl': post.get('trl'),
                         'n_ing_doc': post.get('n_ing_doc'),
                         'n_master_pfe': post.get('n_master_pfe'),
                     }
@@ -173,11 +169,20 @@ class WebsiteProjectSubmission(http.Controller):
                         'email': post.get('email'),
                     }
                     candidate.write(value)
-                    if candidate.parent_id:
-                        candidate.parent_id.write({'name': post.get('organisme')})
+                    if post.get('organisme'):
+                        if candidate.parent_id:
+                            candidate.parent_id.write({'name': post.get('organisme')})
+                        else:
+                            organisme = sudo_env['res.partner'].create({'name': post.get('organisme')})
+                            candidate.write({'parent_id': organisme.id})
                     else:
-                        organisme = sudo_env['res.partner'].create({'name': post.get('organisme')})
-                        candidate.write({'parent_id': organisme.id})
+                        if candidate.parent_id:
+                            part = candidate.parent_id
+                            candidate.parent_id = False
+                            """try:
+                                part.unlink()
+                            except Exception:
+                                pass"""
                     if post.get('inventor'):
                         inventor_value = {
                             'name': post.get('inventor'),
@@ -190,6 +195,14 @@ class WebsiteProjectSubmission(http.Controller):
                         else:
                             inventor = sudo_env['res.partner'].create(inventor_value)
                             submission.write({'inventor': inventor.id})
+                    else:
+                        if submission.inventor:
+                            part = submission.inventor
+                            submission.inventor = False
+                            """try:
+                                part.unlink()
+                            except Exception:
+                                pass"""
                     if post.get('ufile'):
                         attachment_value = {
                             'name': post['ufile'].filename,
@@ -370,7 +383,7 @@ class WebsiteProjectSubmission(http.Controller):
                 next_stage = current_stage
             else:
                 next_stage = 1
-                
+
         #prepare next_stage vals
         vals = {
                 'submission': submission,
@@ -466,10 +479,11 @@ class WebsiteProjectSubmission(http.Controller):
                 'stage1': {
                     submission._fields['name'].string: submission.name == '',
                     submission._fields['acronyme'].string: submission.acronyme == '',
-                    submission._fields['field_ids'].string: submission.field_ids.ids == False,
+                    submission._fields['field_ids'].string: len(submission.field_ids) == 0,
                     submission._fields['duration'].string: submission.duration == 0,
                     submission._fields['description'].string: submission.description == '',
-                    submission._fields['n_related_publications'].string: submission.n_related_publications == 0,
+                    submission._fields['n_related_publications'].string: offer.category == 'innoproject' and submission.n_related_publications == 0,
+                    submission._fields['trl'].string: offer.category == 'innoboost' and submission.trl == 0,
                     submission._fields['n_ing_doc'].string: submission.n_ing_doc == 0,
                     submission._fields['n_master_pfe'].string: submission.n_master_pfe == 0,
                     submission._fields['keywords'].string: submission.keywords == '',
@@ -481,17 +495,17 @@ class WebsiteProjectSubmission(http.Controller):
                     candidate._fields['phone'].string: candidate.phone == '',
                     candidate._fields['mobile'].string: candidate.mobile == '',
                     candidate._fields['email'].string: candidate.email == '',
-                    submission.inventor._fields['name'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.name == ''),
-                    submission.inventor._fields['phone'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.phone == ''),
-                    submission.inventor._fields['mobile'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.mobile == ''),
-                    submission.inventor._fields['email'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.email == ''),
+                    'Inventeur: ' + submission.inventor._fields['name'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.name == ''),
+                    'Inventeur: ' + submission.inventor._fields['phone'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.phone == ''),
+                    'Inventeur: ' + submission.inventor._fields['mobile'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.mobile == ''),
+                    'Inventeur: ' + submission.inventor._fields['email'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.email == ''),
                     candidate._fields['documents_count'].string: candidate.documents_count == 0,
                 },
                 'stage3': {
-                    submission._fields['partners'].string: submission.partners.filtered(lambda p: p.category=='scientifique') == False,
+                    submission._fields['partners'].string: len(submission.partners.filtered(lambda p: p.category=='scientifique')) == 0,
                 },
                 'stage4': {
-                    submission._fields['partners'].string: submission.partners.filtered(lambda p: p.category=='industriel') == False,
+                    submission._fields['partners'].string: len(submission.partners.filtered(lambda p: p.category=='industriel')) == 0,
                 },
                 'stage5': {
                     submission._fields['etat_art'].string: offer.category == 'innoproject' and submission.etat_art == '',
@@ -500,25 +514,27 @@ class WebsiteProjectSubmission(http.Controller):
                     submission._fields['perspective'].string: offer.category == 'innoproject' and submission.perspective == '', 
                     submission._fields['fallout'].string: submission.fallout == '',
                     submission._fields['produits_services_process'].string: offer.category == 'innoboost' and submission.produits_services_process == '',
-                    submission._fields['produits_services_process'].string: offer.category == 'innoboost' and submission.produits_services_process == '',
                     submission._fields['analyse_macro'].string: offer.category == 'innoboost' and submission.analyse_macro == '',
                     submission._fields['analyse_marche'].string: offer.category == 'innoboost' and submission.analyse_marche == '',
                     submission._fields['cible'].string: offer.category == 'innoboost' and submission.cible == '',
                     submission._fields['analyse_competitive'].string: offer.category == 'innoboost' and submission.analyse_competitive == '',
                     submission._fields['proposition_valeur'].string: offer.category == 'innoboost' and submission.proposition_valeur == '',
+                    submission._fields['business_model'].string: offer.category == 'innoboost' and submission.business_model == '',
                     submission._fields['invest_retour'].string: offer.category == 'innoboost' and submission.invest_retour == '',
+                    submission._fields['plan'].string: offer.category == 'innoboost' and submission.plan == '',
                 },
                 'stage6': {
-                    submission._fields['tasks'].string: submission.tasks.ids == False,
+                    submission._fields['tasks'].string: len(submission.tasks) == 0,
 
                     },
                 'stage7': {
-                    submission._fields['personnels'].string: submission.personnels.ids == False,
+                    submission._fields['personnels'].string: len(submission.personnels) == 0,
                     },
                 'stage8': {
                     
                     }
             })
+            has_error = any([v for d in [error.get('stage'+str(x)) for x in range(1,9)] for v in d.values()])
             vals.update({
                 'error': error,
             })

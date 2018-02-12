@@ -120,6 +120,7 @@
 						<filter string="Candidat" domain="[]"  context="{'group_by':'candidate'}"/>
 						<filter string="Responsable" domain="[]"  context="{'group_by':'manager'}"/>
 						<filter string="Offre" domain="[]" context="{'group_by':'offer'}"/>
+						<filter string="Organisme" domain="[]" context="{'group_by':'organisme'}"/>
 					</group>
 			   </search>
 			</field>
@@ -131,7 +132,8 @@
 			<field name="inherit_id" ref="base.view_attachment_search"></field>
 			<field name="arch" type="xml">
 				<group position="inside">
-					<filter string="Répertoire" domain="[]"  context="{'group_by':'parent_id'}"/>
+					<filter name="parent_id" string="Répertoire" domain="[]" context="{'group_by':'parent_id'}"/>
+					<filter name="res_model" string="Modèle" domain="[]" context="{'group_by':'res_model'}"/>
 				</group>
 			</field>
 		</record>
@@ -329,6 +331,7 @@
 					<field name="name"/>
 					<field name="offer"/>
 					<field name="candidate"/>
+					<field name="organisme"/>
 					<field name="acronyme"/>
 					<field name="field_ids"/>
 					<field name="partners"/>
