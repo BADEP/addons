@@ -476,7 +476,7 @@
 								</td>
 							</tr>
 						</table>
-						<input accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<input accept=".pdf,.doc,.docx" class="input-file form-control hidden-print" id="fileInput" type="file" name="ufile"/>
 						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
 					</div>
 				</div>
@@ -489,7 +489,7 @@
 			<t t-if="current_stage==4">
 				<h4 class="text-center text-muted">Partenaires industriels</h4>
 			</t>
-			<h5 class="text-center" t-if="not new and not partner">Vous pouvez ajouter autant de partenaires que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
+			<h5 class="text-center hidden-print" t-if="not new and not partner">Vous pouvez ajouter autant de partenaires que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
 				<t t-if="current_stage==3">
 					<t t-set="category" t-value="scientifique"/></t>
 				<t t-if="current_stage==4">
@@ -503,7 +503,7 @@
 							<th t-if="current_stage==3">Entité</th>
 							<th>Représentant</th>
 							<th>Email</th>
-							<th>Actions</th>
+							<th class="hidden-print">Actions</th>
 						</tr>
 						<tbody>
 							<t t-foreach="partners" t-as="s_partner">
@@ -520,7 +520,7 @@
 									<td>
 										<span t-field="s_partner.email"/>
 									</td>
-									<td>
+									<td class="hidden-print">
 										<button class="btn btn-info" data-toggle="tooltip" title="Editer" type="submit" name="edit-partner" t-att-value="s_partner.id">
 											<i class="fa fa-pencil"/>
 										</button>
@@ -534,7 +534,7 @@
 					</thead>
 				</table>
 				<t t-if="not new and not partner">
-					<div class="form-group text-center">
+					<div class="form-group text-center hidden-print">
 						<button class="btn btn-primary" type="submit" name="add-partner" value="1">
 							<span><i class="fa fa-plus"/> Ajouter un partenaire</span>
 						</button>
