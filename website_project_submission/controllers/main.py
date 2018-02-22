@@ -203,15 +203,16 @@ class WebsiteProjectSubmission(http.Controller):
                             except Exception:
                                 pass"""
                     if post.get('ufile'):
-                        attachment_value = {
-                            'name': post['ufile'].filename,
-                            'res_name': value['name'],
-                            'res_model': 'res.users',
-                            'res_id': candidate.id,
-                            'datas': base64.encodestring(post['ufile'].read()),
-                            'datas_fname': post['ufile'].filename,
-                        }
-                        env['ir.attachment'].create(attachment_value)
+                        for file in request.httprequest.files.getlist('ufile'):
+                            attachment_value = {
+                                'name': file.filename,
+                                'res_name': value['name'],
+                                'res_model': 'res.users',
+                                'res_id': candidate.id,
+                                'datas': base64.encodestring(file.read()),
+                                'datas_fname': file.filename,
+                            }
+                            env['ir.attachment'].create(attachment_value)
                         candidate._get_attached_docs()
     
                 #Stage 3: Project partners informations
@@ -268,15 +269,16 @@ class WebsiteProjectSubmission(http.Controller):
                     else:
                         sudo_env['res.partner'].create(contact_value)
                     if post.get('ufile'):
-                        attachment_value = {
-                            'name': post['ufile'].filename,
-                            'res_name': partner.name,
-                            'res_model': 'res.partner',
-                            'res_id': partner.id,
-                            'datas': base64.encodestring(post['ufile'].read()),
-                            'datas_fname': post['ufile'].filename,
-                        }
-                        sudo_env['ir.attachment'].create(attachment_value)
+                        for file in request.httprequest.files.getlist('ufile'):
+                            attachment_value = {
+                                'name': file.filename,
+                                'res_name': partner.name,
+                                'res_model': 'res.partner',
+                                'res_id': partner.id,
+                                'datas': base64.encodestring(file.read()),
+                                'datas_fname': file.filename,
+                            }
+                            sudo_env['ir.attachment'].create(attachment_value)
                 #Stage 4: Additional info
                 elif current_stage == 5:
                     value = {
@@ -297,15 +299,16 @@ class WebsiteProjectSubmission(http.Controller):
                     }
                     submission.write(value)
                     if post.get('ufile'):
-                        attachment_value = {
-                            'name': post['ufile'].filename,
-                            'res_name': submission.name,
-                            'res_model': 'project.submission',
-                            'res_id': submission.id,
-                            'datas': base64.encodestring(post['ufile'].read()),
-                            'datas_fname': post['ufile'].filename,
-                        }
-                        env['ir.attachment'].create(attachment_value)
+                        for file in request.httprequest.files.getlist('ufile'):
+                            attachment_value = {
+                                'name': file.filename,
+                                'res_name': submission.name,
+                                'res_model': 'project.submission',
+                                'res_id': submission.id,
+                                'datas': base64.encodestring(file.read()),
+                                'datas_fname': file.filename,
+                            }
+                            env['ir.attachment'].create(attachment_value)
                         submission._get_attached_docs()
                 #Stage 5: Tasks
                 elif current_stage == 6 and post.get('to-save') == "1" and post.get('name') and post.get('type'):
@@ -467,7 +470,7 @@ class WebsiteProjectSubmission(http.Controller):
         elif next_stage == 8:
             error.update({
                 'stage1': {
-                    submission._fields['name'].string: submission.name == '',
+                    submission._fields['name'].string: submission.name == '' or submission.name == '/',
                     submission._fields['acronyme'].string: submission.acronyme == '',
                     submission._fields['field_ids'].string: len(submission.field_ids) == 0,
                     submission._fields['duration'].string: submission.duration == 0,
@@ -485,17 +488,19 @@ class WebsiteProjectSubmission(http.Controller):
                     'Téléphone': candidate.phone == '',
                     'Mobile': candidate.mobile == '',
                     candidate._fields['email'].string: candidate.email == '',
-                    'Inventeur: Nom': offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.name == ''),
-                    'Inventeur: Téléphone' : offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.phone == ''),
-                    'Inventeur: Mobile ' : offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.mobile == ''),
+                    'Inventeur: Nom': offer.category == 'innoboost' and (not submission.inventor or submission.inventor.name == ''),
+                    'Inventeur: Téléphone' : offer.category == 'innoboost' and (not submission.inventor or submission.inventor.phone == ''),
+                    'Inventeur: Mobile ' : offer.category == 'innoboost' and (not submission.inventor or submission.inventor.mobile == ''),
                     'Inventeur: ' + submission.inventor._fields['email'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.email == ''),
-                    candidate._fields['documents_count'].string: candidate.documents_count == 0,
+                    candidate._fields['documents_count'].string: (offer.category == 'innoproject' and candidate.documents_count < 6) or (offer.category == 'innoboost' and candidate.documents_count < 2),
                 },
                 'stage3': {
-                    submission._fields['partners'].string: len(submission.partners.filtered(lambda p: p.category=='scientifique')) == 0,
+                    'Parenaires scientifiques': len(submission.partners.filtered(lambda p: p.category=='scientifique')) == 0,
+                    'Pièces jointes': any([p.documents_count == 0 for p in submission.partners.filtered(lambda p: p.category=='scientifique')]),
                 },
                 'stage4': {
-                    submission._fields['partners'].string: len(submission.partners.filtered(lambda p: p.category=='industriel')) == 0,
+                    'Partenaires industriels': len(submission.partners.filtered(lambda p: p.category=='industriel')) == 0,
+                    'Pièces jointes': any([p.documents_count == 0 for p in submission.partners.filtered(lambda p: p.category=='industriel')]),
                 },
                 'stage5': {
                     submission._fields['etat_art'].string: offer.category == 'innoproject' and submission.etat_art == '',
@@ -512,16 +517,18 @@ class WebsiteProjectSubmission(http.Controller):
                     submission._fields['business_model'].string: offer.category == 'innoboost' and submission.business_model == '',
                     submission._fields['invest_retour'].string: offer.category == 'innoboost' and submission.invest_retour == '',
                     submission._fields['plan'].string: offer.category == 'innoboost' and submission.plan == '',
+                    'Présentation du projet': len(submission.documents.filtered(lambda d: not d.parent_id)) == 0
                 },
                 'stage6': {
                     submission._fields['tasks'].string: len(submission.tasks) == 0,
-
                     },
                 'stage7': {
+                    submission._fields['budget'].string: submission.budget == 0,
+                    'Le pourcentage prôpre doit être supérieur à 30%': submission.percent_propre < 30,
                     submission._fields['personnels'].string: len(submission.personnels) == 0,
                     },
                 'stage8': {
-                    
+                    'Convention de collaboration': len(submission.documents.filtered(lambda d: d.parent_id.name == 'Conventions')) == 0,
                     }
             })
             vals.update({

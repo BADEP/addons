@@ -27,6 +27,7 @@
 								<th>Acronyme</th>
 								<th>Appel à projets</th>
 								<th>Statut</th>
+								<th>Actions</th>
 							</tr>
 						</thead>
 						<t t-foreach="submissions" t-as="submission">
@@ -44,6 +45,14 @@
 								</td>
 								<td>
 									<span t-field="submission.state"/>
+								</td>
+								<td>
+									<a t-att-href="'/offers/apply/'+str(submission.offer.id)+'/submission/'+str(submission.id)">
+										<i class="fa fa-pencil"/>
+									</a>
+									<a t-if="submission.state != 'draft'" target='_blank' t-att-href="'/report/pdf/project_submission.report_submission/%s' % submission.id">
+										<i class="fa fa-download"/>
+									</a>
 								</td>
 							</tr>
 						</t>
@@ -92,13 +101,105 @@
 			</xpath>
 		</template>
 		<template id="assets_frontend" inherit_id="website.layout">
-			<xpath expr="//head" position="inside">
-				<script src="https://code.jquery.com/jquery-3.3.1.min.js"></script>
+			<xpath expr="//body" position="inside">
+				<!-- Bootstrap File Input -->
 				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/css/fileinput.min.css" />
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/js/fileinput.min.js"></script>
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-fileinput/4.4.6/js/locales/fr.min.js"></script>
+				<!-- Select2 -->
 				<link href="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/css/select2.min.css" rel="stylesheet" />
 				<script src="https://cdnjs.cloudflare.com/ajax/libs/select2/4.0.6-rc.0/js/select2.min.js"></script>
+				<!-- jQuery UI -->
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.js"></script>
+				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/jqueryui/1.12.1/jquery-ui.min.css" />
+				<!-- jQuery Validate -->
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/jquery.validate.min.js"></script>
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-validate/1.17.0/localization/messages_fr.min.js"></script>
+				<!-- Intl Tel Input -->
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.9/js/intlTelInput.min.js"></script>
+				<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.9/css/intlTelInput.css" />
+				<script src="https://cdnjs.cloudflare.com/ajax/libs/modernizr/2.8.3/modernizr.min.js"></script>
+				<script>
+				$(function() {
+				    $('.multiple-tags').select2();
+				    $(".input-file").fileinput({
+				    	'showPreview': false,
+				    	'showUpload': true,
+				    });
+				    
+				    $(".input-file2").fileinput({
+				    	'showPreview': false,
+				    	'showUpload': true,
+						'uploadTitle': 'Insérer',
+				    });
+				    
+					$(".datecontrol").datepicker();
+
+					$("[type='tel']").intlTelInput({
+						initialCountry: "auto",
+						utilsScript: "https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.9/js/utils.js",
+						nationalMode: false,
+						preferredCountries: ["MA"],
+						geoIpLookup: function(callback) {
+						  $.get("https://ipinfo.io", function() {}, "jsonp").always(function(resp) {
+						    var countryCode = (resp &amp;&amp; resp.country) ? resp.country : "MA";
+						    callback(countryCode);
+						  });
+						}
+					});
+					$.validator.addMethod("intlTelNumber", function(value, element) {
+					    return $(element).intlTelInput("isValidNumber");
+					}, "Champ invalide");
+					$('#submissionform').validate({
+					    errorPlacement: function(error, element) {},
+						rules: {
+							phone: {
+								intlTelNumber: true
+							},
+							mobile: {
+								intlTelNumber: true
+							},
+							fax: {
+								intlTelNumber: true
+							},
+							contact_phone: {
+								intlTelNumber: true
+							},
+							inventor_phone: {
+								intlTelNumber: true
+							},
+							inventor_mobile: {
+								intlTelNumber: true
+							},
+							email: {
+								email: true
+							},
+							inventor_email: {
+								email: true
+							},
+							date: {
+								date: true
+							}
+						},
+						highlight: function (element) {
+						    $(element).closest('.form-group').removeClass('has-success').addClass('has-error');
+						    $(element).siblings().filter('.glyphicons').removeClass('ok_2').addClass('remove_2');
+						
+						},
+						unhighlight: function (element) {
+						    $(element).closest('.form-group').removeClass('has-error').addClass('has-success');
+						    $(element).siblings().filter('.glyphicons').removeClass('remove_2').addClass('ok_2');
+						
+						}
+					});
+    				$("#submissionform").validate().form();
+    				if (!Modernizr.inputtypes.date) {
+						$('.date-control').datepicker({
+					            dateFormat: 'yy-mm-dd'
+				        });
+			        }
+				});
+				</script>
 			</xpath>
 		</template>
 		<template id="index" name="Offers">
@@ -230,8 +331,16 @@
 			<t t-call="website.layout">
 				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + submission.offer.name"/>
 				<div id="wrap">
-					<div class="container text-right mt4">
-						<a class="btn btn-danger" href="/web/session/logout">Se déconnecter</a>
+					<div class="container mt4">
+						<div class="col-md-9 text-center bg-warning">
+							<t t-if="len((submission.candidate.submissions &amp; submission.offer.submissions) - submission) != 0">
+								<div class="col-md-12"><span>Vous avez d'autres soumissions pour ce même projet</span></div>
+								<div class="col-md-12 mt8 mb8"><a href="/my/home" class="btn btn-warning">Accéder à mon portail</a></div>
+							</t>
+						</div>
+						<div class="col-md-3 text-right">
+							<a class="btn btn-danger" href="/web/session/logout">Se déconnecter</a>
+						</div>
 					</div>
 					<div class="container">
 						<span class="text-center">
@@ -255,43 +364,35 @@
 										<span t-esc="error.get('main')"/>
 									</div>
 								</t>
-						<form class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
-							<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-								<t t-if="current_stage==1">
-									<t t-call="website_project_submission.apply1"/></t>
-								<t t-if="current_stage==2">
-									<t t-call="website_project_submission.apply2"/></t>
-								<t t-if="current_stage==3 or current_stage==4">
-									<t t-call="website_project_submission.apply34"/></t>
-								<t t-if="current_stage==5">
-									<t t-call="website_project_submission.apply5"/></t>
-								<t t-if="current_stage==6">
-									<t t-call="website_project_submission.apply6"/></t>
-								<t t-if="current_stage==7">
-									<t t-call="website_project_submission.apply7"/></t>
-								<t t-if="current_stage==8">
-									<t t-call="website_project_submission.apply8"/></t>
-								<t t-call="website_project_submission.form_header_footer"/>
-									</fieldset></form>
+								<form id="submissionform" class="form-horizontal mt32" t-att-action="'/offers/apply/%s' % slug(submission.offer)" method="post" enctype="multipart/form-data">
+									<fieldset t-att-disabled="submission.state != 'draft'"><input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+										<t t-if="current_stage==1">
+											<t t-call="website_project_submission.apply1"/></t>
+										<t t-if="current_stage==2">
+											<t t-call="website_project_submission.apply2"/></t>
+										<t t-if="current_stage==3 or current_stage==4">
+											<t t-call="website_project_submission.apply34"/></t>
+										<t t-if="current_stage==5">
+											<t t-call="website_project_submission.apply5"/></t>
+										<t t-if="current_stage==6">
+											<t t-call="website_project_submission.apply6"/></t>
+										<t t-if="current_stage==7">
+											<t t-call="website_project_submission.apply7"/></t>
+										<t t-if="current_stage==8">
+											<t t-call="website_project_submission.apply8"/></t>
+										<t t-if="submission.state=='draft'"><t t-call="website_project_submission.form_header_footer"/></t>
+									</fieldset>
+								</form>
+								<div class="form-group col-md-12 text-center" t-if="submission.state == 'submitted'">
+									<div class="bg-success mb8">Votre projet a été a été soumis avec succès. Nous vous informerons des résultats de sélection de la première phase après évaluation du conseil scientifique d'IRESEN. Merci pour votre participation.</div>
+									<a class="btn btn-success" target='_blank' t-att-href="'/report/pdf/project_submission.report_submission/%s' % submission.id">
+										<i class="fa fa-download"/> Télécharger le rapport de soumission
+									</a>
+								</div>
 							</section>
 						</div>
 					</div>
 				</div>
-				<script>
-				    $('.multiple-tags').select2();
-				    $(".input-file").fileinput({
-				    	'language': 'fr',
-				    	'showPreview': false,
-				    	'showUpload': false,
-						'uploadTitle': 'Insérer',
-				    });
-				    $(".input-file2").fileinput({
-				    	'language': 'fr',
-				    	'showPreview': false,
-				    	'showUpload': true,
-						'uploadTitle': 'Insérer',
-				    });
-				</script>
 				<style type="text/css">
 					@font-face {
 						font-family: 'Glyphicons Halflings';
@@ -301,12 +402,18 @@
 					.multiselect-search, .multiselect-clear-filter, button.btn.btn-default.btn-secondary.fileinput-remove.fileinput-remove-button, .btn.btn-primary.btn-file, .multiselect {padding: 6px !important}
 					//b.caret {float: right; margin: 10px;}
 					span.multiselect-selected-text {text-transform: initial;}
+					.print-only {
+						display: none;
+					}
+					.iti-flag {background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.9/img/flags.png");}
+					@media only screen and (-webkit-min-device-pixel-ratio: 2), only screen and (min--moz-device-pixel-ratio: 2), only screen and (-o-min-device-pixel-ratio: 2 / 1), only screen and (min-device-pixel-ratio: 2), only screen and (min-resolution: 192dpi), only screen and (min-resolution: 2dppx) {
+					  .iti-flag {background-image: url("https://cdnjs.cloudflare.com/ajax/libs/intl-tel-input/12.1.9/img/flags@2x.png");}
 				</style>
 			</t>
 		</template>
 		<!-- Esquisse du projet -->
 		<template id="apply1">
-				<h4 class="text-center">Résumé du projet</h4>
+				<h4 class="text-center text-primary">Résumé du projet</h4>
 				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="name">Intitulé du projet</label>
 					<div class="col-md-7 col-sm-8">
@@ -322,19 +429,18 @@
 				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="field">Thématiques<br/><span class="text-muted">(Vous pouvez ajouter plusieurs thématiques)</span></label>
 					<div class="col-md-7 col-sm-8">
-						<select multiple="multiple" t-att-disabled="submission.state != 'draft'" id="fields" name="fields" class="form-control multiple-tags">
+						<select multiple="multiple" t-att-disabled="submission.state != 'draft'" id="fields" name="fields" class="form-control multiple-tags hidden-print">
 							<t t-foreach="submission.env['project.offer.field'].search([])" t-as="f">
 								<option name="fields" t-att-value="f.id" t-att-selected="f.id in submission.field_ids.ids">
 									<t t-esc="f.name"/>
 								</option>
 							</t>
 						</select>
+						<span class="print-only form-control" t-esc="', '.join(submission.field_ids.mapped('name'))"/>
 					</div>
 				</div>
 				<div t-attf-class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="duration">Durée du projet
-						
-						<br/>
+					<label class="col-md-3 col-sm-4 control-label" for="duration"><span>Durée du projet en semestres</span><br/>
 						<span class="text-muted" t-if="submission.offer.min_time != submission.offer.max_time">(Entre 
 							
 							<span t-field="submission.offer.min_time"/> et 
@@ -348,8 +454,6 @@
 							<t t-foreach="range(submission.offer.min_time, submission.offer.max_time + 1)" t-as="d">
 								<option name="duration" t-att-value="d" t-att-selected="d == submission.duration">
 									<t t-esc="d"/>
-									<t t-if="d==1"> Semestre</t>
-									<t t-if="d!=1"> Semestres</t>
 								</option>
 							</t>
 						</select>
@@ -358,7 +462,8 @@
 				<div class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="description">Résumé du projet<br/><span class="text-muted">(max 600 mots)</span></label>
 					<div class="col-md-7 col-sm-8">
-						<textarea maxlength="3600" class="form-control" t-esc="submission.description" name="description" style="min-height: 120px"/>
+						<textarea maxlength="3600" class="form-control hidden-print" t-esc="submission.description" name="description" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.description"/>
 					</div>
 				</div>
 				<div class="form-group" t-if="submission.offer.category=='innoproject'">
@@ -380,9 +485,9 @@
 					</div>
 				</div>
 				<div class="form-group">
-					<label class="col-md-3 col-sm-4 control-label" for="n_master_pfe">Nombre de Masters et PFE proposés</label>
+					<label class="col-md-3 col-sm-4 control-label" for="n_master_pfe">Nombre d'étudiants en Master et PFE proposés</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="number" min="0" max="3" class="form-control" t-att-value="submission.n_master_pfe" name="n_master_pfe"/>
+						<input type="number" min="0" max="4" class="form-control" t-att-value="submission.n_master_pfe" name="n_master_pfe"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -394,8 +499,8 @@
 		</template>
 		<!-- Coordinateur principal -->
 		<template id="apply2">
-				<h4 t-if="submission.offer.category=='innoproject'" class="text-center text-muted">Coordinateur principal</h4>
-				<h4 t-if="submission.offer.category=='innoboost'" class="text-center text-muted">Porteur du projet</h4>
+				<h4 t-if="submission.offer.category=='innoproject'" class="text-center text-primary">Coordinateur principal</h4>
+				<h4 t-if="submission.offer.category=='innoboost'" class="text-center text-primary">Porteur du projet</h4>
 				<div t-attf-class="form-group">
 					<label t-if="submission.offer.category=='innoproject'" class="col-md-3 col-sm-4 control-label" for="name">Nom et Prénom</label>
 					<label t-if="submission.offer.category=='innoboost'" class="col-md-3 col-sm-4 control-label" for="name">Porteur du projet</label>
@@ -419,13 +524,13 @@
 				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel bfh-phone" t-att-value="submission.candidate.phone" class="form-control" name="phone" />
+						<input type="tel" t-att-value="submission.candidate.phone" class="form-control" name="phone" />
 					</div>
 				</div>
 				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="mobile">Mobile</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel bfh-phone" data-format="+212 (ddd) dd-dd-dd" t-att-value="submission.candidate.mobile" class="form-control" name="mobile" />
+						<input type="tel" t-att-value="submission.candidate.mobile" class="form-control" name="mobile" />
 					</div>
 				</div>
 				<div t-attf-class="form-group">
@@ -444,13 +549,13 @@
 				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel bfh-phone" t-att-value="submission.inventor and submission.inventor.phone" class="form-control" name="inventor_phone" />
+						<input type="tel" t-att-value="submission.inventor and submission.inventor.phone" class="form-control" name="inventor_phone" />
 					</div>
 				</div>
 				<div t-attf-class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="inventor_mobile">Mobile</label>
 					<div class="col-md-7 col-sm-8">
-						<input type="tel bfh-phone" data-format="+212 (ddd) dd-dd-dd" t-att-value="submission.inventor and submission.inventor.mobile" class="form-control" name="inventor_mobile" />
+						<input type="tel" data-format="+212 (ddd) dd-dd-dd" t-att-value="submission.inventor and submission.inventor.mobile" class="form-control" name="inventor_mobile" />
 					</div>
 				</div>
 				<div t-attf-class="form-group">
@@ -475,18 +580,17 @@
 								</td>
 							</tr>
 						</table>
-						<input accept=".pdf,.doc,.docx" class="input-file form-control hidden-print" id="fileInput" type="file" name="ufile"/>
-						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+						<input multiple="1" accept=".pdf,.doc,.docx" class="input-file form-control hidden-print" id="fileInput" type="file" name="ufile"/>
 					</div>
 				</div>
 		</template>
 		<!-- Partenaires -->
 		<template id="apply34">
 			<t t-if="current_stage==3">
-				<h4 class="text-center">Partenaires scientifiques</h4>
+				<h4 class="text-center text-primary">Partenaires scientifiques</h4>
 			</t>
 			<t t-if="current_stage==4">
-				<h4 class="text-center">Partenaires industriels</h4>
+				<h4 class="text-center text-primary">Partenaires industriels</h4>
 			</t>
 			<h5 class="text-center hidden-print" t-if="not new and not partner">Vous pouvez ajouter autant de partenaires que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
 				<t t-if="current_stage==3"><t t-set="partners" t-value="submission.partners.filtered(lambda p: p.category == 'scientifique')"/></t>
@@ -495,9 +599,7 @@
 					<t t-set="category" t-value="scientifique"/></t>
 				<t t-if="current_stage==4">
 					<t t-set="category" t-value="industriel"/></t>
-				<t t-if="not partners">
-					<t t-set="new" t-value="1"/></t>
-				<table t-if="partners" class="table table-hover">
+				<table class="table table-hover">
 					<thead>
 						<tr>
 							<th>Nom</th>
@@ -556,50 +658,49 @@
 					<div t-if="current_stage==3" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="entite_recherche">Entité de recherche</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.entite_recherche" class="form-control" name="entite_recherche" />
+							<input type="text" required="1" t-att-value="partner and partner.entite_recherche" class="form-control" name="entite_recherche" />
 						</div>
 					</div>
 					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="date">Date de création</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="date" t-att-value="partner and partner.date" class="form-control" name="date" />
+							<input type="date" required="1" t-att-value="partner and partner.date" class="form-control date-control" name="date" />
 						</div>
 					</div>
 					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="capital">Capital</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="number" min="0" t-att-value="partner and partner.capital" class="form-control" name="capital" />
+							<input type="number" required="1" min="0" t-att-value="partner and partner.capital" class="form-control" name="capital" />
 						</div>
 					</div>
 					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaires<br/><span class="text-muted">Année antérieure</span></label>
 						<div class="col-md-7 col-sm-8">
-							<input type="number" min="0" t-att-value="partner and partner.ca" class="form-control" name="ca" />
+							<input type="number" required="1" min="0" t-att-value="partner and partner.ca" class="form-control" name="ca" />
 						</div>
 					</div>
 					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="effectif">
-							<t t-if="current_stage==3">Effectif</t>
-							<t t-if="current_stage==4">Nombre d'employés
-								
+							<t t-if="current_stage==3"><span>Effectif</span></t>
+							<t t-if="current_stage==4"><span>Nombre d'employés</span>
 								<br/>
 								<span class="text-muted">(Supérieur ou égal à 12)</span>
 							</t>
 						</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="number" min="0" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
+							<input type="number" required="1" min="12" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
 						</div>
 					</div>
 					<div t-if="current_stage==3" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="effectif_chercheur">Effectif chercheurs</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="number" min="0" t-att-value="partner and partner.effectif_chercheur" class="form-control" name="effectif_chercheur" />
+							<input type="number" required="1" min="0" t-att-value="partner and partner.effectif_chercheur" class="form-control" name="effectif_chercheur" />
 						</div>
 					</div>
 					<div t-if="current_stage==3" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="effectif_doc">Effectif doctorants</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="number" min="0" t-att-value="partner and partner.effectif_doc" class="form-control" name="effectif_doc" />
+							<input type="number" required="1" min="0" t-att-value="partner and partner.effectif_doc" class="form-control" name="effectif_doc" />
 						</div>
 					</div>
 					<div t-if="current_stage==4" t-attf-class="form-group">
@@ -618,29 +719,27 @@
 					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="category_id">Domaine d'activité</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.category_id" class="form-control" name="category_id" />
+							<input type="text" required="1" t-att-value="partner and partner.category_id.name" class="form-control" name="category_id" />
 						</div>
 					</div>
 					<div t-if="current_stage==4" t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="cnss">N° de CNSS
-							
-							<br/>
+						<label class="col-md-3 col-sm-4 control-label" for="cnss"><span>N° de CNSS</span><br/>
 							<span class="text-muted">(pour les partenaires marocains)</span>
 						</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.cnss" class="form-control" name="cnss" />
+							<input type="text" required="1" t-att-value="partner and partner.cnss" class="form-control" name="cnss" />
 						</div>
 					</div>
 					<div t-if="current_stage==4" t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="rc">N° de registre de commerce</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.rc" class="form-control" name="rc" />
+							<input type="text" required="1" t-att-value="partner and partner.rc" class="form-control" name="rc" />
 						</div>
 					</div>
 					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="partner_references">Références du partenaire</label>
 						<div class="col-md-7 col-sm-8">
-							<textarea t-esc="partner and partner.partner_references" class="form-control" name="partner_references" style="min-height: 120px"/>
+							<textarea required="1" t-esc="partner and partner.partner_references" class="form-control" name="partner_references" style="min-height: 120px"/>
 						</div>
 					</div>
 					<div t-attf-class="form-group">
@@ -659,19 +758,19 @@
 					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="city">Ville</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.city" class="form-control" name="city" />
+							<input type="text" required="1" t-att-value="partner and partner.city" class="form-control" name="city" />
 						</div>
 					</div>
 					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="zip">Code postal</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.zip" class="form-control" name="zip" />
+							<input type="text" required="1" t-att-value="partner and partner.zip" class="form-control" name="zip" />
 						</div>
 					</div>
 					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="street">Adresse</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.street" class="form-control" name="street" />
+							<input type="text" required="1" t-att-value="partner and partner.street" class="form-control" name="street" />
 						</div>
 					</div>
 					<div t-attf-class="form-group">
@@ -683,13 +782,13 @@
 					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="email" t-att-value="partner and partner.email" class="form-control" name="email" />
+							<input type="email" required="1" t-att-value="partner and partner.email" class="form-control" name="email" />
 						</div>
 					</div>
 					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="tel" t-att-value="partner and partner.phone" class="form-control" name="phone" />
+							<input type="tel" required="1" t-att-value="partner and partner.phone" class="form-control" name="phone" />
 						</div>
 					</div>
 					<div t-attf-class="form-group">
@@ -699,7 +798,7 @@
 						</div>
 					</div>
 					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="email">Site web</label>
+						<label class="col-md-3 col-sm-4 control-label" for="website">Site web</label>
 						<div class="col-md-7 col-sm-8">
 							<input type="text" t-att-value="partner and partner.email" class="form-control" name="website" />
 						</div>
@@ -707,25 +806,25 @@
 					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Nom et prénom du représentant</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.child_ids and partner.child_ids[0].name" class="form-control" name="contact_name" />
+							<input type="text" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].name" class="form-control" name="contact_name" />
 						</div>
 					</div>
 					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Fonction du représentant</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.child_ids and partner.child_ids[0].function" class="form-control" name="contact_function" />
+							<input type="text" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].function" class="form-control" name="contact_function" />
 						</div>
 					</div>
 					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Téléphone du représentant</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="tel" t-att-value="partner and partner.child_ids and partner.child_ids[0].phone" class="form-control" name="contact_phone" />
+							<input type="tel" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].phone" class="form-control" name="contact_phone" />
 						</div>
 					</div>
 					<div t-attf-class="form-group">
 						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Email du représentant</label>
 						<div class="col-md-7 col-sm-8">
-							<input type="email" t-att-value="partner and partner.child_ids and partner.child_ids[0].email" class="form-control" name="contact_email" />
+							<input type="email" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].email" class="form-control" name="contact_email" />
 						</div>
 					</div>
 				<div class="form-group">
@@ -738,7 +837,7 @@
 							</tr>
 						</table>
 					</div>
-					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre CV<br/>Joindre publications<br/><span t-if="current_stage==4">Joindre lettre d'engagement signée et scannée</span><br/></label>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile"><span>Joindre CV<br/>Joindre publications<br/></span><span t-if="current_stage==4">Joindre lettre d'engagement signée et scannée</span><br/></label>
 					<div class="col-md-7 col-sm-8">
 						<table class="table table-condensed" t-if="documents">
 							<tr t-foreach="documents" t-as="doc">
@@ -752,22 +851,22 @@
 								</td>
 							</tr>
 						</table>
-						<input accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
-						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+						<input multiple="1" accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
 					</div>
 				</div>
 			</t>
 		</template>
 		<!-- Descriptif detaillé -->
 		<template id="apply5">
-				<h4 class="text-center">Descriptif detaillé</h4>
+				<h4 class="text-center text-primary">Descriptif detaillé</h4>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
 					<label class="col-md-12" for="etat_art">
 						État de l’art<span class="text-muted">(max: 800 mots)</span>
-						<div class="text-muted"><em class="text-muted">Apporter un état de l'art pertinent et la bibliographie associée. Positionner votre projet en apportant des éléments sur le caractère novateur ou original du projet. Décriver toutes les réalisations antérieures ou les études pilotes qui ont été menées par vous (votre équipe) dans le cadre du projet. Il convient de mentionner vos publications internationales pertinentes, brevets et anciennes subventions de recherche en relation avec projet.</em></div>
+						<div class="text-muted"><em class="text-muted">Apporter un état de l'art pertinent et la bibliographie associée. Positionner votre projet en apportant des éléments sur le caractère novateur ou original du projet. Décrivez toutes les réalisations antérieures ou les études pilotes qui ont été menées par vous (votre équipe) dans le cadre du projet. Il convient de mentionner vos publications internationales pertinentes, brevets et anciennes subventions de recherche en relation avec le projet.</em></div>
 					</label>
 					<div class="col-md-12">
-						<textarea maxlength="5600" class="form-control" t-esc="submission.etat_art" name="etat_art" style="min-height: 120px"/>
+						<textarea maxlength="5600" class="form-control hidden-print" t-esc="submission.etat_art" name="etat_art" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.etat_art"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
@@ -776,7 +875,8 @@
 						<div class="text-muted"><em class="text-muted">Approche et méthodologie: Décrire l’objectif global et comment votre projet sera mis en œuvre, y compris votre approche scientifique générale (plan de travail), les activités, les méthodes et les intrants du projet.</em></div>
 					</label>
 					<div class="col-md-12">
-						<textarea maxlength="4200" class="form-control" t-esc="submission.objective" name="objective" style="min-height: 120px"/>
+						<textarea maxlength="4200" class="form-control hidden-print" t-esc="submission.objective" name="objective" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.objective"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
@@ -785,7 +885,8 @@
 						<div class="text-muted"><em class="text-muted">Le projet doit aboutir à un brevet national/international en relation avec lle développement d’un nouveau produit/service/process à fort potentiel commercial, et ce avant la fin le semestre 4. L’octroi dudit Brevet conditione le GO/NO GO gate du projet et par la suite conditionne la poursuite du financement de la troisième année du projet.</em></div>
 					</label>
 					<div class="col-md-12">
-						<textarea maxlength="4200" class="form-control" t-esc="submission.objectives" name="objectives" style="min-height: 120px"/>
+						<textarea maxlength="4200" class="form-control hidden-print" t-esc="submission.objectives" name="objectives" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.objectives"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
@@ -793,25 +894,16 @@
 						<span class="text-muted">(max : 500 mots)</span>
 						<div class="text-muted">
 							<ul>
-								<li><strong><em class="text-muted"><u>Technologiques, Economiques et industrielles :</u></em></strong>
-									<ul>
-										<li><em class="text-muted">Décrire les produits/services/process issus des résultats du projet et les modèles économiques envisagés,</em></li>
-										<li><em class="text-muted">Décrire les principaux marchés visés, leurs tailles estimatives, les acteurs déjà présents et les solutions concurrentes. Le cas échéant, fournir les références des études de marché justifiant ces estimations</em></li>
-										<li><em class="text-muted">Analyser le coût complet de la solution développée</em></li>
-									</ul>
-								</li>
-								<li><strong><em class="text-muted"><u>Environnementales : </u></em></strong></li>
+								<li><em class="text-muted">Décrire les choix envisagés pour justifier le positionnement et les avantages compétitifs espérés (cibles de clientèle, zones géographiques, prix, etc.)</em></li>
+								<li><em class="text-muted">Préciser la stratégie, l'organisation et le planning d'industrialisation et de commercialisation des résultats du projet</em></li>
+								<li><em class="text-muted">Démontrer le caractre généralisable de la solution innovante développée et la présence d'un marché rendant possible sa diffusion au Maroc, en Afrique ou ailleurs, </em></li>
+								<li><em class="text-muted">Préciser les objectifs économiques visés (clients potentiels, parts de marché, prévisionnel des ventes, chiffre d'affaires selon un scénario de développement prudent et raisonnable des produits ou services commercialisés), rentabilité, justifier les hypothèses prises en compte</em></li>
 							</ul>
-							<p><em class="text-muted">les impacts positifs, neutres ou négatifs et leurs éléments de quantification, et les moyens d'évaluation et de suivi pouvant être mis en oeuvre</em></p>
-							<ul>
-								<li><strong><em class="text-muted"><u>Sociales et sociétales : </u></em></strong></li>
-							</ul>
-							<p><em class="text-muted">Indiquer la localisation des activités liées au projet et la localisation des activités industrielles et commerciales futures (Localisation de l'expérimentation : activités liées au projet, Localisation des retombées économiques : activités industrielles et commerciales futures)</em></p>
-							<p><em class="text-muted">Distinguer le nombre d'emplois directs et indirects créés et/ou maintenus lors de la phase d'exécution du projet, puis lors de la phase d'exploitation des résultats du projet.</em></p>
 						</div>
 					</label>
 					<div class="col-md-12">
-						<textarea maxlength="3500" class="form-control" t-esc="submission.perspective" name="perspective" style="min-height: 120px"/>
+						<textarea maxlength="3500" class="form-control hidden-print" t-esc="submission.perspective" name="perspective" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.perspective"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
@@ -826,7 +918,8 @@
 						</div>
 					</label>
 					<div class="col-md-12">
-						<textarea maxlength="3500" class="form-control" t-esc="submission.produits_services_process" name="produits_services_process" style="min-height: 120px"/>
+						<textarea maxlength="3500" class="form-control hidden-print" t-esc="submission.produits_services_process" name="produits_services_process" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.produits_services_process"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
@@ -841,7 +934,8 @@
 					</div>
 					</label>
 					<div class="col-md-12">
-						<textarea maxlength="4200" class="form-control" t-esc="submission.analyse_macro" name="analyse_macro" style="min-height: 120px"/>
+						<textarea maxlength="4200" class="form-control hidden-print" t-esc="submission.analyse_macro" name="analyse_macro" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.analyse_macro"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
@@ -856,7 +950,8 @@
 						</div>
 					</label>
 					<div class="col-md-12">
-						<textarea maxlength="14000" class="form-control" t-esc="submission.analyse_marche" name="analyse_marche" style="min-height: 120px"/>
+						<textarea maxlength="14000" class="form-control hidden-print" t-esc="submission.analyse_marche" name="analyse_marche" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.analyse_marche"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
@@ -872,7 +967,8 @@
 						</div>
 					</label>
 					<div class="col-md-12">
-						<textarea maxlength="1750" class="form-control" t-esc="submission.cible" name="cible" style="min-height: 120px"/>
+						<textarea maxlength="1750" class="form-control hidden-print" t-esc="submission.cible" name="cible" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.cible"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
@@ -908,7 +1004,8 @@
 						</div>
 					</label>
 					<div class="col-md-12">
-						<textarea maxlength="7000" class="form-control" t-esc="submission.proposition_valeur" name="proposition_valeur" style="min-height: 120px"/>
+						<textarea maxlength="7000" class="form-control hidden-print" t-esc="submission.proposition_valeur" name="proposition_valeur" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.proposition_valeur"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
@@ -923,7 +1020,8 @@
 						</div>
 					</label>
 					<div class="col-md-12">
-						<textarea maxlength="7000" class="form-control" t-esc="submission.invest_retour" name="invest_retour" style="min-height: 120px"/>
+						<textarea maxlength="7000" class="form-control hidden-print" t-esc="submission.invest_retour" name="invest_retour" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.invest_retour"/>
 					</div>
 				</div>
 				<div class="form-group">
@@ -951,7 +1049,8 @@
 					</div>
 					</label>
 					<div class="col-md-12">
-						<textarea maxlength="7000" class="form-control" t-esc="submission.fallout" name="fallout" style="min-height: 120px"/>
+						<textarea maxlength="7000" class="form-control hidden-print" t-esc="submission.fallout" name="fallout" style="min-height: 120px"/>
+						<span class="print-only form-control" t-esc="submission.fallout"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoproject'" class="form-group">
@@ -964,20 +1063,19 @@
 								<td>
 									<span t-field="doc.name"/>
 								</td>
-								<td class="text-right">
+								<td class="text-right hidden-print">
 									<button class="btn btn-danger" type="submit" name="unlink-doc" t-att-value="doc.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
 							</tr>
 						</table>
-						<input accept=".ppt,.pptx,.pps,.ppsx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
-						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+						<input multiple="1" accept=".ppt,.pptx,.pps,.ppsx" class="input-file form-control hidden-print" id="fileInput" type="file" name="ufile"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
 					<label class="col-md-3 col-sm-4 control-label" for="ufile">Joindre présentation du projet<br/>
-						<span class="text-muted">(PowerPoint, 10 slides max)</span><br/>Joindre Business Model<br/>
+						<span class="text-muted">(PowerPoint, 10 slides max)</span><br/>Joindre Business Model initial<br/>
 						<span class="text-muted">(Excel)</span>
 					</label>
 					<div class="col-md-7 col-sm-8">
@@ -993,17 +1091,15 @@
 								</td>
 							</tr>
 						</table>
-						<input accept=".ppt,.pptx,.xls,.xlsx,.xlsm" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
-						<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+						<input multiple="1" accept=".ppt,.pptx,.xls,.xlsx,.xlsm" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
 					</div>
 				</div>
 		</template>
 		<!-- Tâches et livrables -->
 		<template id="apply6">
-			<h4 class="text-center">Tâches et livrables</h4>
+			<h4 class="text-center text-primary">Tâches et livrables</h4>
 			<h5 class="text-center hidden-print">Vous pouvez ajouter autant de tâches que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
-				<t t-if="not submission.tasks"><t t-set="new" t-value="1"/></t>
-				<table t-if="submission.tasks" class="table">
+				<table class="table">
 					<thead>
 						<tr>
 							<th>Type</th>
@@ -1044,14 +1140,12 @@
 						</tbody>
 					</thead>
 				</table>
-				<t  t-if="not new and not task" >
-					<div class="form-group text-center">
-						<button class="btn btn-primary" type="submit" name="add-task" value="1">
-							<span><i class="fa fa-plus hidden-print"/> Ajouter une tâche</span>
-						</button>
-					</div>
-				</t>
-			<t t-if="new or task">
+				<div t-if="not new and not task" class="form-group text-center hidden-print">
+					<button class="btn btn-primary" type="submit" name="add-task" value="1">
+						<span><i class="fa fa-plus hidden-print"/> Ajouter une tâche</span>
+					</button>
+				</div>
+				<t t-if="new or task">
 					<input type="hidden" name="to-save" value="1"/>
 					<t t-if="task">
 						<input type="hidden" name="task_id" t-att-value="'%s' % task.id"/>
@@ -1129,15 +1223,15 @@
 		</template>
 		<!-- Montage financier -->
 		<template id="apply7">
-			<h4 class="text-center">Montage financier</h4>
+			<h4 class="text-center text-primary">Montage financier</h4>
 				<div>
-					<h5 class="text-center">Répartition financière du projet</h5>
-					<table t-if="submission.budget_lines" class="table">
+					<h5 class="text-center text-primary">Répartition financière du projet</h5>
+					<table t-if="submission.budget_lines" class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
 								<th>Type</th>
-								<th class="text-right">Financement propre</th>
-								<th class="text-right">Financement demandé</th>
+								<th class="text-right">Financement propre - Partenaires Industriels</th>
+								<th class="text-right">Financement demandé - Partenaires Scientifiques et Industriels</th>
 								<th class="text-right">Budget global</th>
 								<th class="text-right">Pourcentage propre</th>
 							</tr>
@@ -1194,26 +1288,26 @@
 					</table>
 				</div>
 				<div>
-					<h5 class="text-center">Détail du coût du personnel relevant des partenaires scientifiques</h5>
-					<table t-if="submission.personnels" class="table">
+					<h5 class="text-center text-primary">Détail du coût du personnel relevant des partenaires scientifiques</h5>
+					<table t-if="submission.personnels" class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
 								<th>Titre</th>
 								<th class="text-right">Effectif</th>
-								<th class="text-right">Durée (en mois)</th>
+								<th class="text-right">Durée totale (en mois)</th>
 								<th class="text-right">Financement demandé (MAD/Mois)</th>
 								<th class="text-right">Total</th>
 							</tr>
 							<tbody>
-								<!-- <t t-set="tot_effectif" t-value="0"/>
-								<t t-set="tot_montant" t-value="0"/>-->
+								<t t-set="tot_effectif" t-value="0"/>
+								<t t-set="tot_montant" t-value="0"/>
 								<tr t-foreach="submission.personnels.filtered(lambda p: p.type == 'scientifique')" t-as="line">
 									<td>
 										<span t-field="line.function"/>
 									</td>
 									<td>
 										<input type="number" min="0" t-att-name="str(line.id) + 'number'" t-att-value="line.number"/>
-										<!-- <t t-set="tot_effectif" t-att-value="float(tot_effectif) + line.number"/>-->
+										<t t-set="tot_effectif" t-value="int(tot_effectif) + line.number"/>
 									</td>
 									<td class="text-right">
 										<input type="number" min="0" t-att-name="str(line.id) + 'time'" t-att-value="line.time"/>
@@ -1223,19 +1317,17 @@
 									</td>
 									<td class="text-right">
 										<span t-field="line.total"/>
-										<!-- <t t-set="tot_montant" t-esc="tot_montant + line.total"/>-->
+										<t t-set="tot_montant" t-value="float(tot_montant) + line.total"/>
 									</td>
 								</tr>
-								<!-- <tr>
+								<tr>
 									<td class="text-right">
 										<strong>Total:</strong>
 									</td>
 									<td class="text-right">
 										<strong>
-											<t t-esc="tot_effectif"/>&amp;nbsp;MAD
+											<t t-esc="tot_effectif"/>
 										</strong>
-									</td>
-									<td class="text-right">
 									</td>
 									<td class="text-right">
 									</td>
@@ -1243,36 +1335,36 @@
 									</td>
 									<td class="text-right">
 										<strong>
-											<span t-esc="tot_montant"/>&amp;nbsp;%
+											<span t-esc="tot_montant"/>&amp;nbsp;MAD
 										</strong>
 									</td>
-								</tr> -->
+								</tr>
 							</tbody>
 						</thead>
 					</table>
 				</div>
 				<div>
-					<h5 class="text-center">Détail du coût du personnel relevant des partenaires industriels</h5>
-					<table t-if="submission.personnels" class="table">
+					<h5 class="text-center text-primary">Détail du coût du personnel relevant des partenaires industriels</h5>
+					<table t-if="submission.personnels" class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
 								<th>Titre</th>
 								<th class="text-right">Effectif</th>
-								<th class="text-right">Durée (en mois)</th>
+								<th class="text-right">Durée totale (en mois)</th>
 								<th class="text-right">Financement propre (MAD/Mois)</th>
 								<th class="text-right">Financement demandé (MAD/Mois)</th>
 								<th class="text-right">Total</th>
 							</tr>
 							<tbody>
-								<!-- <t t-set="tot_effectif" t-value="0"/>
-								<t t-set="tot_montant" t-value="0"/>-->
+								<t t-set="tot_effectif" t-value="0"/>
+								<t t-set="tot_montant" t-value="0"/>
 								<tr t-foreach="submission.personnels.filtered(lambda p: p.type == 'industriel')" t-as="line">
 									<td>
 										<span t-field="line.function"/>
 									</td>
 									<td>
 										<input type="number" min="0" t-att-name="str(line.id) + 'number'" t-att-value="line.number"/>
-										<!-- <t t-set="tot_effectif" t-att-value="float(tot_effectif) + line.number"/> -->
+										<t t-set="tot_effectif" t-value="int(tot_effectif) + line.number"/>
 									</td>
 									<td class="text-right">
 										<input type="number" min="0" t-att-name="str(line.id) + 'time'" t-att-value="line.time"/>
@@ -1285,16 +1377,16 @@
 									</td>
 									<td class="text-right">
 										<span t-field="line.total"/>
-										<!-- <t t-set="tot_montant" t-esc="float(tot_montant) + line.total"/> -->
+										<t t-set="tot_montant" t-value="float(tot_montant) + line.total"/>
 									</td>
 								</tr>
-								<!-- <tr>
+								<tr>
 									<td class="text-right">
 										<strong>Total:</strong>
 									</td>
 									<td class="text-right">
 										<strong>
-											<t t-esc="tot_effectif"/>&amp;nbsp;MAD
+											<t t-esc="tot_effectif"/>
 										</strong>
 									</td>
 									<td class="text-right">
@@ -1305,17 +1397,17 @@
 									</td>
 									<td class="text-right">
 										<strong>
-											<span t-esc="tot_montant"/>&amp;nbsp;%
+											<span t-esc="tot_montant"/>&amp;nbsp;MAD
 										</strong>
 									</td>
-								</tr> -->
+								</tr>
 							</tbody>
 						</thead>
 					</table>
 				</div>
 				<div>
-					<h5 class="text-center">Détail du coût du financement propre par partenaire industriel</h5>
-					<table t-if="submission.costs" class="table">
+					<h5 class="text-center text-primary">Détail du coût du financement propre par partenaire industriel</h5>
+					<table t-if="submission.costs" class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
 								<th>Partenaire</th>
@@ -1323,8 +1415,7 @@
 								<th class="text-right">Montant (MAD)</th>
 							</tr>
 							<tbody>
-								<!-- <t t-set="tot_effectif" t-value="0"/>
-								<t t-set="tot_montant" t-value="0"/>-->
+								<t t-set="tot_montant" t-value="0"/>
 								<tr t-foreach="submission.costs" t-as="line">
 									<td>
 										<span t-field="line.partner.name"/>
@@ -1334,29 +1425,21 @@
 									</td>
 									<td class="text-right">
 										<input type="number" min="0" t-att-name="str(line.id) + 'montant_cout'" t-att-value="line.montant"/>
+										<t t-set="tot_montant" t-value="tot_montant + line.montant"/>
 									</td>
 								</tr>
-								<!-- <tr>
+								<tr>
 									<td class="text-right">
 										<strong>Total:</strong>
 									</td>
 									<td class="text-right">
-										<strong>
-											<t t-esc="tot_effectif"/>&amp;nbsp;MAD
-										</strong>
-									</td>
-									<td class="text-right">
-									</td>
-									<td class="text-right">
-									</td>
-									<td class="text-right">
 									</td>
 									<td class="text-right">
 										<strong>
-											<span t-esc="tot_montant"/>&amp;nbsp;%
+											<span t-esc="tot_montant"/>&amp;nbsp;MAD
 										</strong>
 									</td>
-								</tr> -->
+								</tr>
 							</tbody>
 						</thead>
 					</table>
@@ -1364,7 +1447,7 @@
 		</template>
 		<!-- Descriptif detaillé -->
 		<template id="apply8">
-			<h4 class="text-center">Soumission</h4>
+			<h4 class="text-center text-primary">Soumission</h4>
 			<h5 class="text-center">Joindre la convention de collaboration</h5>
 			<div class="col-md-12">
 				<table class="table table-condensed" t-if="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Conventions')">
@@ -1389,15 +1472,14 @@
 						</td>
 					</tr>
 				</table>
-				<input t-if="not submission.documents.filtered(lambda d: d.parent_id.name == 'Conventions')" accept=".pdf" class="input-file2 form-control" id="fileInput" type="file" name="ufile"/>
-				<span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span>
+				<input t-if="not submission.documents.filtered(lambda d: d.parent_id.name == 'Conventions')" required="1" accept=".pdf" class="input-file2 form-control" id="fileInput" type="file" name="ufile"/>
 			</div>
 			<t t-if="error"><t t-set="has_errors" t-value="any([v for d in [error.get('stage'+str(x)) for x in range(1,9)] for v in d.values()])"/>
-			<div class="col-md-12">
+			<div class="col-md-12" t-if="has_errors">
 				<span>Votre soumission n'est pas complétée. les champs suivants sont manquants:</span>
 				<t t-foreach="range(1,9)" t-as="i">
 					<t t-if="any(error['stage' + str(i)].values())">
-						<h6>Etape <span t-esc="i"/>:</h6>
+						<h6><span>Etape </span><span t-esc="i"/>:</h6>
 						<p>
 							<t t-foreach="error['stage' + str(i)].items()" t-as="err">
 								<t t-if="err[1]"><span t-esc="err[0]"/>, </t>
@@ -1406,7 +1488,7 @@
 					</t>
 				</t>
 			</div></t>
-			<div class="form-group col-md-12 text-center">
+			<div class="form-group col-md-12 text-center" t-if="submission.state=='draft'">
 				<div class="bg-warning mb8">Une fois votre soumission envoyée, vous ne pouvez plus la modifier. Veuillez vous assurer que vous avez saisis toutes les informations nécessaires.</div>
 				<button t-att-disabled="has_errors" type="submit" name="submit" value="confirm" class="btn btn-primary">Envoyer ma soumission</button>
 			</div>
@@ -1569,7 +1651,7 @@
 					<button type="submit" t-if="current_stage != 1" name="submit" value="prev" class="btn btn-primary">Précédent</button>
 				</div>
 				<div class="col-md-6 text-right">
-					<!-- <button type="submit" name="submit" value="cancel" class="btn btn-danger">Annuler</button> -->
+					<a t-if="new or partner or task" style="padding: 6px 12px;" t-attf-href="/offers/apply/#{slug(submission.offer)}/stage/#{current_stage}" class="btn btn-danger">Effacer</a>
 					<button type="submit" name="submit" value="save" class="btn btn-primary">Enregistrer</button>
 					<button type="submit" t-if="current_stage != 8" name="submit" value="next" class="btn btn-primary">Suivant</button>
 				</div>

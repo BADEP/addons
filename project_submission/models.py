@@ -32,18 +32,19 @@ except ImportError:
     pass
 
 AVAILABLE_PRIORITIES = [
-    ('0', 'Bad'),
-    ('1', 'Below Average'),
-    ('2', 'Average'),
-    ('3', 'Good'),
-    ('4', 'Excellent')
+    ('0', 'D'),
+    ('1', 'C'),
+    ('2', 'B'),
+    ('3', 'A'),
+    ('4', 'A+')
 ]
 
 SUBMISS_ETAT= [
     ('draft', 'En cours de rédaction'),
     ('submitted', 'Soumis'),
-    ('pending', 'En cours d\'évaluation'),
-    ('preselected', 'Préselectionné 1ère phase'),
+    ('pending', 'Présélection IRESEN'),
+    ('preselectedcs', 'Préselection CS'),
+    ('preselectedcss', 'Préselection CSS'),
     ('accepted', 'Aprouvé'),
     ('rejected', 'Refusé')
 ]
@@ -189,7 +190,6 @@ class ProjectSubmission(models.Model):
     n_related_publications = fields.Integer(string='Nombre de publications')
     n_ing_doc = fields.Integer(string='Nombre de doctorants/postdocs/ingénieurs')
     n_master_pfe = fields.Integer(string='Nombre de Masters et PFE')
-    #description_score = fields.Char(_compute = '_get_description_score', store=True)
     manager = fields.Many2one('res.users', 'Responsable')
     date_submitted = fields.Datetime('Date de soumission', readonly=True)
     date_processed = fields.Datetime('Date de traitement', readonly=True)
@@ -210,7 +210,7 @@ class ProjectSubmission(models.Model):
     budget = fields.Float(compute='_get_amounts', store=False, digital_precision=dp.get_precision('Account'))
     montant_subventionne = fields.Float(compute='_get_amounts', string="Montant subventionné", store=False, digital_precision=dp.get_precision('Account'))
     montant_propre = fields.Float(compute='_get_amounts', string="Financement propre", store=False, digital_precision=dp.get_precision('Account'))
-    percent_propre = fields.Float(compute='_get_amounts', digital_precision=2, string="Pourcentage propre (%)", store=True)
+    percent_propre = fields.Float(compute='_get_amounts', digital_precision=2, string="Pourcentage propre (%)", store=False)
     budget_lines = fields.One2many('project.submission.budgetline', 'submission', string="Lignes de budget")
     personnels = fields.One2many('project.submission.personnel', 'submission', string="Personnels")
     duration = fields.Integer('Durée du projet (en semestres)')
@@ -376,7 +376,7 @@ class ResPartner(models.Model):
 class ProjectPartnerFunction(models.Model):
     _name = 'project.partner.function'
     
-    name = fields.Char(required=True, string='Nom')
+    name = fields.Char(required=True, string='Nom', translate=True)
     is_scientifique = fields.Boolean(default=True, string='Scientifique')
     is_industriel = fields.Boolean(default=True, string='Industriel')
 

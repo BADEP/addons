@@ -626,7 +626,7 @@
 		<!-- REPORTS -->
 
     		<template id="report_submission_document">
-		    <t t-call="report.internal_layout">
+		    <t t-call="report.external_layout">
 		        <div class="page">
 			        <script type="text/javascript">
 				        $('textarea').each(function() {
@@ -636,10 +636,8 @@
 					<style type="text/css">
 						input, select, textarea {
 							box-shadow: none !important;
-							border: 1px solid black !important;
-							border-radius: none !important;
-						}
-						select {
+							border-width: 0px 0px 1px 0px !important;
+							border-radius: 0px !important;
 						    -moz-appearance: none;
 						    -webkit-appearance:none !important;
     						appearance: none !important;
@@ -649,6 +647,13 @@
 						}
 						.hidden-print, .text-muted {
 							display: none !important;
+						}
+						.print-only.form-control {
+							height: inherit;
+							max-height: inherit;
+							box-shadow: none !important;
+							border-width: 0px 0px 1px 0px !important;
+							border-radius: 0px !important;
 						}
 					</style>
 		            <div class="oe_structure"/>
@@ -696,9 +701,9 @@
                			    <p style="page-break-before:always;"> </p>
 							<t t-if="current_stage==7">
 								<t t-call="website_project_submission.apply7"/></t>
-                		    <p style="page-break-before:always;"> </p>
+                		    <!-- <p style="page-break-before:always;"> </p>
 							<t t-if="current_stage==8">
-								<t t-call="website_project_submission.apply8"/></t>
+								<t t-call="website_project_submission.apply8"/></t>-->
 		            	</t>
 		            </div>
 		            <div class="oe_structure"/>
@@ -719,7 +724,7 @@
             string="Rapport de soumission"
             model="project.submission" 
             report_type="qweb-pdf"
-            file="project_submission.report_submission" 
+            file="Rapport de soumission"
             name="project_submission.report_submission"
         />
 	</data>
