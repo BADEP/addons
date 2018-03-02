@@ -4,6 +4,7 @@
 			<field name="name">sale_fleet.fleet_vehicle_form</field>
 			<field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
 			<field name="model">fleet.vehicle</field>
+			<field eval="15" name="priority"/>
 			<field name="type">form</field>
 			<field name="arch" type="xml">
 				<button name="act_show_log_cost" position="after">
