@@ -4,8 +4,8 @@ from odoo import models, fields, api
 
 class StockPicking(models.Model):
     _inherit = 'stock.picking'
-    vehicle = fields.Many2one('fleet.vehicle', domain=[('picking_ok','=',True)], related='group_id.vehicle', store=True)
-    driver = fields.Many2one('res.partner', related='group_id.driver', store=True)
+    vehicle = fields.Many2one('fleet.vehicle', domain=[('picking_ok','=',True)])
+    driver = fields.Many2one('res.partner')
     
     @api.onchange('vehicle')
     def set_driver(self):

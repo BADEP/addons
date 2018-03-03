@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import stock, fleet, procurement
+from . import stock, fleet

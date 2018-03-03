@@ -13,8 +13,9 @@ class SaleOrder(models.Model):
             self.driver = self.vehicle.driver_id
         else:
             self.driver = False
-        
-    def _prepare_procurement_group(self):
-        res = super(SaleOrder, self)._prepare_procurement_group()
-        res.update({'vehicle': self.vehicle and self.vehicle.id, 'driver': self.driver and self.driver.id})
+
+    @api.multi
+    def action_confirm(self):
+        res = super(SaleOrder, self).action_confirm()
+        self.picking_ids.write({'vehicle': self.vehicle and self.vehicle.id, 'driver': self.driver and self.driver.id})
         return res

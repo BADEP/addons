@@ -1,0 +1,25 @@
+<odoo>
+	<data>
+		<record id="purchase_fleet.vehicle_form" model="ir.ui.view">
+			<field name="name">purchase_fleet.fleet_vehicle_form</field>
+			<field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
+			<field name="model">fleet.vehicle</field>
+			<field eval="15" name="priority"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<button name="act_show_log_cost" position="after">
+					<button name="act_show_purchases" type="object" class="oe_stat_button" icon="fa-usd">
+					    <div class="o_form_field o_stat_info">
+                            <span class="o_stat_value"><field name="purchases_amount" widget="monetary" options="{'currency_field': 'currency_id'}"/></span>
+                            <span class="o_stat_text"><field name="purchases_count"/> Purchases</span>
+                        </div>
+					</button>
+				</button>
+				<field name="driver_id" position="after">
+					<field name="purchase_ok" />
+					<field name="currency_id" invisible="1"/>
+				</field>
+			</field>
+		</record>
+	</data>
+</odoo>
