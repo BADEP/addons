@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="procurement_order_dimension_form_view" model="ir.ui.view">
+            <field name="name">procurement.order.dimension.form.view</field>
+            <field name="model">procurement.order</field>
+            <field name="inherit_id" ref="procurement.procurement_form_view" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+					<field name="product_dimension_qty" attrs="{'invisible': [('dimensions','=',[])], 'readonly': [('state','!=','draft')]}" />
+                	<field name="dimensions" widget="one2many_list">
+						<tree string="Dimensions" create="false" delete="false" editable="bottom">
+							<field name="dimension" readonly="True"/>
+							<field name="quantity" />
+							<field name="extrapolated_qty" />
+						</tree>
+					</field>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_move_dimension_form_view" model="ir.ui.view">
+            <field name="name">stock.move.dimension.form.view</field>
+            <field name="model">stock.move</field>
+            <field name="inherit_id" ref="stock.view_move_form" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+					<field name="product_dimension_qty" attrs="{'invisible': [('dimensions','=',[])], 'readonly': [('state','!=','draft')]}" />
+                	<field name="dimensions" widget="one2many_list">
+						<tree string="Dimensions" create="false" delete="false" editable="bottom">
+							<field name="dimension" readonly="True"/>
+							<field name="quantity" />
+							<field name="extrapolated_qty" />
+						</tree>
+					</field>
+                </xpath>
+            </field>
+        </record>
+
+        <template id="stock.report_picking_dimensions" inherit_id="stock.report_picking">
+            <xpath expr="//span[@t-field='move.product_id']" position="replace">
+				<span t-field='move.name' />
+            </xpath>
+            <xpath expr="//table[@t-if='not o.pack_operation_ids']" position="attributes">
+				<attribute name="t-if">1</attribute>
+            </xpath>
+            <xpath expr="//table[@t-if='o.pack_operation_ids']" position="replace" />
+        </template>
+    </data>
+</openerp>

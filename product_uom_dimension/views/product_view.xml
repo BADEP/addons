@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp>
+    <data>
+        <record id="product_uom_dimension_form_view" model="ir.ui.view">
+            <field name="name">product_dimension.product_uom_dimension_form_view</field>
+            <field name="model">product.uom</field>
+            <field name="inherit_id" ref="product.product_uom_form_view" />
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='category_id']" position="after">
+					<field name="label" />
+                	<field name="dimensions" widget="one2many_list">
+						<tree string="Dimensions" editable="bottom">
+							<field name="name" />
+							<field name="multiplier" />
+							<field name="rounding" />
+							<field name="offset" />
+						</tree>
+					</field>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</openerp>
