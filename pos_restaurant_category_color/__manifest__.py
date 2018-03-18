@@ -3,7 +3,7 @@
     'name': "POS Category color",
 
     'summary': """
-        Display the table on the color that the current order has""",
+        Display the table on the color that the current order has (Still WIP please don't install)""",
 
     'description': """
     """,
@@ -25,4 +25,5 @@
         # 'security/ir.model.access.csv',
         'views/pos_view.xml',
     ],
+    'installable': False
 }
