@@ -20,6 +20,8 @@
     # for the full list
     'category': 'Technical Settings',
     'version': '10.0.1',
+    'images': ['static/scr/img/banner.png'],
+    'license': 'AGPL-3',
 
     # any module necessary for this one to work correctly
     'depends': ['mail_tracking'],

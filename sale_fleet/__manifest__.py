@@ -20,6 +20,8 @@
 
     # any module necessary for this one to work correctly
     'depends': ['sale', 'stock_fleet'],
+    'images': ['static/scr/img/banner.png'],
+    'license': 'AGPL-3',
 
     # always loaded
     'data': [
