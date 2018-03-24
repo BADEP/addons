@@ -30,6 +30,9 @@ class CrmFacebookForm(models.Model):
     page_id = fields.Many2one('crm.facebook.page', readonly=True, ondelete='cascade', string='Facebook Page')
     mappings = fields.One2many('crm.facebook.form.field', 'form_id')
     team_id = fields.Many2one('crm.team', domain=['|', ('use_leads', '=', True), ('use_opportunities', '=', True)], string="Sales Team")
+    campaign_id = fields.Many2one('utm.campaign')
+    source_id = fields.Many2one('utm.source')
+    medium_id = fields.Many2one('utm.medium')
     
     def get_fields(self):
         self.mappings.unlink()
@@ -98,7 +101,9 @@ class CrmLead(models.Model):
                                     vals.update({odoo_field.name: float(field_data['values'][0])})
                                 elif odoo_field.ttype == 'integer':
                                     vals.update({odoo_field.name: int(field_data['values'][0])})
-                                elif odoo_field.ttype in ('date', 'datetime', 'selection'):
+                                elif odoo_field.ttype in ('date', 'datetime'):
+                                    vals.update({odoo_field.name: field_data['values'][0].split('+')[0].replace('T', ' ')})
+                                elif odoo_field.ttype == 'selection':
                                     vals.update({odoo_field.name: field_data['values'][0]})
                                 else:
                                     vals.update({odoo_field.name: ", ".join(field_data['values'])})
@@ -110,6 +115,9 @@ class CrmLead(models.Model):
                             'facebook_lead_id': lead['id'],
                             'description': "\n".join(notes),
                             'team_id': form.team_id and form.team_id.id,
+                            'campaign_id': form.campaign_id and form.campaign_id.id,
+                            'source_id': form.source_id and form.source_id.id,
+                            'medium_id': form.medium_id and form.medium_id.id,
                             'facebook_form_id': form.id,
                             'date_open': lead['created_time'].split('+')[0].replace('T', ' ')
                         })

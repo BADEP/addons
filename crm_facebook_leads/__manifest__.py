@@ -19,6 +19,7 @@
 
     # any module necessary for this one to work correctly
     'depends': ['crm'],
+    'images': ['static/scr/img/banner.png'],
 
     # always loaded
     'data': [
