@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "CRM Facebook Leads",
+    'name': "CRM Facebook Lead Ads",
 
     'summary': """
         Sync Facebook Leads with Odoo CRM""",
