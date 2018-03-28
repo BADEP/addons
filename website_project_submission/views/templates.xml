@@ -1292,6 +1292,7 @@
 				</div>
 				<div>
 					<h5 class="text-center text-primary">Détail du coût du personnel relevant des partenaires industriels</h5>
+					<h5 class="text-center text-muted">Total = (Financement propre + Financement demandé)* Durée totale <br>Total financement propre( en mois) = Durée totale * Financement propre  </br> <br>Total financement demandé( en mois) = Durée totale * Financement demandé  </br></h5>
 					<table t-if="submission.personnels" class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
