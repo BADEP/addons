@@ -54,7 +54,7 @@
 											<i class="fa fa-downloadghhgh"/>
 										</a>
 										<form id="submissionlist" t-attf-action="/my/home/delete/#{ slug(submission) }" method="get" enctype="multipart/form-data">
-										<button t-if="submission.state == 'draft'" class="btn btn-danger" data-toggle="tooltip" title="Supprimer" onclick="return confirm('Voulez-vous vraiment supprimer votre soumission?');return false;" type="submit" name="unlink-submission" t-att-value="submission.id">
+										<button t-if="submission.state == 'draft'" class="btn btn-danger" data-toggle="tooltip" title="Supprimer" onclick="return confirm('Toute suppression sera définitive. Voulez-vous vraiment supprimer votre soumission?');return false;" type="submit" name="unlink-submission" t-att-value="submission.id">
 											<i class="fa fa-trash"/>
 										</button></form>
 									</td>
