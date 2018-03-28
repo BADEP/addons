@@ -30,6 +30,14 @@ class PortalSubmissionWebsiteAccount(WebsiteAccount):
             'submissions': request.env.user.submissions,
         })
         return response
+#        if post.get('unlink-submission'):
+#            submission = request.env.submissions.filtered(lambda s: s.id == post.get('unlink-submission'))
+    @http.route(['/my/home/delete/<model("project.submission"):submission>',
+                 ], type='http', auth="public", website=True)
+    def unlink_submission(self, submission=None, **post):
+        submission and submission.unlink()
+        return request.redirect("/my/home")
+
     
     @http.route(['/my/submissions/<int:submission_id>'], type='http', auth="user", website=True)
     def submissions_followup(self, submission_id=None):
@@ -470,43 +478,43 @@ class WebsiteProjectSubmission(http.Controller):
         elif next_stage == 8:
             error.update({
                 'stage1': {
-                    submission._fields['name'].string: submission.name == '' or submission.name == '/',
-                    submission._fields['acronyme'].string: submission.acronyme == '',
-                    submission._fields['field_ids'].string: len(submission.field_ids) == 0,
-                    submission._fields['duration'].string: submission.duration == 0,
-                    submission._fields['description'].string: submission.description == '',
-                    submission._fields['n_related_publications'].string: offer.category == 'innoproject' and submission.n_related_publications == 0,
-                    submission._fields['trl'].string: offer.category == 'innoboost' and submission.trl == 0,
-                    submission._fields['n_ing_doc'].string: submission.n_ing_doc == 0,
-                    submission._fields['n_master_pfe'].string: submission.n_master_pfe == 0,
-                    submission._fields['keywords'].string: submission.keywords == '',
+                    'Intitulé du projet' if env.lang == 'fr_FR' else 'Project Name': submission.name == '' or submission.name == '/',
+                    'Acronyme du projet' if env.lang == 'fr_FR' else 'Project Acronym': submission.acronyme == '',
+                    'Thématiques' if env.lang == 'fr_FR' else 'Themes': len(submission.field_ids) == 0,
+                    'Durée du projet' if env.lang == 'fr_FR' else 'Project Duration': submission.duration == 0,
+                    'Description du projet' if env.lang == 'fr_FR' else 'Project Description': submission.description == '',
+                    'Nombre de publications' if env.lang == 'fr_FR' else 'Number of Publications': offer.category == 'innoproject' and submission.n_related_publications == 0,
+                    'TRL' if env.lang == 'fr_FR' else 'Technological Readiness Level': offer.category == 'innoboost' and submission.trl == 0,
+                    'Nombre de doctorants/postdocs/ingénieurs' if env.lang == 'fr_FR' else 'Number of PhD students/postdocs/engineers': submission.n_ing_doc == 0,
+                    'Nombre d\'étudiants en Master et PFE' if env.lang == 'fr_FR' else 'Number of Master students and End of Studies projects': submission.n_master_pfe == 0,
+                    'mots-clés' if env.lang == 'fr_FR' else 'Keywords': submission.keywords == '',
                 },
                 'stage2': {
-                    'Nom et Prénom': candidate.name == '',
-                    'Etablissement': candidate.parent_id.id == False,
-                    'Fonction': candidate.function == '',
-                    'Téléphone': candidate.phone == '',
+                    'Nom du coordinateur/porteur du projet' if env.lang == 'fr_FR' else 'Coordinator/Promoter Full name': candidate.name == '',
+                    'Etablissement' if env.lang == 'fr_FR' else 'Entreprise': candidate.parent_id.id == False,
+                    'Fonction'if env.lang == 'fr_FR' else 'Function': candidate.function == '',
+                    'Téléphone'if env.lang == 'fr_FR' else 'Phone': candidate.phone == '',
                     'Mobile': candidate.mobile == '',
-                    candidate._fields['email'].string: candidate.email == '',
-                    'Inventeur: Nom': offer.category == 'innoboost' and (not submission.inventor or submission.inventor.name == ''),
-                    'Inventeur: Téléphone' : offer.category == 'innoboost' and (not submission.inventor or submission.inventor.phone == ''),
-                    'Inventeur: Mobile ' : offer.category == 'innoboost' and (not submission.inventor or submission.inventor.mobile == ''),
-                    'Inventeur: ' + submission.inventor._fields['email'].string: offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.email == ''),
-                    candidate._fields['documents_count'].string: (offer.category == 'innoproject' and candidate.documents_count < 6) or (offer.category == 'innoboost' and candidate.documents_count < 2),
+                    'Email': candidate.email == '',
+                    'Inventeur: Nom'if env.lang == 'fr_FR' else 'Inventor\'s Full Name': offer.category == 'innoboost' and (not submission.inventor or submission.inventor.name == ''),
+                    'Inventeur: Téléphone'if env.lang == 'fr_FR' else 'Inventor\'s Phone': offer.category == 'innoboost' and (not submission.inventor or submission.inventor.phone == ''),
+                    'Inventeur: Mobile 'if env.lang == 'fr_FR' else 'Inventor\'s Mobile': offer.category == 'innoboost' and (not submission.inventor or submission.inventor.mobile == ''),
+                    'Inventeur: Email' if env.lang == 'fr_FR' else 'Inventor\s Email': offer.category == 'innoboost' and (submission.inventor == False or submission.inventor.email == ''),
+                    'CV/Patentes' if env.lang == 'fr_FR' else 'CV/patents': (offer.category == 'innoproject' and candidate.documents_count < 6) or (offer.category == 'innoboost' and candidate.documents_count < 2),
                 },
                 'stage3': {
-                    'Parenaires scientifiques': len(submission.partners.filtered(lambda p: p.category=='scientifique')) == 0,
-                    'Pièces jointes': any([p.documents_count == 0 for p in submission.partners.filtered(lambda p: p.category=='scientifique')]),
+                    'Parenaires scientifiques' if env.lang == 'fr_FR' else 'Scientific Partners': len(submission.partners.filtered(lambda p: p.category=='scientifique')) == 0,
+                    'Pièces jointes' if env.lang == 'fr_FR' else 'Attachments': any([p.documents_count == 0 for p in submission.partners.filtered(lambda p: p.category=='scientifique')]),
                 },
                 'stage4': {
-                    'Partenaires industriels': len(submission.partners.filtered(lambda p: p.category=='industriel')) == 0,
-                    'Pièces jointes': any([p.documents_count == 0 for p in submission.partners.filtered(lambda p: p.category=='industriel')]),
+                    'Partenaires industriels' if env.lang == 'fr_FR' else 'Industrial Partners': len(submission.partners.filtered(lambda p: p.category=='industriel')) == 0,
+                    'Pièces jointes' if env.lang == 'fr_FR' else 'Attachments': any([p.documents_count == 0 for p in submission.partners.filtered(lambda p: p.category=='industriel')]),
                 },
                 'stage5': {
-                    submission._fields['etat_art'].string: offer.category == 'innoproject' and submission.etat_art == '',
-                    submission._fields['objective'].string: offer.category == 'innoproject' and submission.objective == '',
-                    submission._fields['objectives'].string: offer.category == 'innoproject' and submission.objectives == '',
-                    submission._fields['perspective'].string: offer.category == 'innoproject' and submission.perspective == '', 
+                    'Etat de l\'art' if env.lang == 'fr_FR' else 'State of the art': offer.category == 'innoproject' and submission.etat_art == '',
+                    'Objectif global' if env.lang == 'fr_FR' else 'Overall objective': offer.category == 'innoproject' and submission.objective == '',
+                    'Objectifs spécifiques' if env.lang == 'fr_FR' else 'Specific objectives': offer.category == 'innoproject' and submission.objectives == '',
+                    'Perspective' if env.lang == 'fr_FR' else 'Perspective': offer.category == 'innoproject' and submission.perspective == '', 
                     submission._fields['fallout'].string: submission.fallout == '',
                     submission._fields['produits_services_process'].string: offer.category == 'innoboost' and submission.produits_services_process == '',
                     submission._fields['analyse_macro'].string: offer.category == 'innoboost' and submission.analyse_macro == '',

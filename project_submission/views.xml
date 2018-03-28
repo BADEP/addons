@@ -384,22 +384,22 @@
 						<group string="Informations générales">
 							<notebook colspan="2">
 								<page string="Description">
-									<field name="description"/>
+									<field name="description" widget="html"/>
 								</page>
 								<page string="État de l’art">
-									<field name="etat_art"/>
+									<field name="etat_art" widget="html"/>
 								</page>
 								<page string="Objectif global du projet">
-									<field name="objective"/>
+									<field name="objective" widget="html"/>
 								</page>
 								<page string="Objectifs spécifiques">
-									<field name="objectives"/>
+									<field name="objectives" widget="html"/>
 								</page>
 								<page string="Retombées attendues du projet">
-									<field name="fallout"/>
+									<field name="fallout" widget="html"/>
 								</page>
 								<page string="Perspectives d’application">
-									<field name="perspective"/>
+									<field name="perspective" widget="html"/>
 								</page>
 							</notebook>
 							<group colspan="2">

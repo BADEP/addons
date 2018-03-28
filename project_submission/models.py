@@ -1,24 +1,4 @@
 # -*- coding: utf-8 -*-
-##############################################################################
-#
-#    OpenERP, Open Source Management Solution
-#    Copyright (c) 2010-2013 Elico Corp. All Rights Reserved.
-#    Author: Yannick Gouin <yannick.gouin@elico-corp.com>
-#
-#    This program is free software: you can redistribute it and/or modify
-#    it under the terms of the GNU Affero General Public License as
-#    published by the Free Software Foundation, either version 3 of the
-#    License, or (at your option) any later version.
-#
-#    This program is distributed in the hope that it will be useful,
-#    but WITHOUT ANY WARRANTY; without even the implied warranty of
-#    MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
-#    GNU Affero General Public License for more details.
-#
-#    You should have received a copy of the GNU Affero General Public License
-#    along with this program.  If not, see <http://www.gnu.org/licenses/>.
-#
-##############################################################################
 
 from openerp import tools
 from openerp import fields, models, api
@@ -170,21 +150,21 @@ class ProjectSubmission(models.Model):
     inventor = fields.Many2one('res.partner', string='Inventeur')
     field_ids = fields.Many2many('project.offer.field', string='Thématiques')
     partners = fields.Many2many('res.partner', string='Partenaires')
-    description = fields.Text('Description')
-    etat_art = fields.Text('État de l’art')
-    objective = fields.Text('Objectif global du projet')
-    objectives = fields.Text('Objectifs spécifiques')
-    fallout = fields.Text('Retombées attendues du projet')
-    perspective = fields.Text('Perspectives d’application')
-    produits_services_process = fields.Text('Produit/ Service / Process')
-    analyse_macro = fields.Text('Analyse macro-environnementale')
-    analyse_marche = fields.Text('Analyse du marché')
-    cible = fields.Text('Cible')
-    analyse_competitive = fields.Text('Analyse compétitive')
-    proposition_valeur = fields.Text('Proposition de valeur pour le client')
-    business_model = fields.Text('Business model initial')
-    invest_retour = fields.Text('Investissement et retour sur investissement')
-    plan = fields.Text('Plan du projet')
+    description = fields.Html('Description')
+    etat_art = fields.Html('État de l’art')
+    objective = fields.Html('Objectif global du projet')
+    objectives = fields.Html('Objectifs spécifiques')
+    fallout = fields.Html('Retombées attendues du projet')
+    perspective = fields.Html('Perspectives d’application')
+    produits_services_process = fields.Html('Produit/ Service / Process')
+    analyse_macro = fields.Html('Analyse macro-environnementale')
+    analyse_marche = fields.Html('Analyse du marché')
+    cible = fields.Html('Cible')
+    analyse_competitive = fields.Html('Analyse compétitive')
+    proposition_valeur = fields.Html('Proposition de valeur pour le client')
+    business_model = fields.Html('Business model initial')
+    invest_retour = fields.Html('Investissement et retour sur investissement')
+    plan = fields.Html('Plan du projet')
     trl = fields.Integer()
     
     n_related_publications = fields.Integer(string='Nombre de publications')
@@ -214,7 +194,7 @@ class ProjectSubmission(models.Model):
     budget_lines = fields.One2many('project.submission.budgetline', 'submission', string="Lignes de budget")
     personnels = fields.One2many('project.submission.personnel', 'submission', string="Personnels")
     duration = fields.Integer('Durée du projet (en semestres)')
-    tasks = fields.One2many('project.submission.task', 'submission', string="Tâches et livrables")
+    tasks = fields.One2many('project.submission.task', 'submission', string="Taches et livrables")
     keywords = fields.Char(string='Mots-clés')
     costs = fields.One2many('project.submission.cost', 'submission', string='Détail du coût du financement propre')
     all_partners = fields.Many2many(
