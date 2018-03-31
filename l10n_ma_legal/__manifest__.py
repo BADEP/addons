@@ -10,6 +10,8 @@
     'website': 'https://badep.ma',
     'depends': ['base'],
     'data': ['views/base_views.xml'],
+    'images': ['static/scr/img/banner.png'],
+    'license': 'AGPL-3',
     'demo_xml': [],
     'installable': True,
 }

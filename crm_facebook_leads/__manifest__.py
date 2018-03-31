@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "CRM Facebook Leads",
+    'name': "CRM Facebook Lead Ads",
 
     'summary': """
         Sync Facebook Leads with Odoo CRM""",
@@ -19,6 +19,8 @@
 
     # any module necessary for this one to work correctly
     'depends': ['crm'],
+    'images': ['static/src/img/banner.png'],
+    'license': 'AGPL-3',
 
     # always loaded
     'data': [

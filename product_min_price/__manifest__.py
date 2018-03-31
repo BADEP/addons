@@ -19,6 +19,8 @@
 
     # any module necessary for this one to work correctly
     'depends': ['product'],
+    'images': ['static/scr/img/banner.png'],
+    'license': 'AGPL-3',
 
     # always loaded
     'data': [

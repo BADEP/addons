@@ -44,6 +44,9 @@
          		  			   	<field name="name"/>
          		  			   	<field name="facebook_form_id"/>
                     			<field name="team_id"/>
+                    			<field name="campaign_id"/>
+                    			<field name="medium_id"/>
+                    			<field name="source_id"/>
                     		</tree>
                     	</field>
                     </group>
@@ -95,8 +98,13 @@
 	                        <field name="facebook_form_id"/>
 	                        <field name="access_token" invisible="1"/>
                         </group>
+	                    <group string="Tracking Info">
+	                        <field name="campaign_id"/>
+	                        <field name="medium_id"/>
+	                        <field name="source_id"/>
+                        </group>
                     </group>
-                    <group colspan="2">
+                    <group colspan="2" string="Mappings">
                     	<field name="mappings">
                     		<tree editable="bottom">
                     			<field name="name"/>
