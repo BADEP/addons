@@ -23,7 +23,7 @@ access_project_candidate_manager,project.candidate.manager,model_res_users,group
 access_project_submission_task_manager,project.submission.task.manager,model_project_submission_task,group_manager,1,1,1,1
 access_project_request_manager,project.request.manager,model_project_request,group_manager,1,1,1,1
 access_project_submission_lot_manager,project.submission.lot.manager,model_project_submission_lot,group_manager,1,1,1,1
-access_project_submission_candidate,project.submission.candidate,model_project_submission,group_candidate,1,1,1,0
+access_project_submission_candidate,project.submission.candidate,model_project_submission,group_candidate,1,1,1,1
 access_project_submission_budgetline_candidate,project.submission.budgetline.candidate,model_project_submission_budgetline,group_candidate,1,1,1,1
 access_project_submission_personnel_candidate,project.submission.personnel.candidate,model_project_submission_personnel,group_candidate,1,1,1,1
 access_project_candidate_candidate,project.candidate.candidate,model_res_users,group_candidate,1,1,0,0

@@ -532,7 +532,7 @@ class WebsiteProjectSubmission(http.Controller):
                     },
                 'stage7': {
                     submission._fields['budget'].string: submission.budget == 0,
-                    'Le pourcentage prôpre doit être supérieur à 30%': submission.percent_propre < 30,
+                    #'Le pourcentage prôpre doit être supérieur à 30%': submission.percent_propre < 30,
                     submission._fields['personnels'].string: len(submission.personnels) == 0,
                     },
                 'stage8': {

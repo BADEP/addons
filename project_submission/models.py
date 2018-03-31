@@ -145,6 +145,7 @@ class ProjectSubmission(models.Model):
     name = fields.Char('Intitulé du projet', required=True)
     acronyme = fields.Char('Acronyme')
     offer = fields.Many2one('project.offer', string='Offre de projet', required=True)
+    category = fields.Selection([('innoproject', 'Inno-PROJECT'), ('innoboost', 'Inno-BOOST')], related='offer.category', store=True)
     candidate = fields.Many2one('res.users', string='Soumissionnaire', required=True)
     partner = fields.Many2one('res.partner', related='candidate.partner_id', string='Fiche partenaire', required=True)
     inventor = fields.Many2one('res.partner', string='Inventeur')

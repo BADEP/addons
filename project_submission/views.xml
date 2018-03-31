@@ -339,6 +339,7 @@
 				</tree>
 			</field>
 		</record>
+
 		<record id="view_project_submission_form" model="ir.ui.view">
 			<field name="name">project.submission.form</field>
 			<field name="model">project.submission</field>
@@ -382,24 +383,46 @@
 							</group>
 						</group>
 						<group string="Informations générales">
+							<field name="category" invisible="1"/>
 							<notebook colspan="2">
 								<page string="Description">
 									<field name="description" widget="html"/>
 								</page>
-								<page string="État de l’art">
+								<page string="État de l’art" attrs="{'invisible': [('category', '!=' ,'innoproject')]}">
 									<field name="etat_art" widget="html"/>
 								</page>
-								<page string="Objectif global du projet">
+								<page string="Objectif global du projet" attrs="{'invisible': [('category', '!=' ,'innoproject')]}">
 									<field name="objective" widget="html"/>
 								</page>
-								<page string="Objectifs spécifiques">
+								<page string="Objectifs spécifiques" attrs="{'invisible': [('category', '!=' ,'innoproject')]}">
 									<field name="objectives" widget="html"/>
+								</page>
+								<page string="Perspectives d’application" attrs="{'invisible': [('category', '!=' ,'innoproject')]}">
+									<field name="perspective" widget="html"/>
 								</page>
 								<page string="Retombées attendues du projet">
 									<field name="fallout" widget="html"/>
 								</page>
-								<page string="Perspectives d’application">
-									<field name="perspective" widget="html"/>
+								<page string="Produits/Services/Process" attrs="{'invisible': [('category', '!=' ,'innoboost')]}">
+									<field name="produits_services_process" widget="html"/>
+								</page>
+								<page string="Analyse Macro-environnementale" attrs="{'invisible': [('category', '!=' ,'innoboost')]}">
+									<field name="analyse_macro" widget="html"/>
+								</page>
+								<page string="Analyse du marché" attrs="{'invisible': [('category', '!=' ,'innoboost')]}">
+									<field name="analyse_marche" widget="html"/>
+								</page>
+								<page string="Cible" attrs="{'invisible': [('category', '!=' ,'innoboost')]}">
+									<field name="cible" widget="html"/>
+								</page>
+								<page string="Analyse Compétitive" attrs="{'invisible': [('category', '!=' ,'innoboost')]}">
+									<field name="analyse_competitive" widget="html"/>
+								</page>
+								<page string="Proposition de valeur" attrs="{'invisible': [('category', '!=' ,'innoboost')]}">
+									<field name="proposition_valeur" widget="html"/>
+								</page>
+								<page string="Investissement et Retour" attrs="{'invisible': [('category', '!=' ,'innoboost')]}">
+									<field name="invest_retour" widget="html"/>
 								</page>
 							</notebook>
 							<group colspan="2">
