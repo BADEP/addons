@@ -337,9 +337,16 @@ class WebsiteProjectSubmission(http.Controller):
                         env['project.submission.task'].create(value)
                 #Stage 6: Project budget informations
                 elif current_stage == 7:
-                    for line in submission.budget_lines:
+                    for line in submission.costs:
                         vals = {
-                            'montant_propre': post.get(str(line.id)+'montant_propre') and float(post.get(str(line.id)+'montant_propre')),
+                            'montant': post.get(str(line.id)+'montant_cout') and float(post.get(str(line.id) + 'montant_cout'))
+                        }
+                        line.write(vals)
+                    for line in submission.budget_lines:
+                        montant_propre = sum(submission.costs.filtered(lambda c: c.type.id == line.type.id).mapped('montant'))
+                        vals = {
+                            'montant_propre': montant_propre,
+                            #'montant_propre': post.get(str(line.id)+'montant_propre') and float(post.get(str(line.id)+'montant_propre')),
                             'montant_subventionne': post.get(str(line.id)+'montant_subventionne') and float(post.get(str(line.id)+'montant_subventionne'))
                         }
                         line.write(vals)
@@ -349,11 +356,6 @@ class WebsiteProjectSubmission(http.Controller):
                             'number': post.get(str(line.id) + 'number') and float(post.get(str(line.id) + 'number')),
                             'montant_propre': post.get(str(line.id)+'montant_propre_personnel') and float(post.get(str(line.id) + 'montant_propre_personnel')),
                             'montant_demande': post.get(str(line.id)+'montant_demande_personnel') and float(post.get(str(line.id) + 'montant_demande_personnel'))
-                        }
-                        line.write(vals)
-                    for line in submission.costs:
-                        vals = {
-                            'montant': post.get(str(line.id)+'montant_cout') and float(post.get(str(line.id) + 'montant_cout'))
                         }
                         line.write(vals)
                     

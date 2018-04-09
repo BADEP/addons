@@ -317,6 +317,7 @@ class ProjectSubmissionCost(models.Model):
     def _get_possible_partners_values(self):
         self.all_partners = self.submission.partners.filtered(lambda p: p.category == 'industriel')
 
+    budgetline = fields.Many2one('project.submission.budgetline')
     submission = fields.Many2one('project.submission')
     partner = fields.Many2one('res.partner', required=True, string='Partenaire', domain="[('id', 'in', all_partners[0][2])]", ondelete='cascade')
     type = fields.Many2one('project.budgetline.type', string='Rubrique')
@@ -432,7 +433,8 @@ class ProjectSubmissionBudgetLine(models.Model):
     budget = fields.Float(compute='_get_amount', store=True, digital_precision=dp.get_precision('Account'))
     percent_propre = fields.Float(compute='_get_amount', digital_precision=2, store=True, string='Pourcentage propre')
     type = fields.Many2one('project.budgetline.type', required=True)
-    
+    costs = fields.One2many('project.submission.cost', 'budgetline')
+
     _sql_constraints = [
         ('submission_type_unique',
          'unique(submission, type)',
