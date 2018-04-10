@@ -87,38 +87,39 @@ class CrmLead(models.Model):
             forms = self.env['crm.facebook.form'].search([('page_id', '=', page.id)])
             for form in forms:
                 r = requests.get("https://graph.facebook.com/v2.12/" + form.facebook_form_id + "/leads", params = {'access_token': form.access_token}).json()
-                for lead in r['data']:
-                    if not self.search([('facebook_lead_id', '=', lead.get('id')), '|', ('active', '=', True), ('active', '=', False)]):
-                        vals = {}
-                        notes = []
-                        for field_data in lead['field_data']:
-                            if field_data['name'] in form.mappings.filtered(lambda m: m.odoo_field.id != False).mapped('facebook_field'):
-                                odoo_field = form.mappings.filtered(lambda m: m.facebook_field == field_data['name']).odoo_field
-                                if odoo_field.ttype == 'many2one':
-                                    related_value = self.env[odoo_field.relation].search([('display_name', '=', field_data['values'][0])])
-                                    vals.update({odoo_field.name: related_value and related_value.id})
-                                elif odoo_field.ttype in ('float', 'monetary'):
-                                    vals.update({odoo_field.name: float(field_data['values'][0])})
-                                elif odoo_field.ttype == 'integer':
-                                    vals.update({odoo_field.name: int(field_data['values'][0])})
-                                elif odoo_field.ttype in ('date', 'datetime'):
-                                    vals.update({odoo_field.name: field_data['values'][0].split('+')[0].replace('T', ' ')})
-                                elif odoo_field.ttype == 'selection':
-                                    vals.update({odoo_field.name: field_data['values'][0]})
+                if r.get('data'):
+                    for lead in r['data']:
+                        if not self.search([('facebook_lead_id', '=', lead.get('id')), '|', ('active', '=', True), ('active', '=', False)]):
+                            vals = {}
+                            notes = []
+                            for field_data in lead['field_data']:
+                                if field_data['name'] in form.mappings.filtered(lambda m: m.odoo_field.id != False).mapped('facebook_field'):
+                                    odoo_field = form.mappings.filtered(lambda m: m.facebook_field == field_data['name']).odoo_field
+                                    if odoo_field.ttype == 'many2one':
+                                        related_value = self.env[odoo_field.relation].search([('display_name', '=', field_data['values'][0])])
+                                        vals.update({odoo_field.name: related_value and related_value.id})
+                                    elif odoo_field.ttype in ('float', 'monetary'):
+                                        vals.update({odoo_field.name: float(field_data['values'][0])})
+                                    elif odoo_field.ttype == 'integer':
+                                        vals.update({odoo_field.name: int(field_data['values'][0])})
+                                    elif odoo_field.ttype in ('date', 'datetime'):
+                                        vals.update({odoo_field.name: field_data['values'][0].split('+')[0].replace('T', ' ')})
+                                    elif odoo_field.ttype == 'selection':
+                                        vals.update({odoo_field.name: field_data['values'][0]})
+                                    else:
+                                        vals.update({odoo_field.name: ", ".join(field_data['values'])})
                                 else:
-                                    vals.update({odoo_field.name: ", ".join(field_data['values'])})
-                            else:
-                                notes.append(field_data['name'] + ": " + ", ".join(field_data['values']))
-                        if not vals.get('name'):
-                            vals.update({'name': form.name + " - " + lead['id']})
-                        vals.update({
-                            'facebook_lead_id': lead['id'],
-                            'description': "\n".join(notes),
-                            'team_id': form.team_id and form.team_id.id,
-                            'campaign_id': form.campaign_id and form.campaign_id.id,
-                            'source_id': form.source_id and form.source_id.id,
-                            'medium_id': form.medium_id and form.medium_id.id,
-                            'facebook_form_id': form.id,
-                            'date_open': lead['created_time'].split('+')[0].replace('T', ' ')
-                        })
-                        lead = self.create(vals)
+                                    notes.append(field_data['name'] + ": " + ", ".join(field_data['values']))
+                            if not vals.get('name'):
+                                vals.update({'name': form.name + " - " + lead['id']})
+                            vals.update({
+                                'facebook_lead_id': lead['id'],
+                                'description': "\n".join(notes),
+                                'team_id': form.team_id and form.team_id.id,
+                                'campaign_id': form.campaign_id and form.campaign_id.id,
+                                'source_id': form.source_id and form.source_id.id,
+                                'medium_id': form.medium_id and form.medium_id.id,
+                                'facebook_form_id': form.id,
+                                'date_open': lead['created_time'].split('+')[0].replace('T', ' ')
+                            })
+                            lead = self.create(vals)
