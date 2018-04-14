@@ -33,9 +33,7 @@
 							<t t-foreach="submissions" t-as="submission">
 								<tr>
 									<td>
-										<a t-att-href="'/offers/apply/'+str(submission.offer.id)+'/submission/'+str(submission.id)">
-											<t t-esc="submission.name"/>
-										</a>
+										<t t-esc="submission.name"/>
 									</td>
 									<td>
 										<span t-field="submission.acronyme"/>
@@ -47,6 +45,7 @@
 										<span t-field="submission.state"/>
 									</td>
 									<td>
+										<t t-if="submission.state == 'draft' and submission.offer.state == 'open'">
 										<a t-att-href="'/offers/apply/'+str(submission.offer.id)+'/submission/'+str(submission.id)">
 											<i class="fa fa-pencil"/>
 										</a>
@@ -57,6 +56,7 @@
 										<button t-if="submission.state == 'draft'" class="btn btn-danger" data-toggle="tooltip" title="Supprimer" onclick="return confirm('Toute suppression sera définitive. Voulez-vous vraiment supprimer votre soumission?');return false;" type="submit" name="unlink-submission" t-att-value="submission.id">
 											<i class="fa fa-trash"/>
 										</button></form>
+										</t>
 									</td>
 								</tr>
 							</t>
@@ -317,11 +317,11 @@
 						<h1 class="text-center" t-field="offer.name"/>
 						<h5 class="text-center text-muted">
 							<i class="fa fa-clock-o"/>
-							<span t-field="offer.date_open"/>
+							<span t-field="offer.date_open"/><t t-if="offer.date_closed"> - <span t-field="offer.date_closed"/></t>
 						</h5>
 					</div>
 					<div t-field="offer.website_description"/>
-					<div class="oe_structure">
+					<div class="oe_structure" t-if="offer.state == 'open'">
 						<section data-snippet-id="cta" class="mt16 mb16">
 							<div class="container">
 								<div class="row">
@@ -338,7 +338,7 @@
 		<template id="apply">
 			<t t-call="website.layout">
 				<t t-set="additional_title" t-value="'Formulaire de soumission: ' + submission.offer.name"/>
-				<div id="wrap">
+				<div id="wrap" t-if="submission.offer.state == 'open'">
 					<div class="container mt4">
 						<div class="col-md-9 text-center bg-warning">
 							<t t-if="len((submission.candidate.submissions &amp; submission.offer.submissions) - submission) != 0">
@@ -475,7 +475,7 @@
 					</div>
 				</div>
 				<div class="form-group" t-if="submission.offer.category=='innoproject'">
-					<label class="col-md-3 col-sm-4 control-label" for="n_related_publications">Nombre de publications internationales indexées en relation avec les thématiques proposées</label>
+    				<label class="col-md-3 col-sm-4 control-label" for="n_related_publications">Nombre de publications internationales indexées existantes en relation avec les thématiques proposées</label>
 					<div class="col-md-7 col-sm-8">
 						<input type="number" min="0" class="form-control" t-att-value="submission.n_related_publications" name="n_related_publications"/>
 					</div>
@@ -602,8 +602,8 @@
 				<h5 class="text-center">Au moins un seul partenaire industriel avec un minimum de 12 employés</h5>
 			</t>
 			<h5 class="text-center hidden-print" t-if="not new and not partner">Vous pouvez ajouter autant de partenaires que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
-				<t t-if="current_stage==3"><t t-set="partners" t-value="submission.partners.filtered(lambda p: p.category == 'scientifique')"/></t>
-				<t t-if="current_stage==4"><t t-set="partners" t-value="submission.partners.filtered(lambda p: p.category == 'industriel')"/></t>
+				<t t-if="current_stage==3"><t t-set="partners" t-value="submission.sudo().partners.filtered(lambda p: p.category == 'scientifique')"/></t>
+				<t t-if="current_stage==4"><t t-set="partners" t-value="submission.sudo().partners.filtered(lambda p: p.category == 'industriel')"/></t>
 				<t t-if="current_stage==3">
 					<t t-set="category" t-value="scientifique"/></t>
 				<t t-if="current_stage==4">
@@ -1175,6 +1175,7 @@
 			<h4 class="text-center text-primary">Montage financier</h4>
 				<div>
 					<h5 class="text-center text-primary">Répartition financière du projet</h5>
+					<h6 class="text-center text-muted">Le financement propre par les partenaires industriels est calculé automatiquement à partir du 4<sup>ème</sup> tableau consacré au détail du coût du financement propre par partenaire industriel</h6>
 					<table t-if="submission.budget_lines" class="table table-striped table-bordered table-hover">
 						<thead>
 							<tr>
@@ -1305,7 +1306,7 @@ Total financement demandé = Durée totale ( en mois) * Financement demandé</h6
 							<tr>
 								<th>Titre</th>
 								<th class="text-right">Effectif</th>
-          <th class="text-right">Durée totale de l'effectif (en mois)</th>
+          						<th class="text-right">Durée totale de l'effectif (en mois)</th>
 								<th class="text-right">Financement propre (MAD/Mois)</th>
 								<th class="text-right">Financement demandé (MAD/Mois)</th>
 								<th class="text-right">Total</th>

@@ -20,21 +20,22 @@ AVAILABLE_PRIORITIES = [
 ]
 
 SUBMISS_ETAT= [
-    ('draft', 'En cours de rédaction'),
+    ('draft', u'En cours de rédaction'),
     ('submitted', 'Soumis'),
-    ('pending', 'Présélection IRESEN'),
-    ('preselectedcs', 'Préselection CS'),
-    ('preselectedcss', 'Préselection CSS'),
-    ('accepted', 'Aprouvé'),
-    ('rejected', 'Refusé')
+    ('pending', u'Présélection IRESEN'),
+    ('preselectedcs', u'Préselection CS'),
+    ('preselectedcss', u'Préselection CSS'),
+    ('accepted', u'Aprouvé'),
+    ('rejected', u'Refusé'),
+    ('archived', u'Archivé')
 ]
 
 REQSOUMISS_ETAT =[
     ('draft', 'Brouillon'),
     ('submitted', 'En cours'),
-    ('accepted', 'Aprouvé'),
-    ('rejected', 'Refusé'),
-    ('cancel', 'Annulé')
+    ('accepted', u'Aprouvé'),
+    ('rejected', u'Refusé'),
+    ('cancel', u'Annulé')
 ]
 
 class ProjectOffer(models.Model):
@@ -57,19 +58,19 @@ class ProjectOffer(models.Model):
     host =  fields.Many2one('res.partner', 'Institut hôte',default=_get_default_host)
     submissions = fields.One2many('project.submission', 'offer', string='Soumissions')
     type = fields.Many2one('project.offer.type')
-    survey =  fields.Many2one('survey.survey', 'Formulaire d\'inscription')
+    survey =  fields.Many2one('survey.survey', u'Formulaire d\'évaluation')
     color = fields.Integer('Couleur', default=0)
     state =  fields.Selection([('draft', 'Brouillon'), ('open', 'En cours'),
-                              ('done', 'Terminé'), ('closed', 'Fermé')],
+                              ('closed', u'Fermé'), ('done', u'Terminé')],
                               string='Status', readonly=True, required=True,
                               track_visibility='always', copy=False, default='draft')
     submissions_count =  fields.Integer(compute='_count_all', string='Soumissions')
-    accepted_count =  fields.Integer(compute='_count_all', string='Soumissions acceptées')
+    accepted_count =  fields.Integer(compute='_count_all', string=u'Soumissions acceptées')
     manager =  fields.Many2one('res.users', 'Responsable', track_visibility='always', default=_get_default_manager)
     date_open = fields.Datetime(string='Date de publication')
     date_closed = fields.Datetime(string='Date de clôture')
-    min_time = fields.Integer(string='Durée minimale (en semestres)')
-    max_time = fields.Integer(string='Durée maximale (en semestres)')
+    min_time = fields.Integer(string=u'Durée minimale (en semestres)')
+    max_time = fields.Integer(string=u'Durée maximale (en semestres)')
     budget_total = fields.Float('Budget', digits_compute=dp.get_precision('Account'))
     task_types = fields.Many2many('project.submission.task.type')
 
@@ -109,6 +110,7 @@ class ProjectOffer(models.Model):
         
     @api.one
     def action_close(self):
+        self.submissions.filtered(lambda s: s.state == 'draft').write({'state': 'archived'})
         self.state = 'closed'
         self.date_closed = fields.Datetime.now()
 
@@ -142,26 +144,26 @@ class ProjectSubmission(models.Model):
     def _get_possible_partners_values(self):
         self.all_partners = self.partners + self.candidate.partner_id
 
-    name = fields.Char('Intitulé du projet', required=True)
+    name = fields.Char(u'Intitulé du projet', required=True)
     acronyme = fields.Char('Acronyme')
     offer = fields.Many2one('project.offer', string='Offre de projet', required=True)
     category = fields.Selection([('innoproject', 'Inno-PROJECT'), ('innoboost', 'Inno-BOOST')], related='offer.category', store=True)
     candidate = fields.Many2one('res.users', string='Soumissionnaire', required=True)
     partner = fields.Many2one('res.partner', related='candidate.partner_id', string='Fiche partenaire', required=True)
     inventor = fields.Many2one('res.partner', string='Inventeur')
-    field_ids = fields.Many2many('project.offer.field', string='Thématiques')
+    field_ids = fields.Many2many('project.offer.field', string=u'Thématiques')
     partners = fields.Many2many('res.partner', string='Partenaires')
     description = fields.Html('Description')
-    etat_art = fields.Html('État de l’art')
+    etat_art = fields.Html(u'État de l’art')
     objective = fields.Html('Objectif global du projet')
-    objectives = fields.Html('Objectifs spécifiques')
-    fallout = fields.Html('Retombées attendues du projet')
+    objectives = fields.Html(u'Objectifs spécifiques')
+    fallout = fields.Html(u'Retombées attendues du projet')
     perspective = fields.Html('Perspectives d’application')
     produits_services_process = fields.Html('Produit/ Service / Process')
     analyse_macro = fields.Html('Analyse macro-environnementale')
-    analyse_marche = fields.Html('Analyse du marché')
+    analyse_marche = fields.Html(u'Analyse du marché')
     cible = fields.Html('Cible')
-    analyse_competitive = fields.Html('Analyse compétitive')
+    analyse_competitive = fields.Html(u'Analyse compétitive')
     proposition_valeur = fields.Html('Proposition de valeur pour le client')
     business_model = fields.Html('Business model initial')
     invest_retour = fields.Html('Investissement et retour sur investissement')
@@ -169,7 +171,7 @@ class ProjectSubmission(models.Model):
     trl = fields.Integer()
     
     n_related_publications = fields.Integer(string='Nombre de publications')
-    n_ing_doc = fields.Integer(string='Nombre de doctorants/postdocs/ingénieurs')
+    n_ing_doc = fields.Integer(string=u'Nombre de doctorants/postdocs/ingénieurs')
     n_master_pfe = fields.Integer(string='Nombre de Masters et PFE')
     manager = fields.Many2one('res.users', 'Responsable')
     date_submitted = fields.Datetime('Date de soumission', readonly=True)
@@ -178,41 +180,30 @@ class ProjectSubmission(models.Model):
     title_action = fields.Char('Prochaine action', size=64)
     partner_mobile = fields.Char(related='candidate.mobile', store=False)
     organisme = fields.Many2one('res.partner', related='candidate.parent_id', string='Organisme', store=True)
+    organisme_name = fields.Char('res.partner', related='organisme.name', store=True)
     project = fields.Many2one('project.project', string='Projet')
     state = fields.Selection(SUBMISS_ETAT, 'Etat', track_visibility='always', default='draft')
-    priority = fields.Selection(AVAILABLE_PRIORITIES, 'Appréciation')
+    priority = fields.Selection(AVAILABLE_PRIORITIES, u'Appréciation')
     color = fields.Integer('Couleur', default=0)
     documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents sources')
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
-    all_documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string='Documents associés')
+    all_documents = fields.One2many('ir.attachment', compute='_get_attached_docs', string=u'Documents associés')
     all_documents_count =  fields.Integer(compute='_count_all', string='Nombre de documents')
     survey = fields.Many2one('survey.survey', related='offer.survey')
-    response = fields.Many2one('survey.user_input', string="Réponse au formulaire")
+    response = fields.Many2one('survey.user_input', string=u"Réponse au formulaire")
     budget = fields.Float(compute='_get_amounts', store=False, digital_precision=dp.get_precision('Account'))
-    montant_subventionne = fields.Float(compute='_get_amounts', string="Montant subventionné", store=False, digital_precision=dp.get_precision('Account'))
+    montant_subventionne = fields.Float(compute='_get_amounts', string=u"Montant subventionné", store=False, digital_precision=dp.get_precision('Account'))
     montant_propre = fields.Float(compute='_get_amounts', string="Financement propre", store=False, digital_precision=dp.get_precision('Account'))
     percent_propre = fields.Float(compute='_get_amounts', digital_precision=2, string="Pourcentage propre (%)", store=False)
     budget_lines = fields.One2many('project.submission.budgetline', 'submission', string="Lignes de budget")
     personnels = fields.One2many('project.submission.personnel', 'submission', string="Personnels")
-    duration = fields.Integer('Durée du projet (en semestres)')
-    tasks = fields.One2many('project.submission.task', 'submission', string="Taches et livrables")
-    keywords = fields.Char(string='Mots-clés')
-    costs = fields.One2many('project.submission.cost', 'submission', string='Détail du coût du financement propre')
+    duration = fields.Integer(u'Durée du projet (en semestres)')
+    tasks = fields.One2many('project.submission.task', 'submission', string=u"Tâches et livrables")
+    keywords = fields.Char(string=u'Mots-clés')
+    costs = fields.One2many('project.submission.cost', 'submission', string=u'Détail du coût du financement propre')
     all_partners = fields.Many2many(
         comodel_name='res.partner',
-        compute='_get_possible_partners_values', readonly=True)
-    
-    """@api.one
-    @api.depends('description')
-    def _get_description_score(self):
-        cloud = CopyleaksCloud(Product.Education, 'k.hazam@badep.ma', '9DE022AA-D59C-4785-8198-25B3909CD5BC')# You can change the product.
-        options = ProcessOptions()
-        options.setSandboxMode(True)  # Scan will not consume any credits and will return dummy results.
-        options.setHttpCallback("http://yoursite.here/callback") # Recieve a completion callback with the results. For testing purposes we recommend using http://requestb.in
-        process = cloud.createByText(self.description, options)
-        [iscompleted, percents] = process.isCompleted()
-        if iscompleted:
-            self.description_score = process.getResults()"""
+        compute='_get_possible_partners_values', readonly=True, string='Tous les partenaires')
     
     @api.one
     @api.constrains('duration')
@@ -231,6 +222,10 @@ class ProjectSubmission(models.Model):
         self.montant_propre = sum(self.budget_lines.mapped('montant_propre'))
         self.percent_propre = (self.montant_propre / self.budget)*100 if self.budget != 0 else 0
   
+    @api.multi
+    def submit(self):
+        self.write({'state': 'submitted', 'date_submitted': fields.Datetime.now()})
+
     @api.one
     def _get_attached_docs(self):
         self.documents = self.env['ir.attachment'].search([('res_model', '=', 'project.submission'), ('res_id', '=', self.id)]).ids
@@ -295,7 +290,7 @@ class ProjectSubmission(models.Model):
         # create a response and link it to this applicant
         if self.survey:
             if not self.response:
-                response = self.env['survey.user_input'].create({'survey_id': self.survey.id, 'partner_id': self.candidate.partner_id.id})
+                response = self.env['survey.user_input'].create({'survey_id': self.survey.id, 'partner_id': self.manager.partner_id.id})
                 self.write({'response': response.id})
             else:
                 response = self.response
@@ -332,8 +327,8 @@ class ResPartner(models.Model):
     submissions = fields.Many2many('project.submission')
     category = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')])
     documents_count =  fields.Integer(compute='_count_all', string='Nombre de soumissions')
-    entite_recherche = fields.Char('Entité de recherche')
-    partner_references = fields.Text('Références du partenaire')
+    entite_recherche = fields.Char(u'Entité de recherche')
+    partner_references = fields.Text(u'Références du partenaire')
     effectif = fields.Integer('Effectif global')
     effectif_chercheur = fields.Integer('Effectif de chercheurs')
     effectif_doc = fields.Integer('Effectif de doctorants')
@@ -383,7 +378,7 @@ class ProjectSubmissionTask(models.Model):
         comodel_name='res.partner',
         compute='_get_possible_partners_values', readonly=True)
     partner = fields.Many2one('res.partner', string='Responsable', domain="[('id', 'in', all_partners[0][2])]", ondelete='cascade')
-    partners = fields.Many2many('res.partner', string='Partenaires impliquées', domain="[('id', 'in', all_partners[0][2])]")
+    partners = fields.Many2many('res.partner', string=u'Partenaires impliquées', domain="[('id', 'in', all_partners[0][2])]")
     objectives = fields.Text(string='Objectifs')
     description = fields.Text(string='Description des tâches et rôles des partenaires')
     lots = fields.One2many('project.submission.lot', 'task', string='Livrables')
@@ -398,7 +393,7 @@ class ProjectSubmissionLot(models.Model):
     
     task = fields.Many2one('project.submission.task')
     name = fields.Char('Nom', required=True)
-    month_due = fields.Integer(string='Mois d\'échéance')
+    month_due = fields.Integer(string=u'Mois d\'échéance')
     type = fields.Many2one('project.lot.type', required=True)
     
 class ProjectLotType(models.Model):
@@ -414,9 +409,9 @@ class ProjectSubmissionPersonnel(models.Model):
     type = fields.Selection([('scientifique', 'Scientifique'), ('industriel', 'Industriel')], required=True)
     function = fields.Many2one('project.partner.function', string='Titre')
     number = fields.Integer(string='Effectif', default=0)
-    time = fields.Integer(string='Durée (mois)', required=True, default=0)
+    time = fields.Integer(string=u'Durée (mois)', required=True, default=0)
     montant_propre = fields.Float(digital_precision=dp.get_precision('Account'), required=True, string='Financement propre / mois', default=0)
-    montant_demande = fields.Float(digital_precision=dp.get_precision('Account'), required=True, string='Financement demandé / mois', default=0)
+    montant_demande = fields.Float(digital_precision=dp.get_precision('Account'), required=True, string=u'Financement demandé / mois', default=0)
     total = fields.Float(digital_precision=dp.get_precision('Account'), compute='_get_total', store=True)
     
     @api.one

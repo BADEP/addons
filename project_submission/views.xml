@@ -15,7 +15,7 @@
 			<field name="type">ir.actions.act_window</field>
 			<field name="res_model">project.submission</field>
 			<field name="view_type">form</field>
-			<field name="view_mode">kanban,tree,form</field>
+			<field name="view_mode">kanban,tree,form,graph</field>
 		</record>
 		<record id="action_project_candidate" model="ir.actions.act_window">
 			<field name="name">Candidats</field>
@@ -104,13 +104,13 @@
 				<search string="Rechercher les soumissions">
 					<field name="name"/>
 					<field name="candidate"/>
-					<filter string="My" domain="[('manager', '=', uid)]"/>
+					<filter string="Mes soumissions à évaluer" domain="[('manager', '=', uid)]"/>
 					<filter string="Non assigné" domain="[('manager', '=', False)]"/>
 					<separator/>
-					<filter string="Next Actions" context="{'invisible_next_action':False, 'invisible_next_date':False}"
+					<filter string="Prochaine action" context="{'invisible_next_action':False, 'invisible_next_date':False}"
 						domain="[('date_action','&lt;&gt;',False)]" help="Filter and view on next actions and date"/>
 					<separator/>
-					<filter string="New Mail" name="message_unread" domain="[('message_unread','=',True)]"/>
+					<filter string="Nouveau Message" name="message_unread" domain="[('message_unread','=',True)]"/>
 					<field name="offer"/>
 					<field name="field_ids"/>
 					<field name="manager"/>
@@ -221,11 +221,21 @@
 			</field>
 		</record>
 		
+		<record model="ir.ui.view" id="view_project_submission_graph">
+			<field name="name">Project Submission Graph</field>
+			<field name="model">project.submission</field>
+			<field name="arch" type="xml">
+				<graph string="Soumissions" type="pivot">
+					<field name="candidate" type="row"/>
+					<field name="offer" type="col"/>
+                </graph>
+			</field>
+		</record>
 		<record model="ir.ui.view" id="view_project_submission_kanban">
 			<field name="name">Project Submission kanban</field>
 			<field name="model">project.submission</field>
 			<field name="arch" type="xml">
-				<kanban default_group_by="state">
+				<kanban default_group_by="state" edit="false" quick_create="false">
 					<field name="state"/>
 					<field name="color"/>
 					<field name="manager"/>
@@ -444,6 +454,7 @@
 								<field name="n_related_publications"/>
 								<field name="n_ing_doc"/>
 								<field name="n_master_pfe"/>
+								<field name="trl"/>
 								<field name="survey" invisible="1"/>
 								<field name="response"/>
 							</group>
@@ -542,7 +553,7 @@
 					<header>
 						<button name="action_open" string="Lancer l'offre" states="draft" type="object" class="oe_highlight" groups="base.group_user"/>
 						<button name="action_close" string="Clôturer l'offre" states="open,done" type="object" class="oe_highlight" groups="base.group_user"/>
-						<field name="state" widget="statusbar" statusbar_visible="draft,open,done,closed"/>
+						<field name="state" widget="statusbar"/>
 					</header>
 					<sheet>
 						<div class="oe_title">
@@ -653,7 +664,7 @@
 		<!-- REPORTS -->
 
     		<template id="report_submission_document">
-		    <t t-call="report.external_layout">
+		    <!-- <t t-call="report.external_layout">  -->
 		        <div class="page">
 			        <script type="text/javascript">
 				        $('textarea').each(function() {
@@ -728,14 +739,11 @@
                			    <p style="page-break-before:always;"> </p>
 							<t t-if="current_stage==7">
 								<t t-call="website_project_submission.apply7"/></t>
-                		    <!-- <p style="page-break-before:always;"> </p>
-							<t t-if="current_stage==8">
-								<t t-call="website_project_submission.apply8"/></t>-->
 		            	</t>
 		            </div>
 		            <div class="oe_structure"/>
 		        </div>
-		    </t>
+		    <!-- </t>-->
 		</template>
 		
 		<template id="report_submission">

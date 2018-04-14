@@ -12,6 +12,7 @@ from openerp.exceptions import ValidationError
 from openerp.addons.auth_signup.controllers.main import AuthSignupHome
 from openerp.addons.web.controllers.main import ensure_db
 from openerp.addons.website_portal.controllers.main import WebsiteAccount
+from datetime import datetime
 
 class PortalSubmissionWebsiteAccount(WebsiteAccount):
     
@@ -35,13 +36,14 @@ class PortalSubmissionWebsiteAccount(WebsiteAccount):
     @http.route(['/my/home/delete/<model("project.submission"):submission>',
                  ], type='http', auth="public", website=True)
     def unlink_submission(self, submission=None, **post):
-        submission and submission.unlink()
+        if submission and submission.state == 'draft':
+            submission.unlink()
         return request.redirect("/my/home")
 
     
     @http.route(['/my/submissions/<int:submission_id>'], type='http', auth="user", website=True)
     def submissions_followup(self, submission_id=None):
-        submission = request.env.user.submissions.filtered(lambda s: s.id == submission_id)
+        submission = request.env.user.submissions.filtered(lambda s: s.id == submission_id and s.state == 'draft')
         if not submission:
             return request.website.render("website.404")
         return request.website.render("website_portal_sale.submissions_followup", {
@@ -111,6 +113,8 @@ class WebsiteProjectSubmission(http.Controller):
                  '/offers/apply/<model("project.offer"):offer>/submission/<model("project.submission"):submission>/stage/<int:next_stage>'
                  ], type='http', auth="public", website=True)
     def offers_apply(self, offer=None, next_stage=None, submission=None, is_new=None, **post):
+        if offer.state != 'open':
+            return request.redirect("/my/home")
         
         #If no user connected, force connection
         #TODO: Redirect to submission page if offer variable is in session
@@ -373,7 +377,7 @@ class WebsiteProjectSubmission(http.Controller):
                         }
                         sudo_env['ir.attachment'].create(attachment_value)
                     if post.get('submit') == 'confirm':
-                        submission.state = 'submitted'
+                        submission.submit()
         except ValidationError, e:
             next_stage = current_stage
             if post.get('partner_id'):
