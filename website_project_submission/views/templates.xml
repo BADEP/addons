@@ -588,7 +588,7 @@
 								</td>
 							</tr>
 						</table>
-						<input multiple="1" accept=".pdf,.doc,.docx" class="input-file form-control hidden-print" id="fileInput" type="file" name="ufile"/>
+						<input multiple="1" accept=".pdf,.doc,.docx" class="input-file hidden-print form-control" id="fileInput" type="file" name="ufile"/>
 					</div>
 				</div>
 		</template>
@@ -599,7 +599,7 @@
 			</t>
 			<t t-if="current_stage==4">
 				<h4 class="text-center text-primary">Partenaires industriels</h4>
-				<h5 class="text-center">Au moins un seul partenaire industriel avec un minimum de 12 employés</h5>
+				<h5 class="text-center hidden-print">Au moins un seul partenaire industriel avec un minimum de 12 employés</h5>
 			</t>
 			<h5 class="text-center hidden-print" t-if="not new and not partner">Vous pouvez ajouter autant de partenaires que vous voulez en cliquant sur <i class="fa fa-plus text-primary"/></h5>
 				<t t-if="current_stage==3"><t t-set="partners" t-value="submission.sudo().partners.filtered(lambda p: p.category == 'scientifique')"/></t>
@@ -608,7 +608,7 @@
 					<t t-set="category" t-value="scientifique"/></t>
 				<t t-if="current_stage==4">
 					<t t-set="category" t-value="industriel"/></t>
-				<table class="table table-hover">
+				<table class="table table-hover hidden-print">
 					<thead>
 						<tr>
 							<th>Nom</th>
@@ -651,220 +651,13 @@
 							<span><i class="fa fa-plus"/> Ajouter un partenaire</span>
 						</button>
 					</div></t>
-			<t t-if="new or partner">
-					<t t-if="partner">
-						<input type="hidden" name="partner_id" t-att-value="'%s' % partner.id"/>
-					</t>
-					<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
-					<input type="hidden" name="to-save" value="1"/>
-					<!--<div class="form-group"><label class="col-md-3 col-sm-4 control-label" for="ufile">logo</label><div class="col-md-7 col-sm-8"><div t-if="partner"><img class="media-object pull-left" t-att-src="default.get('image')" style="width: 50px; margin-right: 10px;"/><button class="btn btn-danger" type="submit" name="del-picture" t-att-value="partner.id"><i class="fa fa-trash"/></button></div><input accept="image/*" class="input-file form-control" id="fileInput" type="file" name="ufile"/><span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span></div></div>-->
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="name">Etablissement</label>
-						<div class="col-md-7 col-sm-8">
-							<input required="1" type="text" t-att-value="partner and partner.name" class="form-control" name="name" />
-						</div>
-					</div>
-					<div t-if="current_stage==3" t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="entite_recherche">Entité de recherche</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="text" required="1" t-att-value="partner and partner.entite_recherche" class="form-control" name="entite_recherche" />
-						</div>
-					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="date">Date de création
-								<br/>
-								<span class="text-muted">(Format AAAA-MM-JJ)</span>
-</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="date" required="1" t-att-value="partner and partner.date" class="form-control date-control" name="date" />
-						</div>
-					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="capital">Capital</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="number" min="0" t-att-value="partner and partner.capital" class="form-control" name="capital"/>
-						</div>
-					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaires<br/><span class="text-muted">Année antérieure</span></label>
-						<div class="col-md-7 col-sm-8">
-							<input type="number" min="0" t-att-value="partner and partner.ca" class="form-control" name="ca"/>
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="effectif">
-							<t t-if="current_stage==3"><span>Effectif</span></t>
-							<t t-if="current_stage==4"><span>Nombre d'employés</span>
-							</t>
-						</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="number" required="1" min="0" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
-						</div>
-					</div>
-					<div t-if="current_stage==3" t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="effectif_chercheur">Effectif chercheurs</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="number" required="1" min="0" t-att-value="partner and partner.effectif_chercheur" class="form-control" name="effectif_chercheur" />
-						</div>
-					</div>
-					<div t-if="current_stage==3" t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="effectif_doc">Effectif doctorants</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="number" required="1" min="0" t-att-value="partner and partner.effectif_doc" class="form-control" name="effectif_doc" />
-						</div>
-					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="title">Forme juridique</label>
-						<div class="col-md-7 col-sm-8">
-							<select id="title" name="title" class="form-control">
-								<!--<option>Sélectionnez une valeur...</option>-->
-								<t t-foreach="submission.env['res.partner.title'].search([('domain', '=', 'partner')])" t-as="t">
-									<option name="title" t-att-value="t.id" t-att-selected="partner and t.id  == partner.title.id">
-										<t t-esc="t.name"/>
-									</option>
-								</t>
-							</select>
-						</div>
-					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="category_id">Domaine d'activité</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="text" required="1" t-att-value="partner and partner.category_id.name" class="form-control" name="category_id" />
-						</div>
-					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="cnss"><span>N° de CNSS</span><br/>
-							<span class="text-muted">(pour les partenaires marocains)</span>
-						</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.cnss" class="form-control" name="cnss"/>
-						</div>
-					</div>
-					<div t-if="current_stage==4" t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="rc">N° de registre de commerce</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.rc" class="form-control" name="rc"/>
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="partner_references">Références du partenaire</label>
-						<div class="col-md-7 col-sm-8">
-							<textarea required="1" t-esc="partner and partner.partner_references" class="form-control" name="partner_references" style="min-height: 120px"/>
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="country">Pays</label>
-						<div class="col-md-7 col-sm-8">
-							<select id="partner_country" name="partner_country" class="form-control">
-								<!--<option>Sélectionnez une valeur...</option>-->
-								<t t-foreach="submission.env['res.country'].search([])" t-as="c">
-									<option name="partner_country" t-att-value="c.id" t-att-selected="partner and c.id  == partner.country_id.id">
-										<t t-esc="c.name"/>
-									</option>
-								</t>
-							</select>
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="city">Ville</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="text" required="1" t-att-value="partner and partner.city" class="form-control" name="city" />
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="zip">Code postal</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="text" required="1" t-att-value="partner and partner.zip" class="form-control" name="zip" />
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="street">Adresse</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="text" required="1" t-att-value="partner and partner.street" class="form-control" name="street" />
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="street2"></label>
-						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.street2" class="form-control" name="street2" />
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="email" required="1" t-att-value="partner and partner.email" class="form-control" name="email" />
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="tel" required="1" t-att-value="partner and partner.phone" class="form-control" name="phone" />
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="fax">Fax</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="tel" t-att-value="partner and partner.fax" class="form-control" name="fax" />
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="website">Site web</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="text" t-att-value="partner and partner.email" class="form-control" name="website" />
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Nom et prénom du représentant</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="text" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].name" class="form-control" name="contact_name" />
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Fonction du représentant</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="text" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].function" class="form-control" name="contact_function" />
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Téléphone du représentant</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="tel" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].phone" class="form-control" name="contact_phone" />
-						</div>
-					</div>
-					<div t-attf-class="form-group">
-						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Email du représentant</label>
-						<div class="col-md-7 col-sm-8">
-							<input type="email" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].email" class="form-control" name="contact_email" />
-						</div>
-					</div>
-				<div class="form-group">
-					<div class="col-md-12 text-center" t-if="current_stage==4">
-						<table class="table table-condensed" t-if="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Engagements')">
-<tr t-foreach="submission.offer.documents.filtered( (lambda d: d.parent_id.name == 'Engagements') if lang=='fr_FR' else (lambda d: d.parent_id.name == 'Engagement-EN' ))" t-as="doc">
-								<td>
-									<a t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">Télécharger <span t-field="doc.name"/></a>
-								</td>
-							</tr>
-						</table>
-					</div>
-					<label class="col-md-3 col-sm-4 control-label" for="ufile"><span>Joindre CV<br/>Joindre publications<br/></span><span t-if="current_stage==4">Joindre lettre d'engagement signée et scannée</span><br/></label>
-					<div class="col-md-7 col-sm-8">
-						<table class="table table-condensed" t-if="documents">
-							<tr t-foreach="documents" t-as="doc">
-								<td>
-									<span t-field="doc.name"/>
-								</td>
-								<td class="text-right">
-									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-doc" t-att-value="doc.id">
-										<i class="fa fa-trash"/>
-									</button>
-								</td>
-							</tr>
-						</table>
-						<input multiple="1" accept=".pdf,.doc,.docx" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
-					</div>
-				</div>
-			</t>
+			<t t-call="website_project_submission.partner-template"/>
+			<div class="print-only">
+				<t t-foreach="partners" t-as="partner">
+					<t t-call="website_project_submission.partner-template"/>
+					<hr/>
+				</t>
+			</div>
 		</template>
 		<!-- Descriptif detaillé -->
 		<template id="apply5">
@@ -1019,7 +812,7 @@
 								</td>
 							</tr>
 						</table>
-						<input multiple="1" accept=".ppt,.pptx,.pps,.ppsx" class="input-file form-control hidden-print" id="fileInput" type="file" name="ufile"/>
+						<input multiple="1" accept=".ppt,.pptx,.pps,.ppsx" class="input-file hidden-print form-control" id="fileInput" type="file" name="ufile"/>
 					</div>
 				</div>
 				<div t-if="submission.offer.category=='innoboost'" class="form-group">
@@ -1040,7 +833,7 @@
 								</td>
 							</tr>
 						</table>
-						<input multiple="1" accept=".ppt,.pptx,.xls,.xlsx,.xlsm" class="input-file form-control" id="fileInput" type="file" name="ufile"/>
+						<input multiple="1" accept=".ppt,.pptx,.xls,.xlsx,.xlsm" class="input-file hidden-print form-control" id="fileInput" type="file" name="ufile"/>
 					</div>
 				</div>
 		</template>
@@ -1052,11 +845,14 @@
 					<thead>
 						<tr>
 							<th>Type</th>
-							<th>Nom</th>
-							<th>Partenaires</th>
+							<th>Designation</th>
+							<th>Objectifs</th>
+							<th>Description</th>
 							<th>Semestre</th>
-							<!--<th>Livrables</th>-->
-							<th>Actions</th>
+							<th>Responsable</th>
+							<th>Partenaires impliqués</th>
+							<th class="hidden-print">Actions</th>
+							
 						</tr>
 						<tbody>
 							<tr t-foreach="submission.tasks" t-as="s_task">
@@ -1067,21 +863,25 @@
 									<span t-field="s_task.name"/>
 								</td>
 								<td>
-									<span t-esc="', '.join(s_task.partners.mapped('name'))"/>
+									<span t-field="s_task.objectives"/>
+								</td>
+								<td>
+									<span t-field="s_task.description"/>
 								</td>
 								<td>
 									<span t-field="s_task.semester"/>
 								</td>
-								<!-- <td>
-									<t t-foreach="s_task.lots" t-as="l">
-										<span t-esc="', '.join(s_task.lots.mapped('name'))"/>
-									</t>
-								</td> -->
 								<td>
-									<button class="btn btn-info hidden-print" data-toggle="tooltip" title="Editer" type="submit" name="edit-task" t-att-value="s_task.id">
+									<span t-field="s_task.partner"/>
+								</td>
+								<td>
+									<span t-esc="', '.join(s_task.partners.mapped('name'))"/>
+								</td>
+								<td class=" hidden-print">
+									<button class="btn btn-info" data-toggle="tooltip" title="Editer" type="submit" name="edit-task" t-att-value="s_task.id">
 										<i class="fa fa-pencil"/>
 									</button>
-									<button class="btn btn-danger hidden-print" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-task" t-att-value="s_task.id">
+									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-task" t-att-value="s_task.id">
 										<i class="fa fa-trash"/>
 									</button>
 								</td>
@@ -1438,7 +1238,7 @@ Total financement demandé = Durée totale ( en mois) * Financement demandé</h6
 						</td>
 					</tr>
 				</table>
-				<input t-if="not submission.documents.filtered(lambda d: d.parent_id.name == 'Conventions')" required="1" accept=".pdf" class="input-file2 form-control" id="fileInput" type="file" name="ufile"/>
+				<input t-if="not submission.documents.filtered(lambda d: d.parent_id.name == 'Conventions')" required="1" accept=".pdf" class="hidden-print input-file2 form-control" id="fileInput" type="file" name="ufile"/>
 			</div>
 			<t t-if="error"><t t-set="has_errors" t-value="any([v for d in [error.get('stage'+str(x)) for x in range(1,9)] for v in d.values()])"/>
 			<div class="col-md-12" t-if="has_errors">
@@ -1513,6 +1313,222 @@ Total financement demandé = Durée totale ( en mois) * Financement demandé</h6
 					<a href="/offers/add" class="js_link2post">New offer Offer</a>
 				</li>
 			</xpath>
+		</template>
+		<template id="partner-template">
+		<t t-if="new or partner">
+					<t t-if="partner">
+						<input type="hidden" name="partner_id" t-att-value="'%s' % partner.id"/>
+					</t>
+					<input type="hidden" name="current_stage" t-att-value="'%s' % current_stage"/>
+					<input type="hidden" name="to-save" value="1"/>
+					<!--<div class="form-group"><label class="col-md-3 col-sm-4 control-label" for="ufile">logo</label><div class="col-md-7 col-sm-8"><div t-if="partner"><img class="media-object pull-left" t-att-src="default.get('image')" style="width: 50px; margin-right: 10px;"/><button class="btn btn-danger" type="submit" name="del-picture" t-att-value="partner.id"><i class="fa fa-trash"/></button></div><input accept="image/*" class="input-file hidden-print form-control" id="fileInput" type="file" name="ufile"/><span t-if="error.get('ufile')">Veuillez renvoyer le fichier.</span></div></div>-->
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="name">Etablissement</label>
+						<div class="col-md-7 col-sm-8">
+							<input required="1" type="text" t-att-value="partner and partner.name" class="form-control" name="name" />
+						</div>
+					</div>
+					<div t-if="current_stage==3" t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="entite_recherche">Entité de recherche</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="text" required="1" t-att-value="partner and partner.entite_recherche" class="form-control" name="entite_recherche" />
+						</div>
+					</div>
+					<div t-if="current_stage==4" t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="date">Date de création
+								<br/>
+								<span class="text-muted">(Format AAAA-MM-JJ)</span>
+</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="date" required="1" t-att-value="partner and partner.date" class="form-control date-control" name="date" />
+						</div>
+					</div>
+					<div t-if="current_stage==4" t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="capital">Capital</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="number" min="0" t-att-value="partner and partner.capital" class="form-control" name="capital"/>
+						</div>
+					</div>
+					<div t-if="current_stage==4" t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="ca">Chiffre d'affaires<br/><span class="text-muted">Année antérieure</span></label>
+						<div class="col-md-7 col-sm-8">
+							<input type="number" min="0" t-att-value="partner and partner.ca" class="form-control" name="ca"/>
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="effectif">
+							<t t-if="current_stage==3"><span>Effectif</span></t>
+							<t t-if="current_stage==4"><span>Nombre d'employés</span>
+							</t>
+						</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="number" required="1" min="0" t-att-value="partner and partner.effectif" class="form-control" name="effectif" />
+						</div>
+					</div>
+					<div t-if="current_stage==3" t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="effectif_chercheur">Effectif chercheurs</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="number" required="1" min="0" t-att-value="partner and partner.effectif_chercheur" class="form-control" name="effectif_chercheur" />
+						</div>
+					</div>
+					<div t-if="current_stage==3" t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="effectif_doc">Effectif doctorants</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="number" required="1" min="0" t-att-value="partner and partner.effectif_doc" class="form-control" name="effectif_doc" />
+						</div>
+					</div>
+					<div t-if="current_stage==4" t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="title">Forme juridique</label>
+						<div class="col-md-7 col-sm-8">
+							<select id="title" name="title" class="form-control">
+								<!--<option>Sélectionnez une valeur...</option>-->
+								<t t-foreach="submission.env['res.partner.title'].search([('domain', '=', 'partner')])" t-as="t">
+									<option name="title" t-att-value="t.id" t-att-selected="partner and t.id  == partner.title.id">
+										<t t-esc="t.name"/>
+									</option>
+								</t>
+							</select>
+						</div>
+					</div>
+					<div t-if="current_stage==4" t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="category_id">Domaine d'activité</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="text" required="1" t-att-value="partner and partner.category_id.name" class="form-control" name="category_id" />
+						</div>
+					</div>
+					<div t-if="current_stage==4" t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="cnss"><span>N° de CNSS</span><br/>
+							<span class="text-muted">(pour les partenaires marocains)</span>
+						</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="text" t-att-value="partner and partner.cnss" class="form-control" name="cnss"/>
+						</div>
+					</div>
+					<div t-if="current_stage==4" t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="rc">N° de registre de commerce</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="text" t-att-value="partner and partner.rc" class="form-control" name="rc"/>
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="partner_references">Références du partenaire</label>
+						<div class="col-md-7 col-sm-8">
+							<textarea required="1" t-esc="partner and partner.partner_references" class="form-control" name="partner_references" style="min-height: 120px"/>
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="country">Pays</label>
+						<div class="col-md-7 col-sm-8">
+							<select id="partner_country" name="partner_country" class="form-control">
+								<!--<option>Sélectionnez une valeur...</option>-->
+								<t t-foreach="submission.env['res.country'].search([])" t-as="c">
+									<option name="partner_country" t-att-value="c.id" t-att-selected="partner and c.id  == partner.country_id.id">
+										<t t-esc="c.name"/>
+									</option>
+								</t>
+							</select>
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="city">Ville</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="text" required="1" t-att-value="partner and partner.city" class="form-control" name="city" />
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="zip">Code postal</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="text" required="1" t-att-value="partner and partner.zip" class="form-control" name="zip" />
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="street">Adresse</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="text" required="1" t-att-value="partner and partner.street" class="form-control" name="street" />
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="street2"></label>
+						<div class="col-md-7 col-sm-8">
+							<input type="text" t-att-value="partner and partner.street2" class="form-control" name="street2" />
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="email">Email</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="email" required="1" t-att-value="partner and partner.email" class="form-control" name="email" />
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="phone">Téléphone</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="tel" required="1" t-att-value="partner and partner.phone" class="form-control" name="phone" />
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="fax">Fax</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="tel" t-att-value="partner and partner.fax" class="form-control" name="fax" />
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="website">Site web</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="text" t-att-value="partner and partner.email" class="form-control" name="website" />
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Nom et prénom du représentant</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="text" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].name" class="form-control" name="contact_name" />
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Fonction du représentant</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="text" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].function" class="form-control" name="contact_function" />
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Téléphone du représentant</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="tel" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].phone" class="form-control" name="contact_phone" />
+						</div>
+					</div>
+					<div t-attf-class="form-group">
+						<label class="col-md-3 col-sm-4 control-label" for="contact_function">Email du représentant</label>
+						<div class="col-md-7 col-sm-8">
+							<input type="email" required="1" t-att-value="partner and partner.child_ids and partner.child_ids[0].email" class="form-control" name="contact_email" />
+						</div>
+					</div>
+				<div class="form-group">
+					<div class="col-md-12 text-center" t-if="current_stage==4">
+						<table class="table table-condensed" t-if="submission.offer.documents.filtered(lambda d: d.parent_id.name == 'Engagements')">
+<tr t-foreach="submission.offer.documents.filtered( (lambda d: d.parent_id.name == 'Engagements') if lang=='fr_FR' else (lambda d: d.parent_id.name == 'Engagement-EN' ))" t-as="doc">
+								<td>
+									<a t-att-href="'/web/binary/saveas?model=ir.attachment&amp;field=datas&amp;filename_field=name&amp;id=%i' % doc.id">Télécharger <span t-field="doc.name"/></a>
+								</td>
+							</tr>
+						</table>
+					</div>
+					<label class="col-md-3 col-sm-4 control-label" for="ufile"><span>Joindre CV<br/>Joindre publications<br/></span><span t-if="current_stage==4">Joindre lettre d'engagement signée et scannée</span><br/></label>
+					<div class="col-md-7 col-sm-8">
+						<table class="table table-condensed" t-if="documents">
+							<tr t-foreach="documents" t-as="doc">
+								<td>
+									<span t-field="doc.name"/>
+								</td>
+								<td class="text-right">
+									<button class="btn btn-danger" data-toggle="tooltip" title="Supprimer" type="submit" name="unlink-doc" t-att-value="doc.id">
+										<i class="fa fa-trash"/>
+									</button>
+								</td>
+							</tr>
+						</table>
+						<input multiple="1" accept=".pdf,.doc,.docx" class="hidden-print input-file form-control" id="fileInput" type="file" name="ufile"/>
+					</div>
+				</div>
+			</t>
 		</template>
 		<template id="form_nav">
 			<div class="container">
