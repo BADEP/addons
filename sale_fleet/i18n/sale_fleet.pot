@@ -1,0 +1,65 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* sale_fleet
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 10.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2018-03-02 20:32+0000\n"
+"PO-Revision-Date: 2018-03-02 20:32+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: sale_fleet
+#: model:ir.model.fields,field_description:sale_fleet.field_fleet_vehicle_sale_ok
+msgid "Available in Sales"
+msgstr ""
+
+#. module: sale_fleet
+#: model:ir.model.fields,field_description:sale_fleet.field_fleet_vehicle_currency_id
+msgid "Currency"
+msgstr ""
+
+#. module: sale_fleet
+#: model:ir.model.fields,field_description:sale_fleet.field_sale_order_driver
+#: model:ir.ui.view,arch_db:sale_fleet.sale_fleet_filter_view
+msgid "Driver"
+msgstr ""
+
+#. module: sale_fleet
+#: model:ir.model,name:sale_fleet.model_fleet_vehicle
+msgid "Information on a vehicle"
+msgstr ""
+
+#. module: sale_fleet
+#: model:ir.model.fields,field_description:sale_fleet.field_fleet_vehicle_sale_orders
+#: model:ir.ui.view,arch_db:sale_fleet.vehicle_form
+msgid "Sales"
+msgstr ""
+
+#. module: sale_fleet
+#: model:ir.model,name:sale_fleet.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: sale_fleet
+#: model:ir.model.fields,field_description:sale_fleet.field_fleet_vehicle_sales_amount
+msgid "Sales amount"
+msgstr ""
+
+#. module: sale_fleet
+#: model:ir.model.fields,field_description:sale_fleet.field_fleet_vehicle_sales_count
+msgid "Sales count"
+msgstr ""
+
+#. module: sale_fleet
+#: model:ir.model.fields,field_description:sale_fleet.field_sale_order_vehicle
+#: model:ir.ui.view,arch_db:sale_fleet.sale_fleet_filter_view
+msgid "Vehicle"
+msgstr ""
+

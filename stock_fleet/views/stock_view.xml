@@ -1,0 +1,39 @@
+<odoo>
+	<data>
+		<record id="stock_fleet_form_view" model="ir.ui.view">
+			<field name="name">stock_fleet.stock_picking_form_view</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_form" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="partner_id" position="after">
+					<field name="vehicle" groups="base.group_user"/>
+					<field name="driver" groups="base.group_user"/>
+				</field>
+			</field>
+		</record>
+		<record id="stock_fleet_filter_view" model="ir.ui.view">
+			<field name="name">stock_fleet.stock_picking_filter_view</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.view_picking_internal_search" />
+			<field name="arch" type="xml">
+				<filter name="picking_type" position="after">
+					<filter name="driver" string="Driver" context="{'group_by':'driver'}"/>
+					<filter name="vehicle" string="Vehicle" context="{'group_by':'vehicle'}"/>
+				</filter>
+			</field>
+		</record>
+		<record id="stock_fleet_picking_tree_view" model="ir.ui.view">
+			<field name="name">stock_fleet.stock_picking_tree_view</field>
+			<field name="model">stock.picking</field>
+			<field name="inherit_id" ref="stock.vpicktree"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="partner_id" position="after">
+					<field name="vehicle"/>
+					<field name="driver"/>
+				</field>
+			</field>
+		</record>
+	</data>
+</odoo>

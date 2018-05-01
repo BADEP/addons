@@ -1,0 +1,35 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="account_payment_date_maturity.form">
+      <field name="name">account_payment_date_maturity form</field>
+      <field name="model">account.payment</field>
+      <field name="inherit_id" ref="account.view_account_payment_form"></field>
+      <field name="arch" type="xml">
+        <field name="payment_date" position="after">
+        	<field name="date_maturity" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
+        </field>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="account_payment_date_maturity.invoice_form">
+      <field name="name">account_payment_date_maturity invoice form</field>
+      <field name="model">account.payment</field>
+      <field name="inherit_id" ref="account.view_account_payment_invoice_form"></field>
+      <field name="arch" type="xml">
+        <field name="payment_date" position="after">
+        	<field name="date_maturity" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
+        </field>
+      </field>
+    </record>
+    <record model="ir.ui.view" id="account_payment_date_maturity.list">
+      <field name="name">account_payment_date_maturity list</field>
+      <field name="model">account.payment</field>
+      <field name="inherit_id" ref="account.view_account_payment_tree"></field>
+      <field name="arch" type="xml">
+        <field name="payment_date" position="after">
+        	<field name="date_maturity"/>
+        </field>
+      </field>
+    </record>
+  </data>
+</odoo>

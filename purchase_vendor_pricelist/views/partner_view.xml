@@ -1,0 +1,20 @@
+<odoo>
+	<data>
+		<record id="purchase_vendor_pricelist.view_partner_form" model="ir.ui.view">
+			<field name="name">purchase_vendor_pricelist.view_partner_form</field>
+			<field name="inherit_id" ref="base.view_partner_form" />
+			<field name="model">res.partner</field>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<button name="toggle_active" position="after">
+					<button name="act_show_supplierinfo" type="object" class="oe_stat_button" icon="fa-usd">
+					    <div class="o_form_field o_stat_info">
+                            <span class="o_stat_text">Liste des prix</span>
+                        </div>
+					</button>
+				</button>
+			</field>
+		</record>
+		
+	</data>
+</odoo>

@@ -1,0 +1,41 @@
+<odoo>
+	<data>
+		<record id="sale_fleet_form_view" model="ir.ui.view">
+			<field name="name">sale_fleet.sale_order_form_view</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="partner_shipping_id" position="after">
+					<field name="vehicle" groups="base.group_user" domain="[('sale_ok','=',True)]"/>
+					<field name="driver" groups="base.group_user"/>
+				</field>
+			</field>
+		</record>
+		<record id="sale_fleet_filter_view" model="ir.ui.view">
+			<field name="name">sale_fleet.sale_order_fliter_view</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_sales_order_filter" />
+			<field eval="17" name="priority"/>
+			<field name="arch" type="xml">
+				<filter name="customer" position="after">
+					<filter name="driver" string="Driver" context="{'group_by':'driver'}"/>
+					<filter name="vehicle" string="Vehicle" context="{'group_by':'vehicle'}"/>
+				</filter>
+			</field>
+		</record>
+		<record id="sale_fleet_tree_view" model="ir.ui.view">
+			<field name="name">sale_fleet.sale_order_tree_view</field>
+			<field name="model">sale.order</field>
+			<field name="inherit_id" ref="sale.view_order_tree"/>
+			<field eval="17" name="priority"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="user_id" position="after">
+					<field name="vehicle"/>
+					<field name="driver"/>
+				</field>
+			</field>
+		</record>
+	</data>
+</odoo>

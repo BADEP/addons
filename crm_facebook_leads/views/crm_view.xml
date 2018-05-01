@@ -1,0 +1,151 @@
+<odoo>
+	<data>
+		<record id="crm_facebook_cron" model="ir.cron">
+			<field name="name">Fetch Facebook Leads</field>
+			<field name="active" eval="True"/>
+			<field name="priority" eval="5"/>
+            <field name="interval_number">1</field>
+            <field name="interval_type">hours</field>
+            <field name="numbercall">-1</field>
+            <field name="doall" eval="False"/>
+            <field name="model" eval="'crm.lead'"/>
+            <field name="function" eval="'get_facebook_leads'"/>
+            <field name="args" eval="'()'"/>
+		</record>
+
+        <record id="crm_lead_form" model="ir.ui.view">
+            <field name="name">crm.lead.form</field>
+            <field name="model">crm.lead</field>
+            <field name="inherit_id" ref="crm.crm_case_form_view_leads"/>
+            <field name="arch" type="xml">
+            	<group name="categorization" position="after">
+            		<group name="facebook_info" string="Facebook Info">
+	            		<field name="facebook_lead_id"/>
+	            		<field name="facebook_form_id"/>
+	            		<field name="facebook_page_id"/>
+            		</group>
+            	</group>
+            </field>
+        </record>
+
+        <record id="crm_facebook_page_form" model="ir.ui.view">
+            <field name="name">crm.facebook.page.form</field>
+            <field name="model">crm.facebook.page</field>
+            <field name="arch" type="xml">
+                <form string="Facebook Page">
+                	<button name="get_forms" type="object" string="Get Forms"/>
+                	<group colspan="2">
+                        <field name="name"/>
+                        <field name="access_token" password="1" class="oe_edit_only"/>
+                    </group>
+                    <group colspan="2">
+                    	<field name="form_ids">
+                    		<tree editable="0" readonly="1">
+         		  			   	<field name="name"/>
+         		  			   	<field name="facebook_form_id"/>
+                    			<field name="team_id"/>
+                    			<field name="campaign_id"/>
+                    			<field name="medium_id"/>
+                    			<field name="source_id"/>
+                    		</tree>
+                    	</field>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="crm_facebook_page_tree" model="ir.ui.view">
+            <field name="name">crm.facebook.page.tree</field>
+            <field name="model">crm.facebook.page</field>
+            <field name="arch" type="xml">
+                <tree string="Facebook Page">
+	                <field name="name"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_crm_facebook_page">
+            <field name="name">Facebook Pages</field>
+            <field name="res_model">crm.facebook.page</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="crm_facebook_page_tree"/>
+            <field name="help" type="html">
+                <p></p>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_crm_facebook_page"
+            name="Facebook Pages"
+            parent="crm.menu_crm_config_lead"
+            sequence="100"
+            action="action_crm_facebook_page"
+            groups="sales_team.group_sale_manager"/>
+
+        <record id="crm_facebook_form_form" model="ir.ui.view">
+            <field name="name">crm.facebook.form.form</field>
+            <field name="model">crm.facebook.form</field>
+            <field name="arch" type="xml">
+                <form string="Facebook form">
+                	<button name="get_fields" type="object" string="Get Fields"/>
+                	<group>
+	                    <group>
+	                        <field name="name"/>
+	                        <field name="team_id"/>
+	                    </group>
+	                    <group>
+	                        <field name="page_id"/>
+	                        <field name="facebook_form_id"/>
+	                        <field name="access_token" invisible="1"/>
+                        </group>
+	                    <group string="Tracking Info">
+	                        <field name="campaign_id"/>
+	                        <field name="medium_id"/>
+	                        <field name="source_id"/>
+                        </group>
+                    </group>
+                    <group colspan="2" string="Mappings">
+                    	<field name="mappings">
+                    		<tree editable="bottom">
+                    			<field name="name"/>
+                    			<field name="facebook_field"/>
+         		  			   	<field name="odoo_field"/>
+                    		</tree>
+                    	</field>
+                    </group>
+                </form>
+            </field>
+        </record>
+
+        <record id="crm_facebook_form_tree" model="ir.ui.view">
+            <field name="name">crm.facebook.form.tree</field>
+            <field name="model">crm.facebook.form</field>
+            <field name="arch" type="xml">
+                <tree>
+	                <field name="name"/>
+	                <field name="facebook_form_id"/>
+	                <field name="page_id"/>
+	                <field name="team_id"/>
+                </tree>
+            </field>
+        </record>
+        
+        <record model="ir.actions.act_window" id="action_crm_facebook_form">
+            <field name="name">Facebook Forms</field>
+            <field name="res_model">crm.facebook.form</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" ref="crm_facebook_form_tree"/>
+            <field name="help" type="html">
+                <p></p>
+            </field>
+        </record>
+
+        <menuitem
+            id="menu_crm_facebook_form"
+            name="Facebook Forms"
+            parent="crm.menu_crm_config_lead"
+            sequence="101"
+            action="action_crm_facebook_form"
+            groups="sales_team.group_sale_manager"/>
+	</data>
+</odoo>
