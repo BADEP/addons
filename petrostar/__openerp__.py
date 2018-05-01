@@ -22,26 +22,14 @@
 
 
 {
-    'name': 'Petrostar Customization',
+    'name': 'Prototype Customization',
     'version': '1.0',
     'category': 'Sales',
     'description': """
-    Petrostar meta-package
+    Prototype meta-package
     """,
     'author': 'BADEP',
-    'website': 'http://www.badep.ma',
-    'depends': ['account_accountant',
-                'purchase',
-                'sale_stock',
-                'stock_account',
-                'fleet',
-                'sale_transport_multi_address',
-                'stock_transport_multi_address',
-                'purchase_transport_multi_address'
-                ],
-    'data': [
-           'views.xml',
-    ],
+    'website': 'https://badep.ma',
     'installable': True,
 }
 

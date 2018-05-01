@@ -23,23 +23,15 @@
 
 
 {
-    'name': 'IRESEN Prototype',
+    'name': 'Prototype',
     'version': '1.0',
     'category': 'Project',
     'description': """
-    Module prototype IRESEN
+    Module prototype
     """,
     'author': 'BADEP',
     'website': 'https://badep.ma',
-    'depends': ['project',
-                'website',
-                'document'
-                ''
-                ],
-    'data': [
-           'views.xml',
-    ],
-    'installable': False,
+    'installable': True,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

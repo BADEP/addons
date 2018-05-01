@@ -25,16 +25,13 @@
     'author' : 'BADEP',
     'summary': 'Afficher le montant en lettre dans le bon de commande/facture.',
     'description': """
-    Afficher le montant en lettre dans le bon de commande/facture.
+    [DEPRECATED] please install aount_to_text instead.
     """,
     'category': 'Localization',
     'sequence': 4,
     'website' : 'http://www.badep.ma',
     'depends' : ['sale', 'account'],
     'demo' : [],
-    'data' : [
-        'views.xml',
-    ],
     'auto_install': False,
     'application': False,
     'installable': True,

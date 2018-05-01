@@ -22,22 +22,14 @@
 
 
 {
-    'name': 'IRESEN Prototype',
+    'name': 'Prototype',
     'version': '1.0',
     'category': 'Project',
     'description': """
-    Module prototype pour la plateforme de soumission aux Appels à Projets
+    Module prototype
     """,
     'author': 'BADEP',
     'website': 'https://badep.ma',
-    'depends': ['project',
-                'website',
-                'document'
-                ''
-                ],
-    'data': [
-           'views.xml',
-    ],
     'installable': True,
 }
 

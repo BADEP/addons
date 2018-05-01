@@ -1,3 +1,0 @@
-id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_project_offer_public,project.offer.public,project.model_project_offer,,1,0,0,0
-access_project_offer_type_public,project.offer.type.public,hr.model_hr_department,base.group_public,1,0,0,0
