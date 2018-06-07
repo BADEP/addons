@@ -30,9 +30,9 @@ class CrmFacebookForm(models.Model):
     page_id = fields.Many2one('crm.facebook.page', readonly=True, ondelete='cascade', string='Facebook Page')
     mappings = fields.One2many('crm.facebook.form.field', 'form_id')
     team_id = fields.Many2one('crm.team', domain=['|', ('use_leads', '=', True), ('use_opportunities', '=', True)], string="Sales Team")
-    campaign_id = fields.Many2one('utm.campaign')
-    source_id = fields.Many2one('utm.source')
-    medium_id = fields.Many2one('utm.medium')
+    campaign_id = fields.Many2one('utm.campaign', string='Campaign')
+    source_id = fields.Many2one('utm.source', string='Source')
+    medium_id = fields.Many2one('utm.medium', string='Medium')
     
     def get_fields(self):
         self.mappings.unlink()
