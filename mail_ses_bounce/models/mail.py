@@ -3,7 +3,7 @@
 from odoo import models, api
 from odoo.tools import decode_message_header
 import email
-import xmlrpclib
+from xmlrpc import client
 
 class MailThread(models.AbstractModel):
     _inherit = 'mail.thread'
@@ -12,7 +12,7 @@ class MailThread(models.AbstractModel):
     def message_process(self, model, message, custom_values=None,
                         save_original=False, strip_attachments=False,
                         thread_id=None):
-        if isinstance(message, xmlrpclib.Binary):
+        if isinstance(message, client.Binary):
             message = str(message.data)
         if isinstance(message, unicode):
             message = message.encode('utf-8')
