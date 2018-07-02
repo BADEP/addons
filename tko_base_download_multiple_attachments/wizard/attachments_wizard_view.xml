@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<openerp> 
+    <data>
+        <record model="ir.ui.view" id="download_attachments_wizard_form">
+            <field name="name">Download Attachments</field>
+            <field name="model">download.attachments</field>
+            <field name="arch" type="xml">
+                <form>
+                    <p>Cliquer sur Télécharger pour télécharger les documents sélectionnés</p>
+                    <group invisible="1">
+                        <field name="attachment" filename="filess.tar" invisible="1"/>
+                        <field name="active_model" invisible="1"/>
+                        <field name="active_id" invisible="1"/>
+                    </group>
+                    <field name="attachment_ids" invisible="1"/>
+                    <footer>
+                        <button string="Télécharger" type="object" name="download_attachments" class="oe_highlight"/>
+                        or
+                        <button string="Annuler" special="cancel" class="oe_link"/>
+                    </footer>
+                </form>
+
+
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="download_attachments_wizard_actoin">
+            <field name="name">Télécharger les documents</field>
+            <field name="res_model">download.attachments</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">form</field>
+            <field name="target">new</field>
+        </record>
+
+        <act_window
+            id="action_download_wizard1"
+            multi="True"
+            key2="client_action_multi" name="Download"
+            res_model="download.attachments" src_model="ir.attachment"
+            view_mode="form" target="new" view_type="form"
+            view_id="download_attachments_wizard_form"
+        />
+    </data>
+</openerp>
