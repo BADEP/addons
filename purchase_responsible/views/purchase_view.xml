@@ -1,0 +1,28 @@
+<odoo>
+	<data>
+		<record id="purchase_responsible.purchase_order_form" model="ir.ui.view">
+			<field name="name">purchase_responsible.purchase_order_form</field>
+			<field name="inherit_id" ref="purchase.purchase_order_form" />
+			<field name="model">purchase.order</field>
+			<field eval="15" name="priority"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="partner_id" position="after">
+					<field name="user_id"/>
+				</field>
+			</field>
+		</record>
+		<record id="purchase_responsible.purchase_order_tree" model="ir.ui.view">
+			<field name="name">purchase_responsible.purchase_order_tree</field>
+			<field name="inherit_id" ref="purchase.purchase_order_tree" />
+			<field name="model">purchase.order</field>
+			<field eval="15" name="priority"/>
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<field name="partner_id" position="after">
+					<field name="user_id"/>
+				</field>
+			</field>
+		</record>
+	</data>
+</odoo>
