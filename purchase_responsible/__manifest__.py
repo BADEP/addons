@@ -27,5 +27,5 @@
         # 'security/ir.model.access.csv',
         'views/purchase_view.xml',
     ],
-    "installable": False
+    "installable": True
 }
