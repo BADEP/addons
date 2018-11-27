@@ -6,7 +6,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
     vehicle = fields.Many2one('fleet.vehicle', domain=[('sale_ok','=',True)], readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
     driver = fields.Many2one('res.partner', readonly=True, states={'draft': [('readonly', False)], 'sent': [('readonly', False)]})
-    
+
     @api.onchange('vehicle')
     def set_driver(self):
         if self.vehicle and self.vehicle.driver_id:
