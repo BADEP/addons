@@ -1,0 +1,16 @@
+<odoo>
+  <data>
+    <!-- explicit list view definition -->
+    <record model="ir.ui.view" id="res_currency_form_label">
+      <field name="name">res_currency_form_label form</field>
+      <field name="model">res.currency</field>
+      <field name="inherit_id" ref="base.view_currency_form"></field>
+      <field name="arch" type="xml">
+        <field name="symbol" position="after">
+        	<field name="currency_unit_label"/>
+        	<field name="currency_subunit_label"/>
+        </field>
+      </field>
+    </record>
+  </data>
+</odoo>

@@ -24,6 +24,7 @@
     "external_dependencies": {"python" : ["num2words"]},
     # always loaded
     'data': [
+        'views/res_currency.xml'
         # 'security/ir.model.access.csv',
     ],
     'installable': True,

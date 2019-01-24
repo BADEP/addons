@@ -11,10 +11,13 @@ except ImportError:
     logging.getLogger(__name__).warning("The num2words python library is not installed.")
     num2words = None
 
-from odoo import api, models, tools, _
+from odoo import api, models, fields, tools, _
 
 class Currency(models.Model):
     _inherit = "res.currency"
+
+    currency_unit_label = fields.Char('Label')
+    currency_subunit_label = fields.Char('Label 2')
 
     @api.multi
     def amount_to_text(self, amount):
@@ -41,7 +44,7 @@ class Currency(models.Model):
                         amt_word=self.currency_unit_label,
                         )
         if not self.is_zero(amount - integer_value):
-            amount_words += ' ' + _('and') + tools.ustr(' {amt_value} {amt_word}').format(
+            amount_words += ' ' + _('et') + tools.ustr(' {amt_value} {amt_word}').format(
                         amt_value=_num2words(fractional_value, lang=lang.iso_code),
                         amt_word=self.currency_subunit_label,
                         )
