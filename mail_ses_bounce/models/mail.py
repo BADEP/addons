@@ -3,7 +3,10 @@
 from odoo import models, api
 from odoo.tools import decode_message_header
 import email
-from xmlrpc import client
+try:
+    from xmlrpc import client
+except:
+    import xmlrpclib
 
 class MailThread(models.AbstractModel):
     _inherit = 'mail.thread'
