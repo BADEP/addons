@@ -2,7 +2,7 @@
 	<data>
 		<template id="report_saleorder_document_inherit_separate_description_ref" inherit_id="sale.report_saleorder_document">
 			<xpath expr="//t[@t-foreach='doc.order_lines_layouted()']/table/thead/tr/th[1]" position="before">
-    	        <th>Reference</th>			
+    	        <th>Référence</th>			
 			</xpath>
 			<xpath expr="//t[@t-as='l']/tr/td[1]" position="before">
 	            <td class="text-left" style="padding-left:5px;width:16%;">
