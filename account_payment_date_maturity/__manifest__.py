@@ -28,4 +28,5 @@
         # 'security/ir.model.access.csv',
         'views/account_payment.xml',
     ],
+    'installable': False
 }
