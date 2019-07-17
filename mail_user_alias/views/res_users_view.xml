@@ -1,0 +1,14 @@
+<odoo>
+  <data>
+    <record model="ir.ui.view" id="mail_user_alias.res_users_formview">
+      <field name="name">mail_user_alias user form</field>
+      <field name="model">res.users</field>
+      <field name="inherit_id" ref="mail.view_users_form_mail"/>
+      <field name="arch" type="xml">
+        <xpath expr="//header" position="inside">
+          <button name="action_create_alias" string="Create Alias" type="object" class="oe_inline" attrs="{'invisible': [('alias_id', '!=', False)]}"/>
+        </xpath>
+      </field>
+    </record>
+  </data>
+</odoo>
