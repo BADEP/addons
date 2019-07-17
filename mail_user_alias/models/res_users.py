@@ -54,7 +54,7 @@ class ResUsers(models.Model):
             alias_id = self.env['mail.alias'].create({
                 'alias_name': rec.login.split('@')[0],
                 'alias_model_id': self.env.ref('base.model_res_users').id,
-                'alias_force_thread_id': self.env.ref('base.model_res_users').id,
+                'alias_force_thread_id': rec.id,
                 'alias_parent_model_id': self.env.ref('base.model_res_users').id,
                 'alias_defaults': "{'user_id':" + str(rec.id) + "}",
                 'alias_contact': 'everyone',
