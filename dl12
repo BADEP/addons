@@ -1,0 +1,5 @@
+#!/bin/bash
+output=$(curl -s https://apps.odoo.com/apps/modules/12.0/${1}/ | grep -Po '(?<=$
+wget "${output}" -O temp.zip
+unzip -o temp.zip && rm temp.zip
+
