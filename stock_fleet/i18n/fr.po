@@ -18,7 +18,7 @@ msgstr ""
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle__picking_ok
 msgid "Available in Pickings"
-msgstr "Disponible dans les transferts"
+msgstr "Utiliser dans les transferts"
 
 #. module: stock_fleet
 #: model:ir.model.fields,field_description:stock_fleet.field_stock_move__driver
