@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 12.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-02 20:48+0000\n"
-"PO-Revision-Date: 2018-03-02 20:48+0000\n"
+"POT-Creation-Date: 2019-07-20 18:34+0000\n"
+"PO-Revision-Date: 2019-07-20 18:34+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,38 +16,27 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: stock_fleet
-#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_picking_ok
+#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle__picking_ok
 msgid "Available in Pickings"
 msgstr "Disponible dans les transferts"
 
 #. module: stock_fleet
-#: model:ir.model.fields,field_description:stock_fleet.field_procurement_group_driver
-#: model:ir.model.fields,field_description:stock_fleet.field_stock_move_driver
-#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_driver
-#: model:ir.ui.view,arch_db:stock_fleet.stock_fleet_filter_view
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_move__driver
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__driver
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_fleet_filter_view
 msgid "Driver"
 msgstr "Conducteur"
 
 #. module: stock_fleet
-#: model:ir.model,name:stock_fleet.model_fleet_vehicle
-msgid "Information on a vehicle"
-msgstr "Information sur un véhicule"
-
-#. module: stock_fleet
-#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_picking_count
-msgid "Picking count"
+#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle__picking_count
+msgid "Picking Count"
 msgstr "Nombre de transferts"
 
 #. module: stock_fleet
-#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle_pickings
-#: model:ir.ui.view,arch_db:stock_fleet.vehicle_form
+#: model:ir.model.fields,field_description:stock_fleet.field_fleet_vehicle__pickings
+#: model_terms:ir.ui.view,arch_db:stock_fleet.vehicle_form
 msgid "Pickings"
-msgstr "Transferts"
-
-#. module: stock_fleet
-#: model:ir.model,name:stock_fleet.model_procurement_group
-msgid "Procurement Requisition"
-msgstr "Demande d'approvisionnement"
+msgstr "Préparations"
 
 #. module: stock_fleet
 #: model:ir.model,name:stock_fleet.model_stock_move
@@ -60,10 +49,10 @@ msgid "Transfer"
 msgstr "Transfert"
 
 #. module: stock_fleet
-#: model:ir.model.fields,field_description:stock_fleet.field_procurement_group_vehicle
-#: model:ir.model.fields,field_description:stock_fleet.field_stock_move_vehicle
-#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking_vehicle
-#: model:ir.ui.view,arch_db:stock_fleet.stock_fleet_filter_view
+#: model:ir.model,name:stock_fleet.model_fleet_vehicle
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_move__vehicle
+#: model:ir.model.fields,field_description:stock_fleet.field_stock_picking__vehicle
+#: model_terms:ir.ui.view,arch_db:stock_fleet.stock_fleet_filter_view
 msgid "Vehicle"
 msgstr "Véhicule"
 

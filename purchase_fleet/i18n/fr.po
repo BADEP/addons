@@ -4,10 +4,10 @@
 #
 msgid ""
 msgstr ""
-"Project-Id-Version: Odoo Server 10.0\n"
+"Project-Id-Version: Odoo Server 12.0+e\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2018-03-03 17:22+0000\n"
-"PO-Revision-Date: 2018-03-03 17:22+0000\n"
+"POT-Creation-Date: 2019-07-20 18:53+0000\n"
+"PO-Revision-Date: 2019-07-20 18:53+0000\n"
 "Last-Translator: <>\n"
 "Language-Team: \n"
 "MIME-Version: 1.0\n"
@@ -16,25 +16,25 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: purchase_fleet
-#: model:ir.model.fields,field_description:purchase_fleet.field_fleet_vehicle_purchase_ok
+#: model:ir.model.fields,field_description:purchase_fleet.field_fleet_vehicle__purchase_ok
 msgid "Available in Purchases"
 msgstr "Disponible dans les achats"
 
 #. module: purchase_fleet
-#: model:ir.model.fields,field_description:purchase_fleet.field_fleet_vehicle_currency_id
+#: model:ir.model.fields,field_description:purchase_fleet.field_fleet_vehicle__company_id
+msgid "Company"
+msgstr "Société"
+
+#. module: purchase_fleet
+#: model:ir.model.fields,field_description:purchase_fleet.field_fleet_vehicle__currency_id
 msgid "Currency"
 msgstr "Devise"
 
 #. module: purchase_fleet
-#: model:ir.model.fields,field_description:purchase_fleet.field_purchase_order_driver
-#: model:ir.ui.view,arch_db:purchase_fleet.purchase_fleet_filter_view
+#: model:ir.model.fields,field_description:purchase_fleet.field_purchase_order__driver
+#: model_terms:ir.ui.view,arch_db:purchase_fleet.purchase_fleet_filter_view
 msgid "Driver"
 msgstr "Conducteur"
-
-#. module: purchase_fleet
-#: model:ir.model,name:purchase_fleet.model_fleet_vehicle
-msgid "Information on a vehicle"
-msgstr "Information sur un véhicule"
 
 #. module: purchase_fleet
 #: model:ir.model,name:purchase_fleet.model_purchase_order
@@ -42,24 +42,25 @@ msgid "Purchase Order"
 msgstr "Commande fournisseur"
 
 #. module: purchase_fleet
-#: model:ir.model.fields,field_description:purchase_fleet.field_fleet_vehicle_purchase_orders
-#: model:ir.ui.view,arch_db:purchase_fleet.vehicle_form
+#: model:ir.model.fields,field_description:purchase_fleet.field_fleet_vehicle__purchase_orders
+#: model_terms:ir.ui.view,arch_db:purchase_fleet.vehicle_form
 msgid "Purchases"
 msgstr "Achats"
 
 #. module: purchase_fleet
-#: model:ir.model.fields,field_description:purchase_fleet.field_fleet_vehicle_purchases_amount
-msgid "Purchases amount"
-msgstr "Montant des achats"
+#: model:ir.model.fields,field_description:purchase_fleet.field_fleet_vehicle__purchases_amount
+msgid "Purchases Amount"
+msgstr "Total des achats"
 
 #. module: purchase_fleet
-#: model:ir.model.fields,field_description:purchase_fleet.field_fleet_vehicle_purchases_count
-msgid "Purchases count"
+#: model:ir.model.fields,field_description:purchase_fleet.field_fleet_vehicle__purchases_count
+msgid "Purchases Count"
 msgstr "Nombre d'achats"
 
 #. module: purchase_fleet
-#: model:ir.model.fields,field_description:purchase_fleet.field_purchase_order_vehicle
-#: model:ir.ui.view,arch_db:purchase_fleet.purchase_fleet_filter_view
+#: model:ir.model,name:purchase_fleet.model_fleet_vehicle
+#: model:ir.model.fields,field_description:purchase_fleet.field_purchase_order__vehicle
+#: model_terms:ir.ui.view,arch_db:purchase_fleet.purchase_fleet_filter_view
 msgid "Vehicle"
 msgstr "Véhicule"
 

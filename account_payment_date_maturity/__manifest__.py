@@ -16,7 +16,7 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Accounting',
-    'version': '11.0.1',
+    'version': '12.0.0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['account'],

@@ -25,9 +25,8 @@
 
     # always loaded
     'data': [
-        # 'security/ir.model.access.csv',
+        'security/ir.model.access.csv',
         'views/stock_view.xml',
         'views/fleet_view.xml',
     ],
-    'installable': False
 }
