@@ -1,9 +1,9 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Purchase Min Price",
+    'name': "Product Purchase Min Price",
 
     'summary': """
-        Display min price in product form""",
+        Display min purchase price in product form""",
 
     'description': """
     """,
@@ -14,11 +14,11 @@
     # Categories can be used to filter modules in modules listing
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
-    'category': 'Inventory',
+    'category': 'Purchase',
     'version': '11.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['product'],
+    'depends': ['purchase'],
     'images': ['static/scr/img/banner.png'],
     'license': 'AGPL-3',
 
@@ -27,5 +27,4 @@
         # 'security/ir.model.access.csv',
         'views/product_view.xml',
     ],
-    'installable': False
 }
