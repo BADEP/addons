@@ -1,0 +1,52 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* sale_total_delivered_invoiced
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0+e\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2019-07-20 15:46+0000\n"
+"PO-Revision-Date: 2019-07-20 15:46+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: sale_total_delivered_invoiced
+#: model:ir.model.fields,field_description:sale_total_delivered_invoiced.field_sale_order_line__price_delivered
+msgid "Amount Delivered"
+msgstr "Montant livré"
+
+#. module: sale_total_delivered_invoiced
+#: model:ir.model.fields,field_description:sale_total_delivered_invoiced.field_sale_order_line__price_invoiced
+msgid "Amount Invoiced"
+msgstr "Montant facturé"
+
+#. module: sale_total_delivered_invoiced
+#: model:ir.model,name:sale_total_delivered_invoiced.model_sale_order
+msgid "Sale Order"
+msgstr "Bon de commande"
+
+#. module: sale_total_delivered_invoiced
+#: model:ir.model,name:sale_total_delivered_invoiced.model_sale_order_line
+msgid "Sales Order Line"
+msgstr "Ligne de bons de commande"
+
+#. module: sale_total_delivered_invoiced
+#: model_terms:ir.ui.view,arch_db:sale_total_delivered_invoiced.sale_order_tree_view
+msgid "Total"
+msgstr "Total"
+
+#. module: sale_total_delivered_invoiced
+#: model:ir.model.fields,field_description:sale_total_delivered_invoiced.field_sale_order__amount_delivered
+msgid "Total Delivered"
+msgstr "Total livré"
+
+#. module: sale_total_delivered_invoiced
+#: model:ir.model.fields,field_description:sale_total_delivered_invoiced.field_sale_order__amount_invoiced
+msgid "Total Invoiced"
+msgstr "Total facturé"
+
