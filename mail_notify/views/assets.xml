@@ -1,0 +1,9 @@
+<odoo>
+	<data>
+		<template id="assets_backend" name="Mail Notify assets" inherit_id="web.assets_backend">
+			<xpath expr="." position="inside">
+				<script type="text/javascript" src="/mail_notify/static/src/js/services/mail_manager.js"></script>
+			</xpath>
+		</template>
+	</data>
+</odoo>

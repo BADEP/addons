@@ -3,7 +3,7 @@
     'name': "Dimensions in Product UoM",
 
     'summary': """
-        Eeach Unit of Measure has its dimensions""",
+        Eeach Unit of Measure has its dimensions. This is a technical module, functional behavior can be found in corresponding modules (stock_uom_dimension, sale_uom_dimension, purchase_uom_dimension).""",
 
     'description': """
     """,
@@ -18,14 +18,14 @@
     'version': '11.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['product'],
+    'depends': ['uom'],
     'images': ['static/scr/img/banner.png'],
     'license': 'AGPL-3',
 
     # always loaded
     'data': [
         # 'security/ir.model.access.csv',
-        'views/product_view.xml',
+        'views/uom_view.xml',
     ],
-    'installable': False
+    'installable': False,
 }
