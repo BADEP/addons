@@ -48,12 +48,28 @@ MailManager.include({
             // no need to notify
             return;
         }
+        var icon = false;
+
+        //Set icon to module icon by defaut
+        if (Boolean(message._getModuleIcon())) {
+            icon = message._getModuleIcon();
+        }
+        // for instant messaging the icon will be set to the user avatar
+        if (message.getDocumentModel() == "mail.channel" && Boolean(message.getAvatarSource())) {
+            icon = message.getAvatarSource();
+        }
         var title = _t("New message");
         if (message.hasAuthor()) {
             title = _.escape(message.getAuthorName());
         }
-        var content = mailUtils.parseAndTransform(message.getBody(), mailUtils.stripHTML)
-            .substr(0, PREVIEW_MSG_MAX_SIZE);
+
+        if (message.hasSubject()) {
+            title = title + ": " + message.getSubject();
+        }
+        else if (message.getDocumentModel() != "mail.channel" && message.getDocumentName()) {
+            title = title + ": " + message.getDocumentName();
+        }
+        var content = mailUtils.parseAndTransform(message.getBody(), mailUtils.stripHTML).substr(0, PREVIEW_MSG_MAX_SIZE);
 
         if (!this.call('bus_service', 'isOdooFocused')) {
             this._outOfFocusUnreadMessageCounter++;
@@ -66,7 +82,7 @@ MailManager.include({
                 title: tabTitle
             });
         }
-        this.call('bus_service', 'sendNotification', title, content, function ( ){window.open(message.getURL());});
+        this.call('bus_service', 'sendNotification', title, content, function ( ){window.open(message.getURL());}, icon);
     },
 });
 return MailManager;
