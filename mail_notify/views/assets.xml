@@ -4,6 +4,10 @@
 			<xpath expr="." position="inside">
 				<script type="text/javascript" src="/mail_notify/static/src/js/services/mail_manager.js"></script>
 				<script type="text/javascript" src="/mail_notify/static/src/js/services/bus_service.js"></script>
+				<script src="https://www.gstatic.com/firebasejs/6.3.1/firebase-app.js"></script>
+				<script src="https://www.gstatic.com/firebasejs/6.3.1/firebase-messaging.js"></script>
+				<script type="text/javascript" src="/mail_notify/static/src/js/mail_notify_firebase.js"></script>
+
 			</xpath>
 		</template>
 	</data>
