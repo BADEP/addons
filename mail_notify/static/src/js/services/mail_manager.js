@@ -7,7 +7,7 @@ var _t = core._t;
 var MailManager = require('mail.Manager');
 
 var PREVIEW_MSG_MAX_SIZE = 350;
-
+var rpc = require('web.rpc');
 
 MailManager.include({
     _addNewMessagePostprocessThread: function (message, options) {
@@ -35,7 +35,14 @@ MailManager.include({
                     }
                     if (options.showNotification) {
                         if (!self.call('bus_service', 'isOdooFocused')) {
-                            self._notifyIncomingMessage(message);
+                            var ir_config = rpc.query({
+                                model: 'ir.config_parameter',
+                                method: 'get_fcm_config',
+                            }).then(function(result){
+                                if (!result.is_fcm_enabled) {
+                                    self._notifyIncomingMessage(message);
+                                }
+                            });
                         }
                     }
                 }
