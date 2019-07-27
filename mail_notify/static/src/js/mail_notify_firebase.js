@@ -19,7 +19,6 @@ var config = rpc.query({
                 messaging.usePublicVapidKey(result.fcm_vapid_key);
 
                 messaging.onMessage(function(data) {
-                    console.log(data);
                     registration.showNotification(data.notification.title, {
                         body: data.notification.body,
                         icon: data.notification.icon,
@@ -32,7 +31,6 @@ var config = rpc.query({
 
                 messaging.getToken().then((currentToken) => {
                     if (currentToken) {
-                        console.log(currentToken);
                         rpc.query({
                             model:  'res.users.token',
                             method: 'add_token',
@@ -45,7 +43,6 @@ var config = rpc.query({
 
                 messaging.onTokenRefresh(() => {
                     messaging.getToken().then((refreshedToken) => {
-                        console.log(refreshedToken);
                         rpc.query({
                             model:  'res.users.token',
                             method: 'add_token',
