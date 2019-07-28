@@ -24,6 +24,6 @@ class ResUsersToken(models.Model):
     @api.model
     def clean_token(self):
         push_service = FCMNotification(api_key=self.env['ir.config_parameter'].sudo().get_param('mail_notify.fcm_server_key'))
-        tokens = self.sudo().search([()]).mapped('token')
+        tokens = self.sudo().search([]).mapped('token')
         tokens = push_service.clean_registration_ids(tokens)
         self.sudo().search([('token', 'not in', tokens)]).unlink()
