@@ -17,9 +17,14 @@
     'depends': ['mail', 'web'],
     'images': ['static/scr/img/banner.png'],
     'license': 'AGPL-3',
-
+    'external_dependencies': {
+        'python': [
+            'pyfcm',
+        ],
+    },
     # always loaded
     'data': [
+        'data/ir_cron.xml',
         'security/ir.model.access.csv',
         'security/mail_notify_security.xml',
         'views/assets.xml',

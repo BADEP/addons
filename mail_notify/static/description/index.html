@@ -9,10 +9,8 @@
             This module extends the native push notifications of Odoo to support all incoming messages instead of just chat messages.
         </p>
         <h3>Configuration</h3>
-        <p>None</p>
+        <p>You can choose whether to use the internal bus (online) or Firebase Cloud Messaging (online & offline) for Push Notifications. For FCM, you'll need the <b>Server API Key</b>, the <b>VAPID Key</b>n and the <b>Messaging ID</b>. All of which you can get <a href="https://console.firebase.google.com/project/_/settings/cloudmessaging/">Here</a></p>
         <h3>Usage</h3>
         <p>Each time a user receives an incoming message they will also receive a native notification for it. The user can also click on the notification to open the related document.</p>
-        <h3>Limitation</h3>
-        <p>This module uses the longpolling bus to send notifications and therefore needs an active session (open browser with connected user) in order to receive notifications. A background service worker like firebase can be used in the future to deliver push notifications even if there is no active session.</p>
     </div>
 </section>

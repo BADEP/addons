@@ -14,12 +14,12 @@ var config = rpc.query({
         firebase.initializeApp(firebaseConfig);
         var messaging = firebase.messaging();
         if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/mail_notify/static/src/js/service-worker.js').then(function(registration) {
+            navigator.serviceWorker.register('/mail_notify/static/src/js/service-worker.js?messagingSenderId=' + result.fcm_messaging_id).then(function(registration) {
                 messaging.useServiceWorker(registration);
                 messaging.usePublicVapidKey(result.fcm_vapid_key);
 
                 messaging.onMessage(function(data) {
-                    console.log('New message: ', data.notification);
+                    //console.log('New message: ', data.notification);
                     registration.showNotification(data.notification.title, {
                         body: data.notification.body,
                         icon: data.notification.icon,
@@ -32,7 +32,7 @@ var config = rpc.query({
 
                 messaging.getToken().then((currentToken) => {
                     if (currentToken) {
-                        console.log(currentToken);
+                        //console.log(currentToken);
                         rpc.query({
                             model:  'res.users.token',
                             method: 'add_token',
@@ -45,7 +45,7 @@ var config = rpc.query({
 
                 messaging.onTokenRefresh(() => {
                     messaging.getToken().then((refreshedToken) => {
-                        console.log(refreshedToken);
+                        //console.log(refreshedToken);
                         rpc.query({
                             model:  'res.users.token',
                             method: 'add_token',
