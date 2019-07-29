@@ -13,50 +13,44 @@ var config = rpc.query({
         };
         firebase.initializeApp(firebaseConfig);
         var messaging = firebase.messaging();
-        if ('serviceWorker' in navigator) {
-            navigator.serviceWorker.register('/mail_notify/static/src/js/service-worker.js?messagingSenderId=' + result.fcm_messaging_id).then(function(registration) {
-                messaging.useServiceWorker(registration);
-                messaging.usePublicVapidKey(result.fcm_vapid_key);
+        messaging.usePublicVapidKey(result.fcm_vapid_key);
+        messaging.onMessage(function(data) {
+            //console.log('New message: ', data.notification);
+            registration.showNotification(data.notification.title, {
+                body: data.notification.body,
+                icon: data.notification.icon,
+                click_action: data.notification.click_action,
+                time_to_live: data.notification.time_to_live,
+                data: data.notification.data,
+                tag: data.notification.tag
+            });
+        });
 
-                messaging.onMessage(function(data) {
-                    //console.log('New message: ', data.notification);
-                    registration.showNotification(data.notification.title, {
-                        body: data.notification.body,
-                        icon: data.notification.icon,
-                        click_action: data.notification.click_action,
-                        time_to_live: data.notification.time_to_live,
-                        data: data.notification.data,
-                        tag: data.notification.tag
-                    });
+        messaging.getToken().then((currentToken) => {
+            if (currentToken) {
+                //console.log(currentToken);
+                rpc.query({
+                    model:  'res.users.token',
+                    method: 'add_token',
+                    args: [currentToken]
                 });
+            }
+        }).catch((err) => {
+            console.log('An error occurred while retrieving token. ', err);
+        });
 
-                messaging.getToken().then((currentToken) => {
-                    if (currentToken) {
-                        //console.log(currentToken);
-                        rpc.query({
-                            model:  'res.users.token',
-                            method: 'add_token',
-                            args: [currentToken]
-                        });
-                    }
-                }).catch((err) => {
-                    console.log('An error occurred while retrieving token. ', err);
+        messaging.onTokenRefresh(() => {
+            messaging.getToken().then((refreshedToken) => {
+                //console.log(refreshedToken);
+                rpc.query({
+                    model:  'res.users.token',
+                    method: 'add_token',
+                    args: [refreshedToken]
                 });
-
-                messaging.onTokenRefresh(() => {
-                    messaging.getToken().then((refreshedToken) => {
-                        //console.log(refreshedToken);
-                        rpc.query({
-                            model:  'res.users.token',
-                            method: 'add_token',
-                            args: [refreshedToken]
-                        });
-                    }).catch((err) => {
-                        console.log('Unable to retrieve refreshed token ', err);
-                    });
-                });
-            })
-        }
+            }).catch((err) => {
+                console.log('Unable to retrieve refreshed token ', err);
+            });
+        });
     }
 });
 });
