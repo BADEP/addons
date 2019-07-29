@@ -31,11 +31,7 @@ var config = rpc.query({
         messaging.getToken().then((currentToken) => {
             if (currentToken) {
                 //console.log(currentToken);
-                rpc.query({
-                    model:  'res.users.token',
-                    method: 'add_token',
-                    args: [currentToken]
-                });
+                sendTokenToServer(currentToken);
             }
         }).catch((err) => {
             console.log('An error occurred while retrieving token. ', err);
@@ -44,15 +40,27 @@ var config = rpc.query({
         messaging.onTokenRefresh(() => {
             messaging.getToken().then((refreshedToken) => {
                 //console.log(refreshedToken);
-                rpc.query({
-                    model:  'res.users.token',
-                    method: 'add_token',
-                    args: [refreshedToken]
-                });
+                setTokenSentToServer(false);
+                sendTokenToServer(refreshedToken);
             }).catch((err) => {
                 console.log('Unable to retrieve refreshed token ', err);
             });
         });
+
+        function sendTokenToServer(currentToken) {
+            if (!isTokenSentToServer()) {
+                //console.log('Sending token to server...');
+                document.cookie = "token=" + currentToken;
+                location.reload();
+                setTokenSentToServer(true);
+            }
+        }
+        function isTokenSentToServer() {
+            return window.localStorage.getItem('sentToServer') === '1';
+        }
+        function setTokenSentToServer(sent) {
+            window.localStorage.setItem('sentToServer', sent ? '1' : '0');
+        }
     }
 });
 });

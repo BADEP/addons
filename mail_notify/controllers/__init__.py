@@ -1,3 +1,3 @@
 # -*- coding: utf-8 -*-
 
-from . import sw
+from . import main
