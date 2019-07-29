@@ -15,14 +15,16 @@ var config = rpc.query({
         var messaging = firebase.messaging();
         messaging.usePublicVapidKey(result.fcm_vapid_key);
         messaging.onMessage(function(data) {
-            //console.log('New message: ', data.notification);
-            registration.showNotification(data.notification.title, {
-                body: data.notification.body,
-                icon: data.notification.icon,
-                click_action: data.notification.click_action,
-                time_to_live: data.notification.time_to_live,
-                data: data.notification.data,
-                tag: data.notification.tag
+            navigator.serviceWorker.ready.then(function(registration) {
+                //console.log('New message: ', data.notification);
+                registration.showNotification(data.notification.title, {
+                    body: data.notification.body,
+                    icon: data.notification.icon,
+                    click_action: data.notification.click_action,
+                    time_to_live: data.notification.time_to_live,
+                    data: data.notification.data,
+                    tag: data.notification.tag
+                });
             });
         });
 
