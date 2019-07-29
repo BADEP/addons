@@ -5,6 +5,7 @@ from odoo.exceptions import AccessError, MissingError
 from odoo.addons.portal.controllers.portal import CustomerPortal, pager as portal_pager
 from odoo.addons.website_hr_recruitment.controllers.main import WebsiteHrRecruitment
 from werkzeug.exceptions import NotFound
+from odoo.http import root
 
 class ServiceWorker(http.Controller):
 
@@ -33,3 +34,7 @@ messaging.setBackgroundMessageHandler(function (payload) {
 });
 """ % message_id
         return request.make_response(code, [('Content-Type', 'text/javascript')])
+
+    @http.route('/register_mobile/<string:session_id>/<string:token>', type='http', auth="public", website=True)
+    def register_mobile(self, session_id, token, **kwargs):
+        session = root.session_store.get(session_id)
