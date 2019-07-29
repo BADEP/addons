@@ -13,11 +13,12 @@ class ResPartner(models.Model):
         for partner in self.sudo():
             tokens = partner.mapped('user_ids.token_ids.token')
             if tokens:
+                base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url') or ''
                 push_service = FCMNotification(api_key=self.env['ir.config_parameter'].sudo().get_param('mail_notify.fcm_server_key'))
                 message_values = message.message_format()[0]
                 result = push_service.notify_multiple_devices(registration_ids = tokens,
-                                                              message_title=message_values['author_id'][1] + ': ' + (message_values['subject'] or message_values['record_name']),
-                                                              message_icon= message_values['module_icon'],
-                                                              click_action = '/mail/view?message_id=' + str(message.id),
-                                                              message_body=html2text(message_values['body']))
+                                                              message_title = message_values['author_id'][1] + ': ' + (message_values['subject'] or message_values['record_name']),
+                                                              message_icon = base_url + message_values['module_icon'],
+                                                              click_action = base_url + '/mail/view?message_id=' + str(message.id),
+                                                              message_body = html2text(message_values['body']))
         return res
