@@ -10,15 +10,30 @@ class MailChannel(models.Model):
     @api.multi
     def _notify(self, message):
         res = super(MailChannel, self)._notify(message)
-        tokens = (message.sudo().mapped('channel_ids.channel_partner_ids.user_ids') - message.sudo().author_id.user_ids).mapped('token_ids.token')
-        if tokens:
-            push_service = FCMNotification(api_key=self.env['ir.config_parameter'].sudo().get_param('mail_notify.fcm_server_key'))
-            base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url') or ''
-            message_values = message.message_format()[0]
-            icon = message.author_id and (base_url + ('/web/image/res.partner/' + str(message.author_id.id) + '/image_small')) or (base_url + '/mail/static/src/img/smiley/avatar.jpg')
-            result = push_service.notify_multiple_devices(registration_ids = tokens,
-                                                          message_title=message_values['author_id'][1],
-                                                          message_icon= icon,
-                                                          click_action = base_url + '/mail/view?message_id=' + str(message.id),
-                                                          message_body=html2text(message_values['body']))
+
+        push_service = FCMNotification(
+            api_key=self.env['ir.config_parameter'].sudo().get_param('mail_notify.fcm_server_key'))
+        base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url') or ''
+        message_values = message.message_format()[0]
+        icon = message.author_id and (
+                    base_url + ('/web/image/res.partner/' + str(message.author_id.id) + '/image_small')) or (
+                           base_url + '/mail/static/src/img/smiley/avatar.jpg')
+        web_tokens = (message.sudo().mapped(
+            'channel_ids.channel_partner_ids.user_ids') - message.sudo().author_id.user_ids).mapped(
+            'token_ids').filtered(lambda t: t.type == 'web').mapped('token')
+        android_tokens = (message.sudo().mapped(
+            'channel_ids.channel_partner_ids.user_ids') - message.sudo().author_id.user_ids).mapped(
+            'token_ids').filtered(lambda t: t.type == 'android').mapped('token')
+        if web_tokens:
+            push_service.notify_multiple_devices(registration_ids=web_tokens,
+                                                 message_title=message_values['author_id'][1],
+                                                 message_icon=icon,
+                                                 click_action=base_url + '/mail/view?message_id=' + str(message.id),
+                                                 message_body=html2text(message_values['body']))
+        if android_tokens:
+            push_service.notify_multiple_devices(registration_ids=android_tokens,
+                                                 message_title=message_values['author_id'][1],
+                                                 message_icon=icon,
+                                                 message_data={'url': base_url + '/mail/view?message_id=' + str(message.id)},
+                                                 message_body=html2text(message_values['body']))
         return res

@@ -9,17 +9,18 @@ class ResUsersToken(models.Model):
 
     user_id = fields.Many2one('res.users', ondelete='cascade')
     token = fields.Char(required=True)
+    type = fields.Selection([('web', 'Web'), ('android', 'Android')], default='web', required=True)
 
     _sql_constraints = [
         ('token_uniq', 'unique(token)', 'Token must be unique!'),
     ]
 
     @api.model
-    def add_token(self, token):
+    def add_token(self, token, token_type='web'):
         if self.sudo().search([('token', '=', token)]):
-            self.sudo().search([('token', '=', token)]).write({'user_id': self.env.user.id})
+            self.sudo().search([('token', '=', token)]).write({'user_id': self.env.user.id, 'type': token_type and token_type or 'web'})
         else:
-            self.sudo().create({'token': token, 'user_id': self.env.user.id})
+            self.sudo().create({'token': token, 'user_id': self.env.user.id, 'type': token_type and token_type or 'web'})
 
     @api.model
     def clean_token(self):
