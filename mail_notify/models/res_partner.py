@@ -11,7 +11,7 @@ class ResPartner(models.Model):
     def _notify_by_chat(self, message):
         res = super(ResPartner, self)._notify_by_chat(message)
         web_tokens = self.sudo().mapped('user_ids.token_ids').filtered(lambda t: t.type == 'web').mapped('token')
-        android_tokens = self.sudo().mapped('user_ids.token_ids').filtered(lambda t: t.type == 'web').mapped('token')
+        android_tokens = self.sudo().mapped('user_ids.token_ids').filtered(lambda t: t.type == 'android').mapped('token')
         base_url = self.env['ir.config_parameter'].sudo().get_param('web.base.url') or ''
         push_service = FCMNotification(
             api_key=self.env['ir.config_parameter'].sudo().get_param('mail_notify.fcm_server_key'))
