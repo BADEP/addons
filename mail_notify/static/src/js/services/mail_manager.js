@@ -4,12 +4,13 @@ var config = require('web.config');
 var core = require('web.core');
 var mailUtils = require('mail.utils');
 var _t = core._t;
+var MailManagerNotification = require('mail.Manager.Notification');
 var MailManager = require('mail.Manager');
 
 var PREVIEW_MSG_MAX_SIZE = 350;
 var rpc = require('web.rpc');
 
-MailManager.include({
+MailManagerNotification.include({
     _addNewMessagePostprocessThread: function (message, options) {
         var self = this;
         _.each(message.getThreadIDs(), function (threadID) {
@@ -50,7 +51,7 @@ MailManager.include({
         });
     },
 
-   _notifyIncomingMessage: function (message) {
+    _notifyIncomingMessage: function (message) {
         if (this.call('bus_service', 'isOdooFocused')) {
             // no need to notify
             return;
@@ -91,7 +92,27 @@ MailManager.include({
         }
         this.call('bus_service', 'sendNotification', title, content, function ( ){window.open(message.getURL());}, icon);
     },
+
+    _handleNeedactionNotification: function (messageData) {
+        var self = this;
+        var inbox = this.getMailbox('inbox');
+        var message = this.addMessage(messageData, {
+            incrementUnread: true,
+            showNotification: true,
+        });
+        if (typeof inbox != "undefined") {
+            inbox.incrementMailboxCounter();
+        }
+        _.each(message.getThreadIDs(), function (threadID) {
+            var channel = self.getChannel(threadID);
+            if (channel) {
+                channel.incrementNeedactionCounter();
+            }
+        });
+        this._mailBus.trigger('update_needaction', inbox.getMailboxCounter());
+    },
+
 });
-return MailManager;
+return MailManagerNotification;
 
 });
