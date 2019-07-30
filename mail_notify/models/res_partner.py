@@ -16,16 +16,19 @@ class ResPartner(models.Model):
         push_service = FCMNotification(
             api_key=self.env['ir.config_parameter'].sudo().get_param('mail_notify.fcm_server_key'))
         message_values = message.message_format()[0]
+        icon = message_values.get('module_icon') and message_values.get('module_icon') or \
+               message.author_id and '/web/image/res.partner/' + str(message.author_id.id) + '/image_small' or \
+               '/mail/static/src/img/smiley/avatar.jpg'
         if web_tokens:
             push_service.notify_multiple_devices(registration_ids=web_tokens,
                                                  message_title=message_values['author_id'][1] + ': ' + (message_values['subject'] or message_values['record_name']),
-                                                 message_icon=base_url + message_values['module_icon'],
+                                                 message_icon=base_url + icon,
                                                  click_action=base_url + '/mail/view?message_id=' + str(message.id),
                                                  message_body=html2text(message_values['body']))
         if android_tokens:
             push_service.notify_multiple_devices(registration_ids=web_tokens,
                                                  message_title=message_values['author_id'][1] + ': ' + (message_values['subject'] or message_values['record_name']),
-                                                 message_icon=base_url + message_values['module_icon'],
+                                                 message_icon=base_url + icon,
                                                  data_message={'url': base_url + '/mail/view?message_id=' + str(message.id)},
                                                  message_body=html2text(message_values['body']))
         return res
