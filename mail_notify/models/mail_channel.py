@@ -34,6 +34,6 @@ class MailChannel(models.Model):
             push_service.notify_multiple_devices(registration_ids=android_tokens,
                                                  message_title=message_values['author_id'][1],
                                                  message_icon=icon,
-                                                 message_data={'url': base_url + '/mail/view?message_id=' + str(message.id)},
+                                                 data_message={'url': base_url + '/mail/view?message_id=' + str(message.id)},
                                                  message_body=html2text(message_values['body']))
         return res
