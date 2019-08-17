@@ -6,7 +6,7 @@
 	
  
  <!-- Holidays Category -->
- <record model="hr.holidays.status" id="holiday_status_heures_sup">
+ <record model="hr.leave.type" id="holiday_status_heures_sup">
       <field name="name">Heures Supplementaires</field>
       <field name="limit">True</field>
       <field name="color_name">lightblue</field>
@@ -95,7 +95,7 @@
         <field name="parent_id" eval="False"/>
     </record>
 	
-	 <record id="hr_payroll.DEDIRPP" model="hr.salary.rule.category">
+	 <record id="DEDIRPP" model="hr.salary.rule.category">
         <field name="name">Déduction d'impôt</field>
         <field name="code">DEDIRPP</field>
         <field name="parent_id" eval="False"/>
@@ -109,7 +109,7 @@
 		<field name="parent_id" ref="RETENUES"/>
 	</record> -->
 	
-	<record id="hr_payroll.TRANCHEIMPO" model="hr.salary.rule.category">
+	<record id="TRANCHEIMPO" model="hr.salary.rule.category">
 		<field name="name">Tranche d'impôt</field>
 		<field name="code">TRANCHEIMPO</field>
 		<field name="parent_id" eval="False"/>
@@ -131,7 +131,7 @@
 	
 
 	
-	  <record id="hr_payroll.COMP" model="hr.salary.rule.category">
+	  <record id="COMP" model="hr.salary.rule.category">
         <field name="name">Cotisations Patronales</field>
         <field name="code">COMP</field>
         <field name="parent_id" eval="False"/>
@@ -217,7 +217,7 @@
 		 <field name="appears_on_payslip" eval="False"/>
 	</record>	
 	
-<record id="hr_payroll.hr_rule_basic_absence" model="hr.salary.rule">
+<record id="hr_rule_basic_absence" model="hr.salary.rule">
 			<field name="name">Absences en heures</field>
 			<field name="category_id" ref="hr_payroll.BASIC"/>
 			<field name="parent_rule_id" ref="hr_rule_basic_hor"/>
@@ -348,7 +348,7 @@
     </record>
 	
 	<record id="hr_payroll_rules_MARIE" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll.DEDIRPP"/>
+        <field name="category_id" ref="DEDIRPP"/>
         <field name="name">MARIE</field>
         <field name="code">MARIE</field>
         <field name="sequence">20446</field>
@@ -360,7 +360,7 @@
     </record>
 	
   	<record id="hr_payroll_rules_ENF1" model="hr.salary.rule">
-		<field name="category_id" ref="hr_payroll.DEDIRPP"/>
+		<field name="category_id" ref="DEDIRPP"/>
 		<field name="name">Deduction pour Enfants</field>
         <field name="code">F1</field>
     	<field name="sequence">20447</field>
@@ -383,7 +383,7 @@
     </record>
 	
 	<record id="hr_payroll_rules_ded_sum_famille" model="hr.salary.rule">
-        <field name="category_id" ref="hr_payroll.DEDIRPP"/>
+        <field name="category_id" ref="DEDIRPP"/>
         <field name="name">Déduction impôt famille </field>
         <field name="code">DEDFAM</field>
         <field name="sequence">20445</field>
@@ -471,7 +471,7 @@
             <field name="code">I</field>
             <field name="name">TRANCHEA</field>
 			<field name="sequence">1999999</field>
-            <field name="category_id" ref="hr_payroll.TRANCHEIMPO"/>
+            <field name="category_id" ref="TRANCHEIMPO"/>
             <field name="condition_select">python</field>
 			<field name="condition_python">result = C_IMPDED &gt;= 3000 </field>
             <field name="amount_select">code</field>
@@ -546,11 +546,10 @@ else -0)
 	 <record id="hr_payroll_salary_structure_base" model="hr.payroll.structure">
         <field name="code">Ma-Base-</field>
         <field name="name">Cotisations de base paie Marocaine</field>
-        <field eval="[(6, 0, [ref('hr_payroll.hr_rule_basic'),ref('hr_salary_rule_av_sal'),ref('hr_payroll_rules_C1_employer'),ref('hr_payroll_rules_AMO_employe'),ref('hr_payroll_rules_AMO_employer'),ref('hr_payroll_rules_frpro'),ref('hr_payroll_rules_TRANCHE'),ref('hr_rule_basic_hor'), ref('hr_payroll_rules_MARIE'), ref('hr_payroll.hr_rule_taxable'), ref('hr_payroll_rules_ENF1'),ref('hr_payroll_rules_frais_pro'),ref('hr_payroll_rules_alloc_fam'), ref('hr_payroll.hr_rule_net'), ref('hr_rule_secu') , ref('hr_rule_total'), ref('hr_rule_total_charges_salariales'), ref('hr_rule_total_retenues'), ref('hr_rule_cumul_imposable'), ref('hr_rule_total_charges_patronales'),ref('hr_rule_total_deductionimpot'), ref('hr_payroll_rules_CNSS1'), ref('hr_rule_cumul_imposableannuel'), ref('hr_rule_cumul_impo_apres_ded'), ref('hr_rule_IRPP'),ref('hr_payroll.hr_rule_basic_absence')])]" name="rule_ids"/>
+        <field eval="[(6, 0, [ref('hr_payroll.hr_rule_basic'),ref('hr_salary_rule_av_sal'),ref('hr_payroll_rules_C1_employer'),ref('hr_payroll_rules_AMO_employe'),ref('hr_payroll_rules_AMO_employer'),ref('hr_payroll_rules_frpro'),ref('hr_payroll_rules_TRANCHE'),ref('hr_rule_basic_hor'), ref('hr_payroll_rules_MARIE'), ref('hr_payroll.hr_rule_taxable'), ref('hr_payroll_rules_ENF1'),ref('hr_payroll_rules_frais_pro'),ref('hr_payroll_rules_alloc_fam'), ref('hr_payroll.hr_rule_net'), ref('hr_rule_secu') , ref('hr_rule_total'), ref('hr_rule_total_charges_salariales'), ref('hr_rule_total_retenues'), ref('hr_rule_cumul_imposable'), ref('hr_rule_total_charges_patronales'),ref('hr_rule_total_deductionimpot'), ref('hr_payroll_rules_CNSS1'), ref('hr_rule_cumul_imposableannuel'), ref('hr_rule_cumul_impo_apres_ded'), ref('hr_rule_IRPP'),ref('hr_rule_basic_absence')])]" name="rule_ids"/>
         <field name="company_id" ref="base.main_company"/>
         <field name="parent_id" ref="hr_payroll.structure_base"/>
 		<field name="note">Cette rubrique représente la structure des employés marocains.</field>
-   </record>
-	
-	   </data>
+    </record>
+    </data>
 </odoo>

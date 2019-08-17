@@ -21,10 +21,9 @@
 {
     'name': 'Morocco-payroll Basic',
     'category': 'Human Resources',
-    'author': 'rhfree.com',
-    'website': 'http://rhfree.com',
+    'author': 'BADEP, rhfree.com',
+    'website': 'https://badep.ma, http://rhfree.com',
     "license": "AGPL-3",
-    'version': '1.3Basic',
     'depends': ['hr_payroll'],
     
 	
