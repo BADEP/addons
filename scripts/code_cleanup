@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo rm -r /var/lib/odoo/.local/share/Odoo/addons/repos/badep/addons
+sudo rm -rf /var/lib/odoo/.local/share/Odoo/addons/repos/badep/addons
