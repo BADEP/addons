@@ -1,0 +1,15 @@
+version: 0.0
+os: linux
+files:
+  - source: /
+    destination: /var/lib/odoo/.local/share/Odoo/addons/repos/badep/addons
+hooks:
+  ApplicationStop:
+    - location: scripts/stop_server
+      runas: ubuntu
+  BeforeInstall:
+    - location: scripts/code_cleanup
+      runas: ubuntu
+  ApplicationStart:
+    - location: scripts/start_server
+      runas: ubuntu
