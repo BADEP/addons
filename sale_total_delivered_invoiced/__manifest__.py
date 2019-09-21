@@ -19,7 +19,7 @@
     'version': '10.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['account', 'fleet'],
+    'depends': ['sale'],
     'images': ['static/scr/img/banner.png'],
     'license': 'AGPL-3',
 
