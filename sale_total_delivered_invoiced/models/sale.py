@@ -12,12 +12,9 @@ class SaleOrder(models.Model):
     def _amount_delivered_invoiced(self):
         amount_delivered = amount_invoiced = 0
         for order in self:
-            for line in order.order_line:
-                amount_delivered += line.price_delivered
-                amount_invoiced += line.price_invoiced
             order.update({
-                'amount_delivered': amount_delivered,
-                'amount_invoiced': amount_invoiced,
+                'amount_delivered': sum(order.order_line.mapped('price_delivered')),
+                'amount_invoiced': sum(order.order_line.mapped('price_invoiced')),
             })
 
 class SaleOrderLine(models.Model):
@@ -30,6 +27,6 @@ class SaleOrderLine(models.Model):
     def _compute_amount_delivered_invoiced(self):
         for line in self:
             line.update({
-                'price_delivered': line.price_total * (line.qty_delivered / line.product_uom_qty),
-                'price_invoiced': line.price_total * (line.qty_invoiced / line.product_uom_qty),
+                'price_delivered': line.price_total * (line.qty_delivered / line.product_uom_qty) if line.product_uom_qty else 0,
+                'price_invoiced': line.price_total * (line.qty_invoiced / line.product_uom_qty) if line.product_uom_qty else 0,
             })
