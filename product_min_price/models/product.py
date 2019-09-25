@@ -24,6 +24,6 @@ class ProductProduct(models.Model):
     @api.depends('seller_ids')
     def _get_min_purchase_price(self):
         seller_price = self.variant_seller_ids.filtered(lambda s: (not s.product_id or s.product_id == self) and
-                                                                  (not s.date_start or s.date_start < fields.Date.now()) and
-                                                                  (not s.date_end or s.date_end > fields.Date.now())).mapped('price')
+                                                                  (not s.date_start or s.date_start < fields.Date.today()) and
+                                                                  (not s.date_end or s.date_end > fields.Date.today())).mapped('price')
         self.purchase_min_price = seller_price and min(seller_price) or 0
