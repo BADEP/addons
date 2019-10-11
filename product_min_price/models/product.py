@@ -11,8 +11,8 @@ class ProductTemplate(models.Model):
     @api.one
     @api.depends('seller_ids')
     def _get_min_purchase_price(self):
-        seller_price = self.seller_ids.filtered(lambda s: (not s.date_start or s.date_start < fields.Date.now()) and
-                                                          (not s.date_end or s.date_end > fields.Date.now())).mapped('price')
+        seller_price = self.seller_ids.filtered(lambda s: (not s.date_start or s.date_start < fields.Datetime.now()) and
+                                                          (not s.date_end or s.date_end > fields.Datetime.now())).mapped('price')
         self.purchase_min_price = seller_price and min(seller_price) or 0
 
 class ProductProduct(models.Model):
