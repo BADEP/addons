@@ -85,7 +85,7 @@ msgstr "Journaux"
 #. module: project_task_log
 #: model:ir.model.fields,field_description:project_task_log.field_project_task_log__old_stage_id
 msgid "Old stage"
-msgstr ""
+msgstr "Ancienne étape"
 
 #. module: project_task_log
 #: model:ir.model.fields,field_description:project_task_log.field_project_task_log__old_user_id
