@@ -1,0 +1,50 @@
+<odoo>
+    <data>
+        <record id="view_task_form_inherit_log" model="ir.ui.view">
+            <field name="name">project.task.form.logs</field>
+            <field name="model">project.task</field>
+            <field name="inherit_id" ref="project.view_task_form2"/>
+            <field name="arch" type="xml">
+                <page name="extra_info" position="after">
+                    <page string="Log">
+                        <field name="log_ids" nolabel="1" readonly="1" force_save="1">
+                            <tree>
+                                <field name="type"/>
+                                <field name="old_user_id"/>
+                                <field name="old_stage_id"/>
+                                <field name="user_id"/>
+                                <field name="stage_id"/>
+                                <field name="duration" widget="time_delta"/>
+                            </tree>
+                        </field>
+                    </page>
+                </page>
+            </field>
+        </record>
+
+        <record model="ir.ui.view" id="view_project_task_log_pivot">
+            <field name="name">project.task.log.pivot</field>
+            <field name="model">project.task.log</field>
+            <field name="arch" type="xml">
+                <pivot string="Logs">
+                    <field name="user_id" type="row"/>
+                    <field name="duration" type="measure"/>
+                </pivot>
+            </field>
+        </record>
+
+        <record id="action_project_task_log_graph" model="ir.actions.act_window">
+            <field name="name">Log Analysis</field>
+            <field name="res_model">project.task.log</field>
+            <field name="view_type">form</field>
+            <field name="view_mode">pivot,graph</field>
+            <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
+        </record>
+
+        <menuitem id="menu_project_report_task_log_analysis"
+            name="Log Analysis"
+            action="action_project_task_log_graph"
+            parent="project.menu_project_report"
+            sequence="10"/>
+    </data>
+</odoo>
