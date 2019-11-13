@@ -68,7 +68,7 @@ msgstr "Dernière mise à jour le"
 #. module: project_task_log
 #: model_terms:ir.ui.view,arch_db:project_task_log.view_task_form_inherit_log
 msgid "Log"
-msgstr "Journaux"
+msgstr "Suivi"
 
 #. module: project_task_log
 #: model:ir.actions.act_window,name:project_task_log.action_project_task_log_graph

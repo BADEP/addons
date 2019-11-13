@@ -10,6 +10,8 @@
                         <field name="log_ids" nolabel="1" readonly="1" force_save="1">
                             <tree>
                                 <field name="type"/>
+                                <field name="create_uid"/>
+                                <field name="create_date" string="Date"/>
                                 <field name="old_user_id"/>
                                 <field name="old_stage_id"/>
                                 <field name="user_id"/>
