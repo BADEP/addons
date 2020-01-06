@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">base_attachment_optimize.res_config_settings_view_form</field>
+        <field name="model">res.config.settings</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="base_setup.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div id="business_documents" position="after">
+                <div id="attachment_optimization">
+                    <h2>Attachements Optimization</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="optimize_pdf"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="optimize_pdf"/>
+                                <div class="text-muted">
+                                    Compress PDF Files
+                                </div>
+                                <div attrs="{'invisible': [('optimize_pdf','=',False)]}">
+                                    <div class="mt16 row">
+                                        <label class="col-xs-3 col-md-3 o_light_label" for="pdf_quality"/>
+                                        <field name="pdf_quality" attrs="{'required': [('optimize_pdf','=',True)]}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box">
+                            <div class="o_setting_left_pane">
+                                <field name="optimize_images"/>
+                            </div>
+                            <div class="o_setting_right_pane">
+                                <label for="optimize_images"/>
+                                <div class="text-muted">
+                                    Compress Images
+                                </div>
+                                <div attrs="{'invisible': [('optimize_images','=',False)]}">
+                                    <div class="mt16 row">
+                                        <label class="col-xs-3 col-md-3 o_light_label" for="dpi_quality"/>
+                                        <field name="dpi_quality" attrs="{'required': [('optimize_images','=',True)]}"/>
+                                        <label class="col-xs-3 col-md-3 o_light_label" for="jpeg_quality"/>
+                                        <field name="jpeg_quality" attrs="{'required': [('optimize_images','=',True)]}"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 col-lg-6 o_setting_box" attrs="{'invisible': [('optimize_images','=',False), ('optimize_pdf','=',False)]}">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Advanced settings</span>
+                                <div class="mt16 row">
+                                    <label class="col-xs-3 col-md-3 o_light_label" for="batch_size"/>
+                                    <field name="batch_size" attrs="{'required': ['|', ('optimize_pdf','=',True), ('optimize_images','=',True)]}"/>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>
