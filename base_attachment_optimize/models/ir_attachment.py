@@ -63,3 +63,7 @@ class IrAttachment(models.Model):
             super(IrAttachment, attach.sudo()).write(vals)
             if fname:
                 self._file_delete(fname)
+
+    @api.model
+    def cron_compress(self):
+        return True
