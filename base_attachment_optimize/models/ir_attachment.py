@@ -27,23 +27,26 @@ class IrAttachment(models.Model):
                                        limit=int(self.env['ir.config_parameter'].sudo().get_param('base_attachment_optimize.batch_size')))
             pdfquality = self.env['ir.config_parameter'].sudo().get_param('base_attachment_optimize.pdf_quality')
             for att in attachments:
-                path = att._full_path(att.store_fname)
-                cmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/" + pdfquality + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=/tmp/output.pdf " + path
-                os.system(cmd)
-                # args = [
-                #     "-dNOPAUSE", "-dBATCH", "-dQUIET",
-                #     "-sDEVICE=pdfwrite",
-                #     '-dCompatibilityLevel=1.5',
-                #     "-dPDFSETTINGS=/" + pdfquality,
-                #     "-sOutputFile=/tmp/output.pdf",
-                #     "-f", path
-                # ]
-                # encoding = locale.getpreferredencoding()
-                # args = [a.encode(encoding) for a in args]
-                # ghostscript.Ghostscript(*args)
-                bin_datas = open('/tmp/output.pdf','rb').read()
-                if att.file_size > len(bin_datas):
-                    att.write({'datas': base64.b64encode(bin_datas)})
+                try:
+                    path = att._full_path(att.store_fname)
+                    cmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/" + pdfquality + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=/tmp/output.pdf " + path
+                    os.system(cmd)
+                    # args = [
+                    #     "-dNOPAUSE", "-dBATCH", "-dQUIET",
+                    #     "-sDEVICE=pdfwrite",
+                    #     '-dCompatibilityLevel=1.5',
+                    #     "-dPDFSETTINGS=/" + pdfquality,
+                    #     "-sOutputFile=/tmp/output.pdf",
+                    #     "-f", path
+                    # ]
+                    # encoding = locale.getpreferredencoding()
+                    # args = [a.encode(encoding) for a in args]
+                    # ghostscript.Ghostscript(*args)
+                    bin_datas = open('/tmp/output.pdf','rb').read()
+                    if att.file_size > len(bin_datas):
+                        att.write({'datas': base64.b64encode(bin_datas)})
+                except Exception:
+                    pass
             attachments.write({'optimized': True})
         return True
 
