@@ -2,7 +2,7 @@
 # Part of Odoo. See LICENSE file for full copyright and licensing details.
 
 import logging
-import ghostscript
+#import ghostscript
 import base64
 import locale
 import os
