@@ -28,7 +28,7 @@ class IrAttachment(models.Model):
             pdfquality = self.env['ir.config_parameter'].sudo().get_param('base_attachment_optimize.pdf_quality')
             for att in attachments:
                 path = att._full_path(att.store_fname)
-                cmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.5 -dPDFSETTINGS=/" + pdfquality + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=/tmp/output.pdf " + path
+                cmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/" + pdfquality + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=/tmp/output.pdf " + path
                 os.system(cmd)
                 # args = [
                 #     "-dNOPAUSE", "-dBATCH", "-dQUIET",
