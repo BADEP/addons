@@ -3,7 +3,10 @@
 
 import logging
 import ghostscript
+import base64
 import locale
+import os
+
 
 from odoo import api, fields, models
 
@@ -25,17 +28,25 @@ class IrAttachment(models.Model):
             pdfquality = self.env['ir.config_parameter'].sudo().get_param('base_attachment_optimize.pdf_quality')
             for att in attachments:
                 path = att._full_path(att.store_fname)
-                args = [
-                    "ps2pdf",  # actual value doesn't matter
-                    "-dNOPAUSE", "-dBATCH", "-dQUIET",
-                    "-sDEVICE=pdfwrite",
-                    "-dPDFSETTINGS=/" + pdfquality,
-                    "-sOutputFile=" + path,
-                    "-f", path
-                ]
-                encoding = locale.getpreferredencoding()
-                args = [a.encode(encoding) for a in args]
-                ghostscript.Ghostscript(*args)
+                cmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.5 -dPDFSETTINGS=/" + pdfquality + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=/tmp/output.pdf " + path
+                os.system(cmd)
+                # args = [
+                #     "-dNOPAUSE", "-dBATCH", "-dQUIET",
+                #     "-sDEVICE=pdfwrite",
+                #     '-dCompatibilityLevel=1.5',
+                #     "-dPDFSETTINGS=/" + pdfquality,
+                #     "-sOutputFile=/tmp/output.pdf",
+                #     "-f", path
+                # ]
+                # encoding = locale.getpreferredencoding()
+                # args = [a.encode(encoding) for a in args]
+                # ghostscript.Ghostscript(*args)
+                bin_datas = open('/tmp/output.pdf','rb').read()
+                if att.file_size > len(bin_datas):
+                    att.write({'datas': base64.b64encode(bin_datas)})
             attachments.write({'optimized': True})
-
         return True
+
+    def _inverse_datas(self):
+        super(IrAttachment, self)._inverse_datas()
+        self.write({'optimized': False})
