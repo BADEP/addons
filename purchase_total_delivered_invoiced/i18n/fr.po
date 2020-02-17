@@ -16,7 +16,7 @@ msgstr ""
 "Plural-Forms: \n"
 
 #. module: purchase_total_delivered_invoiced
-#: model:ir.model.fields,field_description:purchase_total_delivered_invoiced.field_purchase_order_line__price_delivered
+#: model:ir.model.fields,field_description:purchase_total_delivered_invoiced.field_purchase_order_line__price_received
 msgid "Amount Delivered"
 msgstr "Montant livré"
 
@@ -41,7 +41,7 @@ msgid "Total"
 msgstr "Total"
 
 #. module: purchase_total_delivered_invoiced
-#: model:ir.model.fields,field_description:purchase_total_delivered_invoiced.field_purchase_order__amount_delivered
+#: model:ir.model.fields,field_description:purchase_total_delivered_invoiced.field_purchase_order__amount_received
 msgid "Total Delivered"
 msgstr "Total livré"
 
