@@ -48,6 +48,7 @@ class PurchaseReport(models.Model):
             %s
             )""" % (self._table, self._select(), self._from(), self._group_by()))
 
+    #TODO: use proper inheritance instead of overriding toe whole code
     def _select(self):
         select_str = """
             WITH currency_rate as (%s)
