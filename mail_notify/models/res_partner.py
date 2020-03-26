@@ -18,6 +18,8 @@ class ResPartner(models.Model):
         message_values = message.message_format()[0]
         if not message.model and self.env.context.get('default_res_id') and self.env.context.get('default_res_model'):
             message.write({'model': self.env.context.get('default_res_model'), 'res_id': self.env.context.get('default_res_id')})
+        if not message.model and self.env.context.get('active_id') and self.env.context.get('active_model'):
+            message.write({'model': self.env.context.get('active_model'), 'res_id': self.env.context.get('active_id')})
         icon = message_values.get('module_icon') and message_values.get('module_icon') or \
                message.author_id and '/web/image/res.partner/' + str(message.author_id.id) + '/image_small' or \
                '/mail/static/src/img/smiley/avatar.jpg'
