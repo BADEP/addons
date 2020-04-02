@@ -6,11 +6,7 @@ odoo.define('mail_notify.BusService', function (require) {
     Session.include({
         get_file: function(options) {
             if (typeof Android != "undefined") {Android.getFile(options);}
-            if (this.override_session) {
-                options.data.session_id = this.session_id;
-            }
-            options.session = this;
-            return ajax.get_file(options);
+            return this._super.apply(this, arguments);
         }
     });
     return Session;
