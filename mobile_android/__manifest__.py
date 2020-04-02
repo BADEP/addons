@@ -2,7 +2,7 @@
 {
     'name': "Android Support",
 
-    'summary': """Add push notifications for incoming messages""",
+    'summary': """Add Android app support""",
 
     'author': "BADEP",
     'website': "https://badep.ma",
@@ -14,7 +14,7 @@
     'version': '12.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['mail', 'web'],
+    'depends': ['mail_notify', 'web'],
     'images': ['static/scr/img/banner.png'],
     'license': 'AGPL-3',
     # always loaded
