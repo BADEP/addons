@@ -5,7 +5,7 @@ odoo.define('mobile_android.Session', function (require) {
     console.log('Android: session declaration');
     Session.include({
         get_file: function(options) {
-            if (typeof Android != "undefined" && options.data.download) {Android.getFile(options.filename);}
+            if (typeof Android != "undefined" && options.data.download) {Android.getFile(options.data.filename);}
             return this._super.apply(this, arguments);
         }
     });
