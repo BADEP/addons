@@ -1,4 +1,4 @@
-odoo.define('mail_notify.BusService', function (require) {
+odoo.define('mobile_android.Session', function (require) {
     "use strict";
     var Session = require('web.Session');
     var ajax = require('web.ajax');
@@ -9,6 +9,6 @@ odoo.define('mail_notify.BusService', function (require) {
             return this._super.apply(this, arguments);
         }
     });
-    return Session;
     console.log('Android: return session');
+    return Session;
 });
