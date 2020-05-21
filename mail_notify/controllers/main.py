@@ -4,7 +4,6 @@ from odoo.addons.web.controllers.main import Home
 
 class FirebaseController(http.Controller):
 
-
     @http.route('/firebase-messaging-sw.js', type='http', auth="public", website=True)
     def get_sw(self, **kwargs):
         message_id = request.env['ir.config_parameter'].get_fcm_config()['fcm_messaging_id'] or '1234567890'
@@ -29,14 +28,3 @@ messaging.setBackgroundMessageHandler(function (payload) {
 });
 """ % message_id
         return request.make_response(code, [('Content-Type', 'text/javascript')])
-
-class FirebaseHome(Home):
-
-    @http.route('/web', type='http', auth="none")
-    def web_client(self, s_action=None, **kw):
-        response = super(FirebaseHome, self).web_client(s_action, **kw)
-        token = request.httprequest.cookies.get('token', False)
-        if token and request.env.user.id:
-            request.env['res.users.token'].add_token(token, request.httprequest.cookies.get('token_type', False))
-            response.set_cookie('token', expires=0)
-        return response

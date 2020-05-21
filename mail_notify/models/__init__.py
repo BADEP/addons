@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 from . import res_users_token
 from . import ir_config_parameter
 from . import ir_http

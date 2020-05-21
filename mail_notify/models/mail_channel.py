@@ -1,8 +1,6 @@
-# -*- coding: utf-8 -*-
 from odoo import fields, models, api
 from pyfcm import FCMNotification
 from html2text import html2text
-
 
 class MailChannel(models.Model):
     _inherit = 'mail.channel'
@@ -21,9 +19,6 @@ class MailChannel(models.Model):
         web_tokens = (message.sudo().mapped(
             'channel_ids.channel_partner_ids.user_ids') - message.sudo().author_id.user_ids).mapped(
             'token_ids').filtered(lambda t: t.type == 'web').mapped('token')
-        android_tokens = (message.sudo().mapped(
-            'channel_ids.channel_partner_ids.user_ids') - message.sudo().author_id.user_ids).mapped(
-            'token_ids').filtered(lambda t: t.type == 'android').mapped('token')
         action_id = self.env.ref('mail.action_discuss').id
 
         if web_tokens:
@@ -31,11 +26,5 @@ class MailChannel(models.Model):
                                                  message_title=message_values['author_id'][1],
                                                  message_icon=icon,
                                                  click_action=base_url + '/web?#action=' + str(action_id) + '&active_id=' + str(self.id),
-                                                 message_body=html2text(message_values['body']))
-        if android_tokens:
-            push_service.notify_multiple_devices(registration_ids=android_tokens,
-                                                 message_title=message_values['author_id'][1],
-                                                 message_icon=icon,
-                                                 data_message={'url': base_url + '/web?#action=' + str(action_id) + '&active_id=' + str(self.id)},
                                                  message_body=html2text(message_values['body']))
         return res

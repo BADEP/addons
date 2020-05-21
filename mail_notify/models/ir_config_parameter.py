@@ -1,8 +1,5 @@
-
-
 from odoo.models import api, Model
 from odoo.tools.safe_eval import const_eval
-
 
 class IrConfigParameter(Model):
     _inherit = "ir.config_parameter"

@@ -1,15 +1,12 @@
-# -*- coding: utf-8 -*-
-
 from odoo import api, fields, models
 from pyfcm import FCMNotification
-
 
 class ResUsersToken(models.Model):
     _name = 'res.users.token'
 
     user_id = fields.Many2one('res.users', ondelete='cascade')
     token = fields.Char(required=True)
-    type = fields.Selection([('web', 'Web'), ('android', 'Android')], default='web', required=True)
+    type = fields.Selection([('web', 'Web')], default='web', required=True)
 
     _sql_constraints = [
         ('token_uniq', 'unique(token)', 'Token must be unique!'),

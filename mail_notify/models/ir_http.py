@@ -1,9 +1,6 @@
-# -*- coding: utf-8 -*-
-
 from odoo import api, models, registry
 from odoo import SUPERUSER_ID
 from odoo.http import request
-
 
 # TODO: This is a dirty hack which renders all image_small of res_partner public! It's needed for the icon of the push notification.
 # TODO: Maybe in the future add an access_token or verify if the request comes from FCM
