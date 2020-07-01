@@ -19,14 +19,14 @@
 #
 ##############################################################################
 {
-    'name': 'Morocco-payroll Basic',
+    'name': 'Paie - Maroc',
     'category': 'Human Resources',
     'author': 'BADEP, rhfree.com',
     'website': 'https://badep.ma, http://rhfree.com',
     "license": "AGPL-3",
+    "version": "12.0.2",
     'depends': ['hr_payroll'],
-    
-	
+
     'description': """Moroccan Payroll Rules Basic Version.
 ======================
 
@@ -42,8 +42,10 @@
     """,
     'data': [
         'data/l10n_ma_hr_payroll_data.xml',
-        'views/l10n_ma_hr_payroll_view.xml',
-
+        'views/hr_contract_views.xml',
+        'views/hr_employee_views.xml',
+        'views/hr_payslip_views.xml',
+        'views/res_company_views.xml',
     ],
 	 'installable': True,
      "images":['static/description/Banner.png'],
