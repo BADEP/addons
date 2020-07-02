@@ -171,8 +171,6 @@
             <field name="name">Impôt sur le revenue</field>
             <field name="sequence">2000</field>
             <field name="category_id" ref="O_TOTAL"/>
-            <field name="condition_select">python</field>
-            <field name="condition_python">result = C_IMP &gt; 2500</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
 C_IMPAN = C_IMP * 12
