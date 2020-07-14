@@ -1,0 +1,6 @@
+id,facebook_field,odoo_field:id
+mapping_company_name,company_name,crm.field_crm_lead__partner_name
+mapping_full_name,full_name,crm.field_crm_lead__contact_name
+mapping_job_title,job_title,crm.field_crm_lead__function
+mapping_phone_number,phone_number,crm.field_crm_lead__mobile
+mapping_email,email,crm.field_crm_lead__email_from
