@@ -29,4 +29,5 @@
         'security/ir.model.access.csv',
         'views/crm_view.xml',
     ],
+    'installable': False,
 }

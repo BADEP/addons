@@ -20,4 +20,6 @@
     'data': [
         'views/assets.xml',
     ],
+    'installable': False,
+
 }

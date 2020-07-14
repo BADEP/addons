@@ -30,4 +30,5 @@
         'views/assets.xml',
         'views/res_config_settings_views.xml'
     ],
+    'installable': False,
 }
