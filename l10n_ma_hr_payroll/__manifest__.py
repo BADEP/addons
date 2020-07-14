@@ -33,11 +33,11 @@
     - Configuration of hr_payroll for Moroccan localization
     - Basic configuration for newly installed company
     - Absence - Advances - CNSS - AMO
-	- Pro version is complete and  handles all kinds of allowances and Bonuses, plus 
-	        - Seniority ( anciennété) and all other advantages:
-        	- CIMR and private health insurance like  AXA 
-			- Nice looking payslip
-			- Legal reports ( etat 9421 ) ...
+    - Pro version is complete and  handles all kinds of allowances and Bonuses, plus 
+            - Seniority ( anciennété) and all other advantages:
+            - CIMR and private health insurance like  AXA 
+            - Nice looking payslip
+            - Legal reports ( etat 9421 ) ...
     - Important: you need to fill the wage amount for the employee in the contract and chose moroccan payroll from the structure field.
     """,
     'data': [
@@ -47,6 +47,6 @@
         'views/hr_payslip_views.xml',
         'views/res_company_views.xml',
     ],
-	 'installable': True,
+     'installable': True,
      "images":['static/description/Banner.png'],
 }

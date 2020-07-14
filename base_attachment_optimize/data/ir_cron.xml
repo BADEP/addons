@@ -1,16 +1,16 @@
 <odoo>
-	<data>
-		<record id="mail_notify_clean" model="ir.cron">
-			<field name="name">Compress Attachments</field>
-			<field name="active" eval="True"/>
-			<field name="state" eval="'code'"/>
-			<field name="priority" eval="5"/>
+    <data>
+        <record id="mail_notify_clean" model="ir.cron">
+            <field name="name">Compress Attachments</field>
+            <field name="active" eval="True"/>
+            <field name="state" eval="'code'"/>
+            <field name="priority" eval="5"/>
             <field name="interval_number">1</field>
             <field name="interval_type">hours</field>
             <field name="numbercall">-1</field>
             <field name="doall" eval="False"/>
             <field name="model_id" ref="base.model_ir_attachment"/>
             <field name="code" eval="'model.cron_compress()'"/>
-		</record>
+        </record>
     </data>
 </odoo>

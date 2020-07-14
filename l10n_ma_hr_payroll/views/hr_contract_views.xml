@@ -6,8 +6,8 @@
             <field name="model">hr.contract</field>
             <field name="priority">20</field>
             <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
-			<field name="arch" type="xml">
-			    <data>
+            <field name="arch" type="xml">
+                <data>
                     <xpath expr="//notebook" position="inside">
                         <page string="Primes et autres Avantages" name="information">
                             <group name="primes-nt" string="Primes et Indemnités non taxables">

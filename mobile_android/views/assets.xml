@@ -1,9 +1,9 @@
 <odoo>
-	<data>
-		<template id="assets_backend" name="Android assets" inherit_id="web.assets_common">
-			<xpath expr="." position="inside">
-				<script type="text/javascript" src="/mobile_android/static/src/js/session.js"></script>
-			</xpath>
-		</template>
-	</data>
+    <data>
+        <template id="assets_backend" name="Android assets" inherit_id="web.assets_common">
+            <xpath expr="." position="inside">
+                <script type="text/javascript" src="/mobile_android/static/src/js/session.js"></script>
+            </xpath>
+        </template>
+    </data>
 </odoo>

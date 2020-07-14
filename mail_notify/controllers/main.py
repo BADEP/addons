@@ -1,6 +1,5 @@
-from odoo import http, _
+from odoo import http
 from odoo.http import request
-from odoo.addons.web.controllers.main import Home
 
 class FirebaseController(http.Controller):
 

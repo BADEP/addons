@@ -7,7 +7,7 @@
       <field name="inherit_id" ref="account.view_account_payment_form"></field>
       <field name="arch" type="xml">
         <field name="payment_date" position="after">
-        	<field name="date_maturity" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
+            <field name="date_maturity" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
         </field>
       </field>
     </record>
@@ -17,7 +17,7 @@
       <field name="inherit_id" ref="account.view_account_payment_invoice_form"></field>
       <field name="arch" type="xml">
         <field name="payment_date" position="after">
-        	<field name="date_maturity" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
+            <field name="date_maturity" attrs="{'readonly': [('state', '!=', 'draft')], 'invisible': [('payment_type', 'not in', ('inbound', 'outbound'))]}"/>
         </field>
       </field>
     </record>
@@ -27,7 +27,7 @@
       <field name="inherit_id" ref="account.view_account_payment_tree"></field>
       <field name="arch" type="xml">
         <field name="payment_date" position="after">
-        	<field name="date_maturity"/>
+            <field name="date_maturity"/>
         </field>
       </field>
     </record>

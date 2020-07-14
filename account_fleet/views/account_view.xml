@@ -1,53 +1,53 @@
 <odoo>
-	<data>
-		<record id="account_fleet_form_view" model="ir.ui.view">
-			<field name="name">account_fleet.account_invoice_form_view</field>
-			<field name="model">account.invoice</field>
-			<field name="inherit_id" ref="account.invoice_form" />
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field name="partner_id" position="after">
-					<field name="vehicle" groups="base.group_user"/>
-					<field name="driver" groups="base.group_user"/>
-				</field>
-			</field>
-		</record>
-		<record id="account_fleet_supplier_form_view" model="ir.ui.view">
-			<field name="name">account_fleet.account_invoice_supplier_form_view</field>
-			<field name="model">account.invoice</field>
-			<field name="inherit_id" ref="account.invoice_supplier_form" />
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field name="partner_id" position="after">
-					<field name="vehicle" groups="base.group_user"/>
-					<field name="driver" groups="base.group_user"/>
-				</field>
-			</field>
-		</record>
-		<record id="account_invoice_filter_view" model="ir.ui.view">
-			<field name="name">account_invoice.account_invoice_fliter_view</field>
-			<field name="model">account.invoice</field>
-			<field name="inherit_id" ref="account.view_account_invoice_filter" />
-			<field eval="17" name="priority"/>
-			<field name="arch" type="xml">
-				<filter name="group_by_partner_id" position="after">
-					<filter name="driver" string="Driver" context="{'group_by':'driver'}"/>
-					<filter name="vehicle" string="Vehicle" context="{'group_by':'vehicle'}"/>
-				</filter>
-			</field>
-		</record>
-		<record id="sale_fleet_tree_view" model="ir.ui.view">
-			<field name="name">account_fleet.account_invoice_tree_view</field>
-			<field name="model">account.invoice</field>
-			<field name="inherit_id" ref="account.invoice_tree"/>
-			<field eval="17" name="priority"/>
-			<field name="type">form</field>
-			<field name="arch" type="xml">
-				<field name="user_id" position="after">
-					<field name="vehicle"/>
-					<field name="driver"/>
-				</field>
-			</field>
-		</record>
-	</data>
+    <data>
+        <record id="account_fleet_form_view" model="ir.ui.view">
+            <field name="name">account_fleet.account_invoice_form_view</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="vehicle" groups="base.group_user"/>
+                    <field name="driver" groups="base.group_user"/>
+                </field>
+            </field>
+        </record>
+        <record id="account_fleet_supplier_form_view" model="ir.ui.view">
+            <field name="name">account_fleet.account_invoice_supplier_form_view</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form" />
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="partner_id" position="after">
+                    <field name="vehicle" groups="base.group_user"/>
+                    <field name="driver" groups="base.group_user"/>
+                </field>
+            </field>
+        </record>
+        <record id="account_invoice_filter_view" model="ir.ui.view">
+            <field name="name">account_invoice.account_invoice_fliter_view</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.view_account_invoice_filter" />
+            <field eval="17" name="priority"/>
+            <field name="arch" type="xml">
+                <filter name="group_by_partner_id" position="after">
+                    <filter name="driver" string="Driver" context="{'group_by':'driver'}"/>
+                    <filter name="vehicle" string="Vehicle" context="{'group_by':'vehicle'}"/>
+                </filter>
+            </field>
+        </record>
+        <record id="sale_fleet_tree_view" model="ir.ui.view">
+            <field name="name">account_fleet.account_invoice_tree_view</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_tree"/>
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="user_id" position="after">
+                    <field name="vehicle"/>
+                    <field name="driver"/>
+                </field>
+            </field>
+        </record>
+    </data>
 </odoo>

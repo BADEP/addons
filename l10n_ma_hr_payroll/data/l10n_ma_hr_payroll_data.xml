@@ -6,7 +6,7 @@
             <field name="name">Charges Salariales</field>
             <field name="code">SALC</field>
             <field name="parent_id" ref="hr_payroll.DED"/>
-			<field name="sequence">51</field>
+            <field name="sequence">51</field>
         </record>
         <record id="DEDIRPP" model="hr.salary.rule.category">
             <field name="name">Déduction d'impôt</field>
@@ -15,7 +15,7 @@
         <record id="INDMNT" model="hr.salary.rule.category">
             <field name="name">Indemnite non taxable</field>
             <field name="code">INDMNT</field>
-			<field name="sequence">40</field>
+            <field name="sequence">40</field>
         </record>
         <record id="COMP" model="hr.salary.rule.category">
             <field name="name">Cotisations Patronales</field>
@@ -42,70 +42,70 @@
 
         <!-- RULES -->
         <record id="hr_rule_INDMTD" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités taxables divers</field>
-	        <field name="code">INDMTD</field>
-	        <field name="sequence">10</field>
-	        <field name="category_id" ref="hr_payroll.ALW"/>
-			<field name="amount_select">code</field>
-			<field name="condition_select">python</field>
+            <field name="name">Primes et Indemnités taxables divers</field>
+            <field name="code">INDMTD</field>
+            <field name="sequence">10</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="condition_select">python</field>
             <field name="condition_python">result = inputs.INDMTD.amount > 0</field>
-			<field name="amount_python_compute">result = inputs.INDMTD.amount</field>
-			<field name="appears_on_payslip" eval="True"/>
+            <field name="amount_python_compute">result = inputs.INDMTD.amount</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
-		<record id="hr_rule_INDMT1" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités taxables 1</field>
-	        <field name="code">INDMT1</field>
-	        <field name="sequence">11</field>
-	        <field name="category_id" ref="hr_payroll.ALW"/>
-			<field name="amount_select">code</field>
-			<field name="amount_python_compute">result = contract.it1</field>
-			<field name="condition_select">python</field>
-			<field name="condition_python">result = contract.it1 > 0</field>
-			<field name="appears_on_payslip" eval="True"/>
+        <record id="hr_rule_INDMT1" model="hr.salary.rule">
+            <field name="name">Primes et Indemnités taxables 1</field>
+            <field name="code">INDMT1</field>
+            <field name="sequence">11</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.it1</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.it1 > 0</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
-		<record id="hr_rule_INDMT2" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités taxables 2</field>
-	        <field name="code">INDMT2</field>
-	        <field name="sequence">12</field>
-	        <field name="category_id" ref="hr_payroll.ALW"/>
-			<field name="amount_select">code</field>
-			<field name="amount_python_compute">result = contract.it2</field>
-			<field name="condition_select">python</field>
-			<field name="condition_python">result = contract.it2 > 0</field>
-			<field name="appears_on_payslip" eval="True"/>
+        <record id="hr_rule_INDMT2" model="hr.salary.rule">
+            <field name="name">Primes et Indemnités taxables 2</field>
+            <field name="code">INDMT2</field>
+            <field name="sequence">12</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.it2</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.it2 > 0</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
-		<record id="hr_rule_INDMT3" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités taxables 3</field>
-	        <field name="code">INDMT3</field>
-	        <field name="sequence">13</field>
-	        <field name="category_id" ref="hr_payroll.ALW"/>
-			<field name="amount_select">code</field>
-			<field name="amount_python_compute">result = contract.it3</field>
-			<field name="condition_select">python</field>
-			<field name="condition_python">result = contract.it3 > 0</field>
-			<field name="appears_on_payslip" eval="True"/>
+        <record id="hr_rule_INDMT3" model="hr.salary.rule">
+            <field name="name">Primes et Indemnités taxables 3</field>
+            <field name="code">INDMT3</field>
+            <field name="sequence">13</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.it3</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.it3 > 0</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
-		<record id="hr_rule_INDMT4" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités taxables 4</field>
-	        <field name="code">INDMT4</field>
-	        <field name="sequence">14</field>
-	        <field name="category_id" ref="hr_payroll.ALW"/>
-			<field name="amount_select">code</field>
-			<field name="amount_python_compute">result = contract.it4</field>
-			<field name="condition_select">python</field>
-			<field name="condition_python">result = contract.it4 > 0</field>
-			<field name="appears_on_payslip" eval="True"/>
+        <record id="hr_rule_INDMT4" model="hr.salary.rule">
+            <field name="name">Primes et Indemnités taxables 4</field>
+            <field name="code">INDMT4</field>
+            <field name="sequence">14</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.it4</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.it4 > 0</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
-		<record id="hr_rule_INDMT5" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités taxables 5</field>
-	        <field name="code">INDMT5</field>
-	        <field name="sequence">15</field>
-	        <field name="category_id" ref="hr_payroll.ALW"/>
-			<field name="amount_select">code</field>
-			<field name="amount_python_compute">result = contract.it5</field>
-			<field name="condition_select">python</field>
-			<field name="condition_python">result = contract.it5 > 0</field>
-			<field name="appears_on_payslip" eval="True"/>
+        <record id="hr_rule_INDMT5" model="hr.salary.rule">
+            <field name="name">Primes et Indemnités taxables 5</field>
+            <field name="code">INDMT5</field>
+            <field name="sequence">15</field>
+            <field name="category_id" ref="hr_payroll.ALW"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.it5</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.it5 > 0</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
         <record id="hr_payroll.hr_rule_taxable" model="hr.salary.rule">
             <field name="name">Salaire Brut</field>
@@ -223,70 +223,70 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
             <field name="note">Cette règle mais en valeur la somme de toutes les retenues.</field>
         </record>
         <record id="hr_rule_INDMNTD" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités non taxables divers</field>
-	        <field name="code">INDMNTD</field>
-	        <field name="sequence">6000</field>
-	        <field name="category_id" ref="INDMNT"/>
-			<field name="condition_select">python</field>
+            <field name="name">Primes et Indemnités non taxables divers</field>
+            <field name="code">INDMNTD</field>
+            <field name="sequence">6000</field>
+            <field name="category_id" ref="INDMNT"/>
+            <field name="condition_select">python</field>
             <field name="condition_python">result = inputs.INDMNTD.amount > 0</field>
-			<field name="amount_select">code</field>
-			<field name="amount_python_compute">result = inputs.INDMNTD</field>
-			<field name="appears_on_payslip" eval="True"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = inputs.INDMNTD</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
-		<record id="hr_rule_INDMNT1" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités non taxables 1</field>
-	        <field name="code">INDMNT1</field>
-	        <field name="sequence">6001</field>
-	        <field name="category_id" ref="INDMNT"/>
-			<field name="amount_select">code</field>
-			<field name="amount_python_compute">result = contract.int1</field>
-			<field name="condition_select">python</field>
-			<field name="condition_python">result = contract.int1 > 0</field>
-			<field name="appears_on_payslip" eval="True"/>
+        <record id="hr_rule_INDMNT1" model="hr.salary.rule">
+            <field name="name">Primes et Indemnités non taxables 1</field>
+            <field name="code">INDMNT1</field>
+            <field name="sequence">6001</field>
+            <field name="category_id" ref="INDMNT"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.int1</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.int1 > 0</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
-		<record id="hr_rule_INDMNT2" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités non taxables 2</field>
-	        <field name="code">INDMNT2</field>
-	        <field name="sequence">6002</field>
-	        <field name="category_id" ref="INDMNT"/>
-			<field name="amount_select">code</field>
-			<field name="amount_python_compute">result = contract.int2</field>
-			<field name="condition_select">python</field>
-			<field name="condition_python">result = contract.int2 > 0</field>
-			<field name="appears_on_payslip" eval="True"/>
+        <record id="hr_rule_INDMNT2" model="hr.salary.rule">
+            <field name="name">Primes et Indemnités non taxables 2</field>
+            <field name="code">INDMNT2</field>
+            <field name="sequence">6002</field>
+            <field name="category_id" ref="INDMNT"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.int2</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.int2 > 0</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
-		<record id="hr_rule_INDMNT3" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités non taxables 3</field>
-	        <field name="code">INDMNT3</field>
-	        <field name="sequence">6003</field>
-	        <field name="category_id" ref="INDMNT"/>
-			<field name="amount_select">code</field>
-			<field name="amount_python_compute">result = contract.int3</field>
-			<field name="condition_select">python</field>
-			<field name="condition_python">result = contract.int3 > 0</field>
-			<field name="appears_on_payslip" eval="True"/>
+        <record id="hr_rule_INDMNT3" model="hr.salary.rule">
+            <field name="name">Primes et Indemnités non taxables 3</field>
+            <field name="code">INDMNT3</field>
+            <field name="sequence">6003</field>
+            <field name="category_id" ref="INDMNT"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.int3</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.int3 > 0</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
-		<record id="hr_rule_INDMNT4" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités non taxables 4</field>
-	        <field name="code">INDMNT4</field>
-	        <field name="sequence">6004</field>
-	        <field name="category_id" ref="INDMNT"/>
-			<field name="amount_select">code</field>
-			<field name="amount_python_compute">result = contract.int4</field>
-			<field name="condition_select">python</field>
-			<field name="condition_python">result = contract.int4 > 0</field>
-			<field name="appears_on_payslip" eval="True"/>
+        <record id="hr_rule_INDMNT4" model="hr.salary.rule">
+            <field name="name">Primes et Indemnités non taxables 4</field>
+            <field name="code">INDMNT4</field>
+            <field name="sequence">6004</field>
+            <field name="category_id" ref="INDMNT"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.int4</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.int4 > 0</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
-		<record id="hr_rule_INDMNT5" model="hr.salary.rule">
-	        <field name="name">Primes et Indemnités non taxables 5</field>
-	        <field name="code">INDMNT5</field>
-	        <field name="sequence">6005</field>
-	        <field name="category_id" ref="INDMNT"/>
-			<field name="amount_select">code</field>
-			<field name="amount_python_compute">result = contract.int5</field>
-			<field name="condition_select">python</field>
-			<field name="condition_python">result = contract.int5 > 0</field>
-			<field name="appears_on_payslip" eval="True"/>
+        <record id="hr_rule_INDMNT5" model="hr.salary.rule">
+            <field name="name">Primes et Indemnités non taxables 5</field>
+            <field name="code">INDMNT5</field>
+            <field name="sequence">6005</field>
+            <field name="category_id" ref="INDMNT"/>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = contract.int5</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = contract.int5 > 0</field>
+            <field name="appears_on_payslip" eval="True"/>
         </record>
         <record id="hr_salary_rule_av_sal" model="hr.salary.rule">
             <field name="code">AVS</field>
@@ -384,20 +384,20 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
         </record>
 
         <!--Inputs-->
-	  	<record id="AVS" model="hr.rule.input">
-	        <field name="code">AVS</field>
-	        <field name="name">Avance sur Salaire</field>
-	        <field name="input_id" ref="hr_salary_rule_av_sal" />
+          <record id="AVS" model="hr.rule.input">
+            <field name="code">AVS</field>
+            <field name="name">Avance sur Salaire</field>
+            <field name="input_id" ref="hr_salary_rule_av_sal" />
         </record>
         <record id="input_INDMTD" model="hr.rule.input">
-	        <field name="code">INDMTD</field>
-	        <field name="name">Primes et Indemnités taxables divers</field>
-	        <field name="input_id" ref="hr_rule_INDMTD" />
+            <field name="code">INDMTD</field>
+            <field name="name">Primes et Indemnités taxables divers</field>
+            <field name="input_id" ref="hr_rule_INDMTD" />
         </record>
-	  	<record id="input_INDMNTD" model="hr.rule.input">
-	        <field name="code">INDMNTD</field>
-	        <field name="name">Primes et Indemnités non taxables divers</field>
-	        <field name="input_id" ref="hr_rule_INDMNTD" />
+          <record id="input_INDMNTD" model="hr.rule.input">
+            <field name="code">INDMNTD</field>
+            <field name="name">Primes et Indemnités non taxables divers</field>
+            <field name="input_id" ref="hr_rule_INDMNTD" />
         </record>
 
         <!-- PAYROLL STRUCTURE -->

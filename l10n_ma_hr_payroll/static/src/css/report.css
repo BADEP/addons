@@ -3,15 +3,15 @@
 }
 
 .underline-text{
-	text-decoration: underline !important;
+    text-decoration: underline !important;
 }
 .clearfloat {
-	clear: both;
-	float: none;
-	width: 1px;
-	border: none;
-	display: block;
+    clear: both;
+    float: none;
+    width: 1px;
+    border: none;
+    display: block;
 }
 .page {
-	padding: 50px 0px;
+    padding: 50px 0px;
 }
