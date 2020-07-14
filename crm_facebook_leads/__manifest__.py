@@ -30,6 +30,6 @@
         'views/crm_view.xml',
     ],
     'installable': True,
-    'price': 99.00,
+    'price': 49.00,
     'currency': 'EUR',
 }
