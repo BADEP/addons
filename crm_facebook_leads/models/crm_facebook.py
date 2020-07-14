@@ -31,7 +31,6 @@ class CrmFacebookPage(models.Model):
             self.form_processing(requests.get(r['paging']['next']).json())
         return
 
-    @api.multi
     def get_forms(self):
         r = requests.get("https://graph.facebook.com/v7.0/" + self.name + "/leadgen_forms", params = {'access_token': self.access_token}).json()
         if r.get('error'):
@@ -63,7 +62,7 @@ class CrmFacebookForm(models.Model):
                                                                 'form_id': self.id,
                                                                 'name': question['label'],
                                                                 'facebook_field': question['key'],
-                                                                'odoo_field': self.env['crm.facebook.form.mapping'].search([('facebook_field', '=', question['key'])], limit=1) and self.env['crm.facebook.form.mapping'].search([('facebook_field', '=', question['key'])], limit=1).odoo_field.id
+                                                                'odoo_field': self.env['crm.facebook.form.mapping'].search([('facebook_field', '=', question['key'])], limit=1) and self.env['crm.facebook.form.mapping'].search([('facebook_field', '=', question['key'])], limit=1).odoo_field.id or ''
                                                             })
     def action_guess_mapping(self):
         for rec in self:

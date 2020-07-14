@@ -29,5 +29,7 @@
         'security/ir.model.access.csv',
         'views/crm_view.xml',
     ],
-    'installable': False,
+    'installable': True,
+    'price': 49.00,
+    'currency': 'EUR',
 }

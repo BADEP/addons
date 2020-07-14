@@ -1,9 +1,9 @@
 <odoo>
     <data>
-        <record id="crm_case_form_view_oppor" model="ir.ui.view">
+        <record id="crm_lead_view_form" model="ir.ui.view">
             <field name="name">crm.lead.form</field>
             <field name="model">crm.lead</field>
-            <field name="inherit_id" ref="crm.crm_case_form_view_oppor"/>
+            <field name="inherit_id" ref="crm.crm_lead_view_form"/>
             <field name="arch" type="xml">
                 <xpath expr='//page[@name="lead"]' position='after'>
                     <page name="categorization" string="Facebook Info">
