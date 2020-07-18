@@ -11,7 +11,7 @@
                 <field name="category_id" position="after">
                     <field name="dimension_ids" widget="many2many_tags"/>
                     <field name="type" attrs="{'invisible': [('dimension_ids', '=', False)]}"/>
-                    <field name="code" attrs="{'invisible': [('type', '=', 'simple')]}"/>
+                    <field name="code" attrs="{'invisible': [('type', '=', 'simple')]}" widget="ace" options="{'mode': 'python'}" />
                 </field>
             </field>
         </record>
