@@ -13,7 +13,7 @@
     'depends': [
         'partner_statement',
     ],
-    'installable': False,
+    'Installable': True,
     'auto_install': True,
     'application': False,
 }

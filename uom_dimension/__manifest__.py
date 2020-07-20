@@ -14,7 +14,7 @@
         'security/ir.model.access.csv',
         'views/uom_view.xml',
     ],
-    'installable': False,
+    'Installable': True,
     'price': 20,
     'currency': 'EUR'
 }
