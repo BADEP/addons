@@ -1,6 +1,6 @@
 from odoo import models, fields, api, exceptions, _
 import time, datetime, dateutil, numpy
-from odoo.tools import safe_eval
+from odoo.tools.safe_eval import safe_eval
 
 DEFAULT_PYTHON_CODE = """# Available variables:
 #  - env: Odoo Environment
@@ -15,12 +15,16 @@ DEFAULT_PYTHON_CODE = """# Available variables:
 class UomUom(models.Model):
     _inherit = 'uom.uom'
     
-    dimension_ids = fields.One2many('uom.dimension', 'parent_uom_id', copy=True)
-    type = fields.Selection([('multiply', 'Multiply', 'code', 'Code')])
+    dimension_ids = fields.One2many('uom.dimension', 'parent_uom_id', string='Dimensions', copy=True)
+    calculation_type = fields.Selection([('simple', 'Simple'), ('code', 'Code')], default='simple', required=True, string='Calculation Type')
     code = fields.Text(string='Python Code', default=DEFAULT_PYTHON_CODE)
 
     def eval_values(self, dimension_values):
         for uom in self:
+            if uom.calculation_type == 'simple':
+                code = 'result = numpy.prod(list(dimension_values.values()))'
+            else:
+                code = uom.code
             eval_context = {
                 'env': self.env,
                 'time': time,
@@ -32,11 +36,11 @@ class UomUom(models.Model):
                 'dimension_values': dimension_values,
                 'result': 0,
             }
-            try:
-                safe_eval(self.amount_python_compute, eval_context, mode='exec', nocopy=True)
-                return float(eval_context['result'])
-            except:
-                raise exceptions.UserError(_('Wrong python code defined for uom %s.') % (uom.name))
+            # try:
+            safe_eval(code, eval_context, mode="exec", nocopy=True)
+            return float(eval_context['result'])
+            # except, e:
+            #     raise exceptions.UserError(_('Wrong python code defined for uom %s.') % (uom.name))
 
 class UomDimension(models.Model):
     _name = 'uom.dimension'
