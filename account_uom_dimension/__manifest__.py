@@ -1,17 +1,17 @@
 {
-    'name': "UoM Dimensions in Sales",
+    'name': "UoM Dimensions in Invoices",
 
     'summary': """
-        Allows the use of UoM dimensions in sales.""",
+        Allows the use of UoM dimensions in invoices.""",
     'author': "BADEP",
     'website': "https://badep.ma",
-    'category': 'Sales Management',
+    'category': 'Invoicing Management',
     'version': '12.0.1.0.1',
     'images': ['static/scr/img/banner.png'],
     'license': 'AGPL-3',
-    'depends': ['sale', 'uom_dimension', 'web_m2x_options'],
+    'depends': ['account', 'uom_dimension', 'web_m2x_options'],
     'data': [
-             'views/sale_views.xml',
+             'views/invoice_views.xml',
              'security/ir.model.access.csv',
              ],
     'auto_install': True,
