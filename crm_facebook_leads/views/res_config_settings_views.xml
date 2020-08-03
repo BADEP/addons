@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res_config_settings_view_form</field>
+        <field name="model">res.config.settings</field>
+        <field name="type">form</field>
+        <field name="inherit_id" ref="crm.res_config_settings_view_form"/>
+        <field name="arch" type="xml">
+            <div data-key="crm" position="inside">
+                <div id="crm_facebook_settings">
+                    <h2>Facebook Leads Settings</h2>
+                    <div class="row mt16 o_settings_container">
+                        <div class="col-12 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Facebook App</span>
+                                <div class="text-muted">
+                                    Create a Facebook App <a href="https://developers.facebook.com/apps" target="new">
+                                    here
+                                </a> and get the <strong>App Id</strong> and <strong>App Secret</strong> in the settings
+                                    page
+                                </div>
+                                <div class="content_group">
+                                    <div class="row">
+                                        <label for="crm_fb_app_id" class="col-md-3 o_light_label"/>
+                                        <field name="crm_fb_app_id"/>
+                                    </div>
+                                    <div class="row">
+                                        <label for="crm_fb_app_secret" class="col-md-3 o_light_label"/>
+                                        <field name="crm_fb_app_secret"/>
+                                    </div>
+                                    <div attrs="{'invisible': ['|', ('crm_fb_app_id', 'in', ('', False)), ('crm_fb_app_secret', 'in', ('', False))]}">
+                                        <button type="object" name="action_get_access_token" string="Get Access Token"
+                                                icon="fa-arrow-right" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-12 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">User Access Token</span>
+                                <div class="text-muted">
+                                    Manually Enter the long-lived User Access Token here or use the <strong>Get Access
+                                    Token
+                                </strong> button helper
+                                </div>
+                                <div class="content_group">
+                                    <div class="row">
+                                        <label for="crm_fb_access_token" class="col-md-3 o_light_label"/>
+                                        <field name="crm_fb_access_token"/>
+                                    </div>
+                                    <div class="row">
+                                        <label for="crm_fb_access_token_state" class="col-md-3 o_light_label"/>
+                                        <field name="crm_fb_access_token_state"/>
+                                    </div>
+                                    <div class="row"
+                                         attrs="{'invisible': [('crm_fb_access_token_state', '=', 'valid')]}">
+                                        <label for="crm_fb_access_token_state_message" class="col-md-3 o_light_label"/>
+                                        <field name="crm_fb_access_token_state_message"/>
+                                    </div>
+                                    <div attrs="{'invisible': [('crm_fb_access_token_state', '=', 'invalid')]}">
+                                        <button type="object" name="action_get_facebook_pages" string="Get Pages"
+                                                icon="fa-arrow-right" class="btn-link"/>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+</odoo>

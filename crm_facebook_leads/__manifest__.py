@@ -15,7 +15,7 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Lead Automation',
-    'version': '12.0.1.0.1',
+    'version': '12.0.2.0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['crm'],
@@ -28,6 +28,7 @@
         'data/crm.facebook.form.mapping.csv',
         'security/ir.model.access.csv',
         'views/crm_view.xml',
+        'views/res_config_settings_views.xml',
     ],
     'installable': True,
     'price': 49.00,

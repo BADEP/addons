@@ -3,6 +3,7 @@ from odoo import models, fields, api
 
 _logger = logging.getLogger(__name__)
 
+
 class UtmMedium(models.Model):
     _inherit = 'utm.medium'
 
@@ -12,6 +13,7 @@ class UtmMedium(models.Model):
         ('facebook_ad_unique', 'unique(facebook_ad_id)',
          'This Facebook Ad already exists!')
     ]
+
 
 class UtmAdset(models.Model):
     _name = 'utm.adset'
@@ -24,6 +26,7 @@ class UtmAdset(models.Model):
         ('facebook_adset_unique', 'unique(facebook_adset_id)',
          'This Facebook AdSet already exists!')
     ]
+
 
 class UtmCampaign(models.Model):
     _inherit = 'utm.campaign'
