@@ -3,6 +3,7 @@ import requests
 
 from odoo import models, fields, api
 from odoo.exceptions import UserError
+
 _logger = logging.getLogger(__name__)
 
 class CrmLead(models.Model):
@@ -75,10 +76,10 @@ class CrmLead(models.Model):
             'description': "\n".join(notes),
             'team_id': form.team_id and form.team_id.id,
             'campaign_id': form.campaign_id and form.campaign_id.id or
-            self.get_campaign(lead),
+                           self.get_campaign(lead),
             'source_id': form.source_id and form.source_id.id,
             'medium_id': form.medium_id and form.medium_id.id or
-            self.get_ad(lead),
+                         self.get_ad(lead),
             'user_id': form.team_id and form.team_id.user_id and form.team_id.user_id.id or False,
             'facebook_adset_id': self.get_adset(lead),
             'facebook_form_id': form.id,
@@ -141,7 +142,8 @@ class CrmLead(models.Model):
             return
         for lead in r['data']:
             lead = self.process_lead_field_data(lead)
-            if not self.search([('facebook_lead_id', '=', lead.get('id')), '|', ('active', '=', True), ('active', '=', False)]):
+            if not self.search(
+                    [('facebook_lead_id', '=', lead.get('id')), '|', ('active', '=', True), ('active', '=', False)]):
                 self.lead_creation(lead, form)
 
         # /!\ NOTE: Once finished a page let us commit that
@@ -157,12 +159,12 @@ class CrmLead(models.Model):
 
     @api.model
     def get_facebook_leads(self):
-        # /!\ TODO: Add this URL as a configuration setting in the company
         fb_api = "https://graph.facebook.com/v7.0/"
         for form in self.env['crm.facebook.form'].search([]):
             # /!\ NOTE: We have to try lead creation if it fails we just log it into the Lead Form?
             _logger.info('Starting to fetch leads from Form: %s' % form.name)
-            r = requests.get(fb_api + form.facebook_form_id + "/leads", params = {'access_token': form.access_token, 'fields': 'created_time,field_data,ad_id,ad_name,adset_id,adset_name,campaign_id,campaign_name,is_organic'}).json()
+            r = requests.get(fb_api + form.facebook_form_id + "/leads", params={'access_token': form.access_token,
+                                                                                'fields': 'created_time,field_data,ad_id,ad_name,adset_id,adset_name,campaign_id,campaign_name,is_organic'}).json()
             if r.get('error'):
                 raise UserError(r['error']['message'])
             self.lead_processing(r, form)
