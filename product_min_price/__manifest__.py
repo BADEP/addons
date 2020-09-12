@@ -15,7 +15,7 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Purchase',
-    'version': '12.0.0.1',
+    'version': '13.0.0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['purchase'],
@@ -27,5 +27,5 @@
         # 'security/ir.model.access.csv',
         'views/product_view.xml',
     ],
-    'Installable': False,
+    'Installable': True,
 }
