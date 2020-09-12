@@ -11,10 +11,10 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Discuss',
-    'version': '12.0.0.1',
+    'version': '13.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['mail', 'web'],
+    'depends': ['mail_bot', 'web'],
     'images': ['static/scr/img/banner.png'],
     'license': 'AGPL-3',
     'external_dependencies': {
@@ -30,5 +30,5 @@
         'views/assets.xml',
         'views/res_config_settings_views.xml'
     ],
-    'Installable': False,
+    'Installable': True,
 }

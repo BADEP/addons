@@ -13,6 +13,7 @@ var rpc = require('web.rpc');
 MailManagerNotification.include({
     _addNewMessagePostprocessThread: function (message, options) {
         var self = this;
+        var proms = [];
         _.each(message.getThreadIDs(), function (threadID) {
             var thread = self.getThread(threadID);
             if (thread) {
@@ -22,6 +23,7 @@ MailManagerNotification.include({
                     !message.isSystemNotification()
                 ) {
                     if (thread.isTwoUserThread() && options.showNotification) {
+                        var prom = Promise.resolve();
                         if (
                             !self._isDiscussOpen() &&
                             !config.device.isMobile &&
@@ -29,10 +31,13 @@ MailManagerNotification.include({
                         ) {
                             // automatically open thread window
                             // while keeping it unread
-                            thread.detach({ passively: true });
+                            prom = thread.detach({ passively: true });
                         }
-                        var query = { isVisible: false };
-                        self._mailBus.trigger('is_thread_bottom_visible', thread, query);
+                        proms.push(prom);
+                        prom.then(function () {
+                            var query = { isVisible: false };
+                            self._mailBus.trigger('is_thread_bottom_visible', thread, query);
+                        });
                     }
                     if (options.showNotification) {
                         if (!self.call('bus_service', 'isOdooFocused')) {
@@ -49,6 +54,7 @@ MailManagerNotification.include({
                 }
             }
         });
+        return Promise.all(proms);
     },
 
     _notifyIncomingMessage: function (message) {
@@ -77,7 +83,8 @@ MailManagerNotification.include({
         else if (message.getDocumentModel() != "mail.channel" && message.getDocumentName()) {
             title = title + ": " + message.getDocumentName();
         }
-        var content = mailUtils.parseAndTransform(message.getBody(), mailUtils.stripHTML).substr(0, PREVIEW_MSG_MAX_SIZE);
+        var content = mailUtils.parseAndTransform(message.getBody(), mailUtils.stripHTML)
+            .substr(0, PREVIEW_MSG_MAX_SIZE);
 
         if (!this.call('bus_service', 'isOdooFocused')) {
             this._outOfFocusUnreadMessageCounter++;
@@ -92,26 +99,6 @@ MailManagerNotification.include({
         }
         this.call('bus_service', 'sendNotification', title, content, function ( ){window.open(message.getURL());}, icon);
     },
-
-    _handleNeedactionNotification: function (messageData) {
-        var self = this;
-        var inbox = this.getMailbox('inbox');
-        var message = this.addMessage(messageData, {
-            incrementUnread: true,
-            showNotification: true,
-        });
-        if (typeof inbox != "undefined") {
-            inbox.incrementMailboxCounter();
-        }
-        _.each(message.getThreadIDs(), function (threadID) {
-            var channel = self.getChannel(threadID);
-            if (channel) {
-                channel.incrementNeedactionCounter();
-            }
-        });
-        this._mailBus.trigger('update_needaction', inbox.getMailboxCounter());
-    },
-
 });
 return MailManagerNotification;
 

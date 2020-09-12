@@ -3,7 +3,7 @@ from odoo.http import request
 
 class FirebaseController(http.Controller):
 
-    @http.route('/firebase-messaging-sw.js', type='http', auth="public", website=True)
+    @http.route('/firebase-messaging-sw.js', type='http', auth="public", website=False)
     def get_sw(self, **kwargs):
         message_id = request.env['ir.config_parameter'].get_fcm_config()['fcm_messaging_id'] or '1234567890'
         code = """
