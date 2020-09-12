@@ -25,5 +25,5 @@
     'data': [
         # 'security/ir.model.access.csv',
     ],
-    'Installable': True,
+    'Installable': False,
 }

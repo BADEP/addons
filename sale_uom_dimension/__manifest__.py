@@ -15,7 +15,7 @@
              'security/ir.model.access.csv',
              ],
     'auto_install': True,
-    'Installable': True,
+    'Installable': False,
     'price': 30,
     'currency': 'EUR'
 }

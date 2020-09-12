@@ -27,5 +27,5 @@
         # 'security/ir.model.access.csv',
         'views/partner_view.xml',
     ],
-    'Installable': True
+    'Installable': False
 }

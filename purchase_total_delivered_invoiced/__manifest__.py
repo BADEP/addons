@@ -28,6 +28,6 @@
         # 'security/ir.model.access.csv',
         'views/purchase_view.xml',
     ],
-    'Installable': True,
+    'Installable': False,
 
 }

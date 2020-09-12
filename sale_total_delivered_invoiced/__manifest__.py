@@ -28,5 +28,5 @@
         # 'security/ir.model.access.csv',
         'views/sale_view.xml',
     ],
-    'Installable': True,
+    'Installable': False,
 }

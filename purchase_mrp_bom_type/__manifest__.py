@@ -10,6 +10,6 @@ Allow to define a bom type for purchases different than that of sales
     'data': [
         'views/bom_views.xml'
     ],
-    'installable': True,
+    'Installable': False,
     'auto_install': True,
 }
