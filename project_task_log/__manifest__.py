@@ -27,5 +27,5 @@
         'security/project_task_log_security.xml',
         'views/task_view.xml'
     ],
-    'Installable': False,
+    'Installable': True,
 }

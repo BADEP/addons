@@ -38,7 +38,6 @@
         <record id="action_project_task_log_graph" model="ir.actions.act_window">
             <field name="name">Log Analysis</field>
             <field name="res_model">project.task.log</field>
-            <field name="view_type">form</field>
             <field name="view_mode">pivot,graph</field>
             <field name="context">{'group_by_no_leaf':1,'group_by':[]}</field>
         </record>
