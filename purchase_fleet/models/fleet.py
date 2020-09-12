@@ -15,13 +15,12 @@ class FleetVehicle(models.Model):
     currency_id = fields.Many2one('res.currency', related='company_id.currency_id', string='Currency')
     company_id = fields.Many2one('res.company', default=_get_current_company)
 
-    @api.one
     @api.depends('purchase_orders')
     def get_purchases(self):
-        self.purchases_amount = sum(order.amount_total for order in self.purchase_orders.filtered(lambda s: s.state in ('purchase', 'done')))
-        self.purchases_count = len(self.purchase_orders.filtered(lambda s: s.state in ('purchase', 'done')))
+        for rec in self:
+            rec.purchases_amount = sum(order.amount_total for order in rec.purchase_orders.filtered(lambda s: s.state in ('purchase', 'done')))
+            rec.purchases_count = len(rec.purchase_orders.filtered(lambda s: s.state in ('purchase', 'done')))
 
-    @api.multi
     def act_show_purchases(self):
         action = self.env.ref('purchase.purchase_form_action')
 
@@ -29,7 +28,6 @@ class FleetVehicle(models.Model):
             'name': action.name,
             'help': action.help,
             'type': action.type,
-            'view_type': action.view_type,
             'view_mode': action.view_mode,
             'target': action.target,
             'context': action.context,
