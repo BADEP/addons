@@ -29,5 +29,5 @@
         'views/stock_view.xml',
         'views/fleet_view.xml',
     ],
-    'Installable': False,
+    'Installable': True,
 }
