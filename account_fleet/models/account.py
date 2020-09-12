@@ -2,8 +2,8 @@
 
 from odoo import models, fields, api
 
-class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
+class AccountMove(models.Model):
+    _inherit = 'account.move'
     vehicle = fields.Many2one('fleet.vehicle', domain=[('invoice_ok','=',True)], readonly=True, states={'draft': [('readonly', False)]})
     driver = fields.Many2one('res.partner', readonly=True, states={'draft': [('readonly', False)]})
     
@@ -20,14 +20,15 @@ class AccountInvoiceReport(models.Model):
     driver = fields.Many2one('res.partner', readonly=True)
     
     def _group_by(self):
-        return super(AccountInvoiceReport, self)._group_by() + ", ai.vehicle, ai.driver"
+        return super(AccountInvoiceReport, self)._group_by() + ", vehicle, driver"
     
     def _select(self):
-        return super(AccountInvoiceReport, self)._select() + ", sub.vehicle as vehicle, sub.driver as driver"
-    
-    def _sub_select(self):
-        return super(AccountInvoiceReport, self)._sub_select() + ", ai.vehicle as vehicle, ai.driver as driver"
+        return super(AccountInvoiceReport, self)._select() + ", vehicle as vehicle, driver as driver"
+
+    # def _sub_select(self):
+    #     return super(AccountInvoiceReport, self)._sub_select() + ", ai.vehicle as vehicle, ai.driver as driver"
+    #
+    # def _from(self):
+    #     return super()._from() + " LEFT JOIN res_partner contact_partner ON contact_partner.id = move.partner_id"
 
 
-    
-    
