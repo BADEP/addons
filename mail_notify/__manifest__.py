@@ -30,4 +30,6 @@
         'views/assets.xml',
         'views/res_config_settings_views.xml'
     ],
+    'price': 149.00,
+    'currency': 'EUR',
 }

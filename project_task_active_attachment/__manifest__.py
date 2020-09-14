@@ -26,4 +26,6 @@
         # 'security/ir.model.access.csv',
     ],
     'installable': True,
+    'price': 19.00,
+    'currency': 'EUR',
 }

@@ -16,5 +16,7 @@
     'depends': ['product'],
     'data': [
         'data/dp_data.xml'
-    ]
+    ],
+    'price': 9.00,
+    'currency': 'EUR',
 }

@@ -27,4 +27,6 @@
         # 'security/ir.model.access.csv',
         'views/product_view.xml',
     ],
+    'price': 9.00,
+    'currency': 'EUR',
 }
