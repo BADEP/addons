@@ -31,4 +31,6 @@
         'views/res_config_settings_views.xml'
     ],
     'Installable': True,
+    'price': 149.00,
+    'currency': 'EUR',
 }

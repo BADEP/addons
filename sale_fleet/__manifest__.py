@@ -30,4 +30,6 @@
         'views/fleet_view.xml',
     ],
     'Installable': False,
+    'price': 29.00,
+    'currency': 'EUR',
 }

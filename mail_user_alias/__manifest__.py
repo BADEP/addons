@@ -21,5 +21,6 @@
         'views/res_users_view.xml'
     ],
     'Installable': False,
-
+    'price': 9.00,
+    'currency': 'EUR',
 }
