@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Mail Push Notifications",
+    'name': "Odoo Push Notifications",
 
     'summary': """Add push notifications for incoming messages""",
 
@@ -11,7 +11,7 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Discuss',
-    'version': '13.0.0.1',
+    'version': '13.0.1.0',
 
     # any module necessary for this one to work correctly
     'depends': ['mail_bot', 'web'],
@@ -30,7 +30,6 @@
         'views/assets.xml',
         'views/res_config_settings_views.xml'
     ],
-    'Installable': True,
-    'price': 149.00,
+    'price': 99.00,
     'currency': 'EUR',
 }
