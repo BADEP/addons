@@ -29,7 +29,7 @@
         'views/account_view.xml',
         'views/fleet_view.xml',
     ],
-    'installable': False,
+    'installable': True,
     'price': 49.00,
     'currency': 'EUR',
 }
