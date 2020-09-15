@@ -8,7 +8,7 @@
     'category': 'Inventory',
     'version': '12.0.1.0.1',
     'depends': ['uom'],
-    'images': ['static/scr/img/banner.png'],
+    'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     'data': [
         'security/ir.model.access.csv',

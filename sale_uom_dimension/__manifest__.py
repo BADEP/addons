@@ -7,7 +7,7 @@
     'website': "https://badep.ma",
     'category': 'Sales Management',
     'version': '12.0.1.0.1',
-    'images': ['static/scr/img/banner.png'],
+    'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     'depends': ['sale', 'uom_dimension', 'web_m2x_options'],
     'data': [
