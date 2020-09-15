@@ -30,7 +30,6 @@
         'views/crm_view.xml',
         'views/res_config_settings_views.xml',
     ],
-    'installable': True,
     'price': 99.00,
-    'currency': 'EUR',
+    'currency': 'USD',
 }

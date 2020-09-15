@@ -13,5 +13,5 @@ Allow to define a bom type for purchases different than that of sales
     'Installable': False,
     'auto_install': True,
     'price': 9.00,
-    'currency': 'EUR',
+    'currency': 'USD',
 }
