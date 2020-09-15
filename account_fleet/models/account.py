@@ -24,11 +24,3 @@ class AccountInvoiceReport(models.Model):
     
     def _select(self):
         return super(AccountInvoiceReport, self)._select() + ", vehicle as vehicle, driver as driver"
-
-    # def _sub_select(self):
-    #     return super(AccountInvoiceReport, self)._sub_select() + ", ai.vehicle as vehicle, ai.driver as driver"
-    #
-    # def _from(self):
-    #     return super()._from() + " LEFT JOIN res_partner contact_partner ON contact_partner.id = move.partner_id"
-
-
