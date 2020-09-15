@@ -9,12 +9,12 @@
             <li>Go to <a href="https://developers.facebook.com/apps">https://developers.facebook.com/apps</a> and
                 press <strong>Create App. </strong>Set the Display Name of your
                 application and enter the <strong>Contact Email</strong></li>
-            <div class="oe_row_img oe_centered oe_mt32"><img class="oe_picture oe_screenshot" src="config1.png"/></div>
-            <div class="oe_row_img oe_centered oe_mt32"><img class="oe_picture oe_screenshot" src="config2.png"/></div>
+            <div class="oe_row_img oe_pic_ctr oe_mt32"><img class="oe_picture oe_screenshot" src="config1.png"/></div>
+            <div class="oe_row_img oe_pic_ctr oe_mt32"><img class="oe_picture oe_screenshot" src="config2.png"/></div>
             <li>Go to the <strong>Settings</strong> section
                 and choose <em><strong>Basic</strong></em>. From there you can get your <strong>App
                     Id</strong> and <strong>App Secret</strong></li>
-            <div class="oe_row_img oe_centered oe_mt32"><img class="oe_picture oe_screenshot" src="config3.png"/></div>
+            <div class="oe_row_img oe_pic_ctr oe_mt32"><img class="oe_picture oe_screenshot" src="config3.png"/></div>
             <li>On Odoo, go to "<strong><strong>CRM/Configuration/Settings</strong></strong>". In Facebook Leads
                 Settings paste your <strong>App Id</strong> and <strong>App Secret </strong>and
                 click Get Access Token
@@ -22,32 +22,32 @@
             <li>You will be redirected to facebook to give access to the app. Make sure to include all the pages you
                 need to sync
             </li>
-            <div class="oe_row_img oe_centered oe_mt32"><img class="oe_picture oe_screenshot" src="config4.png"/></div>
+            <div class="oe_row_img oe_pic_ctr oe_mt32"><img class="oe_picture oe_screenshot" src="config4.png"/></div>
             <li>After granting access you will again be redirected to Odoo with an already generated access token. You
                 can then click Get Pages to retrieve all the pages with their respective access token
             </li>
-            <div class="oe_row_img oe_centered oe_mt32"><img class="oe_picture oe_screenshot" src="config6.png"/></div>
+            <div class="oe_row_img oe_pic_ctr oe_mt32"><img class="oe_picture oe_screenshot" src="config6.png"/></div>
             <li>Go to "CRM/Configuration/Leads &amp; Opportunities/Facebook Pages" and access the page you want to sync.
                 You can use the button "Get Forms" to get all the forms associated with your Facebook page.<br/>
-                <div class="oe_row_img oe_centered oe_mt32"><img class="oe_picture oe_screenshot" src="capture1.png"/>
+                <div class="oe_row_img oe_pic_ctr oe_mt32"><img class="oe_picture oe_screenshot" src="capture1.png"/>
                 </div>
             </li>
             <li>For each form you can edit the mapping between Facebook fields and Odoo fields. Any Facebook field which
                 is not mapped will go automatically in the description field of your lead. this way you will get all
                 your lead info even if your Facebook form has fields which does not have an equivalent in Odoo. You can
                 also assign a Salesteam for each form.<br/>
-                <div class="oe_row_img oe_centered oe_mt32"><img class="oe_picture oe_screenshot" src="capture2.png"/>
+                <div class="oe_row_img oe_pic_ctr oe_mt32"><img class="oe_picture oe_screenshot" src="capture2.png"/>
                 </div>
             </li>
         </ol>
         <h4>Usage</h4>
         <p>The cron job which is configured for an interval of 1 hour will automatically get all the leads which are not
             yet imported in the system.</p>
-        <div class="oe_row_img oe_centered oe_mt32"><img class="oe_picture oe_screenshot" src="capture3.png"/></div>
+        <div class="oe_row_img oe_pic_ctr oe_mt32"><img class="oe_picture oe_screenshot" src="capture3.png"/></div>
         <p>You can also check related Facebook info for each lead.</p>
-        <div class="oe_row_img oe_centered oe_mt32"><img class="oe_picture oe_screenshot" src="capture4.png"/></div>
+        <div class="oe_row_img oe_pic_ctr oe_mt32"><img class="oe_picture oe_screenshot" src="capture4.png"/></div>
         <p>The cron job can also be changed for narrower or bigger intervals.</p>
-        <div class="oe_row_img oe_centered oe_mt32"><img class="oe_picture oe_screenshot" src="capture5.png"/></div>
+        <div class="oe_row_img oe_pic_ctr oe_mt32"><img class="oe_picture oe_screenshot" src="capture5.png"/></div>
         <h4>Roadmap/Known issues</h4>
         <ul>
             <li>There may be some compatibility issues for some field types. For example if the field type is Many2one
