@@ -14,7 +14,7 @@
 
     # any module necessary for this one to work correctly
     'depends': ['mail_notify'],
-    'images': ['static/scr/img/banner.png'],
+    'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     # always loaded
     'data': [

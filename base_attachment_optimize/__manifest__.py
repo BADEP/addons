@@ -15,7 +15,7 @@
 
     # any module necessary for this one to work correctly
     'depends': ['base_setup'],
-    #'images': ['static/scr/img/banner.png'],
+    #'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     # 'external_dependencies': {
     #     'python': [

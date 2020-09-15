@@ -20,7 +20,7 @@
 
     # any module necessary for this one to work correctly
     'depends': ['purchase'],
-    'images': ['static/scr/img/banner.png'],
+    'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
 
     # always loaded
@@ -28,7 +28,6 @@
         # 'security/ir.model.access.csv',
         'views/purchase_view.xml',
     ],
-    'Installable': True,
     'price': 49.00,
     'currency': 'EUR',
 }
