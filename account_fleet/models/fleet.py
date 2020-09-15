@@ -30,7 +30,7 @@ class FleetVehicle(models.Model):
         action['context'] = {'default_vehicle': self.id, 'default_driver': self.driver_id.id}
         return action
 
-    @api.multi
+
     def act_show_purchase_invoices(self):
         action = self.env.ref('account.action_move_in_invoice_type').read()[0]
         action['domain'] = "[('id','in',["+','.join(map(str, self.invoices.ids))+"]),('type', 'in', ('in_invoice', 'in_refund'))]"

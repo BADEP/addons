@@ -5,7 +5,7 @@ from html2text import html2text
 class MailChannel(models.Model):
     _inherit = 'mail.channel'
 
-    @api.multi
+
     def _notify(self, message):
         res = super(MailChannel, self)._notify(message)
 

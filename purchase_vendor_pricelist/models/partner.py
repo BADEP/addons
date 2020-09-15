@@ -7,7 +7,7 @@ class ResPartner(models.Model):
     
     supplierinfo_ids = fields.One2many('product.supplierinfo', 'name', string='Liste des prix')
     
-    @api.multi
+
     def act_show_supplierinfo(self):
         action = self.env.ref('product.product_supplierinfo_type_action')
 
