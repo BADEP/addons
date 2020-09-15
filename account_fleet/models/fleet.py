@@ -27,12 +27,11 @@ class FleetVehicle(models.Model):
     def act_show_sale_invoices(self):
         action = self.env.ref('account.action_move_out_invoice_type').read()[0]
         action['domain'] = "[('id','in',["+','.join(map(str, self.invoices.ids))+"]),('type', 'in', ('out_invoice', 'out_refund'))]"
-        action['context'] = {'default_vehicle': self.id, 'default_driver': self.driver_id.id}
+        action['context'] = {'default_vehicle': self.id, 'default_driver': self.driver_id.id, 'default_type': 'out_invoice'}
         return action
-
 
     def act_show_purchase_invoices(self):
         action = self.env.ref('account.action_move_in_invoice_type').read()[0]
         action['domain'] = "[('id','in',["+','.join(map(str, self.invoices.ids))+"]),('type', 'in', ('in_invoice', 'in_refund'))]"
-        action['context'] = {'default_vehicle': self.id, 'default_driver': self.driver_id.id}
+        action['context'] = {'default_vehicle': self.id, 'default_driver': self.driver_id.id, 'default_type': 'in_invoice'}
         return action
