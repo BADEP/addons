@@ -2,7 +2,7 @@
 {
     'name': "Odoo Push Notifications",
 
-    'summary': """Add push notifications for incoming messages""",
+    'summary': """Add push notifications for incoming messages using FCM""",
 
     'author': "BADEP",
     'website': "https://badep.ma",
