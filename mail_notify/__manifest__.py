@@ -14,7 +14,7 @@
     'version': '12.0.1.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['mail', 'web'],
+    'depends': ['mail_bot', 'web'],
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     'external_dependencies': {
