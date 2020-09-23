@@ -3,4 +3,4 @@ This is the main repository for Odoo modules developed by BADEP. These can be mi
 
 Donation
 ========
-Feel free to support our efforts by purchasing [our mail modules at app store](https://apps.odoo.com/apps/modules/browse?price=Paid&order=Newest&author=BADEP)
+Feel free to support our efforts by purchasing [our modules at app store](https://apps.odoo.com/apps/modules/browse?price=Paid&order=Newest&author=BADEP)
