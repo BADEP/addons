@@ -27,14 +27,14 @@
                                         <field name="fcm_vapid_key" attrs="{'required': [('is_fcm_enabled','=',True)]}"/>
                                         <label class="col-xs-3 col-md-3 o_light_label" for="fcm_messaging_id"/>
                                         <field name="fcm_messaging_id" attrs="{'required': [('is_fcm_enabled','=',True)]}"/>
-                                        <label class="col-lg-3 o_light_label" for="badge" />
-                                        <field name="badge" widget="image" class="float-left oe_avatar"/>
+<!--                                        <label class="col-lg-3 o_light_label" for="badge" />-->
+<!--                                        <field name="badge" widget="image" class="float-left oe_avatar"/>-->
                                     </div>
-<!--                                    <div>-->
-<!--                                        <a class="btn-link o_btn-link-as-button fa fa-arrow-right" href="https://console.firebase.google.com/project/_/settings/cloudmessaging/">-->
-<!--                                            Get your keys-->
-<!--                                        </a>-->
-<!--                                    </div>-->
+                                    <div>
+                                        <a class="btn-link o_btn-link-as-button fa fa-arrow-right" target="_blank" href="https://console.firebase.google.com/project/_/settings/cloudmessaging/">
+                                            Get your keys
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
