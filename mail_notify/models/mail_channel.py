@@ -20,13 +20,13 @@ class MailChannel(models.Model):
                 'channel_ids.channel_partner_ids.user_ids') - message.sudo().author_id.user_ids).mapped(
                 'token_ids').filtered(lambda t: t.type == 'web').mapped('token')
             action_id = self.env.ref('mail.action_discuss').id
-            badge = ('/web/image/res.company/%s/badge' % str(self.env.user.company_id.id)) if self.env.user.company_id.badge else '/web/static/src/img/favicon.ico'
+            #badge = ('/web/image/res.company/%s/badge' % str(self.env.user.company_id.id)) if self.env.user.company_id.badge else '/web/static/src/img/favicon.ico'
 
             if web_tokens:
                 push_service.notify_multiple_devices(registration_ids=web_tokens,
                                                      message_title=message_values['author_id'][1],
                                                      message_icon=icon,
                                                      click_action=base_url + '/web?#action=' + str(action_id) + '&active_id=' + str(self.id),
-                                                     badge = badge,
+                                                     #badge = base_url + badge,
                                                      message_body=html2text(message_values['body']))
         return res

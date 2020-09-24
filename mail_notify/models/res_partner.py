@@ -21,12 +21,12 @@ class ResPartner(models.Model):
             icon = message_values.get('module_icon') and message_values.get('module_icon') or \
                    message.author_id and '/web/image/res.partner/' + str(message.author_id.id) + '/image_small' or \
                    '/mail/static/src/img/smiley/avatar.jpg'
-            badge = ('/web/image/res.company/%s/badge' % str(self.env.user.company_id.id)) if self.env.user.company_id.badge else '/web/static/src/img/favicon.ico'
+            #badge = ('/web/image/res.company/%s/badge' % str(self.env.user.company_id.id)) if self.env.user.company_id.badge else '/web/static/src/img/favicon.ico'
             if web_tokens:
                 push_service.notify_multiple_devices(registration_ids=web_tokens,
                                                      message_title=message_values['author_id'][1] + ': ' + (message_values['subject'] or message_values['record_name']),
                                                      message_icon=base_url + icon,
                                                      click_action=base_url + '/mail/view?message_id=' + str(message.id),
-                                                     badge = base_url + badge,
+                                                     #badge = base_url + badge,
                                                      message_body=html2text(message_values['body']))
         return res
