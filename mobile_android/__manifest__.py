@@ -20,4 +20,6 @@
     'data': [
         'views/assets.xml',
     ],
+    'price': 199.00,
+    'currency': 'USD',
 }
