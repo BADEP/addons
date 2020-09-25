@@ -22,7 +22,13 @@ class StockMove(models.Model):
         if not self.picking_type_id:
             return self
         bom = self.env['mrp.bom'].sudo()._bom_find(product=self.product_id, company_id=self.company_id.id)
-        if not bom or (bom.type_purchase != 'phantom' and bom.type != 'phantom'):
+        if self.picking_type_id.code == 'outgoing':
+            if not bom or bom.type != 'phantom':
+                return self
+        if self.picking_type_id.code == 'incoming':
+            if not bom or bom.type_purchase != 'phantom':
+                return self
+        if not bom:
             return self
         phantom_moves = self.env['stock.move']
         processed_moves = self.env['stock.move']
