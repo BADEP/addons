@@ -28,7 +28,7 @@
         # 'security/ir.model.access.csv',
         'views/account_payment.xml',
     ],
-    'installable': True,
+    'installable': False,
 
     'price': 19.00,
     'currency': 'USD',

@@ -27,7 +27,7 @@
         # 'security/ir.model.access.csv',
         'views/product_view.xml',
     ],
-    'Installable': True,
+    'installable': False,
     'price': 9.00,
     'currency': 'USD',
 }
