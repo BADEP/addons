@@ -10,7 +10,16 @@ BusService.include({
     sendNotification: function (title, content, callback, icon=false) {
         if (window.Notification && Notification.permission === "granted") {
             if (this.isMasterTab()) {
-                this._sendNativeNotification(title, content, callback, icon);
+                try {
+                    this._sendNativeNotification(title, content, callback, icon);
+                } catch (error) {
+                    if (error.message.indexOf('ServiceWorkerRegistration') > -1) {
+                        this.do_notify(title, content);
+                        this._beep();
+                    } else {
+                        throw error;
+                    }
+                }
             }
         } else {
             this.do_notify(title, content);
@@ -21,9 +30,14 @@ BusService.include({
     },
     _sendNativeNotification: function (title, content, callback, icon=false) {
         if (!icon) {
-            icon = "/mail/static/src/img/odoobot.png"
+            icon = "/mail/static/src/img/odoobot_transparent.png"
         }
-        var notification = new Notification(title, {body: content, icon: icon});
+        var notification = new Notification(
+            _.unescape(title),
+            {
+                body: _.unescape(content),
+                icon: icon
+            });
         notification.onclick = function () {
             window.focus();
             if (this.cancel) {
