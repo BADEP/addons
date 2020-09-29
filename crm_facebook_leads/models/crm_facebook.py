@@ -110,6 +110,7 @@ class CrmFacebookFormField(models.Model):
                                                           'selection',
                                                           'phone',
                                                           'text'))],
+                                 ondelete='set null',
                                  required=False)
     facebook_field = fields.Char(required=True)
 
@@ -143,6 +144,7 @@ class CrmFacebookFormMapping(models.Model):
                                                           'selection',
                                                           'phone',
                                                           'text'))],
+                                 ondelete='cascade',
                                  required=True)
     facebook_field = fields.Char(required=True)
 
