@@ -16,10 +16,10 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Sales',
-    'version': '12.0.1',
+    'version': '14.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['sale'],
+    'depends': ['sale_management'],
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
 
@@ -28,7 +28,7 @@
         # 'security/ir.model.access.csv',
         'views/sale_view.xml',
     ],
-    'Installable': False,
+    'Installable': True,
     'price': 49.00,
     'currency': 'USD',
 }
