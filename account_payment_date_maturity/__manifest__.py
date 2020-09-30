@@ -16,7 +16,7 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Accounting',
-    'version': '13.0.1.1',
+    'version': '14.0.1.1',
 
     # any module necessary for this one to work correctly
     'depends': ['account'],
@@ -28,7 +28,7 @@
         # 'security/ir.model.access.csv',
         'views/account_payment.xml',
     ],
-    'installable': False,
+    'installable': True,
 
     'price': 19.00,
     'currency': 'USD',
