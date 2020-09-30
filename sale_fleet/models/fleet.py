@@ -20,19 +20,8 @@ class FleetVehicle(models.Model):
         self.sales_amount = sum(order.amount_total for order in self.sale_orders.filtered(lambda s: s.state in ('sale', 'done')))
         self.sales_count = len(self.sale_orders.filtered(lambda s: s.state in ('sale', 'done')))
 
-
     def act_show_sales(self):
-        action = self.env.ref('sale.action_orders')
-
-        result = {
-            'name': action.name,
-            'help': action.help,
-            'type': action.type,
-            'view_type': action.view_type,
-            'view_mode': action.view_mode,
-            'target': action.target,
-            'context': action.context,
-            'res_model': action.res_model,
-        }
-        result['domain'] = "[('id','in',["+','.join(map(str, self.sale_orders.ids))+"])]"
-        return result
+        action = self.env.ref('sale.action_orders').read()[0]
+        action['domain'] = "[('id','in',["+','.join(map(str, self.sale_orders.ids))+"])]"
+        action['context'] = {'default_vehicle': self.id, 'default_driver': self.driver_id.id}
+        return action
