@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Account Fleet",
+    'name': "Account Invoice Fleet",
 
     'summary': """
         Link Invoices with Fleet""",
@@ -22,7 +22,7 @@
         'views/account_view.xml',
         'views/fleet_view.xml',
     ],
-    'installable': False,
+    'installable': True,
     'price': 49.00,
     'currency': 'EUR',
 }
