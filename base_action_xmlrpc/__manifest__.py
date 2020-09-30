@@ -15,13 +15,13 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Technical Settings',
-    'version': '13.0.1',
+    'version': '14.0.1',
 
     # any module necessary for this one to work correctly
     'depends': [
         'base'
     ],
 
-    'installable': False,
+    'installable': True,
     'auto_install': True,
 }

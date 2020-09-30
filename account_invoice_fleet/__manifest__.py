@@ -13,7 +13,7 @@
     'website': "https://badep.ma",
 
     'category': 'Invoicing &amp; Payments',
-    'version': '13.0.2.0',
+    'version': '14.0.2.0',
 
     'depends': ['account', 'fleet'],
     'images': ['static/src/img/banner.png'],
