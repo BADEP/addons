@@ -7,7 +7,7 @@
             <field eval="20" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <button name="act_show_log_cost" position="after">
+                <button name="open_assignation_logs" position="after">
                     <button name="act_show_pickings" type="object" class="oe_stat_button" icon="fa-truck">
                         <field name="picking_count" widget="statinfo" string="Pickings"/>
                     </button>
