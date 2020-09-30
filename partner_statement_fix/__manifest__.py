@@ -4,7 +4,7 @@
 
 {
     'name': 'Partner Statement Fix',
-    'version': '12.0.1.0.1',
+    'version': '14.0.1.0.1',
     'category': 'Accounting & Finance',
     'summary': 'OCA Financial Reports',
     'author': "BADEP",
