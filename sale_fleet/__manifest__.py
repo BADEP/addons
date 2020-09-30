@@ -16,10 +16,10 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Sales',
-    'version': '13.0.1.0',
+    'version': '14.0.1.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['sale', 'stock_fleet', 'sale_stock'],
+    'depends': ['sale_management', 'stock_fleet', 'sale_stock'],
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
 
