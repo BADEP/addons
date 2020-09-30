@@ -28,7 +28,6 @@
         'views/task_view.xml'
     ],
     'installable': False,
-    'installable': False,
     'price': 19.00,
     'currency': 'USD',
 }
