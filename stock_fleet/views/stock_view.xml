@@ -9,6 +9,7 @@
                 <field name="partner_id" position="after">
                     <field name="vehicle" groups="base.group_user"/>
                     <field name="driver" groups="base.group_user"/>
+                    <field name="odometer" groups="base.group_user"/>
                 </field>
             </field>
         </record>
