@@ -16,7 +16,7 @@ class MrpProductionDimension(models.Model):
     _name = "mrp.production.dimension"
 
     dimension_id = fields.Many2one('uom.dimension', required=True, ondelete='cascade')
-    quantity = fields.Integer('Quantité', required=True)
+    quantity = fields.Float('Quantité', required=True)
     mrp_production = fields.Many2one('mrp.production', required=True, ondelete='cascade')
     name = fields.Char(compute='get_name', store=True)
     display_name = fields.Char(compute='get_name', store=True)
