@@ -7,7 +7,7 @@ class SaleOrderLine(models.Model):
     dimension_ids = fields.One2many('sale.order.line.dimension', 'sale_order_line_id', string='Dimensions', copy=True)
     product_dimension_qty = fields.Integer('Nombre', required=True, default=0)
 
-    @api.onchange('dimension_ids')
+    @api.onchange('product_dimension_qty', 'dimension_ids')
     def onchange_dimension_ids(self):
         if self.dimension_ids:
             qty = self.product_uom.eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]),
