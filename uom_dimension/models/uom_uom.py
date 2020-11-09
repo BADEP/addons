@@ -5,6 +5,7 @@ from odoo.tools.safe_eval import safe_eval
 DEFAULT_PYTHON_CODE = """# Available variables:
 #  - env: Odoo Environment
 #  - record: Uom record
+#  - product_dimension_qty: Number of products
 #  - dimension_values: dict of dimension values with dimension key
 #  - time, datetime, dateutil, numpy: useful Python libraries
 #  - Warning: Warning Exception to use with raise
@@ -19,10 +20,10 @@ class UomUom(models.Model):
     calculation_type = fields.Selection([('simple', 'Simple'), ('code', 'Code')], default='simple', required=True, string='Calculation Type')
     code = fields.Text(string='Python Code', default=DEFAULT_PYTHON_CODE)
 
-    def eval_values(self, dimension_values):
+    def eval_values(self, dimension_values, product_dimension_qty = 1):
         for uom in self:
             if uom.calculation_type == 'simple':
-                code = 'result = numpy.prod(list(dimension_values.values()))'
+                code = 'result = product_dimension_qty * numpy.prod(list(dimension_values.values()))'
             else:
                 code = uom.code
             eval_context = {
@@ -33,6 +34,7 @@ class UomUom(models.Model):
                 'numpy': numpy,
                 'Warning': exceptions.Warning,
                 'record': uom,
+                'product_dimension_qty': product_dimension_qty,
                 'dimension_values': dimension_values,
                 'result': 0,
             }
