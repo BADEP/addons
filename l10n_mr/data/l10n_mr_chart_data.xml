@@ -16,260 +16,178 @@
         <record id="type_imm_corp" model="account.account.type">
             <field name="name">Immobilisations corporelles</field>
             <field name="code">imm_corp</field>
-            <field name="report_type">asset</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_a_prosp" model="account.account.type">
             <field name="name">Actifs de prospection</field>
             <field name="code">a_prosp</field>
-            <field name="report_type">asset</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_a_incorp" model="account.account.type">
             <field name="name">Actifs incorporels</field>
             <field name="code">a_incorp</field>
-            <field name="report_type">asset</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_aut_a_fin" model="account.account.type">
             <field name="name">Autres actifs financiers</field>
             <field name="code">aut_a_fin</field>
-            <field name="report_type">asset</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_part_asso" model="account.account.type">
             <field name="name">Participations dans les entreprises associées</field>
             <field name="code">part_asso</field>
-            <field name="report_type">asset</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_a_cour" model="account.account.type">
             <field name="name">Actifs courants</field>
             <field name="code">a_cour</field>
-            <field name="report_type">asset</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_stk_e_cour" model="account.account.type">
             <field name="name">Stocks et en-cours</field>
             <field name="code">stk_e_cour</field>
-            <field name="report_type">asset</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_clt" model="account.account.type">
             <field name="name">Clients et comptes rattachés</field>
             <field name="code">clt</field>
-            <field name="report_type">asset</field>
-            <field name="close_method">unreconciled</field>
+            <field name="internal_type">receivable</field>
+            <field name="reconcile" eval='True'/>
         </record>
         <record id="type_aut_deb" model="account.account.type">
             <field name="name">Autres débiteurs</field>
             <field name="code">aut_deb</field>
-            <field name="report_type">asset</field>
-            <field name="close_method">unreconciled</field>
         </record>
         <record id="type_prod_der" model="account.account.type">
             <field name="name">Produits dérivés</field>
             <field name="code">prod_der</field>
-            <field name="report_type">asset</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_tres" model="account.account.type">
             <field name="name">Trésorerie et équivalents de trésorerie</field>
             <field name="code">tres</field>
-            <field name="report_type">asset</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_cap_rsve" model="account.account.type">
             <field name="name">Capital et réserves</field>
             <field name="code">cap_rsve</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_cap_em" model="account.account.type">
             <field name="name">Capital émis</field>
             <field name="code">cap_em</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_pri_em" model="account.account.type">
             <field name="name">Primes d’émission</field>
             <field name="code">pri_em</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_gain_lat" model="account.account.type">
             <field name="name">Gains nets latents sur contrats à terme</field>
             <field name="code">gain_lat</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_res_n_dist" model="account.account.type">
             <field name="name">Résultats accumulés non distribués</field>
             <field name="code">res_n_dist</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_p_n_cour" model="account.account.type">
             <field name="name">Passifs non courants</field>
             <field name="code">p_n_cour</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_emp" model="account.account.type">
             <field name="name">Emprunts portant intérêts</field>
             <field name="code">emp</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_oblig_retrait" model="account.account.type">
             <field name="name">Obligations au titre des retraites</field>
             <field name="code">oblig_retrait</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_prov" model="account.account.type">
             <field name="name">Provisions</field>
             <field name="code">prov</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_p_cour" model="account.account.type">
             <field name="name">Passifs courants</field>
             <field name="code">p_cour</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_fsr" model="account.account.type">
             <field name="name">Fournisseurs et comptes rattachés</field>
             <field name="code">fsr</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">unreconciled</field>
+            <field name="internal_type">payable</field>
+            <field name="reconcile" eval='True'/>
         </record>
         <record id="type_imp" model="account.account.type">
             <field name="name">Impôts</field>
             <field name="code">imp</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">unreconciled</field>
         </record>
         <record id="type_aut_tax" model="account.account.type">
             <field name="name">Autres taxes</field>
             <field name="code">aut_tax</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">unreconciled</field>
         </record>
         <record id="type_aut_cred" model="account.account.type">
             <field name="name">Autres créditeurs</field>
             <field name="code">aut_cred</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">unreconciled</field>
         </record>
         <record id="type_contrat" model="account.account.type">
             <field name="name">Contrats à terme</field>
             <field name="code">contrat</field>
-            <field name="report_type">liability</field>
-            <field name="close_method">balance</field>
         </record>
         <record id="type_ca_prod" model="account.account.type">
             <field name="name">Chiffre d'affaires</field>
             <field name="code">ca_prod</field>
-            <field name="report_type">income</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_prod_anex" model="account.account.type">
             <field name="name">Produits des activités annexes</field>
             <field name="code">prod_anex</field>
-            <field name="report_type">income</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_aut_prod_op" model="account.account.type">
             <field name="name">Autres produits opérationnels</field>
             <field name="code">aut_prod_op</field>
-            <field name="report_type">income</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_prod_imm" model="account.account.type">
             <field name="name">Production immobilisée</field>
             <field name="code">prod_imm</field>
-            <field name="report_type">income</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_march" model="account.account.type">
             <field name="name">Marchandises et matières consommées</field>
             <field name="code">march</field>
-            <field name="report_type">expense</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_fr_perso" model="account.account.type">
             <field name="name">Frais de personnel</field>
             <field name="code">fr_perso</field>
-            <field name="report_type">expense</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_dot_amort_prov" model="account.account.type">
             <field name="name">Dotations aux amortissements et provisions</field>
             <field name="code">dot_amort_prov</field>
-            <field name="report_type">expense</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_rep_amort_prov" model="account.account.type">
             <field name="name">Reprises des amortissements et provisions</field>
             <field name="code">rep_amort_prov</field>
-            <field name="report_type">income</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_imp_tax" model="account.account.type">
             <field name="name">Impôts et taxes</field>
             <field name="code">imp_tax</field>
-            <field name="report_type">expense</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_aut_chg_op" model="account.account.type">
             <field name="name">Autres charges opérationnelles</field>
             <field name="code">aut_chg_op</field>
-            <field name="report_type">expense</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_pdt_fin" model="account.account.type">
             <field name="name">Produits financiers</field>
             <field name="code">pdt_fin</field>
-            <field name="report_type">income</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_chg_fin" model="account.account.type">
             <field name="name">Charges financières</field>
             <field name="code">chg_fin</field>
-            <field name="report_type">expense</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_tax_ca_prod" model="account.account.type">
             <field name="name">Taxe unique sur le chiffre d'affaires</field>
             <field name="code">tax_ca_prod</field>
-            <field name="report_type">expense</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_amort" model="account.account.type">
             <field name="name">Amortissements</field>
             <field name="code">amort</field>
-            <field name="report_type">expense</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_res_cr" model="account.account.type">
             <field name="name">Resultat</field>
             <field name="code">res_cr</field>
-            <field name="report_type">income</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_cpte_analy" model="account.account.type">
             <field name="name">Comptes analytique et autres</field>
             <field name="code">cpte_analy</field>
-            <field name="report_type">none</field>
-            <field name="close_method">none</field>
         </record>
         <record id="type_mrt_view" model="account.account.type">
             <field name="name">Vue</field>
             <field name="code">mrt_view</field>
-            <field name="report_type">none</field>
-            <field name="close_method">none</field>
         </record>
         <!--
             #Etape 2: Definition des comptes financicers
@@ -1422,9 +1340,21 @@
             <field name="type">other</field>
             <field name="user_type_id" ref="type_p_cour"/>
         </record>
-        <record id="mrt_245" model="account.account.template">
-            <field name="name">Taxes sur le chiffre d’affaire</field>
-            <field name="code">435</field>
+        <record id="mrt_4350" model="account.account.template">
+            <field name="name">Etat, TVA déductible</field>
+            <field name="code">4350</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_4355" model="account.account.template">
+            <field name="name">Etat, TVA à décaisser</field>
+            <field name="code">4355</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_4357" model="account.account.template">
+            <field name="name">Etat, TVA collectée</field>
+            <field name="code">4357</field>
             <field name="type">other</field>
             <field name="user_type_id" ref="type_p_cour"/>
         </record>
@@ -3163,8 +3093,8 @@
         <record id="pcm_chart_template" model="account.chart.template">
             <field name="name">Plan de compte - PCM</field>
             <field name="bank_account_view_id" ref="mrt_294"/>
-            <field name="property_account_receivable" ref="mrt_220"/>
-            <field name="property_account_payable" ref="mrt_207"/>
+            <field name="property_account_receivable_id" ref="mrt_220"/>
+            <field name="property_account_payable_id" ref="mrt_207"/>
             <field name="bank_account_code_prefix">550</field>
             <field name="cash_account_code_prefix">555</field>
             <field name="transfer_account_code_prefix">580</field>
