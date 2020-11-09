@@ -10,8 +10,7 @@ Allow to define a bom type for purchases different than that of sales
     'data': [
         'views/bom_views.xml'
     ],
-    'Installable': False,
-    'auto_install': True,
+    'installable': True,
     'price': 9.00,
     'currency': 'USD',
 }
