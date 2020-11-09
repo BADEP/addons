@@ -1,15 +1,20 @@
 from odoo import models, fields, api
 from odoo.addons import decimal_precision as dp
 
+
 class SaleOrderLine(models.Model):
     _inherit = "sale.order.line"
     dimension_ids = fields.One2many('sale.order.line.dimension', 'sale_order_line_id', string='Dimensions', copy=True)
+    product_dimension_qty = fields.Integer('Nombre', required=True, default=0)
 
     @api.onchange('dimension_ids')
     def onchange_dimension_ids(self):
         if self.dimension_ids:
-            qty = self.product_uom.eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]))
-            qty_delivered_manual = self.product_uom.eval_values(dict([(d.dimension_id.id, d.quantity_delivered) for d in self.dimension_ids]))
+            qty = self.product_uom.eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]),
+                                               self.product_dimension_qty)
+            qty_delivered_manual = self.product_uom.eval_values(
+                dict([(d.dimension_id.id, d.quantity_delivered) for d in self.dimension_ids]),
+                self.product_dimension_qty)
             if qty != self.product_uom_qty:
                 self.product_uom_qty = qty
             if qty_delivered_manual != self.product_uom_qty:
@@ -19,13 +24,15 @@ class SaleOrderLine(models.Model):
     def onchange_product_uom_set_dimensions(self):
         self.dimension_ids = [(5, 0, 0)]
         if self.product_uom:
-            self.dimension_ids = [(0, 0, {'dimension_id':d.id}) for d in self.product_uom.dimension_ids]
+            self.dimension_ids = [(0, 0, {'dimension_id': d.id}) for d in self.product_uom.dimension_ids]
 
     @api.multi
     def _prepare_procurement_values(self, group_id=False):
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
         values.update({
-            'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity})  for d in self.dimension_ids],
+            'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in
+                              self.dimension_ids],
+            'product_dimension_qty': self.product_dimension_qty
         })
         return values
 
@@ -33,9 +40,12 @@ class SaleOrderLine(models.Model):
     def _prepare_invoice_line(self, qty):
         res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
         res.update({
-            'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity})  for d in self.dimension_ids],
+            'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in
+                              self.dimension_ids],
+            'product_dimension_qty': self.product_dimension_qty
         })
         return res
+
 
 class SaleOrderLineDimension(models.Model):
     _name = 'sale.order.line.dimension'

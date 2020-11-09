@@ -12,10 +12,11 @@
     'depends': ['sale', 'uom_dimension', 'web_m2x_options'],
     'data': [
              'views/sale_views.xml',
+             'report/sale_report_templates.xml',
              'security/ir.model.access.csv',
              ],
     'auto_install': True,
-    'installable': False,
+    'installable': True,
     'price': 30,
     'currency': 'USD'
 }

@@ -1,36 +1,31 @@
 <odoo>
     <data>
-<!--        <template id="report_invoice_product_dimension" inherit_id="account.report_invoice_document">-->
-<!--		    <xpath expr="//span[@t-field='line.uom_id']" position="replace">-->
-<!--                <span t-field="line.uom_id.label" groups="uom.group_uom"/>-->
-<!--            </xpath>-->
-<!--        </template>-->
 
-<!--        <template id="report_saleorder_document_inherit_product_dimension" inherit_id="sale.report_saleorder_document">-->
+        <template id="report_saleorder_document_inherit_product_dimension" inherit_id="sale.report_saleorder_document">
 <!--            <xpath expr="//thead/tr/th[5]" position="attributes">-->
 <!--                <attribute name="style">display: none;</attribute>-->
 <!--            </xpath>-->
 <!--            <xpath expr="//t[@t-if='not line.display_type']/td[5]" position="attributes">-->
 <!--                <attribute name="style">display: none;</attribute>-->
 <!--            </xpath>-->
-<!--            <xpath expr="//thead/tr/th[1]" position="after">-->
-<!--                <t t-if="doc.order_line.mapped('dimensions')">-->
-<!--                    <th>Nombre</th>-->
-<!--                    <th>Mesures</th>-->
-<!--                </t>-->
-<!--            </xpath>-->
-<!--            <xpath expr="//t[@t-if='not line.display_type']/td[1]" position="after">-->
-<!--                    <td>-->
-<!--                        <t t-if="line.dimensions">-->
-<!--                            <span t-field="line.product_dimension_qty"/>-->
-<!--                        </t>-->
-<!--                    </td>-->
-<!--                    <td>-->
-<!--                        <t t-if="line.dimensions">-->
-<!--                            <span t-esc="'x'.join([str(q) for q in line.dimensions.mapped('quantity')])"/>-->
-<!--                        </t>-->
-<!--                    </td>-->
-<!--            </xpath>-->
-<!--        </template>-->
+            <xpath expr="//thead/tr/th[1]" position="after">
+                <t t-if="doc.order_line.mapped('dimension_ids')">
+                    <th>Nombre</th>
+                    <th>Mesures</th>
+                </t>
+            </xpath>
+            <xpath expr="//t[@t-if='not line.display_type']/td[1]" position="after">
+                    <td>
+                        <t t-if="line.dimension_ids">
+                            <span t-field="line.product_dimension_qty"/>
+                        </t>
+                    </td>
+                    <td>
+                        <t t-if="line.dimension_ids">
+                            <span t-esc="'x'.join([str(q) for q in line.dimension_ids.mapped('quantity')])"/>
+                        </t>
+                    </td>
+            </xpath>
+        </template>
     </data>
 </odoo>
