@@ -12,6 +12,31 @@
     </record>
 
     <!-- Account Tax Template -->
+
+    <record model="account.tax.template" id="tva_vt16">
+        <field name="name">TVA 16% VENTES</field>
+        <field name="description">TVA 16% VENTES</field>
+        <field name="type_tax_use">sale</field>
+        <field name="refund_account_id" ref="mrt_4357"/>
+        <field name="account_id" ref="mrt_4357"/>
+        <field name="amount">16</field>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="pcm_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_01')])]"/>
+        <field name="tax_group_id" ref="tax_group_tva"/>
+    </record>
+    <record model="account.tax.template" id="tva_ac16">
+        <field name="name">TVA 16% ACHATS</field>
+        <field name="description">TVA 16% ACHATS</field>
+        <field name="type_tax_use">purchase</field>
+        <field name="refund_account_id" ref="mrt_4350"/>
+        <field name="account_id" ref="mrt_4350"/>
+        <field name="amount">16</field>
+        <field name="amount_type">percent</field>
+        <field name="chart_template_id" ref="pcm_chart_template"/>
+        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_02')])]"/>
+        <field name="tax_group_id" ref="tax_group_tva"/>
+    </record>
     <record model="account.tax.template" id="tva_exo">
         <field name="name">Exonere de TVA VENTES</field>
         <field name="description">Exonere de TVA VENTES</field>
@@ -32,30 +57,6 @@
         <field name="amount">0</field>
         <field name="amount_type">percent</field>
         <field name="chart_template_id" ref="pcm_chart_template"/>
-        <field name="tax_group_id" ref="tax_group_tva"/>
-    </record>
-    <record model="account.tax.template" id="tva_vt16">
-        <field name="name">TVA 16% VENTES</field>
-        <field name="description">TVA 16% VENTES</field>
-        <field name="type_tax_use">sale</field>
-        <field name="refund_account_id" ref="mrt_246"/>
-        <field name="account_id" ref="mrt_246"/>
-        <field name="amount">16</field>
-        <field name="amount_type">percent</field>
-        <field name="chart_template_id" ref="pcm_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_01')])]"/>
-        <field name="tax_group_id" ref="tax_group_tva"/>
-    </record>
-    <record model="account.tax.template" id="tva_ac16">
-        <field name="name">TVA 16% ACHATS</field>
-        <field name="description">TVA 16% ACHATS</field>
-        <field name="type_tax_use">purchase</field>
-        <field name="refund_account_id" ref="mrt_246"/>
-        <field name="account_id" ref="mrt_246"/>
-        <field name="amount">16</field>
-        <field name="amount_type">percent</field>
-        <field name="chart_template_id" ref="pcm_chart_template"/>
-        <field name="tag_ids" eval="[(6,0,[ref('tax_tag_02')])]"/>
         <field name="tax_group_id" ref="tax_group_tva"/>
     </record>
 </odoo>
