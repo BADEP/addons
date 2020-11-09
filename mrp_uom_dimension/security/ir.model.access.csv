@@ -1,0 +1,4 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mrp_production_dimension_all,mrp.production.dimension.all,model_mrp_production_dimension,,1,0,0,0
+access_mrp_production_dimension_stock_user,mrp.production.dimension.stock_user,model_mrp_production_dimension,stock.group_stock_user,1,1,1,1
+access_mrp_production_dimension_mrp_user,mrp.production.dimension.mrp_user,model_mrp_production_dimension,mrp.group_mrp_user,1,1,1,1
