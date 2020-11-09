@@ -1,0 +1,3185 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+    <data noupdate="0">
+        <!--
+    #Etape 1: Definition des types de comptes
+	#Ils sont necessaire pour la definition des comptes du plan comptable
+	#
+    # PCM : Types de comptes Etats Financiers PCM
+    # Auteur : AFRICA PERFORMANCES
+    # Version du fichier : 1.0
+    # Date : 01/2016
+    #
+    #
+    -->
+        <!-- Account Type Templates -->
+        <record id="type_imm_corp" model="account.account.type">
+            <field name="name">Immobilisations corporelles</field>
+            <field name="code">imm_corp</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_a_prosp" model="account.account.type">
+            <field name="name">Actifs de prospection</field>
+            <field name="code">a_prosp</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_a_incorp" model="account.account.type">
+            <field name="name">Actifs incorporels</field>
+            <field name="code">a_incorp</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_aut_a_fin" model="account.account.type">
+            <field name="name">Autres actifs financiers</field>
+            <field name="code">aut_a_fin</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_part_asso" model="account.account.type">
+            <field name="name">Participations dans les entreprises associées</field>
+            <field name="code">part_asso</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_a_cour" model="account.account.type">
+            <field name="name">Actifs courants</field>
+            <field name="code">a_cour</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_stk_e_cour" model="account.account.type">
+            <field name="name">Stocks et en-cours</field>
+            <field name="code">stk_e_cour</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_clt" model="account.account.type">
+            <field name="name">Clients et comptes rattachés</field>
+            <field name="code">clt</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="type_aut_deb" model="account.account.type">
+            <field name="name">Autres débiteurs</field>
+            <field name="code">aut_deb</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="type_prod_der" model="account.account.type">
+            <field name="name">Produits dérivés</field>
+            <field name="code">prod_der</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_tres" model="account.account.type">
+            <field name="name">Trésorerie et équivalents de trésorerie</field>
+            <field name="code">tres</field>
+            <field name="report_type">asset</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_cap_rsve" model="account.account.type">
+            <field name="name">Capital et réserves</field>
+            <field name="code">cap_rsve</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_cap_em" model="account.account.type">
+            <field name="name">Capital émis</field>
+            <field name="code">cap_em</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_pri_em" model="account.account.type">
+            <field name="name">Primes d’émission</field>
+            <field name="code">pri_em</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_gain_lat" model="account.account.type">
+            <field name="name">Gains nets latents sur contrats à terme</field>
+            <field name="code">gain_lat</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_res_n_dist" model="account.account.type">
+            <field name="name">Résultats accumulés non distribués</field>
+            <field name="code">res_n_dist</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_p_n_cour" model="account.account.type">
+            <field name="name">Passifs non courants</field>
+            <field name="code">p_n_cour</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_emp" model="account.account.type">
+            <field name="name">Emprunts portant intérêts</field>
+            <field name="code">emp</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_oblig_retrait" model="account.account.type">
+            <field name="name">Obligations au titre des retraites</field>
+            <field name="code">oblig_retrait</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_prov" model="account.account.type">
+            <field name="name">Provisions</field>
+            <field name="code">prov</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_p_cour" model="account.account.type">
+            <field name="name">Passifs courants</field>
+            <field name="code">p_cour</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_fsr" model="account.account.type">
+            <field name="name">Fournisseurs et comptes rattachés</field>
+            <field name="code">fsr</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="type_imp" model="account.account.type">
+            <field name="name">Impôts</field>
+            <field name="code">imp</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="type_aut_tax" model="account.account.type">
+            <field name="name">Autres taxes</field>
+            <field name="code">aut_tax</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="type_aut_cred" model="account.account.type">
+            <field name="name">Autres créditeurs</field>
+            <field name="code">aut_cred</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">unreconciled</field>
+        </record>
+        <record id="type_contrat" model="account.account.type">
+            <field name="name">Contrats à terme</field>
+            <field name="code">contrat</field>
+            <field name="report_type">liability</field>
+            <field name="close_method">balance</field>
+        </record>
+        <record id="type_ca_prod" model="account.account.type">
+            <field name="name">Chiffre d'affaires</field>
+            <field name="code">ca_prod</field>
+            <field name="report_type">income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_prod_anex" model="account.account.type">
+            <field name="name">Produits des activités annexes</field>
+            <field name="code">prod_anex</field>
+            <field name="report_type">income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_aut_prod_op" model="account.account.type">
+            <field name="name">Autres produits opérationnels</field>
+            <field name="code">aut_prod_op</field>
+            <field name="report_type">income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_prod_imm" model="account.account.type">
+            <field name="name">Production immobilisée</field>
+            <field name="code">prod_imm</field>
+            <field name="report_type">income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_march" model="account.account.type">
+            <field name="name">Marchandises et matières consommées</field>
+            <field name="code">march</field>
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_fr_perso" model="account.account.type">
+            <field name="name">Frais de personnel</field>
+            <field name="code">fr_perso</field>
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_dot_amort_prov" model="account.account.type">
+            <field name="name">Dotations aux amortissements et provisions</field>
+            <field name="code">dot_amort_prov</field>
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_rep_amort_prov" model="account.account.type">
+            <field name="name">Reprises des amortissements et provisions</field>
+            <field name="code">rep_amort_prov</field>
+            <field name="report_type">income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_imp_tax" model="account.account.type">
+            <field name="name">Impôts et taxes</field>
+            <field name="code">imp_tax</field>
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_aut_chg_op" model="account.account.type">
+            <field name="name">Autres charges opérationnelles</field>
+            <field name="code">aut_chg_op</field>
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_pdt_fin" model="account.account.type">
+            <field name="name">Produits financiers</field>
+            <field name="code">pdt_fin</field>
+            <field name="report_type">income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_chg_fin" model="account.account.type">
+            <field name="name">Charges financières</field>
+            <field name="code">chg_fin</field>
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_tax_ca_prod" model="account.account.type">
+            <field name="name">Taxe unique sur le chiffre d'affaires</field>
+            <field name="code">tax_ca_prod</field>
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_amort" model="account.account.type">
+            <field name="name">Amortissements</field>
+            <field name="code">amort</field>
+            <field name="report_type">expense</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_res_cr" model="account.account.type">
+            <field name="name">Resultat</field>
+            <field name="code">res_cr</field>
+            <field name="report_type">income</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_cpte_analy" model="account.account.type">
+            <field name="name">Comptes analytique et autres</field>
+            <field name="code">cpte_analy</field>
+            <field name="report_type">none</field>
+            <field name="close_method">none</field>
+        </record>
+        <record id="type_mrt_view" model="account.account.type">
+            <field name="name">Vue</field>
+            <field name="code">mrt_view</field>
+            <field name="report_type">none</field>
+            <field name="close_method">none</field>
+        </record>
+        <!--
+            #Etape 2: Definition des comptes financicers
+            #Ils s'appuyent sur les types de comptes precedents
+            #
+            # PCM : Comptes Financiers PCM
+            # Auteur : AFRICA PERFORMANCES
+            # Version du fichier : 1.0
+            # Date : 01/2016
+            #
+            #
+            -->
+        <!-- Account Templates -->
+        <record id="mrt_4" model="account.account.template">
+            <field name="name">Capital souscrit non appelé</field>
+            <field name="code">1001</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cap_em"/>
+        </record>
+        <record id="mrt_5" model="account.account.template">
+            <field name="name">Capital souscrit appelé, non versé</field>
+            <field name="code">1002</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cap_em"/>
+        </record>
+        <record id="mrt_7" model="account.account.template">
+            <field name="name">Capital non amorti</field>
+            <field name="code">10030</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cap_em"/>
+        </record>
+        <record id="mrt_8" model="account.account.template">
+            <field name="name">Capital amorti</field>
+            <field name="code">10031</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cap_em"/>
+        </record>
+        <record id="mrt_10" model="account.account.template">
+            <field name="name">Primes d’émission</field>
+            <field name="code">1041</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_pri_em"/>
+        </record>
+        <record id="mrt_11" model="account.account.template">
+            <field name="name">Primes de fusion</field>
+            <field name="code">1042</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_pri_em"/>
+        </record>
+        <record id="mrt_12" model="account.account.template">
+            <field name="name">Primes d’apport</field>
+            <field name="code">1043</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_pri_em"/>
+        </record>
+        <record id="mrt_13" model="account.account.template">
+            <field name="name">Fonds de dotation</field>
+            <field name="code">105</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_pri_em"/>
+        </record>
+        <record id="mrt_14" model="account.account.template">
+            <field name="name">Compte de l’exploitant</field>
+            <field name="code">108</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_pri_em"/>
+        </record>
+        <record id="mrt_15" model="account.account.template">
+            <field name="name">Actionnaire capital souscrit –non appelé</field>
+            <field name="code">109</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_pri_em"/>
+        </record>
+        <record id="mrt_17" model="account.account.template">
+            <field name="name">Réserves légales</field>
+            <field name="code">110</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cap_rsve"/>
+        </record>
+        <record id="mrt_18" model="account.account.template">
+            <field name="name">Réserves statutaires et ou contractuelles</field>
+            <field name="code">113</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cap_rsve"/>
+        </record>
+        <record id="mrt_19" model="account.account.template">
+            <field name="name">Réserves réglementées</field>
+            <field name="code">114</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cap_rsve"/>
+        </record>
+        <record id="mrt_20" model="account.account.template">
+            <field name="name">Réserves libres</field>
+            <field name="code">115</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cap_rsve"/>
+        </record>
+        <record id="mrt_21" model="account.account.template">
+            <field name="name">Autres réserves</field>
+            <field name="code">116</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cap_rsve"/>
+        </record>
+        <record id="mrt_23" model="account.account.template">
+            <field name="name">Report à nouveau (solde créditeur)</field>
+            <field name="code">120</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_n_dist"/>
+        </record>
+        <record id="mrt_24" model="account.account.template">
+            <field name="name">Report à nouveau (solde débiteur)</field>
+            <field name="code">129</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_n_dist"/>
+        </record>
+        <record id="mrt_26" model="account.account.template">
+            <field name="name">Résultat net (solde créditeur)</field>
+            <field name="code">130</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_n_dist"/>
+        </record>
+        <record id="mrt_27" model="account.account.template">
+            <field name="name">Résultat net (solde débiteur)</field>
+            <field name="code">139</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_n_dist"/>
+        </record>
+        <record id="mrt_29" model="account.account.template">
+            <field name="name">Subventions d’équipement reçues</field>
+            <field name="code">140</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_gain_lat"/>
+        </record>
+        <record id="mrt_30" model="account.account.template">
+            <field name="name">Subvention d’équipement inscrites au compte de résultat (solde débiteur)</field>
+            <field name="code">149</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_gain_lat"/>
+        </record>
+        <record id="mrt_33" model="account.account.template">
+            <field name="name">Plus values de cession à réinvestir</field>
+            <field name="code">1500</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_34" model="account.account.template">
+            <field name="name">Amortissement spécial de réemploi</field>
+            <field name="code">1508</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_35" model="account.account.template">
+            <field name="name">Ecarts de réévaluation</field>
+            <field name="code">151</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_36" model="account.account.template">
+            <field name="name">provisions réglementées</field>
+            <field name="code">152</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_38" model="account.account.template">
+            <field name="name">Emprunts obligataires</field>
+            <field name="code">160</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_emp"/>
+        </record>
+        <record id="mrt_39" model="account.account.template">
+            <field name="name">Emprunt auprès des établissements de crédit</field>
+            <field name="code">162</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_emp"/>
+        </record>
+        <record id="mrt_40" model="account.account.template">
+            <field name="name">Dépôts et cautionnement reçus</field>
+            <field name="code">165</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_emp"/>
+        </record>
+        <record id="mrt_41" model="account.account.template">
+            <field name="name">Avances de l’Etat</field>
+            <field name="code">167</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_emp"/>
+        </record>
+        <record id="mrt_42" model="account.account.template">
+            <field name="name">Autres emprunts et dettes assimilées(billet de fond, Fournisseurs et effets à payer à
+                long et moyen terme)
+            </field>
+            <field name="code">168</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_emp"/>
+        </record>
+        <record id="mrt_43" model="account.account.template">
+            <field name="name">Primes de remboursements des obligations</field>
+            <field name="code">169</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_emp"/>
+        </record>
+        <record id="mrt_45" model="account.account.template">
+            <field name="name">Dettes rattachées à des participations (groupe)</field>
+            <field name="code">175</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_emp"/>
+        </record>
+        <record id="mrt_46" model="account.account.template">
+            <field name="name">Dettes rattachées à des sociétés en participation</field>
+            <field name="code">178</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_emp"/>
+        </record>
+        <record id="mrt_47" model="account.account.template">
+            <field name="name">COMPTE DE LIAISON DES ETABLISSEMENTS, SUCCURSALES ET SOCIETES EN PARTICIPATION</field>
+            <field name="code">18</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_emp"/>
+        </record>
+        <record id="mrt_50" model="account.account.template">
+            <field name="name">Provisions pour litiges</field>
+            <field name="code">1901</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_51" model="account.account.template">
+            <field name="name">Provisions pour garanties données aux clients</field>
+            <field name="code">1902</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_52" model="account.account.template">
+            <field name="name">Provisions pour perte sur marché à terme</field>
+            <field name="code">1903</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_53" model="account.account.template">
+            <field name="name">Provisions pour amendes, doubles droits, pénalités</field>
+            <field name="code">1904</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_54" model="account.account.template">
+            <field name="name">Provisions pour pensions et obligations similaires</field>
+            <field name="code">194</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_55" model="account.account.template">
+            <field name="name">Provisions pour impôts</field>
+            <field name="code">195</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_56" model="account.account.template">
+            <field name="name">Provisions pour renouvellement des immobilisations (entreprises concessionnaires)</field>
+            <field name="code">196</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_57" model="account.account.template">
+            <field name="name">Provisions pour charges à repartir sur plusieurs exercices</field>
+            <field name="code">197</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_61" model="account.account.template">
+            <field name="name">Frais d’établissement</field>
+            <field name="code">2000</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_a_incorp"/>
+        </record>
+        <record id="mrt_62" model="account.account.template">
+            <field name="name">Frais relatifs au pacte social</field>
+            <field name="code">2001</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_a_incorp"/>
+        </record>
+        <record id="mrt_63" model="account.account.template">
+            <field name="name">Frais d’émission des emprunts</field>
+            <field name="code">2003</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_a_incorp"/>
+        </record>
+        <record id="mrt_64" model="account.account.template">
+            <field name="name">Frais d’acquisition des immobilisations</field>
+            <field name="code">2004</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_a_incorp"/>
+        </record>
+        <record id="mrt_65" model="account.account.template">
+            <field name="name">Frais exceptionnelles à étaler sur plusieurs exercices</field>
+            <field name="code">2005</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_a_incorp"/>
+        </record>
+        <record id="mrt_66" model="account.account.template">
+            <field name="name">Frais de recherches et du développement</field>
+            <field name="code">203</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_a_incorp"/>
+        </record>
+        <record id="mrt_68" model="account.account.template">
+            <field name="name">Concessions, brevets, licences, procédés, modèles, dessins</field>
+            <field name="code">2050</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_a_incorp"/>
+        </record>
+        <record id="mrt_69" model="account.account.template">
+            <field name="name">Droit au bail</field>
+            <field name="code">2051</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_a_incorp"/>
+        </record>
+        <record id="mrt_70" model="account.account.template">
+            <field name="name">Fonds commercial</field>
+            <field name="code">2052</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_a_incorp"/>
+        </record>
+        <record id="mrt_71" model="account.account.template">
+            <field name="name">Autres immobilisations incorporelles</field>
+            <field name="code">2058</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_a_incorp"/>
+        </record>
+        <record id="mrt_74" model="account.account.template">
+            <field name="name">Terrains nus</field>
+            <field name="code">2100</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_75" model="account.account.template">
+            <field name="name">Terrains de chantiers</field>
+            <field name="code">2101</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_76" model="account.account.template">
+            <field name="name">Sous-sol et sur-sol</field>
+            <field name="code">2102</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_77" model="account.account.template">
+            <field name="name">Terrains de gisement</field>
+            <field name="code">2103</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_78" model="account.account.template">
+            <field name="name">Terrains d’exploitation agricole</field>
+            <field name="code">2105</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_79" model="account.account.template">
+            <field name="name">Terrains bâtis (ensemble industriels, administratifs, commerciaux)</field>
+            <field name="code">2106</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_80" model="account.account.template">
+            <field name="name">Agencements et aménagements des terrains</field>
+            <field name="code">211</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_83" model="account.account.template">
+            <field name="name">Bâtiments industriels</field>
+            <field name="code">21200</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_84" model="account.account.template">
+            <field name="name">Bâtiments administratifs et commerciaux</field>
+            <field name="code">21205</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_85" model="account.account.template">
+            <field name="name">Autres ensembles immobiliers</field>
+            <field name="code">21208</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_86" model="account.account.template">
+            <field name="name">Installations complexes spécialisés</field>
+            <field name="code">213</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_87" model="account.account.template">
+            <field name="name">Matériel d’exploitation</field>
+            <field name="code">214</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_88" model="account.account.template">
+            <field name="name">Matériel de transport</field>
+            <field name="code">215</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_89" model="account.account.template">
+            <field name="name">Matériel de bureau et informatique</field>
+            <field name="code">216</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_90" model="account.account.template">
+            <field name="name">Immobilsations animales (animaux de reproduction, de trait, laitiers)</field>
+            <field name="code">217</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_92" model="account.account.template">
+            <field name="name">Mobiliers de bureau</field>
+            <field name="code">2180</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_93" model="account.account.template">
+            <field name="name">Mobiliers de logement</field>
+            <field name="code">2181</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_94" model="account.account.template">
+            <field name="name">Installations, agencements, aménagements</field>
+            <field name="code">2182</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_95" model="account.account.template">
+            <field name="name">Emballages récupérables identifiables</field>
+            <field name="code">2183</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_97" model="account.account.template">
+            <field name="name">Par le concédant</field>
+            <field name="code">220</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_98" model="account.account.template">
+            <field name="name">Par le concessionnaire</field>
+            <field name="code">225</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_99" model="account.account.template">
+            <field name="name">Droit du concédant (en nature)</field>
+            <field name="code">229</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_101" model="account.account.template">
+            <field name="name">Immobilisations corporelles en cours</field>
+            <field name="code">230</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_102" model="account.account.template">
+            <field name="name">Avances et acomptes versées sur immobilisations incorporelles</field>
+            <field name="code">237</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_103" model="account.account.template">
+            <field name="name">Avances et acomptes sur commande d’immobilisations corporelles</field>
+            <field name="code">238</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imm_corp"/>
+        </record>
+        <record id="mrt_105" model="account.account.template">
+            <field name="name">prêts avances consentis à long et moyen terme (aux associés, au personnel, billets de
+                fonds)
+            </field>
+            <field name="code">260</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_a_fin"/>
+        </record>
+        <record id="mrt_106" model="account.account.template">
+            <field name="name">Créances sur clients ( à long et moyen terme)</field>
+            <field name="code">264</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_a_fin"/>
+        </record>
+        <record id="mrt_107" model="account.account.template">
+            <field name="name">Dépôts et cautionnement versés</field>
+            <field name="code">265</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_a_fin"/>
+        </record>
+        <record id="mrt_108" model="account.account.template">
+            <field name="name">Autres créances immobilisées</field>
+            <field name="code">268</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_a_fin"/>
+        </record>
+        <record id="mrt_110" model="account.account.template">
+            <field name="name">Titres de participation</field>
+            <field name="code">270</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_a_fin"/>
+        </record>
+        <record id="mrt_111" model="account.account.template">
+            <field name="name">Titres immobilisés</field>
+            <field name="code">272</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_a_fin"/>
+        </record>
+        <record id="mrt_112" model="account.account.template">
+            <field name="name">Créances rattachées à des participations (groupe)</field>
+            <field name="code">275</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_a_fin"/>
+        </record>
+        <record id="mrt_113" model="account.account.template">
+            <field name="name">Créance rattachées à des sociétés en participation</field>
+            <field name="code">278</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_a_fin"/>
+        </record>
+        <record id="mrt_114" model="account.account.template">
+            <field name="name">Versements restant à effectuer sur titres de participation ou des titres immobilisés non
+                libérés
+            </field>
+            <field name="code">279</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_a_fin"/>
+        </record>
+        <record id="mrt_117" model="account.account.template">
+            <field name="name">Amortissements des frais d’établissement</field>
+            <field name="code">28000</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_118" model="account.account.template">
+            <field name="name">Amortissements des frais relatifs au pacte social</field>
+            <field name="code">28001</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_119" model="account.account.template">
+            <field name="name">Amortissements des frais d’émission des emprunts</field>
+            <field name="code">28003</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_120" model="account.account.template">
+            <field name="name">Amortissements des frais d’acquisitions des immobilisations</field>
+            <field name="code">28004</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_121" model="account.account.template">
+            <field name="name">Amortissements des frais à immobiliser sur plusieurs exercices</field>
+            <field name="code">28005</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_122" model="account.account.template">
+            <field name="name">Amortissements des frais de recherche et de développement</field>
+            <field name="code">2803</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_124" model="account.account.template">
+            <field name="name">Amortissements des concessions, brevets, licence, procédés, modèles, dessins</field>
+            <field name="code">28050</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_125" model="account.account.template">
+            <field name="name">Amortissements des autres immobilisations incorporelles</field>
+            <field name="code">28058</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_126" model="account.account.template">
+            <field name="name">Amortissements des terrains de gisements</field>
+            <field name="code">28103</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_127" model="account.account.template">
+            <field name="name">Amortissements des agencements et aménagement des terrains</field>
+            <field name="code">2811</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_129" model="account.account.template">
+            <field name="name">Amortissements des bâtiments</field>
+            <field name="code">28120</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_130" model="account.account.template">
+            <field name="name">Amortissements des installations, agencements, aménagements des constructions</field>
+            <field name="code">28122</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_131" model="account.account.template">
+            <field name="name">Amortissements des ouvrages d’infrastructures participations (groupe)</field>
+            <field name="code">28125</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_132" model="account.account.template">
+            <field name="name">Amortissements des installations complexes spécialisées</field>
+            <field name="code">2813</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_133" model="account.account.template">
+            <field name="name">Amortissements du matériel d’exploitation en participation</field>
+            <field name="code">2814</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_134" model="account.account.template">
+            <field name="name">Amortissement du matériel de transport</field>
+            <field name="code">2815</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_135" model="account.account.template">
+            <field name="name">Amortissements du matériel de bureau et informatique</field>
+            <field name="code">2816</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_136" model="account.account.template">
+            <field name="name">Amortissements des immobilisations animales</field>
+            <field name="code">2817</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_138" model="account.account.template">
+            <field name="name">Amortissements du mobilier de bureau</field>
+            <field name="code">28180</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_139" model="account.account.template">
+            <field name="name">Amortissements du mobilier de logement</field>
+            <field name="code">28181</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_140" model="account.account.template">
+            <field name="name">Amortissements des installations, agencement et aménagements</field>
+            <field name="code">28182</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_141" model="account.account.template">
+            <field name="name">Amortissements des emballages récupérables identifiables</field>
+            <field name="code">28183</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_142" model="account.account.template">
+            <field name="name">Amortissement des immobilisations mises en concession</field>
+            <field name="code">282</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_amort"/>
+        </record>
+        <record id="mrt_145" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des marques, procédés et valeurs similaires</field>
+            <field name="code">29050</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_146" model="account.account.template">
+            <field name="name">Provisions pour dépréciation du droit au bail</field>
+            <field name="code">29051</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_147" model="account.account.template">
+            <field name="name">Provisions pour dépréciation de fonds de commerce</field>
+            <field name="code">29052</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_149" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des terrains nus</field>
+            <field name="code">29100</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_150" model="account.account.template">
+            <field name="name">Provisions pour dépréciations des terrains de chantiers</field>
+            <field name="code">29101</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_151" model="account.account.template">
+            <field name="name">Provisions pour dépréciations des sous-sol et sursol</field>
+            <field name="code">29102</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_152" model="account.account.template">
+            <field name="name">Provisions pour dépréciations des terrains d’exploitation agricole</field>
+            <field name="code">29105</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_153" model="account.account.template">
+            <field name="name">Provisions pour dépréciations des terrains bâtis</field>
+            <field name="code">29106</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_155" model="account.account.template">
+            <field name="name">Provisions pour dépréciations des immobilisations en cours</field>
+            <field name="code">2930</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_157" model="account.account.template">
+            <field name="name">Provisions pour dépréciations des prêts et avances consenties ( à</field>
+            <field name="code">2960</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_158" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des créances sur clients</field>
+            <field name="code">2964</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_159" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des dépôts</field>
+            <field name="code">2965</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_160" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des autres créances immobilisées</field>
+            <field name="code">2968</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_162" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des titres de participations</field>
+            <field name="code">2970</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_163" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des titres immobilisés</field>
+            <field name="code">2972</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_164" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des créances rattachées à des</field>
+            <field name="code">2975</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_165" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des créances rattachées à des sociétés</field>
+            <field name="code">2978</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_168" model="account.account.template">
+            <field name="name">Marchandises (ou groupe A)</field>
+            <field name="code">300</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_169" model="account.account.template">
+            <field name="name">Marchandises (Ou groupe B)</field>
+            <field name="code">301</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_171" model="account.account.template">
+            <field name="name">Matières premières</field>
+            <field name="code">310</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_173" model="account.account.template">
+            <field name="name">Matières consommables</field>
+            <field name="code">3120</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_174" model="account.account.template">
+            <field name="name">Combustibles, carburant et lubrifiants</field>
+            <field name="code">3121</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_175" model="account.account.template">
+            <field name="name">Fournitures et matériaux d’entretien</field>
+            <field name="code">3122</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_176" model="account.account.template">
+            <field name="name">Fournitures d’atelier, d’usine et de magasin</field>
+            <field name="code">3123</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_177" model="account.account.template">
+            <field name="name">Petits outillages</field>
+            <field name="code">3124</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_178" model="account.account.template">
+            <field name="name">Produits d’entretien</field>
+            <field name="code">3125</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_179" model="account.account.template">
+            <field name="name">Fournitures de bureau et administratives</field>
+            <field name="code">3126</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_180" model="account.account.template">
+            <field name="name">Autre matières et fournitures</field>
+            <field name="code">3128</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_182" model="account.account.template">
+            <field name="name">Emballages perdus</field>
+            <field name="code">320</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_183" model="account.account.template">
+            <field name="name">Emballages récupérables non identifiables</field>
+            <field name="code">325</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_184" model="account.account.template">
+            <field name="name">Emballages à usage mixte</field>
+            <field name="code">327</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_186" model="account.account.template">
+            <field name="name">Produits en cours</field>
+            <field name="code">330</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_187" model="account.account.template">
+            <field name="name">Travaux en cours</field>
+            <field name="code">332</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_188" model="account.account.template">
+            <field name="name">Etudes en cours</field>
+            <field name="code">335</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_189" model="account.account.template">
+            <field name="name">Prestations de services en cours</field>
+            <field name="code">337</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_190" model="account.account.template">
+            <field name="name">PRODUCTIONS INTERMEDIAIRES</field>
+            <field name="code">34</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_191" model="account.account.template">
+            <field name="name">PRODUITS FINIS</field>
+            <field name="code">35</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_193" model="account.account.template">
+            <field name="name">Déchets</field>
+            <field name="code">361</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_194" model="account.account.template">
+            <field name="name">Rebuts</field>
+            <field name="code">365</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_195" model="account.account.template">
+            <field name="name">Matières et produits de récupération</field>
+            <field name="code">366</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_196" model="account.account.template">
+            <field name="name">STOCKS EN COURS DE ROUTE, EN DEPOT OU EN CONSIGNATION</field>
+            <field name="code">38</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_198" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des stocks de marchandises</field>
+            <field name="code">390</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_199" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des stocks de matières premières et autres
+                approvisionnements
+            </field>
+            <field name="code">391</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_200" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des stocks d’emballages</field>
+            <field name="code">392</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_201" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des stocks d’encours</field>
+            <field name="code">393</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_202" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des stocks de produits intermédiaires</field>
+            <field name="code">394</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_203" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des stocks de produits finis</field>
+            <field name="code">395</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_stk_e_cour"/>
+        </record>
+        <record id="mrt_207" model="account.account.template">
+            <field name="name">Fournisseurs ordinaires</field>
+            <field name="code">4000</field>
+            <field name="type">payable</field>
+            <field name="user_type_id" ref="type_fsr"/>
+        </record>
+        <record id="mrt_208" model="account.account.template">
+            <field name="name">Fournisseurs sous traitants</field>
+            <field name="code">4003</field>
+            <field name="type">payable</field>
+            <field name="user_type_id" ref="type_fsr"/>
+        </record>
+        <record id="mrt_209" model="account.account.template">
+            <field name="name">Fournisseurs des biens d’équipement</field>
+            <field name="code">4004</field>
+            <field name="type">payable</field>
+            <field name="user_type_id" ref="type_fsr"/>
+        </record>
+        <record id="mrt_210" model="account.account.template">
+            <field name="name">Fournisseurs sociétés apparentées</field>
+            <field name="code">4005</field>
+            <field name="type">payable</field>
+            <field name="user_type_id" ref="type_fsr"/>
+        </record>
+        <record id="mrt_211" model="account.account.template">
+            <field name="name">Fournisseurs retenues de garantie</field>
+            <field name="code">4008</field>
+            <field name="type">payable</field>
+            <field name="user_type_id" ref="type_fsr"/>
+        </record>
+        <record id="mrt_212" model="account.account.template">
+            <field name="name">Effets à payer</field>
+            <field name="code">405</field>
+            <field name="type">payable</field>
+            <field name="user_type_id" ref="type_fsr"/>
+        </record>
+        <record id="mrt_213" model="account.account.template">
+            <field name="name">Fournisseurs factures à recevoir (non parvenues)</field>
+            <field name="code">408</field>
+            <field name="type">payable</field>
+            <field name="user_type_id" ref="type_fsr"/>
+        </record>
+        <record id="mrt_215" model="account.account.template">
+            <field name="name">Fournisseurs avances et acomptes versées sur commandes d’exploitation</field>
+            <field name="code">4090</field>
+            <field name="type">receivable</field>
+            <field name="user_type_id" ref="type_aut_deb"/>
+        </record>
+        <record id="mrt_216" model="account.account.template">
+            <field name="name">Fournisseurs créances pour emballages et matériel à rendre</field>
+            <field name="code">4096</field>
+            <field name="type">receivable</field>
+            <field name="user_type_id" ref="type_aut_deb"/>
+        </record>
+        <record id="mrt_217" model="account.account.template">
+            <field name="name">Rabais, remises et ristourne à obtenir (avoirs non encore reçus)</field>
+            <field name="code">4097</field>
+            <field name="type">receivable</field>
+            <field name="user_type_id" ref="type_aut_deb"/>
+        </record>
+        <record id="mrt_220" model="account.account.template">
+            <field name="name">Clients ordinaires</field>
+            <field name="code">4100</field>
+            <field name="type">receivable</field>
+            <field name="user_type_id" ref="type_clt"/>
+        </record>
+        <record id="mrt_221" model="account.account.template">
+            <field name="name">Clients, Etats et collectivités publiques</field>
+            <field name="code">4103</field>
+            <field name="type">receivable</field>
+            <field name="user_type_id" ref="type_clt"/>
+        </record>
+        <record id="mrt_222" model="account.account.template">
+            <field name="name">Clients, sociétés apparentées</field>
+            <field name="code">4105</field>
+            <field name="type">receivable</field>
+            <field name="user_type_id" ref="type_clt"/>
+        </record>
+        <record id="mrt_223" model="account.account.template">
+            <field name="name">Clients, retenues de garantie</field>
+            <field name="code">4108</field>
+            <field name="type">receivable</field>
+            <field name="user_type_id" ref="type_clt"/>
+        </record>
+        <record id="mrt_224" model="account.account.template">
+            <field name="name">Clients douteux ou litigieux</field>
+            <field name="code">412</field>
+            <field name="type">receivable</field>
+            <field name="user_type_id" ref="type_clt"/>
+        </record>
+        <record id="mrt_225" model="account.account.template">
+            <field name="name">Effets à recevoir</field>
+            <field name="code">415</field>
+            <field name="type">receivable</field>
+            <field name="user_type_id" ref="type_clt"/>
+        </record>
+        <record id="mrt_226" model="account.account.template">
+            <field name="name">Créances sur des travaux non encore facturables ( Opérations à long terme)</field>
+            <field name="code">417</field>
+            <field name="type">receivable</field>
+            <field name="user_type_id" ref="type_clt"/>
+        </record>
+        <record id="mrt_227" model="account.account.template">
+            <field name="name">Clients factures à établir</field>
+            <field name="code">418</field>
+            <field name="type">receivable</field>
+            <field name="user_type_id" ref="type_clt"/>
+        </record>
+        <record id="mrt_229" model="account.account.template">
+            <field name="name">Clients, avances et acomptes reçus sur commande en cours</field>
+            <field name="code">4190</field>
+            <field name="type">payable</field>
+            <field name="user_type_id" ref="type_aut_cred"/>
+        </record>
+        <record id="mrt_230" model="account.account.template">
+            <field name="name">Clients, dettes pour emballages et matériels consignés</field>
+            <field name="code">4196</field>
+            <field name="type">payable</field>
+            <field name="user_type_id" ref="type_aut_cred"/>
+        </record>
+        <record id="mrt_231" model="account.account.template">
+            <field name="name">Rabais, remises et ristournes à accorder (avoirs à établir)</field>
+            <field name="code">4197</field>
+            <field name="type">payable</field>
+            <field name="user_type_id" ref="type_aut_cred"/>
+        </record>
+        <record id="mrt_233" model="account.account.template">
+            <field name="name">Rémunérations dues au personnel</field>
+            <field name="code">420</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_234" model="account.account.template">
+            <field name="name">Organismes sociaux rattachés à l’entreprise (OEuvres sociales –Comité d’entreprise)
+            </field>
+            <field name="code">422</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_235" model="account.account.template">
+            <field name="name">Avances et acomptes au personnel</field>
+            <field name="code">425</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_236" model="account.account.template">
+            <field name="name">Dépôt au personnel</field>
+            <field name="code">426</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_237" model="account.account.template">
+            <field name="name">Oppositions</field>
+            <field name="code">427</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_238" model="account.account.template">
+            <field name="name">Dettes provisionnées pour congés à payer</field>
+            <field name="code">428</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_240" model="account.account.template">
+            <field name="name">Fonds de dotation et subvention à recevoir</field>
+            <field name="code">430</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_241" model="account.account.template">
+            <field name="name">Opérations particulières avec l’état, les collectivités publiques, les organismes
+                internationaux
+            </field>
+            <field name="code">431</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_242" model="account.account.template">
+            <field name="name">Impôts sur le bénéfice et Impôt minimum forfaitaire</field>
+            <field name="code">432</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_243" model="account.account.template">
+            <field name="name">Impôts recouvrables sur les tiers</field>
+            <field name="code">433</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_244" model="account.account.template">
+            <field name="name">Impôts sur les traitements et salaires (retenue à la source)</field>
+            <field name="code">434</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_245" model="account.account.template">
+            <field name="name">Taxes sur le chiffre d’affaire</field>
+            <field name="code">435</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_246" model="account.account.template">
+            <field name="name">Douanes et autres impôts et taxes</field>
+            <field name="code">436</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_247" model="account.account.template">
+            <field name="name">Obligations cautionnées</field>
+            <field name="code">437</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_248" model="account.account.template">
+            <field name="name">Charges à payer (et produits à recevoir)</field>
+            <field name="code">438</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_250" model="account.account.template">
+            <field name="name">Sécurité sociale</field>
+            <field name="code">440</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_251" model="account.account.template">
+            <field name="name">Autres organismes sociaux</field>
+            <field name="code">442</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_252" model="account.account.template">
+            <field name="name">Charges à payer (et produits à recevoir)</field>
+            <field name="code">448</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_254" model="account.account.template">
+            <field name="name">Associés comptes d’apport en société</field>
+            <field name="code">450</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_255" model="account.account.template">
+            <field name="name">Associés-Capital souscrit et appelé mais non versé</field>
+            <field name="code">451</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_256" model="account.account.template">
+            <field name="name">Associés, versements anticipés et reçus sur augmentation de capital</field>
+            <field name="code">452</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_257" model="account.account.template">
+            <field name="name">Actionnaires défaillants</field>
+            <field name="code">453</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_258" model="account.account.template">
+            <field name="name">Associés Capital à rembourser</field>
+            <field name="code">454</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_259" model="account.account.template">
+            <field name="name">Associé dividendes a payer</field>
+            <field name="code">455</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_260" model="account.account.template">
+            <field name="name">Comptes courants des associés et administrateurs</field>
+            <field name="code">456</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_261" model="account.account.template">
+            <field name="name">Compte des sociétés du groupe (Société mère-filiale-sous filiale-participation
+                multiples)
+            </field>
+            <field name="code">457</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_262" model="account.account.template">
+            <field name="name">Associés-opérations faites en commun</field>
+            <field name="code">458</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_264" model="account.account.template">
+            <field name="name">Obligataires (Obligations échues à rembourser-coupons a payer)</field>
+            <field name="code">460</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_265" model="account.account.template">
+            <field name="name">Débiteurs sur cession d’immobilisations ( et valeurs mobilières de placement)</field>
+            <field name="code">462</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_266" model="account.account.template">
+            <field name="name">Autres comptes débiteurs et créditeurs</field>
+            <field name="code">464</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_267" model="account.account.template">
+            <field name="name">Charges à payer et produits à recevoir</field>
+            <field name="code">468</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_269" model="account.account.template">
+            <field name="name">Charges constatées d’avance</field>
+            <field name="code">480</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_270" model="account.account.template">
+            <field name="name">Produits constatées d’avance</field>
+            <field name="code">481</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_271" model="account.account.template">
+            <field name="name">Différence de conversion sur opérations en devise-passif</field>
+            <field name="code">484</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_272" model="account.account.template">
+            <field name="name">Comptes d’abonnement des charges et des produits</field>
+            <field name="code">486</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_273" model="account.account.template">
+            <field name="name">Comptes d’attentes et à régulariser</field>
+            <field name="code">488</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_p_cour"/>
+        </record>
+        <record id="mrt_275" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des comptes clients</field>
+            <field name="code">490</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_276" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des comptes d’associés et groupe</field>
+            <field name="code">495</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_277" model="account.account.template">
+            <field name="name">Provisions pour dépréciation des comptes de débiteurs divers</field>
+            <field name="code">496</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prov"/>
+        </record>
+        <record id="mrt_279" model="account.account.template">
+            <field name="name">EMPRUNTS A COURT TERME</field>
+            <field name="code">50</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_280" model="account.account.template">
+            <field name="name">PRETS A COURT TERME</field>
+            <field name="code">51</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_282" model="account.account.template">
+            <field name="name">Actions</field>
+            <field name="code">520</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_283" model="account.account.template">
+            <field name="name">Autres titres conférant un droit de propriété</field>
+            <field name="code">525</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_284" model="account.account.template">
+            <field name="name">Obligations</field>
+            <field name="code">526</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_285" model="account.account.template">
+            <field name="name">Bons du trésor et bons de caisse à court terme</field>
+            <field name="code">527</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_286" model="account.account.template">
+            <field name="name">Autres valeurs mobilières conférant un droit de propriété</field>
+            <field name="code">528</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_287" model="account.account.template">
+            <field name="name">Versements restant à effectuer sur les valeurs mobilières de placement non libérées
+            </field>
+            <field name="code">529</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_289" model="account.account.template">
+            <field name="name">Chèques à encaisser</field>
+            <field name="code">540</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_290" model="account.account.template">
+            <field name="name">Effets à l’encaissement</field>
+            <field name="code">541</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_291" model="account.account.template">
+            <field name="name">Effets à l’escompte</field>
+            <field name="code">542</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_292" model="account.account.template">
+            <field name="name">Coupons échus à l’encaissement</field>
+            <field name="code">547</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_294" model="account.account.template">
+            <field name="name">Banques en Mauritanie</field>
+            <field name="code">550</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_295" model="account.account.template">
+            <field name="name">Banques à l’étranger</field>
+            <field name="code">551</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_296" model="account.account.template">
+            <field name="name">Chèques postaux</field>
+            <field name="code">554</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_297" model="account.account.template">
+            <field name="name">Caisse du trésor</field>
+            <field name="code">555</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_298" model="account.account.template">
+            <field name="name">Agents de change</field>
+            <field name="code">556</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_299" model="account.account.template">
+            <field name="name">Autres organismes financiers</field>
+            <field name="code">558</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_300" model="account.account.template">
+            <field name="name">Concours bancaires courants</field>
+            <field name="code">559</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_302" model="account.account.template">
+            <field name="name">Caisse siège</field>
+            <field name="code">560</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_303" model="account.account.template">
+            <field name="name">Caisses succursales</field>
+            <field name="code">561</field>
+            <field name="type">liquidity</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_304" model="account.account.template">
+            <field name="name">REGIES D’AVANCES ET ACCREDITIFS</field>
+            <field name="code">562</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_306" model="account.account.template">
+            <field name="name">Virements de fonds</field>
+            <field name="code">580</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_307" model="account.account.template">
+            <field name="name">Achats comptants</field>
+            <field name="code">586</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_308" model="account.account.template">
+            <field name="name">Ventes comptant</field>
+            <field name="code">587</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_309" model="account.account.template">
+            <field name="name">Provisions pour dépréciations des prêts à court terme</field>
+            <field name="code">591</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_310" model="account.account.template">
+            <field name="name">Provisions pour dépréciations des valeurs mobilières de placement</field>
+            <field name="code">592</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_311" model="account.account.template">
+            <field name="name">PROVISIONS POUR DEPRECIATION DES COMPTES FINANCIERS</field>
+            <field name="code">594</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_tres"/>
+        </record>
+        <record id="mrt_314" model="account.account.template">
+            <field name="name">Marchandises</field>
+            <field name="code">600</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_316" model="account.account.template">
+            <field name="name">Matières premières</field>
+            <field name="code">6010</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_318" model="account.account.template">
+            <field name="name">Matières consommables</field>
+            <field name="code">60120</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_319" model="account.account.template">
+            <field name="name">Combustible, carburant et lubrifiants</field>
+            <field name="code">60121</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_320" model="account.account.template">
+            <field name="name">Fournitures et matériels d’entretien</field>
+            <field name="code">60122</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_321" model="account.account.template">
+            <field name="name">Fourniture d’atelier d’usine et de magasin</field>
+            <field name="code">60123</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_322" model="account.account.template">
+            <field name="name">Petits outillage</field>
+            <field name="code">60124</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_323" model="account.account.template">
+            <field name="name">Produits d’entretien</field>
+            <field name="code">60125</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_324" model="account.account.template">
+            <field name="name">Fournitures de bureau et administratives</field>
+            <field name="code">60126</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_325" model="account.account.template">
+            <field name="name">Autres matières et fournitures</field>
+            <field name="code">60128</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_327" model="account.account.template">
+            <field name="name">Emballages perdus</field>
+            <field name="code">6020</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_328" model="account.account.template">
+            <field name="name">Emballages récupérables non identifiables</field>
+            <field name="code">6025</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_329" model="account.account.template">
+            <field name="name">Emballages à usage mixtes</field>
+            <field name="code">6027</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_331" model="account.account.template">
+            <field name="name">Variations de stocks de marchandises</field>
+            <field name="code">6030</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_332" model="account.account.template">
+            <field name="name">Variations de stocks de matières premières et autres approvisionnements</field>
+            <field name="code">6031</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_333" model="account.account.template">
+            <field name="name">Variations de stocks d’emballages</field>
+            <field name="code">6032</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_335" model="account.account.template">
+            <field name="name">Fournitures non stockables (eau-énergie)</field>
+            <field name="code">6060</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_336" model="account.account.template">
+            <field name="name">Combustible, carburant et lubrifiant</field>
+            <field name="code">6061</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_337" model="account.account.template">
+            <field name="name">Fournitures et matériaux d’entretien</field>
+            <field name="code">6062</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_338" model="account.account.template">
+            <field name="name">Fournitures d’atelier, d’usine et de magasin</field>
+            <field name="code">6063</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_339" model="account.account.template">
+            <field name="name">Petits outillages</field>
+            <field name="code">6064</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_340" model="account.account.template">
+            <field name="name">Produits d’entretien</field>
+            <field name="code">6065</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_341" model="account.account.template">
+            <field name="name">Fournitures de bureau et administratives</field>
+            <field name="code">6066</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_342" model="account.account.template">
+            <field name="name">Vêtements de travail</field>
+            <field name="code">6067</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_343" model="account.account.template">
+            <field name="name">Autres matières et fournitures</field>
+            <field name="code">6068</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_march"/>
+        </record>
+        <record id="mrt_345" model="account.account.template">
+            <field name="name">Achats de sous-traitance</field>
+            <field name="code">610</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_348" model="account.account.template">
+            <field name="name">Locations mobilières et immobilières, charges de copropriété</field>
+            <field name="code">6200</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_349" model="account.account.template">
+            <field name="name">Redevances de crédit-bail</field>
+            <field name="code">6202</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_350" model="account.account.template">
+            <field name="name">Malis sur emballages restitués</field>
+            <field name="code">6203</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_351" model="account.account.template">
+            <field name="name">Travaux d’entretiens et de réparations</field>
+            <field name="code">621</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_353" model="account.account.template">
+            <field name="name">Multirisques(incendies, vols, responsabilité civile)</field>
+            <field name="code">6230</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_354" model="account.account.template">
+            <field name="name">Assurance transport</field>
+            <field name="code">6234</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_355" model="account.account.template">
+            <field name="name">Autres risques</field>
+            <field name="code">6238</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_356" model="account.account.template">
+            <field name="name">Etudes et recherches</field>
+            <field name="code">624</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_357" model="account.account.template">
+            <field name="name">Documentation générale et technique</field>
+            <field name="code">625</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_358" model="account.account.template">
+            <field name="name">Frais de colloques, séminaires et conférence</field>
+            <field name="code">626</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_361" model="account.account.template">
+            <field name="name">transports sur achat (2)</field>
+            <field name="code">6300</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_362" model="account.account.template">
+            <field name="name">Transports sur vente</field>
+            <field name="code">6301</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_363" model="account.account.template">
+            <field name="name">Transports entre établissements</field>
+            <field name="code">6302</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_364" model="account.account.template">
+            <field name="name">Transports collectif du personnel</field>
+            <field name="code">6305</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_365" model="account.account.template">
+            <field name="name">Autres frais de transports</field>
+            <field name="code">6308</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_367" model="account.account.template">
+            <field name="name">Voyages et déplacements</field>
+            <field name="code">6310</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_368" model="account.account.template">
+            <field name="name">Missions</field>
+            <field name="code">6315</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_369" model="account.account.template">
+            <field name="name">Réceptions</field>
+            <field name="code">6317</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_370" model="account.account.template">
+            <field name="name">Frais postaux et télécommunications</field>
+            <field name="code">632</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_372" model="account.account.template">
+            <field name="name">Personnel intérimaire</field>
+            <field name="code">6330</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_373" model="account.account.template">
+            <field name="name">honoraires (services d’ingénierie, d’architecte, de conseil juridique, fiscal, de
+                comptable)
+            </field>
+            <field name="code">6331</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_374" model="account.account.template">
+            <field name="name">Frais d’acte et de contentieux</field>
+            <field name="code">6332</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_375" model="account.account.template">
+            <field name="name">Traitement automatique des informations, organismes d’études, d’assistance technique)
+            </field>
+            <field name="code">6333</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_376" model="account.account.template">
+            <field name="name">Commissions et courtages (et rémunérations de s transitaires)</field>
+            <field name="code">6334</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_377" model="account.account.template">
+            <field name="name">Divers</field>
+            <field name="code">6338</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_378" model="account.account.template">
+            <field name="name">Publicités et propagandes, publications, promotions des ventes(annonces, échantillons,
+                foire et expositions, cadeau à la clientèle,catalogues et imprimés)
+            </field>
+            <field name="code">634</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_380" model="account.account.template">
+            <field name="name">Commissions sur ouverture de crédit</field>
+            <field name="code">6350</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_381" model="account.account.template">
+            <field name="name">Frais de tenue de compte</field>
+            <field name="code">6351</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_382" model="account.account.template">
+            <field name="name">Frais sur effets</field>
+            <field name="code">6354</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_383" model="account.account.template">
+            <field name="name">Frais sur titres</field>
+            <field name="code">6355</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_384" model="account.account.template">
+            <field name="name">locations de coffres</field>
+            <field name="code">6356</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_385" model="account.account.template">
+            <field name="name">Quotepart de frais du siège à l’étranger membres des sociétés de personne, gérant
+                majoritaire
+            </field>
+            <field name="code">637</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_386" model="account.account.template">
+            <field name="name">Charges diverses (Cotisations, frais de recrutements du personnel, frais de conseils et
+                d’assemblées..)
+            </field>
+            <field name="code">638</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_388" model="account.account.template">
+            <field name="name">Fermages et revenus de la terre</field>
+            <field name="code">640</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_389" model="account.account.template">
+            <field name="name">Redevances pour concession, brevets, licences, droit d’auteur et de (0)</field>
+            <field name="code">641</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_390" model="account.account.template">
+            <field name="name">RRR accordés</field>
+            <field name="code">642</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_391" model="account.account.template">
+            <field name="name">Jetons de présence</field>
+            <field name="code">643</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_392" model="account.account.template">
+            <field name="name">Dons pourboires et subventions accordées License</field>
+            <field name="code">645</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_393" model="account.account.template">
+            <field name="name">Créances irrécouvrables</field>
+            <field name="code">646</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_394" model="account.account.template">
+            <field name="name">Amendes, pénalités sur marchés pour infraction autres que fiscales</field>
+            <field name="code">647</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_396" model="account.account.template">
+            <field name="name">Perte d’actifs non immobilisés (Manquant caisse, stocks)</field>
+            <field name="code">6480</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_397" model="account.account.template">
+            <field name="name">Pertes sur actifs immobilisés</field>
+            <field name="code">6481</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_398" model="account.account.template">
+            <field name="name">Lots ménagères, taxes sur les armes à feu)</field>
+            <field name="code">6482</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_399" model="account.account.template">
+            <field name="name">Malis provenant de clauses d’indexation</field>
+            <field name="code">6483</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_400" model="account.account.template">
+            <field name="name">Malis provenant du rachat de l’entreprise d’actions et d’obligations émises par elle
+                même
+            </field>
+            <field name="code">6484</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_aut_chg_op"/>
+        </record>
+        <record id="mrt_403" model="account.account.template">
+            <field name="name">Salaires, appointements, commissions de base</field>
+            <field name="code">6500</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_404" model="account.account.template">
+            <field name="name">Main d’oeuvre occasionnelle sur les viandes</field>
+            <field name="code">6501</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_405" model="account.account.template">
+            <field name="name">Heures supplémentaires</field>
+            <field name="code">6503</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_406" model="account.account.template">
+            <field name="name">Congés payés</field>
+            <field name="code">6505</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_407" model="account.account.template">
+            <field name="name">Primes et gratifications</field>
+            <field name="code">6506</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_408" model="account.account.template">
+            <field name="name">Indemnités de préavis et de licenciement</field>
+            <field name="code">6507</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_409" model="account.account.template">
+            <field name="name">Indemnités et avantages divers en espèce</field>
+            <field name="code">6508</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_410" model="account.account.template">
+            <field name="name">Rémunération du travail de l’exploitant et de sa famille</field>
+            <field name="code">651</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_412" model="account.account.template">
+            <field name="name">Cotisations de sécurité sociale</field>
+            <field name="code">6520</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_413" model="account.account.template">
+            <field name="name">Cotisations aux mutuelles</field>
+            <field name="code">6525</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_414" model="account.account.template">
+            <field name="name">Cotisations aux caisses de retraite</field>
+            <field name="code">6526</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_415" model="account.account.template">
+            <field name="name">Prestations directes-familiales-retraites</field>
+            <field name="code">6527</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_416" model="account.account.template">
+            <field name="name">Cotisations sociales personnelles de l’exploitant et des</field>
+            <field name="code">654</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_418" model="account.account.template">
+            <field name="name">Versement aux oeuvres sociales</field>
+            <field name="code">6550</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_419" model="account.account.template">
+            <field name="name">Médecine de travail</field>
+            <field name="code">6551</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_420" model="account.account.template">
+            <field name="name">Soins médicaux et pharmacie</field>
+            <field name="code">6552</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_421" model="account.account.template">
+            <field name="name">Frais de recyclage et de formation professionnelle</field>
+            <field name="code">656</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_422" model="account.account.template">
+            <field name="name">Avantages en nature (logement, voiture, assurance, santé,production transport, vêtements,
+                alimentation …)
+            </field>
+            <field name="code">657</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_fr_perso"/>
+        </record>
+        <record id="mrt_425" model="account.account.template">
+            <field name="name">patentes et droits de</field>
+            <field name="code">6601</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_426" model="account.account.template">
+            <field name="name">Impôts fonciers et taxes annexes</field>
+            <field name="code">6600</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_428" model="account.account.template">
+            <field name="name">Taxes sur les véhicules à moteurs</field>
+            <field name="code">6602</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_429" model="account.account.template">
+            <field name="name">Taxes d’apprentissage</field>
+            <field name="code">6605</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_430" model="account.account.template">
+            <field name="name">Impôts régionaux (taxes d’habitations et d’enlèvement des ordures</field>
+            <field name="code">6606</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_431" model="account.account.template">
+            <field name="name">Taxe sur le bétail</field>
+            <field name="code">6607</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_433" model="account.account.template">
+            <field name="name">Taxes sur le chiffre d’affaire (importations, ventes, prestations de services)</field>
+            <field name="code">6610</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_434" model="account.account.template">
+            <field name="name">Taxes de consommation (produits pétroliers, boissons alcooliques, tabac, thé…)</field>
+            <field name="code">6611</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_435" model="account.account.template">
+            <field name="name">Autres impôts indirectes et taxes spécifiques (Taxe de circulation, taxes spéciales sur
+                les projections cinématographiques)
+            </field>
+            <field name="code">6618</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_440" model="account.account.template">
+            <field name="name">Droits d’enregistrement des actes et marchés</field>
+            <field name="code">6620</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_437" model="account.account.template">
+            <field name="name">Droits de timbres</field>
+            <field name="code">6621</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_438" model="account.account.template">
+            <field name="name">Autres droits</field>
+            <field name="code">6628</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_441" model="account.account.template">
+            <field name="name">Droits de douanes à l’importation</field>
+            <field name="code">6630</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_442" model="account.account.template">
+            <field name="name">Droits de douane à l’exportation</field>
+            <field name="code">6631</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_443" model="account.account.template">
+            <field name="name">Impôts et taxes dans le cadre d’organismes africains</field>
+            <field name="code">664</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_444" model="account.account.template">
+            <field name="name">Impôts et taxes dans le cadre d’organismes internationaux</field>
+            <field name="code">665</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_445" model="account.account.template">
+            <field name="name">Impôts et taxes exigibles à l’étranger</field>
+            <field name="code">666</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_446" model="account.account.template">
+            <field name="name">Pénalités et amendes fiscales</field>
+            <field name="code">667</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_imp_tax"/>
+        </record>
+        <record id="mrt_448" model="account.account.template">
+            <field name="name">Intérêts des emprunts (dont prime de remboursement des obligations)</field>
+            <field name="code">670</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_chg_fin"/>
+        </record>
+        <record id="mrt_449" model="account.account.template">
+            <field name="name">Intérêts des comptes courant et des dépôts</field>
+            <field name="code">672</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_chg_fin"/>
+        </record>
+        <record id="mrt_450" model="account.account.template">
+            <field name="name">Intérêts bancaires et sur opérations de financement</field>
+            <field name="code">673</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_chg_fin"/>
+        </record>
+        <record id="mrt_451" model="account.account.template">
+            <field name="name">Intérêts des obligations cautionnées</field>
+            <field name="code">674</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_chg_fin"/>
+        </record>
+        <record id="mrt_452" model="account.account.template">
+            <field name="name">Escomptes accordés</field>
+            <field name="code">676</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_chg_fin"/>
+        </record>
+        <record id="mrt_453" model="account.account.template">
+            <field name="name">Différence de change (pertes)</field>
+            <field name="code">678</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_chg_fin"/>
+        </record>
+        <record id="mrt_455" model="account.account.template">
+            <field name="name">Dotations aux amortissements (classe 2)</field>
+            <field name="code">680</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_dot_amort_prov"/>
+        </record>
+        <record id="mrt_456" model="account.account.template">
+            <field name="name">Dotations aux provisions pour dépréciations des éléments de l’actif (classe 2,3 ,4,5)
+            </field>
+            <field name="code">685</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_dot_amort_prov"/>
+        </record>
+        <record id="mrt_457" model="account.account.template">
+            <field name="name">Dotations aux provisions réglementées</field>
+            <field name="code">687</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_dot_amort_prov"/>
+        </record>
+        <record id="mrt_460" model="account.account.template">
+            <field name="name">Ventes de marchandises (a subdiviser selon les besoins)</field>
+            <field name="code">700</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_462" model="account.account.template">
+            <field name="name">Productions des biens</field>
+            <field name="code">7010</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_463" model="account.account.template">
+            <field name="name">travaux</field>
+            <field name="code">7012</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_464" model="account.account.template">
+            <field name="name">Etudes</field>
+            <field name="code">7015</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_465" model="account.account.template">
+            <field name="name">Prestations de services</field>
+            <field name="code">7017</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_467" model="account.account.template">
+            <field name="name">Produits des services exploités dans l’intérêt du personnel</field>
+            <field name="code">7060</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_468" model="account.account.template">
+            <field name="name">Commissions et courtages</field>
+            <field name="code">7061</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_469" model="account.account.template">
+            <field name="name">Locations diverses</field>
+            <field name="code">7062</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_470" model="account.account.template">
+            <field name="name">Bonis sur reprises d’emballages</field>
+            <field name="code">7063</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_471" model="account.account.template">
+            <field name="name">Ports facturés aux clients</field>
+            <field name="code">7064</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_473" model="account.account.template">
+            <field name="name">Ventes d’emballages achetés</field>
+            <field name="code">70650</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_474" model="account.account.template">
+            <field name="name">Ventes d’emballages produits</field>
+            <field name="code">70651</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_475" model="account.account.template">
+            <field name="name">Autres produits des activités annexes</field>
+            <field name="code">7068</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_ca_prod"/>
+        </record>
+        <record id="mrt_478" model="account.account.template">
+            <field name="name">Produits en cours</field>
+            <field name="code">7130</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_479" model="account.account.template">
+            <field name="name">Travaux en cours</field>
+            <field name="code">7132</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_480" model="account.account.template">
+            <field name="name">Etudes en cours</field>
+            <field name="code">7135</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_481" model="account.account.template">
+            <field name="name">O+Prestations de services en cours</field>
+            <field name="code">7137</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_482" model="account.account.template">
+            <field name="name">Variations des produits intermédiaires</field>
+            <field name="code">714</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_483" model="account.account.template">
+            <field name="name">Variations des produits finis</field>
+            <field name="code">715</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_484" model="account.account.template">
+            <field name="name">Variations des produits résiduels</field>
+            <field name="code">716</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_486" model="account.account.template">
+            <field name="name">Production immobilisée (auto-équipement)</field>
+            <field name="code">722</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_imm"/>
+        </record>
+        <record id="mrt_487" model="account.account.template">
+            <field name="name">Production autoconsommée</field>
+            <field name="code">723</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_imm"/>
+        </record>
+        <record id="mrt_488" model="account.account.template">
+            <field name="name">Services redus par l’entreprise pur elle même</field>
+            <field name="code">726</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_imm"/>
+        </record>
+        <record id="mrt_490" model="account.account.template">
+            <field name="name">Fermages et métayages</field>
+            <field name="code">740</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_491" model="account.account.template">
+            <field name="name">Redevances pour concessions, brevets, License, droits d’auteur, et de propriété)</field>
+            <field name="code">741</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_492" model="account.account.template">
+            <field name="name">Subvention d’équipement, quotepart virée au résultat de l’exercice</field>
+            <field name="code">744</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_493" model="account.account.template">
+            <field name="name">Cotisations et dons reçus</field>
+            <field name="code">745</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_494" model="account.account.template">
+            <field name="name">Rentrées des créances amorties</field>
+            <field name="code">746</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_495" model="account.account.template">
+            <field name="name">Dégrèvement d’impôts</field>
+            <field name="code">747</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_496" model="account.account.template">
+            <field name="name">Autres produits et profits exceptionnelles</field>
+            <field name="code">748</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_498" model="account.account.template">
+            <field name="name">SUBVENTIONS D’EXPLOITATION</field>
+            <field name="code">761</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_499" model="account.account.template">
+            <field name="name">SUBVENTION D’EQUILIBRE</field>
+            <field name="code">762</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_prod_anex"/>
+        </record>
+        <record id="mrt_501" model="account.account.template">
+            <field name="name">Revenus des prêts et autres créances immobilières</field>
+            <field name="code">770</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_pdt_fin"/>
+        </record>
+        <record id="mrt_502" model="account.account.template">
+            <field name="name">Revenus des titres immobilisés et des valeurs mobilières de placement (dividendes,
+                coupons d’obligations etc…)
+            </field>
+            <field name="code">771</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_pdt_fin"/>
+        </record>
+        <record id="mrt_503" model="account.account.template">
+            <field name="name">Revenus des comptes courants et des dépôts</field>
+            <field name="code">772</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_pdt_fin"/>
+        </record>
+        <record id="mrt_504" model="account.account.template">
+            <field name="name">Escomptes obtenus</field>
+            <field name="code">776</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_pdt_fin"/>
+        </record>
+        <record id="mrt_505" model="account.account.template">
+            <field name="name">Différences de change</field>
+            <field name="code">778</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_pdt_fin"/>
+        </record>
+        <record id="mrt_507" model="account.account.template">
+            <field name="name">Reprises sur amortissements</field>
+            <field name="code">780</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_rep_amort_prov"/>
+        </record>
+        <record id="mrt_508" model="account.account.template">
+            <field name="name">Reprises sur provisions pour dépréciations</field>
+            <field name="code">785</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_rep_amort_prov"/>
+        </record>
+        <record id="mrt_509" model="account.account.template">
+            <field name="name">Reprises sur provisions pour risques et charges</field>
+            <field name="code">787</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_rep_amort_prov"/>
+        </record>
+        <record id="mrt_511" model="account.account.template">
+            <field name="name">Frais à immobiliser</field>
+            <field name="code">791</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_rep_amort_prov"/>
+        </record>
+        <record id="mrt_513" model="account.account.template">
+            <field name="name">Charges imputables a des tiers</field>
+            <field name="code">7920</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_rep_amort_prov"/>
+        </record>
+        <record id="mrt_514" model="account.account.template">
+            <field name="name">Frais à transférer aux comptes de cession d’éléments d’actif</field>
+            <field name="code">7921</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_rep_amort_prov"/>
+        </record>
+        <record id="mrt_515" model="account.account.template">
+            <field name="name">Avantages en nature</field>
+            <field name="code">7922</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_rep_amort_prov"/>
+        </record>
+        <record id="mrt_517" model="account.account.template">
+            <field name="name">RESULTAT D’EXPLOITATION</field>
+            <field name="code">81</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_cr"/>
+        </record>
+        <record id="mrt_518" model="account.account.template">
+            <field name="name">RESULTAT HORS EXPLOITATION</field>
+            <field name="code">82</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_cr"/>
+        </record>
+        <record id="mrt_519" model="account.account.template">
+            <field name="name">RESULTAT D’OPERATIONS PARTICULIERES (PRODUITS ET SERVICES ECHANGES ENTRE établissements,
+                opérations réalisées dans le cadre des sociétés en participation)
+            </field>
+            <field name="code">83</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_cr"/>
+        </record>
+        <record id="mrt_521" model="account.account.template">
+            <field name="name">plus values de cession</field>
+            <field name="code">840</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_cr"/>
+        </record>
+        <record id="mrt_522" model="account.account.template">
+            <field name="name">Moins values de cession</field>
+            <field name="code">849</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_cr"/>
+        </record>
+        <record id="mrt_524" model="account.account.template">
+            <field name="name">réintégrations des plus values à investir</field>
+            <field name="code">855</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_cr"/>
+        </record>
+        <record id="mrt_525" model="account.account.template">
+            <field name="name">Engagement de réinvestir</field>
+            <field name="code">859</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_cr"/>
+        </record>
+        <record id="mrt_526" model="account.account.template">
+            <field name="name">IMPOT SUR LE RESULTAT (IMF ET IS)</field>
+            <field name="code">86</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_cr"/>
+        </record>
+        <record id="mrt_527" model="account.account.template">
+            <field name="name">RESULTAT NET DE LA PERIODE</field>
+            <field name="code">87</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_res_cr"/>
+        </record>
+        <record id="mrt_530" model="account.account.template">
+            <field name="name">Stocks réfléchis</field>
+            <field name="code">903</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_531" model="account.account.template">
+            <field name="name">Achats réfléchis</field>
+            <field name="code">904</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_532" model="account.account.template">
+            <field name="name">Charges par nature et dotations réfléchis</field>
+            <field name="code">906</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_533" model="account.account.template">
+            <field name="name">Produits d’exploitation réfléchis</field>
+            <field name="code">907</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_534" model="account.account.template">
+            <field name="name">Résultats réfléchis</field>
+            <field name="code">908</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_536" model="account.account.template">
+            <field name="name">Reclassements préalables des charges (selon le besoin de l’entreprise)</field>
+            <field name="code">910</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_537" model="account.account.template">
+            <field name="name">Reclassements préalables des charges (selon le besoin de l’entreprise)</field>
+            <field name="code">911</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_538" model="account.account.template">
+            <field name="name">Reclassements préalables des charges (selon le besoin de l’entreprise)</field>
+            <field name="code">912</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_539" model="account.account.template">
+            <field name="name">Reclassements préalables des charges (selon le besoin de l’entreprise)</field>
+            <field name="code">913</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_540" model="account.account.template">
+            <field name="name">Reclassements préalables des charges (selon le besoin de l’entreprise)</field>
+            <field name="code">914</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_541" model="account.account.template">
+            <field name="name">Reclassements préalables des charges (selon le besoin de l’entreprise)</field>
+            <field name="code">915</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_542" model="account.account.template">
+            <field name="name">Reclassements préalables des charges (selon le besoin de l’entreprise)</field>
+            <field name="code">916</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_543" model="account.account.template">
+            <field name="name">Reclassements préalables des charges (selon le besoin de l’entreprise)</field>
+            <field name="code">917</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_544" model="account.account.template">
+            <field name="name">Reclassements préalables des charges (selon le besoin de l’entreprise)</field>
+            <field name="code">918</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_545" model="account.account.template">
+            <field name="name">Reclassements préalables des produits</field>
+            <field name="code">919</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_547" model="account.account.template">
+            <field name="name">Centres d’administrations</field>
+            <field name="code">920</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_548" model="account.account.template">
+            <field name="name">Centre d’approvisionnement</field>
+            <field name="code">924</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_549" model="account.account.template">
+            <field name="name">Centre de production</field>
+            <field name="code">925</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_550" model="account.account.template">
+            <field name="name">Centre de distribution Comptes de bilan d’ouverture et de bilan de clôture</field>
+            <field name="code">927</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_551" model="account.account.template">
+            <field name="name">Centre des activités non professionnelles 01</field>
+            <field name="code">928</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_552" model="account.account.template">
+            <field name="name">COUTS ET PRIX DE REVIENT (A SUBDIVISER EN CAS DE BESOIN) 02</field>
+            <field name="code">93</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_554" model="account.account.template">
+            <field name="name">Marchandises 04</field>
+            <field name="code">940</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_555" model="account.account.template">
+            <field name="name">Matières premières et autres approvisionnements 05</field>
+            <field name="code">941</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_556" model="account.account.template">
+            <field name="name">Emballages</field>
+            <field name="code">942</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_557" model="account.account.template">
+            <field name="name">Encours de production des biens ou des services Comptes de gestion hors exploitation
+            </field>
+            <field name="code">943</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_558" model="account.account.template">
+            <field name="name">Produits intermédiaires 06</field>
+            <field name="code">944</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_559" model="account.account.template">
+            <field name="name">Produits finis 07</field>
+            <field name="code">945</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_560" model="account.account.template">
+            <field name="name">Produits résiduels Résultat hors exploitation</field>
+            <field name="code">946</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_561" model="account.account.template">
+            <field name="name">Provisions pour dépréciations des stocks et des encours 08</field>
+            <field name="code">949</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_563" model="account.account.template">
+            <field name="name">encarts sur matières budgétaire</field>
+            <field name="code">960</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_564" model="account.account.template">
+            <field name="name">Ecarts sur main d’oeuvre</field>
+            <field name="code">963</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_565" model="account.account.template">
+            <field name="name">Ecarts sur autres charges 090 Engagements hors bilan</field>
+            <field name="code">966</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_566" model="account.account.template">
+            <field name="name">Ecarts sur frais de centres d’analyses imputés 0900 Engagements données par
+                l’entreprise
+            </field>
+            <field name="code">968</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_568" model="account.account.template">
+            <field name="name">différences d’incorporation sur matières redevances de crédit-bail restant à courir,
+                autres engagements données
+            </field>
+            <field name="code">970</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_569" model="account.account.template">
+            <field name="name">Différences sur amortissements, provisions et autres charges incorporables 0905
+                Engagements reçus par l’entreprise
+            </field>
+            <field name="code">971</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_570" model="account.account.template">
+            <field name="name">Eléments supplétifs incorporés</field>
+            <field name="code">972</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_571" model="account.account.template">
+            <field name="name">Différence d’inventaire constatées</field>
+            <field name="code">974</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_572" model="account.account.template">
+            <field name="name">Différences sur cout et taux de cessions</field>
+            <field name="code">975</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_573" model="account.account.template">
+            <field name="name">Différences sur niveau d’activité</field>
+            <field name="code">976</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_574" model="account.account.template">
+            <field name="name">Produits d’exploitation non incorporés</field>
+            <field name="code">977</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_575" model="account.account.template">
+            <field name="name">Différences sur résultats (perte et profits)</field>
+            <field name="code">978</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_577" model="account.account.template">
+            <field name="name">Reports des écarts sur couts préétablies</field>
+            <field name="code">986</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_578" model="account.account.template">
+            <field name="name">Résultats analytiques</field>
+            <field name="code">981</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_579" model="account.account.template">
+            <field name="name">Résultats analytiques</field>
+            <field name="code">982</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_580" model="account.account.template">
+            <field name="name">Résultats analytiques</field>
+            <field name="code">983</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_581" model="account.account.template">
+            <field name="name">Résultats analytiques</field>
+            <field name="code">984</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_582" model="account.account.template">
+            <field name="name">Résultats analytiques</field>
+            <field name="code">985</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_583" model="account.account.template">
+            <field name="name">Report des différences d’incorporations</field>
+            <field name="code">987</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_584" model="account.account.template">
+            <field name="name">Report des résultats</field>
+            <field name="code">988</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_586" model="account.account.template">
+            <field name="name">Liaisons internes dans un même établissement</field>
+            <field name="code">991</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_587" model="account.account.template">
+            <field name="name">Cessions reçues d’autres établissements</field>
+            <field name="code">996</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_588" model="account.account.template">
+            <field name="name">Cessions fournies à d’autres établissements</field>
+            <field name="code">997</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_589" model="account.account.template">
+            <field name="name">Engagements données par l’entreprise</field>
+            <field name="code">0900</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_590" model="account.account.template">
+            <field name="name">Contrepartie des engagements</field>
+            <field name="code">0909</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_592" model="account.account.template">
+            <field name="name">Opérations d’investissement</field>
+            <field name="code">0920</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <record id="mrt_593" model="account.account.template">
+            <field name="name">Opérations d’exploitations</field>
+            <field name="code">0925</field>
+            <field name="type">other</field>
+            <field name="user_type_id" ref="type_cpte_analy"/>
+        </record>
+        <!--
+            #Etape 3: Definition des codes de taxes
+            #Ils permettent de definir les codes servant à calculer les taxes et agregats
+            #
+            # PCM : Code de taxes PCM
+            # Auteur : AFRICA PERFORMANCES
+            # Version du fichier : 1.0
+            # Date : 01/2016
+            # TO DO
+            #
+            -->
+        <!--
+            #Etape 4: Definition du modele de plan comptable
+            #Il recapitule les valeurs par defaut du plan comptable
+            #
+            # PCM : Definition du modele de plan comptable PCM
+            # Auteur : AFRICA PERFORMANCES
+            # Version du fichier : 1.0
+            # Date : 01/2016
+            #
+            #
+            -->
+        <record id="pcm_chart_template" model="account.chart.template">
+            <field name="name">Plan de compte - PCM</field>
+            <field name="bank_account_view_id" ref="mrt_294"/>
+            <field name="property_account_receivable" ref="mrt_220"/>
+            <field name="property_account_payable" ref="mrt_207"/>
+            <field name="bank_account_code_prefix">550</field>
+            <field name="cash_account_code_prefix">555</field>
+            <field name="transfer_account_code_prefix">580</field>
+            <field name="currency_id" ref="base.MRU"/>
+        </record>
+        <!--
+    #Etape 3: Definition des taxes
+	#Ils permettent de definir les taxes
+	#
+    # PCM : Taxes SYSCOA Mauritanie
+    # Auteur : AFRICA PERFORMANCES
+    # Version du fichier : 1.0
+    # Date : 01/2016
+    # TO DO
+    #
+    -->
+    </data>
+</openerp>
