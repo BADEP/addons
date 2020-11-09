@@ -8,6 +8,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="before">
+					<field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}" />
                 	<field name="dimension_ids" attrs="{'invisible': [('dimension_ids','=',[])]}">
 						<tree create="false" delete="false" editable="bottom">
 							<field name="display_name" invisible="1"/>
@@ -27,6 +28,7 @@
 					<attribute name="force_save">1</attribute>
 				</xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="before">
+					<field name="product_dimension_qty"/>
                 	<field name="dimension_ids" widget="many2many_tags"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree" position="attributes">
