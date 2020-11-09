@@ -11,7 +11,6 @@ Allow to define a bom type for purchases different than that of sales
         'views/bom_views.xml'
     ],
     'installable': True,
-    'auto_install': True,
     'price': 9.00,
     'currency': 'USD',
 }
