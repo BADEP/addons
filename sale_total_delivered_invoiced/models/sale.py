@@ -10,7 +10,6 @@ class SaleOrder(models.Model):
     
     @api.depends('order_line.price_delivered', 'order_line.price_invoiced')
     def _amount_delivered_invoiced(self):
-        amount_delivered = amount_invoiced = 0
         for order in self:
             order.update({
                 'amount_delivered': sum(order.order_line.mapped('price_delivered')),
@@ -30,3 +29,4 @@ class SaleOrderLine(models.Model):
                 'price_delivered': line.price_total * (line.qty_delivered / line.product_uom_qty) if line.product_uom_qty else 0,
                 'price_invoiced': line.price_total * (line.qty_invoiced / line.product_uom_qty) if line.product_uom_qty else 0,
             })
+
