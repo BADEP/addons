@@ -36,5 +36,18 @@
                 </xpath>
 			</field>
         </record>
+
+        <template id="product_configurator_configure_dimensions" inherit_id="sale.product_configurator_configure" name="Configure">
+            <h2 position="before">
+            <table class="table">
+                <tbody>
+                    <tr t-foreach="product.uom_id.dimension_ids" t-as="dimension">
+                        <td><strong t-field="dimension.name"/></td>
+                        <td><input type="text" t-att-name="'dimension-%s-%s' % (product.id, dimension.id)"/></td>
+                    </tr>
+                </tbody>
+            </table>
+            </h2>
+        </template>
     </data>
 </odoo>
