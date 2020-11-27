@@ -15,6 +15,7 @@
                 </t>
             </xpath>
             <xpath expr="//t[@t-if='not line.display_type']/td[1]" position="after">
+                <t t-if="doc.order_line.mapped('dimension_ids')">
                     <td>
                         <t t-if="line.dimension_ids">
                             <span t-field="line.product_dimension_qty"/>
@@ -25,6 +26,7 @@
                             <span t-esc="'x'.join([str(q) for q in line.dimension_ids.mapped('quantity')])"/>
                         </t>
                     </td>
+                </t>
             </xpath>
         </template>
     </data>
