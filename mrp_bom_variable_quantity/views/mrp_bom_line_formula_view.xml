@@ -1,0 +1,52 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_mrp_bom_line_formula_tree" model="ir.ui.view">
+        <field name="model">mrp.bom.line.formula</field>
+        <field name="arch" type="xml">
+            <tree>
+                <field name="name"/>
+            </tree>
+        </field>
+    </record>
+
+    <record id="view_mrp_bom_line_formula_form" model="ir.ui.view">
+        <field name="model">mrp.bom.line.formula</field>
+        <field name="arch" type="xml">
+            <form>
+                <sheet>
+                    <div class="oe_title">
+                        <h1>
+                            <field name="name" placeholder="Name"/>
+                        </h1>
+                    </div>
+                    <group string="Code">
+                        <div style="margin-top: 4px;">
+                            <field name="code" nolabel="1" widget="ace"
+                                   options="{'mode': 'python'}"/>
+                        </div>
+                    </group>
+                </sheet>
+            </form>
+        </field>
+    </record>
+
+    <record id="action_mrp_bom_line_formula"
+            model="ir.actions.act_window">
+        <field name="name">Formules</field>
+        <field name="res_model">mrp.bom.line.formula</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="help" type="html">
+            <p class="oe_view_nocontent_create">
+                Click to create a new formula for variable quantities.
+            </p>
+        </field>
+    </record>
+
+    <menuitem id="menu_mrp_bom_line_formula"
+              action="action_mrp_bom_line_formula"
+              parent="mrp.menu_mrp_bom"
+    />
+
+</odoo>
