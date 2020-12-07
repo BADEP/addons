@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<odoo>
+    <record id="action_stock_picking_map" model="ir.actions.act_window">
+        <field name="name">Map</field>
+        <field name="res_model">stock.picking</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">map,form</field>
+        <field name="domain">[('id', '=', active_id)]</field>
+    </record>
+    <record id="view_stock_picking_form" model="ir.ui.view">
+        <field name="name">view.stock.picking.form</field>
+        <field name="model">stock.picking</field>
+        <field name="inherit_id" ref="stock.view_picking_form"/>
+        <field name="arch" type="xml">
+            <form position="attributes">
+                <attribute name="geo_field">{'lat': 'shipping_latitude', 'lng': 'shipping_longitude'}</attribute>
+            </form>
+            <xpath expr="//notebook" position="inside">
+                <page name="geolocalize" string="Geolocalize">
+                    <group colspan="2" col="2">
+                        <separator string="Geolocation" colspan="2"/>
+                        <button string="Geolocalize" name="geo_localize" type="object" icon="fa-check" colspan="2"/>
+                        <div>
+                            <span class="oe_inline">(</span>
+                            <span>Lat :</span>
+                            <field name="shipping_latitude" class="oe_inline" no_label="1"/>
+                            <span>: Long :</span>
+                            <field name="shipping_longitude" class="oe_inline" nolabel="1"/>
+                            <span>)</span>
+                        </div>
+                    </group>
+                </page>
+            </xpath>
+            <xpath expr="//div[@name='button_box']" position="inside">
+                <button name="%(action_stock_picking_map)d" type="action" class="oe_stat_button"
+                        context="{'search_default_name': name}" icon="fa-map-marker"
+                        string="Map"
+                        attrs="{'invisible': ['|',('shipping_latitude', '=', 0.0), ('shipping_longitude', '=', 0.0)]}"/>
+            </xpath>
+        </field>
+    </record>
+    <record id="view_stock_picking_map" model="ir.ui.view">
+        <field name="name">view.stock.picking.map</field>
+        <field name="model">stock.picking</field>
+        <field name="arch" type="xml">
+            <map string="Maps" library="geometry" lat="shipping_latitude" lng="shipping_longitude" color="orange">
+                <field name="shipping_latitude"/>
+                <field name="shipping_longitude"/>
+                <field name="name"/>
+                <field name="partner_id"/>
+                <field name="location_dest_id"/>
+                <field name="state"/>
+                <field name="date"/>
+                <templates>
+                    <t t-name="kanban-box">
+                        <div t-attf-class="oe_kanban_card oe_kanban_global_click">
+                            <div class="o_kanban_record_top mb8">
+                                <div class="o_kanban_record_headings">
+                                    <strong class="o_kanban_record_title">
+                                        <span>
+                                            <t t-esc="record.name.value"/>
+                                        </span>
+                                    </strong>
+                                </div>
+                                <strong>
+                                    <field name="state" widget="label_selection"
+                                           options="{'classes': {'draft': 'default', 'cancel': 'default', 'none': 'danger', 'waiting': 'warning', 'confirmed': 'warning', 'partially_available': 'warning', 'done': 'success'}}"/>
+                                </strong>
+                            </div>
+                            <div class="o_kanban_record_bottom">
+                                <div class="oe_kanban_bottom_left">
+                                    <t t-esc="record.partner_id.value"/>
+                                </div>
+                                <div class="oe_kanban_bottom_right">
+                                    <t t-esc="record.date.value and record.date.value.split(' ')[0] or False"/>
+                                </div>
+                            </div>
+                        </div>
+                    </t>
+                </templates>
+            </map>
+        </field>
+    </record>
+    <record id="stock.action_picking_tree" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar,map</field>
+    </record>
+    <record id="stock.action_picking_tree_all" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar,map</field>
+    </record>
+    <record id="stock.action_picking_tree_backorder" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar,map</field>
+    </record>
+    <record id="stock.action_picking_tree_done" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar,map</field>
+    </record>
+    <record id="stock.action_picking_tree_done_grouped" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar,map</field>
+    </record>
+    <record id="stock.action_picking_tree_late" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar,map</field>
+    </record>
+    <record id="stock.action_picking_tree_ready" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar,map</field>
+    </record>
+    <record id="stock.action_picking_tree_waiting" model="ir.actions.act_window">
+        <field name="view_mode">tree,kanban,form,calendar,map</field>
+    </record>
+</odoo>
