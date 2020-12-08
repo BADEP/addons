@@ -8,10 +8,16 @@ class MrpProduction(models.Model):
     @api.onchange('product_dimension_qty', 'dimension_ids')
     def onchange_dimension_ids(self):
         if self.dimension_ids:
-            qty = self.mo_id.product_uom_id.eval_values(
+            qty = self.product_uom_id.eval_values(
                 dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]), self.product_dimension_qty)
             if qty != self.product_uom_qty:
                 self.product_uom_qty = qty
+
+    @api.onchange('product_uom_id')
+    def onchange_product_uom(self):
+        self.dimension_ids = [(5, 0, 0)]
+        if self.product_uom_id:
+            self.dimension_ids = [(0, 0, {'dimension_id': d.id}) for d in self.product_uom_id.dimension_ids]
 
 class MrpProductionDimension(models.Model):
     _name = "mrp.production.dimension"
