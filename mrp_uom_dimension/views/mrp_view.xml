@@ -10,11 +10,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
                     <field name="product_dimension_qty"
-                           attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','!=','draft')]}"/>
+                           attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('has_moves', '=', True)]}"/>
                     <field name="dimension_ids"
-                           attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','!=','draft')]}">
+                           attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('has_moves', '=', True)]}">
                         <tree create="false" delete="false" editable="bottom">
-                            <field name="dimension_id" readonly="1"/>
+                            <field name="dimension_id" readonly="1" force_save="1"/>
                             <field name="quantity"/>
                         </tree>
                     </field>
