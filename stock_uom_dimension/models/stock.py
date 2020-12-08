@@ -17,8 +17,10 @@ class StockMove(models.Model):
 
     @api.depends('product_id', 'has_tracking')
     def _compute_show_details_visible(self):
-        for move in self:
+        res = super()._compute_show_details_visible()
+        for move in self.filtered(lambda m: m.dimension_ids):
             move.show_details_visible = False
+        return res
 
     @api.onchange('dimension_ids', 'product_dimension_qty_done')
     def onchange_dimensions(self):
