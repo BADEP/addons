@@ -1,0 +1,29 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <record id="res_config_settings_view_form" model="ir.ui.view">
+        <field name="name">res.config.settings.view.form.inherit.website.sale.operating.unit</field>
+        <field name="model">res.config.settings</field>
+        <field name="inherit_id" ref="website_sale.res_config_settings_view_form" />
+        <field name="arch" type="xml">
+            <div id="product_attributes_setting" position="after">
+                <div class="col-12 col-lg-6 o_setting_box" id="operating_unit_settings">
+                    <div class="o_setting_right_pane">
+                        <span class="o_form_label">Operating Unit</span>
+                        <span class="fa fa-lg fa-globe" title="Values set here are website-specific." groups="website.group_multi_website"/>
+                        <div class="text-muted">
+                            Default operating unit for website
+                        </div>
+                        <div class="content-group">
+                            <div class="row mt16">
+                                <label for="operating_unit_id" class="col-lg-3 o_light_label" string="Operating Unit"/>
+                                <field name="operating_unit_id" class="oe_inline"/>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </field>
+    </record>
+
+</odoo>
+
