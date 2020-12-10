@@ -19,6 +19,10 @@
                         </tree>
                     </field>
                 </xpath>
+                <field name="product_qty" position="attributes">
+                    <attribute name="attrs">{'readonly': ['|', ('has_moves', '=', True), ('dimension_ids','!=',[])]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </field>
             </field>
         </record>
         <record id="view_change_production_qty_wizard_dimension" model="ir.ui.view">

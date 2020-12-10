@@ -10,8 +10,8 @@ class MrpProduction(models.Model):
         if self.dimension_ids:
             qty = self.product_uom_id.eval_values(
                 dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]), self.product_dimension_qty)
-            if qty != self.product_uom_qty:
-                self.product_uom_qty = qty
+            if qty != self.product_qty:
+                self.product_qty = qty
 
     @api.onchange('product_uom_id')
     def onchange_product_uom(self):
