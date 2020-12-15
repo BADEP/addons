@@ -28,8 +28,8 @@
 					<attribute name="force_save">1</attribute>
 				</xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="before">
-					<field name="product_dimension_qty"/>
-                	<field name="dimension_ids" widget="many2many_tags"/>
+					<field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
+                	<field name="dimension_ids" widget="many2many_tags" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree" position="attributes">
                     <attribute name="editable"/>
