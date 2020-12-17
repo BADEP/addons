@@ -10,9 +10,10 @@ class StockPicking(models.Model):
     _state_from = ['assigned', 'waiting', 'confirmed']
     _state_to = ['done']
 
-    def button_validate(self):
+    def action_done(self):
         self.write({'state': 'done'})
-        return super().button_validate()
+        res = super().action_done()
+        return res
 
     def _notify_accepted_reviews(self):
         return super(StockPicking, self.sudo())._notify_accepted_reviews()
