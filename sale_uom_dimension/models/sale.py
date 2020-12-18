@@ -7,6 +7,14 @@ class SaleOrderLine(models.Model):
     dimension_ids = fields.One2many('sale.order.line.dimension', 'sale_order_line_id', string='Dimensions', copy=True)
     product_dimension_qty = fields.Integer('Nombre', required=True, default=0)
 
+    @api.model
+    def default_get(self, fields_list):
+        res = super(SaleOrderLine, self).default_get(fields_list)
+        for dim_values in res.get('dimension_ids', []):
+            if dim_values[0] == 6:
+                res['dimension_ids'].remove(dim_values)
+        return res
+
     @api.onchange('product_dimension_qty', 'dimension_ids')
     def onchange_dimension_ids(self):
         if self.dimension_ids:
@@ -22,6 +30,8 @@ class SaleOrderLine(models.Model):
 
     @api.onchange('product_uom')
     def onchange_product_uom_set_dimensions(self):
+        if self.dimension_ids and self.product_uom and self.dimension_ids.mapped('dimension_id.id').sort() == self.product_uom.dimension_ids.ids.sort():
+            return
         self.dimension_ids = [(5, 0, 0)]
         if self.product_uom:
             self.dimension_ids = [(0, 0, {'dimension_id': d.id}) for d in self.product_uom.dimension_ids]
@@ -45,7 +55,6 @@ class SaleOrderLine(models.Model):
             'product_dimension_qty': self.product_dimension_qty
         })
         return res
-
 
 class SaleOrderLineDimension(models.Model):
     _name = 'sale.order.line.dimension'
