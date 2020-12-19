@@ -6,7 +6,6 @@ class Website(models.Model):
 
     operating_unit_id = fields.Many2one('operating.unit', string='Operating Unit')
 
-    @api.multi
     def _prepare_sale_order_values(self, partner, pricelist):
         self.ensure_one()
         values = super(Website, self)._prepare_sale_order_values(partner, pricelist)

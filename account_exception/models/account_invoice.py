@@ -35,7 +35,6 @@ class AccountInvoice(models.Model):
     def _reverse_field(self):
         return 'invoice_ids'
 
-    @api.multi
     def detect_exceptions(self):
         all_exceptions = super(AccountInvoice, self).detect_exceptions()
         lines = self.mapped('invoice_line_ids')
@@ -62,7 +61,6 @@ class AccountInvoice(models.Model):
             record.invoice_check_exception()
         return record
 
-    @api.multi
     def write(self, vals):
         result = super(AccountInvoice, self).write(vals)
         check_exceptions = any(
@@ -83,13 +81,11 @@ class AccountInvoice(models.Model):
         if self.state in ('open', 'paid'):
             self.ignore_exception = False
 
-    @api.multi
     def action_invoice_open(self):
         if self.detect_exceptions():
             return self._popup_exceptions()
         return super().action_invoice_open()
 
-    @api.multi
     def action_invoice_draft(self):
         res = super().action_invoice_draft()
         invoices = self.filtered(lambda i: i.ignore_exception)

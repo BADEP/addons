@@ -58,7 +58,6 @@ class ChangeProductionQty(models.TransientModel):
             if qty != self.product_qty:
                 self.product_qty = qty
 
-    @api.multi
     def change_prod_qty(self):
         res = super().change_prod_qty()
         for wizard in self:
