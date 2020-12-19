@@ -5,7 +5,6 @@ from html2text import html2text
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    @api.multi
     def _notify_by_chat(self, message):
         res = super(ResPartner, self)._notify_by_chat(message)
         android_tokens = self.sudo().mapped('user_ids.token_ids').filtered(lambda t: t.type == 'android').mapped('token')

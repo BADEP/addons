@@ -21,7 +21,6 @@ class FleetVehicle(models.Model):
         self.purchases_amount = sum(order.amount_total for order in self.purchase_orders.filtered(lambda s: s.state in ('purchase', 'done')))
         self.purchases_count = len(self.purchase_orders.filtered(lambda s: s.state in ('purchase', 'done')))
 
-    @api.multi
     def act_show_purchases(self):
         action = self.env.ref('purchase.purchase_form_action')
 

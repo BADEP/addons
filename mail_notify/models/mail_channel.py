@@ -5,7 +5,6 @@ from html2text import html2text
 class MailChannel(models.Model):
     _inherit = 'mail.channel'
 
-    @api.multi
     def _notify(self, message):
         res = super(MailChannel, self)._notify(message)
         if self.env['ir.config_parameter'].sudo().get_param('mail_notify.is_fcm_enabled'):

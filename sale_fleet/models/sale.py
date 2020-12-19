@@ -14,7 +14,6 @@ class SaleOrder(models.Model):
         else:
             self.driver = False
 
-    @api.multi
     def action_confirm(self):
         res = super(SaleOrder, self).action_confirm()
         self.picking_ids.write({'vehicle': self.vehicle and self.vehicle.id, 'driver': self.driver and self.driver.id})

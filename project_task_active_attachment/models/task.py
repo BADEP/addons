@@ -5,7 +5,6 @@ from odoo import models, fields, api
 class ProjectTask(models.Model):
     _inherit = 'project.task'
 
-    @api.multi
     def write(self, vals):
         res = super(ProjectTask, self).write(vals) if vals else True
         if 'active' in vals:

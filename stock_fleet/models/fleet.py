@@ -14,7 +14,6 @@ class FleetVehicle(models.Model):
     def get_picking_count(self):
         self.picking_count = len(self.pickings.filtered(lambda s: s.state != 'cancel'))
 
-    @api.multi
     def act_show_pickings(self):
         action = self.env.ref('stock.action_picking_tree_all')
         result = {

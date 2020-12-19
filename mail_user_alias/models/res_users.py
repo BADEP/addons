@@ -13,7 +13,6 @@ class ResUsers(models.Model):
             self = self.with_context(thread_model='res.users')
         return self.partner_id.id
 
-    @api.multi
     @api.returns('self', lambda value: value.id)
     def message_post(self, **kwargs):
         """ Redirect the posting of message on res.users as a private discussion.
@@ -40,15 +39,12 @@ class ResUsers(models.Model):
     def message_subscribe(self, partner_ids=None, channel_ids=None, subtype_ids=None, force=True):
         return True
 
-    @api.multi
     def message_partner_info_from_emails(self, emails, link_mail=False):
         return self.env['mail.thread'].message_partner_info_from_emails(emails, link_mail=link_mail)
 
-    @api.multi
     def message_get_suggested_recipients(self):
         return dict((res_id, list()) for res_id in self._ids)
 
-    @api.multi
     def action_create_alias(self):
         for rec in self:
             alias_id = self.env['mail.alias'].create({

@@ -25,14 +25,12 @@ class FleetVehicle(models.Model):
         self.invoices_purchase_amount = sum(invoice.amount_total_signed for invoice in self.invoices.filtered(lambda s: s.state in ('open', 'paid') and s.type in ('in_invoice', 'in_refund')))
         self.invoices_purchase_count = len(self.invoices.filtered(lambda s: s.state in ('open', 'paid') and s.type in ('in_invoice', 'in_refund')))
 
-    @api.multi
     def act_show_sale_invoices(self):
         action = self.env.ref('account.action_invoice_tree1').read()[0]
         action['domain'] = "[('id','in',["+','.join(map(str, self.invoices.ids))+"]),('type', 'in', ('out_invoice', 'out_refund'))]"
         action['context'] = {'default_vehicle': self.id, 'default_driver': self.driver_id.id}
         return action
 
-    @api.multi
     def act_show_purchase_invoices(self):
         action = self.env.ref('account.action_invoice_tree2').read()[0]
         action['domain'] = "[('id','in',["+','.join(map(str, self.invoices.ids))+"]),('type', 'in', ('in_invoice', 'in_refund'))]"

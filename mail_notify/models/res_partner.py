@@ -5,7 +5,6 @@ from html2text import html2text
 class ResPartner(models.Model):
     _inherit = 'res.partner'
 
-    @api.multi
     def _notify_by_chat(self, message):
         res = super(ResPartner, self)._notify_by_chat(message)
         if self.env['ir.config_parameter'].sudo().get_param('mail_notify.is_fcm_enabled'):

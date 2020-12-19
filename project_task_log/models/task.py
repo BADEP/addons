@@ -7,7 +7,6 @@ class ProjectTask(models.Model):
 
     log_ids = fields.One2many('project.task.log', 'task_id', string='Logs')
 
-    @api.multi
     def write(self, vals):
         if 'user_id' in vals:
             logs = self.log_ids.filtered(lambda l: l.type == 'user')

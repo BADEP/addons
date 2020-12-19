@@ -36,7 +36,6 @@ class SaleOrderLine(models.Model):
         if self.product_uom:
             self.dimension_ids = [(0, 0, {'dimension_id': d.id}) for d in self.product_uom.dimension_ids]
 
-    @api.multi
     def _prepare_procurement_values(self, group_id=False):
         values = super(SaleOrderLine, self)._prepare_procurement_values(group_id)
         values.update({
@@ -46,7 +45,6 @@ class SaleOrderLine(models.Model):
         })
         return values
 
-    @api.multi
     def _prepare_invoice_line(self, qty):
         res = super(SaleOrderLine, self)._prepare_invoice_line(qty)
         res.update({
