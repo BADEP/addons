@@ -21,7 +21,6 @@ class FleetVehicle(models.Model):
             self.vehicle_latitude = self.driver_id.partner_latitude
             self.vehicle_longitude = self.driver_id.partner_longitude
 
-    @api.multi
     def geo_localize(self):
         google_api_key = self.env['ir.config_parameter'].sudo().get_param(
             'google.api_key_geocode', default='')

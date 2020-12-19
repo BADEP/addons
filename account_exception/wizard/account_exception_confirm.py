@@ -12,7 +12,6 @@ class AccountExceptionConfirm(models.TransientModel):
 
     related_model_id = fields.Many2one('account.invoice', 'Invoice')
 
-    @api.multi
     def action_confirm(self):
         self.ensure_one()
         if self.ignore:

@@ -9,7 +9,6 @@ class StockMove(models.Model):
     product_dimension_qty = fields.Integer('Nombre initial')
     product_dimension_qty_done = fields.Integer('Nombre fait', required=True, default=0, copy=False)
 
-    @api.multi
     @api.depends('state', 'picking_id', 'product_id')
     def _compute_is_quantity_done_editable(self):
         for rec in self:

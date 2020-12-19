@@ -14,7 +14,6 @@ class AccountInvoiceLine(models.Model):
         store=True,
         string="Ignore Exceptions")
 
-    @api.multi
     def _get_main_records(self):
         return self.mapped('invoice_id')
 
@@ -22,7 +21,6 @@ class AccountInvoiceLine(models.Model):
     def _reverse_field(self):
         return 'invoice_ids'
 
-    @api.multi
     def _detect_exceptions(self, rule):
         records = super(AccountInvoiceLine, self)._detect_exceptions(rule)
         return records.mapped('invoice_id')

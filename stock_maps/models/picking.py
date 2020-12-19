@@ -13,7 +13,6 @@ class StockPicking(models.Model):
     shipping_latitude = fields.Float(string='Shipping Latitude', related='partner_id.partner_latitude',
                                      store=False, readonly=False, digits=(16, 5))
 
-    @api.multi
     def geo_localize(self):
         google_api_key = self.env['ir.config_parameter'].sudo().get_param(
             'google.api_key_geocode', default='')

@@ -5,7 +5,6 @@ class MailComposeMessage(models.TransientModel):
 
     scheduled_date = fields.Datetime('Scheduled date')
 
-    @api.multi
     def get_mail_values(self, res_ids):
         res = super().get_mail_values(res_ids)
         for id in res_ids:
