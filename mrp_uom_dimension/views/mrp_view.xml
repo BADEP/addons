@@ -47,5 +47,14 @@
                 </field>
             </field>
         </record>
+
+        <template id="report_mrp_production_dimensions" inherit_id="mrp.report_mrporder">
+            <span t-field="o.product_uom_id.name" position="after">
+                <t t-if="o.dimension_ids">
+                    <br/>
+                    <span t-field="o.product_dimension_qty"/> - <span t-esc="'x'.join([str(q) for q in o.dimension_ids.mapped('display_name')])"/>
+                </t>
+            </span>
+        </template>
     </data>
 </odoo>
