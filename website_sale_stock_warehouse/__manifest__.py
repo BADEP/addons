@@ -14,7 +14,7 @@
              'views/res_config_settings_views.xml',
              ],
     'auto_install': True,
-    'installable': True,
+    'installable': False,
     'price': 30,
     'currency': 'USD'
 }

@@ -15,5 +15,5 @@
         'views/mrp_bom_line_formula_view.xml',
         'views/mrp_bom_view.xml',
     ],
-    'installable': True,
+    'installable': False,
 }
