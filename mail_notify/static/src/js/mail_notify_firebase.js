@@ -14,6 +14,9 @@ odoo.define('mail_notify.Firebase', function (require) {
             messaging.usePublicVapidKey(result.fcm_vapid_key);
             messaging.getToken().then((currentToken) => {
                 if (currentToken) {
+                    if (result.debug_fcm) {
+                        isTokenSentToServer() ? console.log('Existing token found: ', currentToken) : console.log('New token received: ', currentToken);
+                    }
                     sendTokenToServer(currentToken);
                 }
             }).catch((err) => {
@@ -22,11 +25,29 @@ odoo.define('mail_notify.Firebase', function (require) {
             messaging.onTokenRefresh(() => {
                 messaging.getToken().then((refreshedToken) => {
                     setTokenSentToServer(false);
+                    if (result.debug_fcm) {
+                        console.log('New refreshed token received: ', refreshedToken);
+                    }
                     sendTokenToServer(refreshedToken);
                 }).catch((err) => {
                     console.log('Unable to retrieve refreshed token ', err);
                 });
             });
+            messaging.onMessage((payload) => {
+                if (result.debug_fcm) {
+                    console.log('Message received. ', payload);
+                }
+                if (result.foreground_notifications) {
+                    var notificationTitle = payload.notification.title;
+                    var notificationOptions = {
+                        body: payload.notification.body,
+                        icon: payload.notification.icon,
+                        image: payload.notification.image
+                    };
+                    var notification = new Notification(notificationTitle, notificationOptions);
+                }
+            });
+
             function sendTokenToServer(currentToken) {
                 if (!isTokenSentToServer()) {
                     rpc.query({
