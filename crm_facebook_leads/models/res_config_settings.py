@@ -9,9 +9,9 @@ class ResConfigSettings(models.TransientModel):
     crm_fb_app_id = fields.Char('App ID', config_parameter='crm_facebook_leads.crm_fb_app_id')
     crm_fb_app_secret = fields.Char('App Secret', config_parameter='crm_facebook_leads.crm_fb_app_secret')
     crm_fb_access_token = fields.Char('Access Token', config_parameter='crm_facebook_leads.crm_fb_access_token')
-    crm_fb_access_token_state = fields.Selection([('valid', 'Valid'), ('invalid', 'Invalid'), ('unknown', 'Unknown')],
-                                                 compute='_get_access_token_state', string='Token State')
-    crm_fb_access_token_state_message = fields.Text(compute='_get_access_token_state', string='Error Message')
+    # crm_fb_access_token_state = fields.Selection([('valid', 'Valid'), ('invalid', 'Invalid'), ('unknown', 'Unknown')],
+    #                                              compute='_get_access_token_state', string='Token State')
+    # crm_fb_access_token_state_message = fields.Text(compute='_get_access_token_state', string='Error Message')
 
     def action_get_access_token(self):
         redirect_url = "%s/crm_facebook_leads/auth" % (self.env['ir.config_parameter'].get_param('web.base.url'))
