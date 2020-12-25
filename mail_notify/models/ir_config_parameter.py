@@ -11,5 +11,7 @@ class IrConfigParameter(Model):
             'is_fcm_enabled': const_eval(get_param("mail_notify.is_fcm_enabled", 'False')),
             'fcm_server_key': get_param("mail_notify.fcm_server_key", 'False'),
             'fcm_vapid_key': get_param("mail_notify.fcm_vapid_key", 'False'),
-            'fcm_messaging_id': get_param("mail_notify.fcm_messaging_id", 'False')
+            'fcm_messaging_id': get_param("mail_notify.fcm_messaging_id", 'False'),
+            'debug_fcm': const_eval(get_param('mail_notify.debug_fcm', 'False')),
+            'foreground_notifications': const_eval(get_param('mail_notify.foreground_notifications', 'False'))
         }

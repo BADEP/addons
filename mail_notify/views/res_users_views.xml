@@ -1,0 +1,21 @@
+<odoo>
+    <data>
+        <record id="view_users_form_simple_modif_inherit_fcm" model="ir.ui.view">
+            <field name="name">view_users_form_simple_modif_inherit_fcm</field>
+            <field name="model">res.users</field>
+            <field name="type">form</field>
+            <field name="inherit_id" ref="mail.view_users_form_simple_modif_mail"/>
+            <field name="arch" type="xml">
+                <field name="notification_type" position="after">
+                    <field name="token_ids" string="My access tokens">
+                        <tree create="0" editable="bottom">
+                            <field name="token" readonly="1"/>
+                            <field name="type" readonly="1"/>
+                            <field name="create_date"/>
+                        </tree>
+                    </field>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
