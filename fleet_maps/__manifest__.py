@@ -21,6 +21,6 @@ Show your leads and pipelines on map
         'views/fleet_vehicle.xml'
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
     'uninstall_hook': 'uninstall_hook',
 }
