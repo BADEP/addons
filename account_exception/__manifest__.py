@@ -20,5 +20,6 @@
         'data/account_exception_data.xml',
         'wizard/account_exception_confirm_view.xml',
         'views/invoice_view.xml',
-    ]
+    ],
+    'installable': False
 }
