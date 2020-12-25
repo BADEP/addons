@@ -21,6 +21,6 @@ Show your Stock pickings  on map view in regards to delivery address
         'views/picking_views.xml'
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
     'uninstall_hook': 'uninstall_hook',
 }

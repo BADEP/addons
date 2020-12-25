@@ -17,7 +17,7 @@
     'data': [
         'views/sequence_view.xml',
     ],
-    'installable': True,
+    'installable': False,
     'price': 49.00,
     'currency': 'EUR',
 }

@@ -14,7 +14,7 @@
              'security/ir.model.access.csv',
              'views/mrp_view.xml'
              ],
-    'installable': True,
+    'installable': False,
     'auto_install': True,
     'price': 50,
     'currency': 'EUR'
