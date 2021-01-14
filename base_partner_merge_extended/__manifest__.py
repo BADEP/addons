@@ -27,5 +27,5 @@
         'wizard/base_partner_merge_views.xml',
     ],
     'price': 19.00,
-    'currency': 'eur',
+    'currency': 'EUR',
 }

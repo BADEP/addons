@@ -19,5 +19,5 @@
     ],
     'installable': False,
     'price': 49.00,
-    'currency': 'eur',
+    'currency': 'EUR',
 }
