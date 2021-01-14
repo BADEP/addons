@@ -11,7 +11,7 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Discuss',
-    'version': '13.0.1.0',
+    'version': '12.0.1.0',
 
     # any module necessary for this one to work correctly
     'depends': ['mail_bot', 'web'],
@@ -32,5 +32,5 @@
         'views/res_users_views.xml'
     ],
     'price': 99.00,
-    'currency': 'eur',
+    'currency': 'EUR',
 }
