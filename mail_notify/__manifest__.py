@@ -32,5 +32,5 @@
         'views/res_users_views.xml'
     ],
     'price': 99.00,
-    'currency': 'USD',
+    'currency': 'eur',
 }
