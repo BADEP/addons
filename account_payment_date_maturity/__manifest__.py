@@ -29,5 +29,5 @@
         'views/account_payment.xml',
     ],
     'price': 19.00,
-    'currency': 'eur',
+    'currency': 'EUR',
 }
