@@ -16,5 +16,5 @@
     'auto_install': True,
     'installable': False,
     'price': 30,
-    'currency': 'USD'
+    'currency': 'eur'
 }
