@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<openerp>
+	<data>
+		<record id="report_invoice_with_taxes" model="ir.ui.view">
+			<field name="name">account.report_invoice_document_with_taxes</field>
+			<field name="inherit_id" ref="account.report_invoice_document" />
+			<field eval="16" name="priority" />
+			<field name="type">qweb</field>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//span[@t-field='l.price_subtotal']" position="replace">
+			        	<span t-field="l.price_total" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.currency_id&quot;}"/>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="report_saleorder_with_taxes" model="ir.ui.view">
+			<field name="name">sale.report_saleorder_document_with_taxes</field>
+			<field name="inherit_id" ref="sale.report_saleorder_document" />
+			<field eval="16" name="priority" />
+			<field name="type">qweb</field>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//span[@t-field='l.price_subtotal']" position="replace">
+			        	<span t-field="l.price_total" t-field-options="{&quot;widget&quot;: &quot;monetary&quot;, &quot;display_currency&quot;: &quot;o.pricelist_id.currency_id&quot;}"/>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="account_invoice_form_with_taxes" model="ir.ui.view">
+			<field name="name">account.invoice_form_with_taxes</field>
+			<field name="inherit_id" ref="account.invoice_form" />
+            <field name="model">account.invoice</field>
+			<field eval="16" name="priority" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='price_subtotal']" position="after">
+			        	<field name="price_total"/>
+					</xpath>
+				</data>
+			</field>
+		</record>
+
+		<record id="sale_view_order_form_with_taxes" model="ir.ui.view">
+			<field name="name">sale.view_order_form_with_taxes</field>
+			<field name="inherit_id" ref="sale.view_order_form" />
+            <field name="model">sale.order</field>
+			<field eval="16" name="priority" />
+			<field name="type">form</field>
+			<field name="arch" type="xml">
+				<data>
+					<xpath expr="//field[@name='price_subtotal']" position="after">
+			        	<field name="price_total"/>
+					</xpath>
+				</data>
+			</field>
+		</record>
+	</data>
+</openerp>
