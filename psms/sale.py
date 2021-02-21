@@ -84,9 +84,9 @@ class sale_session(models.Model):
             total += order.amount_total
             for line in order.order_line:
                 if line.product_id.pumps:
-                    fuel += line.price_subtotal
+                    fuel += line.price_total
                 else:
-                    other += line.price_subtotal
+                    other += line.price_total
         self.total_sales = total
         self.fuel_sales = fuel
         self.other_sales = other
@@ -123,23 +123,27 @@ class sale_session_line(models.Model):
     @api.depends('session.sale_orders')
     def get_sales(self):
         sales = 0
-        for order in self.session.sale_orders:
-            for line in order.order_line:
-                if line.product_id.id == self.product.id:
-                    sales += line.product_uom_qty 
+        for rec in self:
+            for order in rec.session.sale_orders:
+                for line in order.order_line:
+                    if line.product_id.id == rec.product.id:
+                        sales += line.product_uom_qty
         self.sale_qty = sales
 
     @api.depends('log_qty', 'sale_qty')
     def get_diff(self):
-        self.diff_qty = self.log_qty - self.sale_qty
+        for rec in self:
+            rec.diff_qty = rec.log_qty - rec.sale_qty
 
     @api.depends('session.logs')
     def get_log(self):
-        log_qty = 0
-        for log in self.session.logs:
-            if log.pump.product.id == self.product.id:
-                log_qty += log.diff
-        self.log_qty = log_qty
+        for r in self:
+            log_qty = 0
+            for log in r.session.logs:
+                for rec in log:
+                    if rec.pump.product.id == r.product.id:
+                        log_qty += rec.diff
+            r.log_qty = log_qty
 
 class sale_session_client_line(models.Model):
     _name = 'sale.session.client_line'
@@ -174,11 +178,13 @@ class sale_session_log(models.Model):
 
     @api.depends('new_counter', 'old_counter')
     def get_diff(self):
-        self.diff = self.new_counter - self.old_counter
+        for rec in self:
+            rec.diff = rec.new_counter - rec.old_counter
 
     @api.depends('new_counter')
     def get_electric_counter(self):
-        self.electric_counter = self.new_counter + self.pump.electric_diff
+        for rec in self:
+            rec.electric_counter = rec.new_counter + rec.pump.electric_diff
 
 class sale_order(models.Model):
     _inherit = 'sale.order'
@@ -189,16 +195,16 @@ class sale_order(models.Model):
     vouchers_taken = fields.One2many('sale.order.voucher', 'sale_order_taken', readonly=True, states={'draft': [('readonly', False)]}, string="Bons d'échange reçus")
     delivery_order_ref = fields.Char(string="N° BL")
 
-    # def _amount_all(self, field_name, arg):
-    #     res = super(sale_order, self)._amount_all(field_name, arg)
-    #     for order in self:
-    #         for vd in order.vouchers_delivered:
-    #             res[order.id]['amount_untaxed'] += vd.price_subtotal
-    #             res[order.id]['amount_total'] += vd.price_subtotal
-    #         for vt in order.vouchers_taken:
-    #             res[order.id]['amount_untaxed'] -= vt.price_subtotal
-    #             res[order.id]['amount_total'] -= vt.price_subtotal
-    #     return res
+    def _amount_all(self):
+        res = super(sale_order, self)._amount_all()
+        for order in self:
+            for vd in order.vouchers_delivered:
+                res[order.id]['amount_untaxed'] += vd.price_total
+                res[order.id]['amount_total'] += vd.price_total
+            for vt in order.vouchers_taken:
+                res[order.id]['amount_untaxed'] -= vt.price_total
+                res[order.id]['amount_total'] -= vt.price_total
+        return res
 
 
 class sale_order_voucher(models.Model):
@@ -211,7 +217,7 @@ class sale_order_voucher(models.Model):
     quantity = fields.Float(digits_compute=dp.get_precision('Product UoS'), required=True, string="Quantité")
     uom = fields.Many2one('uom.uom', required=True, string="Unité de mesure")
     price_unit = fields.Float(digits_compute=dp.get_precision('Product Price'), required=True, string="Prix unitaire")
-    price_subtotal = fields.Float(digits_compute=dp.get_precision('Product Price'), compute='get_price_subtotal', string="Prix total")
+    price_total = fields.Float(digits_compute=dp.get_precision('Product Price'), compute='get_price_total', string="Prix total")
     state = fields.Selection([('draft', 'draft'), ('delivered', 'Delivered'), ('collected', 'Collected'), ('done', 'Done')], 'Etat',readonly=True, copy=False, select=True, default='draft')
     taxes = fields.Many2many('account.tax', string='Taxes', store=True)
 
@@ -237,8 +243,8 @@ class sale_order_voucher(models.Model):
                     self.price_unit = price
 
     @api.depends('quantity', 'price_unit')
-    def get_price_subtotal(self):
-        self.price_subtotal = self.price_unit * self.quantity
+    def get_price_total(self):
+        self.price_total = self.price_unit * self.quantity
 
 class sale_order_old(models.Model):
     _inherit = 'sale.order'
@@ -270,7 +276,7 @@ class sale_order_old(models.Model):
         # last day of the last month as invoice date
         if date_invoice:
             context = dict(date_invoice=date_invoice)
-        for o in self.browse():
+        for o in self:
             currency_id = o.pricelist_id.currency_id.id
             if (o.partner_id.id in partner_currency): #and (partner_currency[o.partner_id.id] <> currency_id):
                 raise exceptions.UserError('You cannot group sales having different currencies for the same partner.')
@@ -343,18 +349,6 @@ class sale_order_old(models.Model):
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
     responsable = fields.Boolean(default=False)
-
-# class sale_make_invoice(models.TransientModel):
-#     _inherit = 'sale.make.invoice'
-#
-#     def make_invoices(self):
-#         result = super(sale_make_invoice, self).make_invoices()
-#         if self.grouped:
-#             orders = self.env['sale.order'].browse(self.env.context.get(('active_ids'), []))
-#             for o in orders:
-#                 for i in o.invoice_ids:
-#                     i.merge_lines()
-#             return result
 
 class res_partner(models.Model):
     _inherit = 'res.partner'

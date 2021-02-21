@@ -6,9 +6,15 @@
     'category': 'Sales Management',
     'description': """
     """,
-    'author': 'BADEP',
-    'website': 'http://www.badep.ma',
-    'depends': ['stock', 'product', 'sale', 'purchase', 'mail', 'base', 'fleet', 'sale_taxed_total', 'hr'],
+    'author': 'BADEP, Pragmatic System',
+    'website': 'http://www.badep.ma, http://pragmatic-system.ma',
+    'depends': ['stock',
+                'product',
+                'sale_management',
+                'purchase', 'mail',
+                'base',
+                'fleet',
+                'hr',],
     'data': [
             'account_view.xml',
              'product_view.xml',
