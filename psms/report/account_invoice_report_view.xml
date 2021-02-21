@@ -74,7 +74,7 @@
 						                        </td>
 						                        <td class="text-right" groups="sale.group_discount_per_so_line" style="border-right: 1px solid black;"><span t-field="l.discount"/></td>
 						                        <td class="text-right">
-						                            <span t-esc="round(l.price_total, 2)"/>
+						                            <span t-esc="round(l.price_subtotal, 2)"/>
 												</td>
 						                    </tr>
 						                    <tr style="height:100%;">

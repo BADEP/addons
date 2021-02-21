@@ -4,9 +4,7 @@
         <record id="fleet_vehicle_psms_form_view" model="ir.ui.view">
             <field name="name">psms.fleet_vehicle_psms_form_view</field>
             <field name="model">fleet.vehicle</field>
-            <field name="inherit_id" ref="fleet.fleet_vehicle_form" />
-            <field eval="17" name="priority"/>
-            <field name="type">form</field>
+            <field name="inherit_id" ref="fleet.fleet_vehicle_view_form" />
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='driver_id']" position="before">
 					<field name="partner" />

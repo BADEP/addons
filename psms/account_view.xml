@@ -4,11 +4,9 @@
         <record id="psms_account_invoice_form" model="ir.ui.view">
             <field name="name">psms.account.move.form</field>
             <field name="model">account.move</field>
-            <field name="inherit_id" ref="account.move_form" />
-            <field eval="17" name="priority"/>
-            <field name="type">form</field>
+            <field name="inherit_id" ref="account.view_move_form" />
             <field name="arch" type="xml">
-                <xpath expr="//field[@name='origin']" position="after">
+                <xpath expr="//field[@name='date']" position="after">
 					<field name="so_count" />
                 </xpath>
             </field>

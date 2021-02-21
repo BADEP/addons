@@ -1,5 +1,5 @@
 # -*- coding: utf-8 -*-
-from odoo import models, fields, api, exceptions
+from odoo import models, fields, api, exceptions, _
 import odoo.addons.decimal_precision as dp
 from odoo.exceptions import UserError
 
@@ -17,7 +17,7 @@ class sale_session(models.Model):
         self.name = self.date
     
     def get_default_warehouse(self):
-        return self.env.user.company_id.warehouse_ids[0].id if self.env.user.company_id.warehouse_ids else False
+        return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)])
         
     date = fields.Date(default=fields.Date.today(), readonly=True, states={'draft': [('readonly', False)]})    
     sale_orders = fields.One2many('sale.order', 'session', readonly=True, states={'draft': [('readonly', False)]}, string="Bons de commande")
@@ -84,9 +84,9 @@ class sale_session(models.Model):
             total += order.amount_total
             for line in order.order_line:
                 if line.product_id.pumps:
-                    fuel += line.price_total
+                    fuel += line.price_subtotal
                 else:
-                    other += line.price_total
+                    other += line.price_subtotal
         self.total_sales = total
         self.fuel_sales = fuel
         self.other_sales = other
@@ -189,60 +189,74 @@ class sale_order(models.Model):
     vouchers_taken = fields.One2many('sale.order.voucher', 'sale_order_taken', readonly=True, states={'draft': [('readonly', False)]}, string="Bons d'échange reçus")
     delivery_order_ref = fields.Char(string="N° BL")
 
-    def _amount_all(self, field_name, arg):
-        res = super(sale_order, self)._amount_all(field_name, arg)
-        for order in self:
-            for vd in order.vouchers_delivered:
-                res[order.id]['amount_untaxed'] += vd.price_total
-                res[order.id]['amount_total'] += vd.price_total
-            for vt in order.vouchers_taken:
-                res[order.id]['amount_untaxed'] -= vt.price_total
-                res[order.id]['amount_total'] -= vt.price_total
-        return res
-        
+    # def _amount_all(self, field_name, arg):
+    #     res = super(sale_order, self)._amount_all(field_name, arg)
+    #     for order in self:
+    #         for vd in order.vouchers_delivered:
+    #             res[order.id]['amount_untaxed'] += vd.price_subtotal
+    #             res[order.id]['amount_total'] += vd.price_subtotal
+    #         for vt in order.vouchers_taken:
+    #             res[order.id]['amount_untaxed'] -= vt.price_subtotal
+    #             res[order.id]['amount_total'] -= vt.price_subtotal
+    #     return res
+
+
+class sale_order_voucher(models.Model):
+    _name = 'sale.order.voucher'
+
+    sale_order_delivered = fields.Many2one('sale.order', required=True, string="Bon de commande de délivrance")
+    sale_order_taken = fields.Many2one('sale.order', string="Bon de commande de consommation")
+    name = fields.Char('Code', required=True)
+    product = fields.Many2one('product.product', required=True, string="Article")
+    quantity = fields.Float(digits_compute=dp.get_precision('Product UoS'), required=True, string="Quantité")
+    uom = fields.Many2one('uom.uom', required=True, string="Unité de mesure")
+    price_unit = fields.Float(digits_compute=dp.get_precision('Product Price'), required=True, string="Prix unitaire")
+    price_subtotal = fields.Float(digits_compute=dp.get_precision('Product Price'), compute='get_price_subtotal', string="Prix total")
+    state = fields.Selection([('draft', 'draft'), ('delivered', 'Delivered'), ('collected', 'Collected'), ('done', 'Done')], 'Etat',readonly=True, copy=False, select=True, default='draft')
+    taxes = fields.Many2many('account.tax', string='Taxes', store=True)
+
+    @api.onchange('product')
+    def onchange_product(self):
+        if self.product:
+            self.uom = self.product.uom_id
+            warning_msgs = None
+            if not self.sale_order_delivered.pricelist_id:
+                warn_msg = _('You have to select a pricelist or a customer in the sales form ! Please set one before choosing a product.')
+                warning_msgs = "No Pricelist ! : " + warn_msg + "\n\n"
+            else:
+                price = self.sale_order_delivered.pricelist_id.with_context(
+                    uom=self.uom.id or self.product.uom_id.id, date=self.sale_order_delivered.date_order).price_get(
+                    prod_id=self.product.id, qty=self.quantity or 1.0, partner=self.sale_order_delivered.partner_id.id)[
+                    self.sale_order_delivered.pricelist_id.id]
+                if price is False:
+                    warn_msg = "Cannot find a pricelist line matching this product and quantity.\n" \
+                               "You have to change either the product, the quantity or the pricelist."
+
+                    warning_msgs += "No valid pricelist line found ! :" + warn_msg + "\n\n"
+                else:
+                    self.price_unit = price
+
+    @api.depends('quantity', 'price_unit')
+    def get_price_subtotal(self):
+        self.price_subtotal = self.price_unit * self.quantity
+
 class sale_order_old(models.Model):
     _inherit = 'sale.order'
-    _name = 'sale.order'
-    
+
     def onchange_partner_id(self):
         val = super(sale_order, self).onchange_partner_id()
         val['value'].update({'vehicle': False})
         return val
-    
+
     def _get_order(self):
         result = {}
         for line in self.pool.get('sale.order.line').browse():
             result[line.order_id.id] = True
         return result.keys()
-    
-    def _amount_all_wrapper(self):
-        return self._amount_all()
 
-    amount_untaxed = fields.Float(string='Untaxed Amount')
-    amount_tax = fields.Float(string='Taxes')
-    amount_total = fields.Float(string='Total')
-    
-    # _columns = {
-    #     'amount_untaxed': oldfields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Untaxed Amount',
-    #         store={
-    #             'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line', 'vouchers_delivered', 'vouchers_taken'], 10),
-    #             'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
-    #         },
-    #         multi='sums', help="The amount without tax.", track_visibility='always'),
-    #     'amount_tax': oldfields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Taxes',
-    #         store={
-    #             'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line', 'vouchers_delivered', 'vouchers_taken'], 10),
-    #             'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
-    #         },
-    #         multi='sums', help="The tax amount."),
-    #     'amount_total': oldfields.function(_amount_all_wrapper, digits_compute=dp.get_precision('Account'), string='Total',
-    #         store={
-    #             'sale.order': (lambda self, cr, uid, ids, c={}: ids, ['order_line', 'vouchers_delivered', 'vouchers_taken'], 10),
-    #             'sale.order.line': (_get_order, ['price_unit', 'tax_id', 'discount', 'product_uom_qty'], 10),
-    #         },
-    #         multi='sums', help="The total amount.")
-    # }
-    
+    # def _amount_all_wrapper(self):
+    #     return self._amount_all()
+
     def action_invoice_create(self, grouped=False, states=None, date_invoice=False):
         if states is None:
             states = ['confirmed', 'done', 'exception']
@@ -326,44 +340,6 @@ class sale_order_old(models.Model):
                     self.invalidate_cache(['invoice_ids'], [order.id], context=context)
         return res
 
-class sale_order_voucher(models.Model):
-    _name = 'sale.order.voucher'
-    
-    sale_order_delivered = fields.Many2one('sale.order', required=True, string="Bon de commande de délivrance")
-    sale_order_taken = fields.Many2one('sale.order', string="Bon de commande de consommation")
-    name = fields.Char('Code', required=True)
-    product = fields.Many2one('product.product', required=True, string="Article")
-    quantity = fields.Float(digits_compute=dp.get_precision('Product UoS'), required=True, string="Quantité")
-    uom = fields.Many2one('product.uom', required=True, string="Unité de mesure")
-    price_unit = fields.Float(digits_compute=dp.get_precision('Product Price'), required=True, string="Prix unitaire")
-    price_total = fields.Float(digits_compute=dp.get_precision('Product Price'), compute='get_price_total', string="Prix total")
-    state = fields.Selection([('draft', 'draft'), ('delivered', 'Delivered'), ('collected', 'Collected'), ('done', 'Done')], 'Etat', readonly=True, copy=False, select=True, default='draft')
-    taxes = fields.Many2many('account.tax', string='Taxes', related='product.taxes_id', store=True)
-
-    @api.onchange('product')
-    def onchange_product(self):
-        if self.product:
-            self.uom = self.product.uom_id
-            if not self.sale_order_delivered.pricelist_id:
-                warn_msg = _('You have to select a pricelist or a customer in the sales form !\n'
-                        'Please set one before choosing a product.')
-                warning_msgs = "No Pricelist ! : " + warn_msg + "\n\n"
-            else:
-                price = self.sale_order_delivered.pricelist_id.with_context(
-                    uom=self.uom.id or self.product.uom_id.id, date=self.sale_order_delivered.date_order).price_get(
-                    prod_id=self.product.id, qty=self.quantity or 1.0, partner=self.sale_order_delivered.partner_id.id)[self.sale_order_delivered.pricelist_id.id]
-                if price is False:
-                    warn_msg = "Cannot find a pricelist line matching this product and quantity.\n" \
-                            "You have to change either the product, the quantity or the pricelist."
-    
-                    warning_msgs += "No valid pricelist line found ! :" + warn_msg + "\n\n"
-                else:
-                    self.price_unit = price
-
-    @api.depends('quantity', 'price_unit')
-    def get_price_total(self):
-        self.price_total = self.price_unit * self.quantity
-    
 class hr_employee(models.Model):
     _inherit = 'hr.employee'
     responsable = fields.Boolean(default=False)
@@ -385,13 +361,13 @@ class res_partner(models.Model):
 
     def name_get(self):
         res = []
-        for rec in self:       
+        for rec in self:
             if rec.ref:
                 res.append((rec.id, '[%s] %s' % (rec.ref, rec.name)))
             else:
                 res.append((rec.id, rec.name))
         return res
-    
+
     @api.model
     def name_search(self, name, args=None, operator='ilike', limit=100):
         if not args:

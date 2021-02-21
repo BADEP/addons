@@ -7,22 +7,15 @@ import odoo.addons.decimal_precision as dp
 class sale_order_line_old(models.Model):
     _inherit = 'sale.order.line'
 
-    def product_id_change(self, pricelist, product, qty=0,
-            uom=False, qty_uos=0, uos=False, name='', partner_id=False,
-            lang=False, update_tax=True, date_order=False, packaging=False, fiscal_position=False, flag=False, context=None):
-        res = super(sale_order_line_old, self).product_id_change(pricelist, product, qty=qty,
-            uom=uom, qty_uos=qty_uos, uos=uos, name=name, partner_id=partner_id,
-            lang=lang, update_tax=update_tax, date_order=date_order, packaging=packaging, fiscal_position=fiscal_position, flag=flag, context=context)
-        cost = 0
-        
-        product_obj = self.env['product.product'].browse(product)
-        for delivery_cost in product_obj.product_tmpl_id.delivery_costs:
-            if delivery_cost.code.id == context.get('code'):
-                cost += delivery_cost.price
-                break
-        if 'price_unit' in res['value']:
-            res['value'].update({'price_base': res['value']['price_unit']})
-            res['value'].update({'price_unit': res['value']['price_unit'] + cost})
+    @api.onchange('product_id')
+    def product_id_change(self):
+        res = super(sale_order_line_old, self).product_id_change()
+        if self.product_id:
+            cost = 0
+            for delivery_cost in self.product_id.product_tmpl_id.delivery_costs:
+                    cost += delivery_cost.price
+            self.price_base =  self.price_unit
+            self.price_unit =  self.price_unit + cost
         return res
 
 class sale_order_line(models.Model):
