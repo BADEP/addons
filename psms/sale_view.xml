@@ -21,7 +21,7 @@
 								<field name="quantity" />
 								<field name="price_unit" />
 								<field name="taxes" widget="many2many_tags"/>
-								<field name="price_subtotal" sum="Total"/>
+								<field name="price_total" sum="Total"/>
 							</tree>
 						</field>
 					</page>
@@ -29,7 +29,7 @@
 						<field name="vouchers_taken" widget="many2many" options="{'no_create': True}" domain="[('sale_order_taken','=',False)]">
 							<tree string="Bons d'échange reçus" editable="bottom">
 								<field name="name" readonly="True"/>
-								<field name="price_subtotal" sum="Total" readonly="True"/>
+								<field name="price_total" sum="Total" readonly="True"/>
 							</tree>
 						</field>
 					</page>
