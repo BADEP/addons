@@ -6,15 +6,13 @@
             <field name="name">psms.sale_psms_form_view</field>
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form" />
-            <field eval="17" name="priority"/>
-            <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
-					<field name="delivery_order_ref" /> 
+					<field name="delivery_order_ref" />
                 	<field name="vehicle" domain="[('partner.id','=',partner_id)]"/>
                 </xpath>
-                <xpath expr="//page[@string='Order Lines']" position="after">
-                	<page string="Bons d'échange donnés">
+                <xpath expr="//page[@name='order_lines']" position="after">
+                	<page string="Bons d'échange donnés" name="test">
 						<field name="vouchers_delivered">
 							<tree string="Bons d'échange donnés" editable="bottom">
 								<field name="name" />
@@ -22,8 +20,8 @@
 								<field name="uom" />
 								<field name="quantity" />
 								<field name="price_unit" />
-								<field name="taxes" widget="many2many_tags" domain="[('parent_id','=',False),('type_tax_use','&lt;&gt;','purchase')]"/>
-								<field name="price_total" sum="Total"/>
+								<field name="taxes" widget="many2many_tags"/>
+								<field name="price_subtotal" sum="Total"/>
 							</tree>
 						</field>
 					</page>
@@ -31,7 +29,7 @@
 						<field name="vouchers_taken" widget="many2many" options="{'no_create': True}" domain="[('sale_order_taken','=',False)]">
 							<tree string="Bons d'échange reçus" editable="bottom">
 								<field name="name" readonly="True"/>
-								<field name="price_total" sum="Total" readonly="True"/>
+								<field name="price_subtotal" sum="Total" readonly="True"/>
 							</tree>
 						</field>
 					</page>
@@ -42,9 +40,9 @@
         <record id="sale_session_view_tree" model="ir.ui.view">
             <field name="name">sale.session.tree</field>
             <field name="model">sale.session</field>
-            <field name="priority">4</field>
             <field name="arch" type="xml">
-                <tree string="Sessions" colors="red:state=='except';grey:state=='done';blue:state=='draft'">
+<!--                decoration-danger="state=='except'" decoration-info="blue:state=='draft'" decoration-muted="state=='done'"-->
+                <tree string="Sessions" >
 					<field name="name" />
                     <field name="date"/>
                     <field name="total_sales" sum="Total"/>
@@ -57,9 +55,8 @@
             <field name="name">Sessions</field>
             <field name="type">ir.actions.act_window</field>
             <field name="res_model">sale.session</field>
-            <field name="view_type">form</field>
             <field name="view_id" ref="psms.sale_session_view_tree"/>
-            <field name="view_mode">tree,form,calendar,graph</field>
+            <field name="view_mode">tree,form</field>
         </record>
 
 		<record id="view_session_form" model="ir.ui.view">
@@ -74,10 +71,6 @@
                         <field name="state" widget="statusbar" statusbar_visible="draft,except,done"/>
                 </header>
                 <sheet>
-                    <h1>
-                        <label string="Session "/>
-                        <field name="name" class="oe_inline"/>
-                    </h1>
                     <group>
                         <group>
                             <field name="date"/>
@@ -147,6 +140,6 @@
             </field>
         </record>
 
-        <menuitem id="menu_session" action="action_session" parent="base.menu_sales" sequence="10" groups="base.group_sale_salesman"/>
+        <menuitem id="menu_session" action="action_session" parent="sale.sale_order_menu" sequence="10" groups="sales_team.group_sale_salesman_all_leads"/>
     </data>
 </odoo>
