@@ -14,7 +14,8 @@ class sale_session(models.Model):
     
     @api.depends('date')
     def get_name(self):
-        self.name = self.date
+        for rec in self:
+            rec.name = rec.date
     
     def get_default_warehouse(self):
         return self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)])
@@ -44,7 +45,7 @@ class sale_session(models.Model):
             if abs(line.diff_qty) > 1:
                 self.state = 'except'
                 return False
-        self.action_force()
+        self.state = 'done'
         
     @api.onchange('logs')
     def update_line(self):
