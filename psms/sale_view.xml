@@ -9,7 +9,6 @@
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='partner_id']" position="after">
 					<field name="delivery_order_ref" />
-                	<field name="vehicle" domain="[('partner.id','=',partner_id)]"/>
                 </xpath>
                 <xpath expr="//page[@name='order_lines']" position="after">
                 	<page string="Bons d'échange donnés" name="test">
