@@ -5,7 +5,7 @@ class PosSession(models.Model):
 
     log_ids = fields.One2many('pos.session.log', 'session_id')
     line_ids = fields.One2many('pos.session.line', 'session_id', string='Lignes de carburant')
-    client_line_ids = fields.One2many('pos.session.client_line', 'session_id', string="Lignes par client")
+    client_line_ids = fields.One2many('pos.session.client_line', 'session_id', compute='get_client_lines', string="Lignes par client")
     total_sales = fields.Monetary(compute='get_sales', string="Total des ventes")
     fuel_sales = fields.Monetary(compute='get_sales', string="Ventes carburant")
     other_sales = fields.Monetary(compute='get_sales', string="Ventes autre")
@@ -38,7 +38,7 @@ class PosSession(models.Model):
             log.pump_id.counter = log.new_counter
         return super().action_pos_session_closing_control()
 
-    @api.onchange('order_ids')
+    @api.depends('order_ids')
     def get_client_lines(self):
         self.client_line_ids.unlink()
         partners = self.order_ids.mapped('partner_id')
@@ -54,9 +54,9 @@ class PosSession(models.Model):
             total += order.amount_total
             for line in order.lines:
                 if line.product_id.pump_ids:
-                    fuel += line.price_total
+                    fuel += line.price_subtotal_incl
                 else:
-                    other += line.price_total
+                    other += line.price_subtotal_incl
         self.total_sales = total
         self.fuel_sales = fuel
         self.other_sales = other
@@ -117,11 +117,11 @@ class PosSessionLog(models.Model):
     _name = 'pos.session.log'
     _description = 'Log'
 
-    session_id = fields.Many2one('sale.session', ondelete='cascade')
+    session_id = fields.Many2one('pos.session', ondelete='cascade')
     pump_id = fields.Many2one('stock.location.pump', ondelete='cascade', string="Pompe")
     old_counter = fields.Float(digits='Product Unit Of Measure', string="Ancien compteur")
     new_counter = fields.Float(digits='Product Unit Of Measure', required=True, default=0, string="Nouveau compteur")
-    diff = fields.Float(digits='Product Unit Of Measure', compute='get_diff', string="Difference")
+    diff = fields.Float(digits='Product Unit Of Measure', compute='get_diff', string="Difference", store=True)
 
     @api.depends('new_counter', 'old_counter')
     def get_diff(self):

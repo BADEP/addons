@@ -40,13 +40,12 @@
             <field name="model">pos.session</field>
             <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
             <field name="arch" type="xml">
-                <!--                    <header>-->
-                <!--						<button name="action_import_data" string="Importer les données" type="object" groups="base.group_user" attrs="{'invisible': [('state', '!=', 'draft')]}"/>-->
-                <!--						<button name="action_confirm" string="Confirmer" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('state', '!=', 'draft')]}"/>-->
-                <!--						<button name="action_force" string="Forcer la clotûre" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('state', '!=', 'except')]}" confirm="Any residual quantity will be processed as stock loss. Do you want to continue?"/>-->
-                <!--                </header>-->
+                <header position="inside">
+                    <button name="action_import_data" string="Importer les données" type="object"/>
+            </header>
                 <notebook position="inside">
-                    <page string="Log">
+                    <page string="Log Carburant">
+                        <separator string="Compteurs" name="log"/>
                         <field name="log_ids">
                             <tree string="Log" create="false" delete="false" editable="bottom">
                                 <field name="pump_id" readonly="True"/>
@@ -55,8 +54,16 @@
                                 <field name="diff"/>
                             </tree>
                         </field>
-                    </page>
-                    <page string="Commandes">
+                        <separator string="Produits"/>
+                        <field name="line_ids">
+                            <tree decoration-danger="diff_qty != 0" create="false" delete="false" editable="bottom">
+                                <field name="product_id"/>
+                                <field name="log_qty"/>
+                                <field name="sale_qty"/>
+                                <field name="diff_qty"/>
+                            </tree>
+                        </field>
+                        <separator string="Commandes" name="commandes"/>
                         <field name="order_ids">
                             <tree string="Commandes" create="false" delete="false" editable="none">
                                 <field name="name"/>
@@ -68,34 +75,23 @@
                                        decoration-success="state not in ('draft','cancel')"/>
                             </tree>
                         </field>
-                        <label for="client_line_ids"/>
-                        <field name="client_line_ids">
-                            <tree string="Lignes par client" create="false" delete="false" editable="bottom">
-                                <field name="partner_id"/>
-                                <field name="order_count" sum="Nombre total"/>
-                                <field name="sale_amount" sum="Total"/>
-                            </tree>
-                        </field>
+<!--                        <label for="client_line_ids"/>-->
+<!--                        <field name="client_line_ids">-->
+<!--                            <tree string="Lignes par client" create="false" delete="false" editable="bottom">-->
+<!--                                <field name="partner_id"/>-->
+<!--                                <field name="order_count" sum="Nombre total"/>-->
+<!--                                <field name="sale_amount" sum="Total"/>-->
+<!--                            </tree>-->
+<!--                        </field>-->
+                        <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                            <field name="fuel_sales" widget='monetary'/>
+                            <field name="other_sales" widget='monetary'/>
+                            <div class="oe_subtotal_footer_separator oe_inline">
+                                <label for="total_sales"/>
+                            </div>
+                            <field name="total_sales" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary'/>
+                        </group>
                     </page>
-                    <h1>
-                        <label for="line_ids"/>
-                    </h1>
-                    <field name="line_ids">
-                        <tree colors="red:diff_qty!=0" create="false" delete="false" editable="bottom">
-                            <field name="product_id"/>
-                            <field name="log_qty"/>
-                            <field name="sale_qty"/>
-                            <field name="diff_qty"/>
-                        </tree>
-                    </field>
-                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
-                        <field name="fuel_sales" widget='monetary'/>
-                        <field name="other_sales" widget='monetary'/>
-                        <div class="oe_subtotal_footer_separator oe_inline">
-                            <label for="total_sales"/>
-                        </div>
-                        <field name="total_sales" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary'/>
-                    </group>
                 </notebook>
             </field>
         </record>
