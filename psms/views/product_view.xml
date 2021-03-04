@@ -7,11 +7,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='general_information']" position="after">
 					<page string="Pompes">
-	                	<field name="pump_ids" widget="one2many_list">
+	                	<field name="pump_ids">
 							<tree string="Pompes" editable="bottom">
-								<field name="name" />
-								<field name="location" />
-								<field name="counter" />
+								<field name="name"/>
+								<field name="location_id"/>
+								<field name="counter"/>
 							</tree>
 						</field>
 					</page>

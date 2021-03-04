@@ -68,8 +68,8 @@
                                        decoration-success="state not in ('draft','cancel')"/>
                             </tree>
                         </field>
-                        <label for="client_lines"/>
-                        <field name="client_lines">
+                        <label for="client_line_ids"/>
+                        <field name="client_line_ids">
                             <tree string="Lignes par client" create="false" delete="false" editable="bottom">
                                 <field name="partner_id"/>
                                 <field name="order_count" sum="Nombre total"/>
@@ -78,9 +78,9 @@
                         </field>
                     </page>
                     <h1>
-                        <label for="lines"/>
+                        <label for="line_ids"/>
                     </h1>
-                    <field name="lines">
+                    <field name="line_ids">
                         <tree colors="red:diff_qty!=0" create="false" delete="false" editable="bottom">
                             <field name="product_id"/>
                             <field name="log_qty"/>
