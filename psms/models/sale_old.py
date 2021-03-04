@@ -1,186 +1,8 @@
-from odoo import models, fields, api, exceptions, _
-import odoo.addons.decimal_precision as dp
-from odoo.exceptions import UserError
-
-
-class PosSession(models.Model):
-    _inherit = 'pos.session'
-
-    #TODO: replace all logic by pos_orders
-    #order_ids = fields.One2many('sale.order', 'session', readonly=True, states={'draft': [('readonly', False)]},
-    #                              string="Bons de commande")
-
-    log_ids = fields.One2many('pos.session.log', 'session')
-    line_ids = fields.One2many('pos.session.line', 'session', string='Lignes de carburant')
-    client_line_ids = fields.One2many('pos.session.client_line', 'session', string="Lignes par client")
-    total_sales = fields.Float(digits_compute=dp.get_precision('Product Price'), compute='get_sales',
-                               string="Total des ventes")
-    fuel_sales = fields.Float(digits_compute=dp.get_precision('Product Price'), compute='get_sales',
-                              string="Ventes carburant")
-    other_sales = fields.Float(digits_compute=dp.get_precision('Product Price'), compute='get_sales',
-                               string="Ventes autre")
-
-    # def action_confirm(self):
-    #     count = self.search_count([('state', '!=', 'done'), ('date', '<', self.date)])
-    #     if count > 0:
-    #         raise UserError('Une session antérieure est encore ouverte')
-    #     for log in self.logs:
-    #         if log.diff < 0:
-    #             raise UserError('Log cannot be of a negative value')
-    #     for line in self.lines:
-    #         if abs(line.diff_qty) > 1:
-    #             self.state = 'except'
-    #             return False
-    #     self.state = 'done'
-
-    @api.onchange('log_ids')
-    def update_line(self):
-        for line in self.line_ids:
-            log_qty = 0
-            for log in self.log_ids:
-                if log.pump_id.product_id.id == line.product_id.id:
-                    log_qty += log.diff
-            line.log_qty = log_qty
-
-    #todo: replace by session closing
-    def action_pos_session_closing_control(self):
-        for log in self.log_ids:
-            log.pump_id.counter = log.new_counter
-        return super().action_pos_session_closing_control()
-
-    @api.onchange('order_ids')
-    def get_client_lines(self):
-        self.client_line_ids.unlink()
-        self.client_lines = []
-        partners = self.order_ids.mapped('partner_id')
-        for partner in partners:
-            self.client_line_ids |= self.env['pos.session.client_line'].new({'partner': partner.id, 'session': self.id})
-
-    @api.depends('order_ids')
-    def get_sales(self):
-        other = 0
-        total = 0
-        fuel = 0
-        for order in self.order_ids:
-            total += order.amount_total
-            for line in order.order_line:
-                if line.product_id.pumps:
-                    fuel += line.price_total
-                else:
-                    other += line.price_total
-        self.total_sales = total
-        self.fuel_sales = fuel
-        self.other_sales = other
-
-    def action_import_data(self):
-        count = self.search_count([('state', '!=', 'done'), ('date', '<', self.date)])
-        if count > 0:
-            UserError('Une session antérieure est encore ouverte')
-        self.logs.unlink()
-        self.write({'logs': [(0, 0, {'session': self.id, 'pump': x.id, 'old_counter': x.counter}) for x in
-                             self.env['stock.location.pump'].search(
-                                 [('location', 'child_of', self.warehouse.view_location_id.id)])]})
-        self.order_ids.write({'session': False})
-        order_ids = self.env['sale.order'].search(
-            [('session', '=', False), ('date_order', '>=', self.date), ('warehouse_id', '=', self.warehouse.id)])
-        self.write({'order_ids': [(4, x.id) for x in order_ids]})
-        products = self.logs.mapped('pump.product')
-        self.lines.unlink()
-        self.write({'lines': [(0, 0, {'product': x.id, 'session': self.id}) for x in products]})
-
-    @api.onchange('date')
-    def onchange_date(self):
-        self.lines.unlink()
-        self.logs.unlink()
-        self.order_ids.unlink()
-
-class PosSessionLine(models.Model):
-    _name = 'pos.session.line'
-    _description = 'Ligne de carburant'
-
-    product_id = fields.Many2one('product.product', readonly=True, string="Article")
-    log_qty = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_log',
-                           string="Variance compteur")
-    sale_qty = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_sales', string='Ventes')
-    diff_qty = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_diff', string='Différence')
-    session_id = fields.Many2one('pos.session', ondelete='cascade')
-
-    @api.depends('session_id.order_ids')
-    def get_sales(self):
-        sales = 0
-        for rec in self:
-            for order in rec.session.order_ids:
-                for line in order.order_line:
-                    if line.product_id.id == rec.product.id:
-                        sales += line.product_uom_qty
-        self.sale_qty = sales
-
-    @api.depends('log_qty', 'sale_qty')
-    def get_diff(self):
-        for rec in self:
-            rec.diff_qty = rec.log_qty - rec.sale_qty
-
-    @api.depends('session.logs')
-    def get_log(self):
-        for r in self:
-            log_qty = 0
-            for log in r.session.logs:
-                for rec in log:
-                    if rec.pump.product.id == r.product.id:
-                        log_qty += rec.diff
-            r.log_qty = log_qty
-
-
-class sale_session_client_line(models.Model):
-    _name = 'sale.session.client_line'
-    _description = 'Ligne de vente client'
-
-    partner = fields.Many2one('res.partner', readonly=True, string="Client")
-    order_count = fields.Integer(compute='get_sales_and_count', string="Nombre de commandes")
-    sale_qty = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_sales_and_count',
-                            string="Ventes")
-    session = fields.Many2one('sale.session', ondelete='cascade')
-
-    @api.depends('session.order_ids')
-    def get_sales_and_count(self):
-        sales = 0
-        count = 0
-        for order in self.session.order_ids:
-            if order.partner_id.id == self.partner.id:
-                sales += order.amount_total
-                count += 1
-        self.sale_qty = sales
-        self.order_count = count
-
-
-class sale_session_log(models.Model):
-    _name = 'sale.session.log'
-    _description = 'Log'
-
-    session = fields.Many2one('sale.session', ondelete='cascade')
-    pump = fields.Many2one('stock.location.pump', ondelete='cascade', string="Pompe")
-    old_counter = fields.Float(digits_compute=dp.get_precision('Product UoS'), string="Ancien compteur")
-    new_counter = fields.Float(digits_compute=dp.get_precision('Product UoS'), required=True, default=0,
-                               string="Nouveau compteur")
-    diff = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_diff', string="Difference")
-    electric_counter = fields.Float(digits_compute=dp.get_precision('Product UoS'), compute='get_electric_counter',
-                                    string="Compteur électrique")
-
-    @api.depends('new_counter', 'old_counter')
-    def get_diff(self):
-        for rec in self:
-            rec.diff = rec.new_counter - rec.old_counter
-
-    @api.depends('new_counter')
-    def get_electric_counter(self):
-        for rec in self:
-            rec.electric_counter = rec.new_counter + rec.pump.electric_diff
-
+from odoo import models, fields, api
 
 class sale_order(models.Model):
     _inherit = 'sale.order'
 
-    session = fields.Many2one('sale.session', ondelete='set null')
     vouchers_delivered = fields.One2many('sale.order.voucher', 'sale_order_delivered', readonly=True,
                                          states={'draft': [('readonly', False)]}, string="Bons d'échange donnés")
     vouchers_taken = fields.One2many('sale.order.voucher', 'sale_order_taken', readonly=True,
@@ -216,7 +38,7 @@ class sale_order_voucher(models.Model):
         readonly=True, copy=False, select=True, default='draft')
     taxes = fields.Many2many('account.tax', string='Taxes', store=True)
 
-    @api.onchange('product')
+    @api.onchange('product_id')
     def onchange_product(self):
         if self.product:
             self.uom = self.product.uom_id
@@ -337,8 +159,3 @@ class sale_order_old(models.Model):
     #                 self.env.cr.execute('insert into sale_order_invoice_rel (order_id,invoice_id) values (%s,%s)', (order.id, res))
     #                 self.invalidate_cache(['invoice_ids'], [order.id], context=context)
     #     return res
-
-
-class hr_employee(models.Model):
-    _inherit = 'hr.employee'
-    responsable = fields.Boolean(default=False)

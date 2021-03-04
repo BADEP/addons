@@ -1,4 +1,3 @@
-<?xml version="1.0" encoding="utf-8"?>
 <odoo>
     <data>
         <record id="product_psms_form_view" model="ir.ui.view">
@@ -8,13 +7,11 @@
             <field name="arch" type="xml">
                 <xpath expr="//page[@name='general_information']" position="after">
 					<page string="Pompes">
-	                	<field name="pumps" widget="one2many_list">
+	                	<field name="pump_ids" widget="one2many_list">
 							<tree string="Pompes" editable="bottom">
 								<field name="name" />
 								<field name="location" />
 								<field name="counter" />
-								<field name="electric_diff" />
-								<field name="electric_counter" />
 							</tree>
 						</field>
 					</page>

@@ -1,0 +1,103 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+        <!--        <record id="sale_psms_form_view" model="ir.ui.view">-->
+        <!--            <field name="name">psms.sale_psms_form_view</field>-->
+        <!--            <field name="model">sale.order</field>-->
+        <!--            <field name="inherit_id" ref="sale.view_order_form" />-->
+        <!--            <field name="arch" type="xml">-->
+        <!--                <xpath expr="//field[@name='partner_id']" position="after">-->
+        <!--					<field name="delivery_order_ref" />-->
+        <!--                </xpath>-->
+        <!--                <xpath expr="//page[@name='order_lines']" position="after">-->
+        <!--                	<page string="Bons d'échange donnés" name="test">-->
+        <!--						<field name="vouchers_delivered">-->
+        <!--							<tree string="Bons d'échange donnés" editable="bottom">-->
+        <!--								<field name="name" />-->
+        <!--								<field name="product" />-->
+        <!--								<field name="uom" />-->
+        <!--								<field name="quantity" />-->
+        <!--								<field name="price_unit" />-->
+        <!--								<field name="taxes" widget="many2many_tags"/>-->
+        <!--								<field name="price_total" sum="Total"/>-->
+        <!--							</tree>-->
+        <!--						</field>-->
+        <!--					</page>-->
+        <!--                	<page string="Bons d'échange reçus">-->
+        <!--						<field name="vouchers_taken" widget="many2many" options="{'no_create': True}" domain="[('sale_order_taken','=',False)]">-->
+        <!--							<tree string="Bons d'échange reçus" editable="bottom">-->
+        <!--								<field name="name" readonly="True"/>-->
+        <!--								<field name="price_total" sum="Total" readonly="True"/>-->
+        <!--							</tree>-->
+        <!--						</field>-->
+        <!--					</page>-->
+        <!--                </xpath>-->
+        <!--			</field>-->
+        <!--        </record>-->
+
+        <record id="view_session_form" model="ir.ui.view">
+            <field name="name">pos.session.form</field>
+            <field name="model">pos.session</field>
+            <field name="inherit_id" ref="point_of_sale.view_pos_session_form"/>
+            <field name="arch" type="xml">
+                <!--                    <header>-->
+                <!--						<button name="action_import_data" string="Importer les données" type="object" groups="base.group_user" attrs="{'invisible': [('state', '!=', 'draft')]}"/>-->
+                <!--						<button name="action_confirm" string="Confirmer" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('state', '!=', 'draft')]}"/>-->
+                <!--						<button name="action_force" string="Forcer la clotûre" type="object" class="oe_highlight" groups="base.group_user" attrs="{'invisible': [('state', '!=', 'except')]}" confirm="Any residual quantity will be processed as stock loss. Do you want to continue?"/>-->
+                <!--                </header>-->
+                <notebook position="inside">
+                    <page string="Log">
+                        <field name="log_ids">
+                            <tree string="Log" create="false" delete="false" editable="bottom">
+                                <field name="pump_id" readonly="True"/>
+                                <field name="old_counter" readonly="True"/>
+                                <field name="new_counter"/>
+                                <field name="diff"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <page string="Commandes">
+                        <field name="order_ids">
+                            <tree string="Commandes" create="false" delete="false" editable="none">
+                                <field name="name"/>
+                                <field name="currency_id" invisible="1"/>
+                                <field name="pos_reference"/>
+                                <field name="partner_id"/>
+                                <field name="amount_total" sum="Total Tax Included"/>
+                                <field name="state" widget="badge" decoration-info="state == 'draft'"
+                                       decoration-success="state not in ('draft','cancel')"/>
+                            </tree>
+                        </field>
+                        <label for="client_lines"/>
+                        <field name="client_lines">
+                            <tree string="Lignes par client" create="false" delete="false" editable="bottom">
+                                <field name="partner_id"/>
+                                <field name="order_count" sum="Nombre total"/>
+                                <field name="sale_amount" sum="Total"/>
+                            </tree>
+                        </field>
+                    </page>
+                    <h1>
+                        <label for="lines"/>
+                    </h1>
+                    <field name="lines">
+                        <tree colors="red:diff_qty!=0" create="false" delete="false" editable="bottom">
+                            <field name="product_id"/>
+                            <field name="log_qty"/>
+                            <field name="sale_qty"/>
+                            <field name="diff_qty"/>
+                        </tree>
+                    </field>
+                    <group class="oe_subtotal_footer oe_right" colspan="2" name="sale_total">
+                        <field name="fuel_sales" widget='monetary'/>
+                        <field name="other_sales" widget='monetary'/>
+                        <div class="oe_subtotal_footer_separator oe_inline">
+                            <label for="total_sales"/>
+                        </div>
+                        <field name="total_sales" nolabel="1" class="oe_subtotal_footer_separator" widget='monetary'/>
+                    </group>
+                </notebook>
+            </field>
+        </record>
+    </data>
+</odoo>
