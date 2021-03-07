@@ -75,6 +75,21 @@
                                        decoration-success="state not in ('draft','cancel')"/>
                             </tree>
                         </field>
+                        <separator string="Bons d'échange" name="coupons"/>
+                        <field name="used_coupon_ids">
+                            <tree>
+                                <field name="code"/>
+                                <field name="partner_id"/>
+                                <field name="pos_order_id"/>
+                            </tree>
+                        </field>
+                        <field name="generated_coupon_ids">
+                            <tree>
+                                <field name="code"/>
+                                <field name="partner_id"/>
+                                <field name="pos_order_id"/>
+                            </tree>
+                        </field>
 <!--                        <label for="client_line_ids"/>-->
 <!--                        <field name="client_line_ids">-->
 <!--                            <tree string="Lignes par client" create="false" delete="false" editable="bottom">-->
