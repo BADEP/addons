@@ -9,6 +9,14 @@ class PosSession(models.Model):
     total_sales = fields.Monetary(compute='get_sales', string="Total des ventes")
     fuel_sales = fields.Monetary(compute='get_sales', string="Ventes carburant")
     other_sales = fields.Monetary(compute='get_sales', string="Ventes autre")
+    used_coupon_ids = fields.Many2many('coupon.coupon', compute='get_used_coupons')
+    generated_coupon_ids = fields.Many2many('coupon.coupon', compute='get_used_coupons')
+
+    @api.depends('order_ids')
+    def get_used_coupons(self):
+        for rec in self:
+            rec.used_coupon_ids = rec.order_ids.mapped('used_coupon_ids')
+            rec.generated_coupon_ids = rec.order_ids.mapped('generated_coupon_ids')
 
     # def action_confirm(self):
     #     count = self.search_count([('state', '!=', 'done'), ('date', '<', self.date)])
