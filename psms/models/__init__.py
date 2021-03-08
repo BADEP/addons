@@ -1,1 +1,1 @@
-from . import pos_session, stock
+from . import pos_session, stock, coupon

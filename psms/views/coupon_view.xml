@@ -1,0 +1,66 @@
+<odoo>
+    <data>
+
+        <record id="psms_coupon_program_view_form" model="ir.ui.view">
+            <field name="name">psms.coupon.program.form.psms</field>
+            <field name="model">coupon.program</field>
+            <field name="priority" eval="1"/>
+            <field name="arch" type="xml">
+                    <header modifiers="{}">
+                        <button type="action" name="560" string="Générer les bons d'échange" attrs="{'invisible': [('active', '=', False)]}" modifiers="{'invisible':[['active','=',false]]}" options="{}"/>
+                        <button type="action" name="560" string="Générer les bons d'échange" attrs="{'invisible': [('active', '=', True)]}" class="oe_highlight" modifiers="{'invisible':[['active','=',true]]}" options="{}"/>
+                    </header>
+
+                    <sheet>
+
+                        <form string="Bon d'échange">
+                        <div class="oe_button_box" name="button_box">
+                            <button class="oe_stat_button" type="action" icon="fa-ticket" name="%(coupon.coupon_action)d">
+                                <field name="coupon_count" string="Coupons" widget="statinfo"/>
+                            </button>
+                            <button class="oe_stat_button" type="object" icon="fa-usd" name="action_view_pos_orders" modifiers="{}" options="{}">
+                                <field name="pos_order_count" string="PoS Sales" widget="statinfo" modifiers="{'readonly':true}" id="pos_order_count"/>
+                            </button>
+                        </div>
+                               <group colspan="4" col="4">
+                                   <field name="name" />
+                                   <field name="partner_id" />
+                                   <field name="discount_type"  readonly="1"/>
+                                   <field name="discount_fixed_amount"/>
+                                   <field name="active" />
+                               </group>
+                            </form>
+                </sheet>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_psms_coupon_program_form">
+                <field name="name">Générateur de bons d'échange</field>
+                <field name="res_model">coupon.program</field>
+                <field name="view_mode">tree,form</field>
+        </record>
+
+        <menuitem id="menu_psms_bon_d_echange"
+                  parent="point_of_sale.pos_config_menu_catalog"
+                  action="action_psms_coupon_program_form"
+                  sequence="100"
+                  name="Générateur de bon d'échange"/>
+
+    <record id="coupon_coupon_view_form" model="ir.ui.view">
+        <field name="name">coupon.coupon.psms.form</field>
+        <field name="model">coupon.coupon</field>
+        <field name="inherit_id" ref="coupon.coupon_view_form"/>
+        <field name="mode">primary</field>
+        <field name="priority" eval="10"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='partner_id']" position="after">
+                <field name="consumed_amount"/>
+                <field name="remaining_amount"/>
+            </xpath>
+        </field>
+    </record>
+
+
+
+    </data>
+</odoo>
