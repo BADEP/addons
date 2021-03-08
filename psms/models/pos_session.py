@@ -6,9 +6,9 @@ class PosSession(models.Model):
     log_ids = fields.One2many('pos.session.log', 'session_id')
     line_ids = fields.One2many('pos.session.line', 'session_id', string='Lignes de carburant')
     client_line_ids = fields.One2many('pos.session.client_line', 'session_id', compute='get_client_lines', string="Lignes par client")
-    total_sales = fields.Monetary(compute='get_sales', string="Total des ventes")
-    fuel_sales = fields.Monetary(compute='get_sales', string="Ventes carburant")
-    other_sales = fields.Monetary(compute='get_sales', string="Ventes autre")
+    total_sales = fields.Monetary(compute='get_sales', string="Espéces")
+    fuel_sales = fields.Monetary(compute='get_sales', string="Total des ventes")
+    other_sales = fields.Monetary(compute='get_sales', string="Bons d'changes")
     used_coupon_ids = fields.Many2many('coupon.coupon', compute='get_used_coupons')
     generated_coupon_ids = fields.Many2many('coupon.coupon', compute='get_used_coupons')
 
@@ -61,7 +61,7 @@ class PosSession(models.Model):
         for order in self.order_ids:
             total += order.amount_total
             for line in order.lines:
-                if line.product_id.pump_ids:
+                if len(line.product_id.pump_ids) != 0:
                     fuel += line.price_subtotal_incl
                 else:
                     other += line.price_subtotal_incl
@@ -77,7 +77,6 @@ class PosSession(models.Model):
         products = self.log_ids.mapped('pump_id.product_id')
         self.line_ids.unlink()
         self.write({'line_ids': [(0, 0, {'product_id': x.id, 'session_id': self.id}) for x in products]})
-
 
 class PosSessionLine(models.Model):
     _name = 'pos.session.line'

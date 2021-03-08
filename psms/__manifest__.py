@@ -5,15 +5,17 @@
     'description': """
     """,
     'author': 'BADEP, Pragmatic System',
-    'website': 'http://www.badep.ma, http://pragmatic-system.ma',
+    'website': 'https://www.badep.ma   https://pragmatic-system.ma',
     'depends': [
         'point_of_sale',
-        'sale_management'
+        'sale_management',
+        'pos_coupon',
     ],
     'data': [
         'views/product_view.xml',
         'views/sale_view.xml',
-         'security/ir.model.access.csv'
+        'views/coupon_view.xml',
+        'security/ir.model.access.csv'
     ],
     'installable': True,
     'application': True,
