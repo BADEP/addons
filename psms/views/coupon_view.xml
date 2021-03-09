@@ -54,8 +54,7 @@
         <field name="priority" eval="10"/>
         <field name="arch" type="xml">
             <xpath expr="//field[@name='partner_id']" position="after">
-                <field name="consumed_amount"/>
-                <field name="remaining_amount"/>
+                <field name="amount" readonly="1"/>
             </xpath>
         </field>
     </record>
