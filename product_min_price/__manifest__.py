@@ -28,5 +28,5 @@
         'views/product_view.xml',
     ],
     'price': 9.00,
-    'currency': 'USD',
+    'currency': 'EUR',
 }

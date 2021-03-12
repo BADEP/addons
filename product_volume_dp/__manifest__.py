@@ -18,5 +18,5 @@
         'data/dp_data.xml'
     ],
     'price': 9.00,
-    'currency': 'USD',
+    'currency': 'EUR',
 }

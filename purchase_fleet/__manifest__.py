@@ -30,5 +30,5 @@
         'views/fleet_view.xml',
     ],
     'price': 29.00,
-    'currency': 'USD',
+    'currency': 'EUR',
 }
