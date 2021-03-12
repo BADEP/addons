@@ -1,0 +1,5 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_stock_location_pump,stock.location.pump,model_stock_location_pump,base.group_user,1,1,1,1
+access_pos_session_line,pos.session.line,model_pos_session_line,base.group_user,1,1,1,1
+access_pos_session_client_line,pos.session.client_line,model_pos_session_client_line,base.group_user,1,1,1,1
+access_pos_session_log,pos.session.log,model_pos_session_log,base.group_user,1,1,1,1
