@@ -15,6 +15,9 @@
                 <field name="driver_id" position="after">
                     <field name="picking_ok" />
                 </field>
+                <field name="car_value" position="after">
+                    <field name="stock_location_id"/>
+                </field>
             </field>
         </record>
     </data>

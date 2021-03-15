@@ -14,6 +14,9 @@ class StockPicking(models.Model):
             self.driver = self.vehicle.driver_id
         else:
             self.driver = False
+        #todo: initialise picking location on vehicle location
+        if self.vehicle and self.vehicle.stock_location_id:
+            pass
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
