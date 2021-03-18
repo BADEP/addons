@@ -16,7 +16,30 @@ class StockPicking(models.Model):
             self.driver = False
         #todo: initialise picking location on vehicle location
         if self.vehicle and self.vehicle.stock_location_id:
+            if self.picking_type_id.code == 'incoming':
+                self.location_dest_id = self.vehicle.stock_location_id
+                for m in self.move_lines:
+                    m.location_dest_id = self.vehicle.stock_location_id
+                    for ml in m.move_line_ids:
+                        ml.location_dest_id = self.vehicle.stock_location_id
+            elif self.picking_type_id.code == 'outgoing':
+                self.location_id = self.vehicle.stock_location_id
+                for m in self.move_lines:
+                    m.location_id = self.vehicle.stock_location_id
+                    for ml in m.move_line_ids:
+                        ml.location_id = self.vehicle.stock_location_id
             pass
+    @api.model
+    def create(self, vals):
+        if vals.get('vehicle') and vals.get('picking_type_id'):
+            vehicle = self.env['fleet.vehicle'].browse(vals['vehicle'])
+            picking_type_id = self.env['stock.picking.type'].browse(vals['picking_type_id'])
+            if vehicle.stock_location_id:
+                if picking_type_id.code == 'incoming':
+                    vals.update({'location_dest_id': vehicle.stock_location_id.id})
+                elif picking_type_id.code == 'outgoing':
+                    vals.update({'location_id': vehicle.stock_location_id.id})
+        return super().create(vals)
 
 class StockMove(models.Model):
     _inherit = 'stock.move'
