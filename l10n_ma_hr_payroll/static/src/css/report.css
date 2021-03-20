@@ -1,0 +1,17 @@
+.text_setting{
+    font-size:400px;
+}
+
+.underline-text{
+    text-decoration: underline !important;
+}
+.clearfloat {
+    clear: both;
+    float: none;
+    width: 1px;
+    border: none;
+    display: block;
+}
+.page {
+    padding: 50px 0px;
+}
