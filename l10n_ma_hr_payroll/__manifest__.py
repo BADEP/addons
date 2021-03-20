@@ -5,8 +5,8 @@
     'author': 'BADEP, rhfree.com',
     'website': 'https://badep.ma, http://rhfree.com',
     "license": "AGPL-3",
-    "version": "13.0.2",
-    'depends': ['payroll'],
+    "version": "14.0.2",
+    'depends': ['hr_payroll_community'],
 
     'description': """Moroccan Payroll Rules Basic Version.
 ======================

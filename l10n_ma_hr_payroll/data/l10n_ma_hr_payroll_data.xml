@@ -5,7 +5,7 @@
         <record id="SALC" model="hr.salary.rule.category">
             <field name="name">Charges Salariales</field>
             <field name="code">SALC</field>
-            <field name="parent_id" ref="payroll.DED"/>
+            <field name="parent_id" ref="hr_payroll_community.DED"/>
         </record>
         <record id="DEDIRPP" model="hr.salary.rule.category">
             <field name="name">Déduction d'impôt</field>
@@ -43,7 +43,7 @@
             <field name="name">Primes et Indemnités taxables divers</field>
             <field name="code">INDMTD</field>
             <field name="sequence">10</field>
-            <field name="category_id" ref="payroll.ALW"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
             <field name="amount_select">code</field>
             <field name="condition_select">python</field>
             <field name="condition_python">result = inputs.INDMTD.amount > 0</field>
@@ -54,7 +54,7 @@
             <field name="name">Primes et Indemnités taxables 1</field>
             <field name="code">INDMT1</field>
             <field name="sequence">11</field>
-            <field name="category_id" ref="payroll.ALW"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = contract.it1</field>
             <field name="condition_select">python</field>
@@ -65,7 +65,7 @@
             <field name="name">Primes et Indemnités taxables 2</field>
             <field name="code">INDMT2</field>
             <field name="sequence">12</field>
-            <field name="category_id" ref="payroll.ALW"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = contract.it2</field>
             <field name="condition_select">python</field>
@@ -76,7 +76,7 @@
             <field name="name">Primes et Indemnités taxables 3</field>
             <field name="code">INDMT3</field>
             <field name="sequence">13</field>
-            <field name="category_id" ref="payroll.ALW"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = contract.it3</field>
             <field name="condition_select">python</field>
@@ -87,7 +87,7 @@
             <field name="name">Primes et Indemnités taxables 4</field>
             <field name="code">INDMT4</field>
             <field name="sequence">14</field>
-            <field name="category_id" ref="payroll.ALW"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = contract.it4</field>
             <field name="condition_select">python</field>
@@ -98,18 +98,18 @@
             <field name="name">Primes et Indemnités taxables 5</field>
             <field name="code">INDMT5</field>
             <field name="sequence">15</field>
-            <field name="category_id" ref="payroll.ALW"/>
+            <field name="category_id" ref="hr_payroll_community.ALW"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = contract.it5</field>
             <field name="condition_select">python</field>
             <field name="condition_python">result = contract.it5 > 0</field>
             <field name="appears_on_payslip" eval="True"/>
         </record>
-        <record id="payroll.hr_rule_taxable" model="hr.salary.rule">
+        <record id="hr_payroll_community.hr_rule_taxable" model="hr.salary.rule">
             <field name="name">Salaire Brut</field>
             <field name="code">BRUT</field>
             <field name="sequence">100</field>
-            <field name="category_id" ref="payroll.GROSS"/>
+            <field name="category_id" ref="hr_payroll_community.GROSS"/>
             <field name="amount_python_compute">result = categories.BASIC + categories.ALW + categories.DED</field>
             <field name="appears_on_payslip" eval="False"/>
         </record>
@@ -204,7 +204,7 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
         <record id="hr_rule_IRPP" model="hr.salary.rule">
             <field name="name">Impôt sur le Revenue Prélévé</field>
             <field name="sequence">3000</field>
-            <field name="category_id" ref="payroll.DED"/>
+            <field name="category_id" ref="hr_payroll_community.DED"/>
             <field name="code">IRPP</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = min(IR + categories.DEDIRPP, 0)</field>
@@ -290,7 +290,7 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
             <field name="code">AVS</field>
             <field name="name">Avance sur Salaire</field>
             <field name="sequence">9000</field>
-            <field name="category_id" ref="payroll.DED"/>
+            <field name="category_id" ref="hr_payroll_community.DED"/>
             <field name="condition_select">python</field>
             <field name="amount_select">code</field>
             <field name="condition_python">result = inputs.AVS.amount > 0</field>
@@ -298,15 +298,15 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
             <field name="appears_on_payslip" eval="True"/>
             <field eval="150" name="amount_fix"/>
         </record>
-        <record id="payroll.hr_rule_net" model="hr.salary.rule">
+        <record id="hr_payroll_community.hr_rule_net" model="hr.salary.rule">
             <field name="name">Net</field>
             <field name="sequence">10000</field>
-            <field name="category_id" ref="payroll.NET"/>
+            <field name="category_id" ref="hr_payroll_community.NET"/>
             <field name="amount_python_compute">result = round(BRUT + categories.INDMNT + categories.DED)</field>
             <field name="note">C'est le salaire Net qui est le salaire Brut - toutes les retenues</field>
         </record>
         <record id="hr_payroll_rules_CNSS_employer" model="hr.salary.rule">
-            <field name="category_id" ref="payroll.COMP"/>
+            <field name="category_id" ref="hr_payroll_community.COMP"/>
             <field name="name">CNSS Patronale</field>
             <field name="code">CNSSP</field>
             <field name="sequence">10001</field>
@@ -317,7 +317,7 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
             <field name="appears_on_payslip" eval="False"/>
         </record>
         <record id="hr_payroll_rules_AMO_employer" model="hr.salary.rule">
-            <field name="category_id" ref="payroll.COMP"/>
+            <field name="category_id" ref="hr_payroll_community.COMP"/>
             <field name="name">AMO patronale</field>
             <field name="code">AMOP</field>
             <field name="sequence">10002</field>
@@ -328,7 +328,7 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
             <field name="appears_on_payslip" eval="False"/>
         </record>
         <record id="hr_payroll_rules_C1_employer" model="hr.salary.rule">
-            <field name="category_id" ref="payroll.COMP"/>
+            <field name="category_id" ref="hr_payroll_community.COMP"/>
             <field name="name">Participation AMO</field>
             <field name="code">C1PA</field>
             <field name="sequence">10003</field>
@@ -339,7 +339,7 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
             <field name="appears_on_payslip" eval="False"/>
         </record>
         <record id="hr_payroll_rules_frais_pro" model="hr.salary.rule">
-            <field name="category_id" ref="payroll.COMP"/>
+            <field name="category_id" ref="hr_payroll_community.COMP"/>
             <field name="name">Frais Formation professionnelle</field>
             <field name="code">FPRO</field>
             <field name="sequence">10004</field>
@@ -350,7 +350,7 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
             <field name="register_id" ref="hr_CNSS_register"/>
         </record>
         <record id="hr_payroll_rules_alloc_fam" model="hr.salary.rule">
-            <field name="category_id" ref="payroll.COMP"/>
+            <field name="category_id" ref="hr_payroll_community.COMP"/>
             <field name="name">Frais Allocations familiales</field>
             <field name="code">alloc</field>
             <field name="sequence">10005</field>
@@ -403,7 +403,7 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
             <field name="code">Ma_Base</field>
             <field name="name">Paie Marocaine</field>
             <field eval="[(6, 0, [
-                ref('payroll.hr_rule_basic'),
+                ref('hr_payroll_community.hr_rule_basic'),
                 ref('hr_rule_INDMTD'),
                 ref('hr_rule_INDMT1'),
                 ref('hr_rule_INDMT2'),
@@ -423,11 +423,11 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
                 ref('hr_payroll_rules_frpro'),
                 ref('hr_payroll_rules_IR'),
                 ref('hr_payroll_rules_MARIE'),
-                ref('payroll.hr_rule_taxable'),
+                ref('hr_payroll_community.hr_rule_taxable'),
                 ref('hr_payroll_rules_ENF1'),
                 ref('hr_payroll_rules_frais_pro'),
                 ref('hr_payroll_rules_alloc_fam'),
-                ref('payroll.hr_rule_net'),
+                ref('hr_payroll_community.hr_rule_net'),
                 ref('hr_rule_total'),
                 ref('hr_rule_total_charges_salariales'),
                 ref('hr_rule_total_retenues'),
@@ -438,7 +438,7 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
                 ref('hr_rule_IRPP')])]"
                    name="rule_ids"/>
             <field name="company_id" ref="base.main_company"/>
-            <field name="parent_id" ref="payroll.structure_base"/>
+            <field name="parent_id" ref="hr_payroll_community.structure_base"/>
             <field name="note">Cette rubrique représente la structure des employés marocains.</field>
         </record>
     </data>
