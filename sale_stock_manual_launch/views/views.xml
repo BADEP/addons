@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="sale_order_tree_manual_launch">
+            <field name="name">sale.order.tree.manual.launch</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_tree"/>
+            <field name="arch" type="xml">
+                <field name="state" position="after">
+                    <field name="launch_state" widget="state_selection"/>
+                </field>
+            </field>
+        </record>
+        <record model="ir.ui.view" id="sale_order_line_inhereted">
+            <field name="name">sale.order.form.inhereted</field>
+            <field name="model">sale.order</field>
+            <field name="inherit_id" ref="sale.view_order_form"/>
+            <field name="arch" type="xml">
+                <field name="name" position="before">
+                    <field name="launch_state" widget="state_selection" class="ml-auto" attrs="{'invisible': [('state', '!=', 'sale')]}"/>
+                </field>
+                <field name="order_line" position="before">
+                    <div class="float-right">
+                        <button name="%(act_launch_procurement_wizard)d" type="action" class="fa fa-sign-in"
+                                attrs="{'invisible': ['|', ('state', '!=', 'sale'), ('launch_state', '=', 'done')]}"/>
+                    </div>
+                </field>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="after">
+                    <field name="procurement_qty"
+                           attrs="{'invisible': [('parent.state', '!=', 'sale')]}"/>
+                </xpath>
+                <xpath expr="//field[@name='order_line']/tree//field[@name='state']" position="before">
+                    <button name="_action_launch_stock_rule" type="object" class="fa fa-sign-in"
+                            context="{'qty_to_launch': product_uom_qty - procurement_qty}"
+                            attrs="{'invisible': [('to_launch', '=', False)]}"/>
+                    <field name="to_launch" invisible="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
