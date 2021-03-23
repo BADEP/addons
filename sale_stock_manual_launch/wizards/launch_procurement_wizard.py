@@ -22,7 +22,7 @@ class LaunchProcurementWizard(models.TransientModel):
                 line_data = dict(sale_order_line_id)
                 line_data.update({
                         'sale_order_line_id': line.id,
-                        'quantity': line.product_uom_qty - line.procurement_qty,
+                        'quantity': line.get_dummy_qty()[0],
                     })
                 line_ids.append((0, 0, line_data))
             if 'line_ids' in fields:
