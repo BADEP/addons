@@ -1,5 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
+from odoo.addons import decimal_precision as dp
 
 class LaunchProcurementWizard(models.TransientModel):
     _name = 'launch.procurement.wizard'
@@ -39,7 +40,7 @@ class LaunchProcurementWizardLine(models.TransientModel):
 
     wizard_id = fields.Many2one('launch.procurement.wizard', string="Wizard")
     sale_order_line_id = fields.Many2one('sale.order.line', string="Ligne de commande")
-    quantity = fields.Integer(string="Quantité")
+    quantity = fields.Float(string="Quantité", digits=dp.get_precision('Product Unit of Measure'))
 
     @api.constrains('quantity')
     def _check_max_qty(self):
