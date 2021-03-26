@@ -26,10 +26,10 @@ class SaleOrderLine(models.Model):
     def get_dummy_qty(self):
         return self.product_uom_qty - self.procurement_qty
 
-    @api.depends('product_uom_qty')
+    @api.depends('product_uom_qty', 'qty_delivered_manual')
     def _get_procurement_quantity(self):
         for rec in self:
-            rec.procurement_qty = super(SaleOrderLine, rec.with_context(previous_product_uom_qty={rec.id: 0}))._get_qty_procurement()
+            rec.procurement_qty = rec.qty_delivered_manual or super(SaleOrderLine, rec.with_context(previous_product_uom_qty={rec.id: 0}))._get_qty_procurement()
 
     def action_launch_procurement(self):
         return self._action_launch_stock_rule()
