@@ -28,12 +28,12 @@
                     <field name="procurement_qty"
                            attrs="{'invisible': [('parent.state', '!=', 'sale')]}"/>
                 </xpath>
-                <xpath expr="//field[@name='order_line']/tree//field[@name='state']" position="before">
-                    <button name="action_launch_procurement" type="object" class="fa fa-sign-in"
-                            context="{'qty_to_launch': product_uom_qty - procurement_qty}"
-                            attrs="{'invisible': [('to_launch', '=', False)]}"/>
-                    <field name="to_launch" invisible="1"/>
-                </xpath>
+ <!--                <xpath expr="//field[@name='order_line']/tree//field[@name='state']" position="before">-->
+<!--                    <button name="action_launch_procurement" type="object" class="fa fa-sign-in"-->
+<!--                            context="{'qty_to_launch': product_uom_qty - procurement_qty}"-->
+<!--                            attrs="{'invisible': [('to_launch', '=', False)]}"/>-->
+<!--                    <field name="to_launch" invisible="1"/>-->
+<!--                </xpath>-->
             </field>
         </record>
     </data>
