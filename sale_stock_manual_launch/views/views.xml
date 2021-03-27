@@ -5,9 +5,11 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_tree"/>
             <field name="arch" type="xml">
-                <field name="state" position="after">
-                    <field name="launch_state" widget="state_selection" readonly="1"/>
-                </field>
+               <data>
+<!--                   <field name="state" position="after">-->
+<!--                       <field name="launch_state" widget="state_selection" readonly="1"/>-->
+<!--                   </field>-->
+               </data>
             </field>
         </record>
         <record model="ir.ui.view" id="sale_order_line_inhereted">
@@ -15,9 +17,9 @@
             <field name="model">sale.order</field>
             <field name="inherit_id" ref="sale.view_order_form"/>
             <field name="arch" type="xml">
-<!--                <field name="name" position="after">-->
-<!--                    <field name="launch_state" widget="state_selection" readonly="1" class="ml-auto" attrs="{'invisible': [('state', '!=', 'sale')]}"/>-->
-<!--                </field>-->
+                <field name="name" position="after">
+                    <field name="launch_state" widget="state_selection" readonly="1" class="ml-auto" attrs="{'invisible': [('state', '!=', 'sale')]}"/>
+                </field>
                 <field name="order_line" position="before">
                     <div class="float-right">
                         <button name="%(act_launch_procurement_wizard)d" type="action" class="fa fa-sign-in"
