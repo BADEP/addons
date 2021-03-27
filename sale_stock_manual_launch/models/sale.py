@@ -7,7 +7,7 @@ class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
     launch_state = fields.Selection([('normal', 'En cours'), ('blocked', 'Pas encore lancé'), ('done', 'Lancé complètement')], string='Avancement',
-                                    compute='_get_to_launch', store=False)
+                                    compute='_get_to_launch', store=True)
 
     @api.depends('order_line.to_launch')
     def _get_to_launch(self):
@@ -19,14 +19,14 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    procurement_qty = fields.Float(string="Qté lancée", compute='_get_procurement_quantity', digits=dp.get_precision('Product Unit of Measure'))
-    to_launch = fields.Boolean(string="To Launch Procurement", compute='_get_to_launch', store=False)
+    procurement_qty = fields.Float(string="Qté lancée", compute='_get_procurement_quantity', digits=dp.get_precision('Product Unit of Measure'), store=True)
+    to_launch = fields.Boolean(string="To Launch Procurement", compute='_get_to_launch', store=True)
 
     @api.one
     def get_dummy_qty(self):
         return self.product_uom_qty - self.procurement_qty
 
-    @api.depends('product_uom_qty', 'qty_delivered_manual')
+    @api.depends('qty_delivered_manual', 'move_ids.state', 'move_ids.scrapped', 'move_ids.product_uom_qty', 'move_ids.product_uom')
     def _get_procurement_quantity(self):
         for rec in self:
             rec.procurement_qty = rec.qty_delivered_manual or super(SaleOrderLine, rec.with_context(previous_product_uom_qty={rec.id: 0}))._get_qty_procurement()
