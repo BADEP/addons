@@ -15,6 +15,6 @@ class SaleOrderLine(models.Model):
                 outgoing_moves = moves.filtered(lambda m: m.location_dest_id.usage == "customer" and (
                             not m.origin_returned_move_id or (m.origin_returned_move_id and m.to_refund)))
                 if outgoing_moves:
-                    rec.procurement_qty = rec.qty_delivered_manual or rec.product_uom_qty
+                    rec.procurement_qty = (rec.qty_delivered_manual or rec.product_uom_qty) - self.env.context.get('qty_to_launch', 0)
             else:
                 super(SaleOrderLine, rec)._get_procurement_quantity()

@@ -11,6 +11,7 @@
            </field>
            <field name="quantity" position="attributes">
                 <attribute name="attrs">{'readonly': [('quantity_editable', '=', False)]}</attribute>
+                <attribute name="force_save">1</attribute>
            </field>
         </field>
     </record>
