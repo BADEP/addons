@@ -8,7 +8,7 @@ class IrConfigParameter(Model):
     _inherit = "ir.config_parameter"
 
     @api.model
-    def get_fcm_config(self):
+    def get_attachment_config(self):
         get_param = self.sudo().get_param
         return {
             'optimize_pdf': get_param("base_attachment_optimize.optimize_pdf", False),
