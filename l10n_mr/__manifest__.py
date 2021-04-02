@@ -1,6 +1,6 @@
 {
     'name' : 'Plan comptable Mauritanie',
-    'version' : '12.0.0.1',
+    'version' : '14.0.0.1',
     'author' : 'Africa Performances, BADEP',
     'category' : 'Localization/Account Charts',
     'description': 	"""
@@ -17,5 +17,5 @@
         'data/account_tax_data.xml',
         'data/account_chart_template_data.xml',
     ],
-    'installable': False,
+    'installable': True,
 }
