@@ -5,7 +5,7 @@ odoo.define('mail_notify.Firebase', function (require) {
         model: 'ir.config_parameter',
         method: 'get_fcm_config',
     }).then(function(result){
-        if (result.is_fcm_enabled) {
+        if (result.is_fcm_enabled && firebase.messaging.isSupported()) {
             var firebaseConfig = {
                 messagingSenderId: result.fcm_messaging_id
             };
