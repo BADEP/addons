@@ -1,6 +1,6 @@
 {
     'name' : 'Plan comptable Mauritanie',
-    'version' : '13.0.0.1',
+    'version' : '14.0.0.1',
     'author' : 'Africa Performances, BADEP',
     'category' : 'Localization/Account Charts',
     'description': 	"""
