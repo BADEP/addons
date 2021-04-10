@@ -19,7 +19,7 @@
     'version': '12.0.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['purchase', 'stock_fleet'],
+    'depends': ['purchase_stock', 'stock_fleet'],
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
 
