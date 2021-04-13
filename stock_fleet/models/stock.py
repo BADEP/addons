@@ -58,3 +58,12 @@ class StockMove(models.Model):
     vehicle = fields.Many2one('fleet.vehicle', related='picking_id.vehicle', store=False, readonly=True)
     driver = fields.Many2one('res.partner', related='picking_id.driver', store=False, readolny=True)
     odometer = fields.Float('Kilométrage', related='picking_id.odometer', store=False, readolny=True)
+
+class StockRule(models.Model):
+    _inherit = 'stock.rule'
+
+    def _get_stock_move_values(self, product_id, product_qty, product_uom, location_id, name, origin, values, group_id):
+        res = super()._get_stock_move_values(product_id, product_qty, product_uom, location_id, name, origin, values, group_id)
+        if values.get('force_src_location_id'):
+            res.update({'location_id': values['force_src_location_id']})
+        return res

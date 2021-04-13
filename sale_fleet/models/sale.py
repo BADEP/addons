@@ -18,3 +18,12 @@ class SaleOrder(models.Model):
         res = super(SaleOrder, self).action_confirm()
         self.picking_ids.write({'vehicle': self.vehicle and self.vehicle.id, 'driver': self.driver and self.driver.id})
         return res
+
+class SaleOrderLine(models.Model):
+    _inherit = 'sale.order.line'
+
+    def _prepare_procurement_values(self, group_id):
+        res = super()._prepare_procurement_values(group_id)
+        if self.order_id.vehicle and self.order_id.vehicle.stock_location_id:
+            res.update({'force_src_location_id': self.order_id.vehicle.stock_location_id.id})
+        return res
