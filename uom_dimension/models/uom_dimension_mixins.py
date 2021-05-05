@@ -23,7 +23,7 @@ class UomLine(models.AbstractModel):
     @api.onchange('product_dimension_qty', 'dimension_ids')
     def onchange_dimension_ids(self):
         if self.dimension_ids:
-            self[self.get_qty_field()] = self.product_uom.eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]),
+            self[self.get_qty_field()] = self[self.get_uom_field()].eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]),
                                                self.product_dimension_qty)
 
     def onchange_product_uom_set_dimensions(self):
