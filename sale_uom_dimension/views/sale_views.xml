@@ -14,18 +14,11 @@
                             <field name="display_name" invisible="1"/>
                             <field name="dimension_id" readonly="1" force_save="1"/>
                             <field name="quantity"/>
-                            <field name="qty_delivered_method" invisible="1"/>
-                            <field name="quantity_delivered"
-                                   attrs="{'readonly': [('qty_delivered_method', '!=', 'manual')]}"/>
                         </tree>
                     </field>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="attributes">
                     <attribute name="attrs">{'readonly': [('dimension_ids','!=',[])]}</attribute>
-                    <attribute name="force_save">1</attribute>
-                </xpath>
-                <xpath expr="//field[@name='order_line']/form//field[@name='qty_delivered']" position="attributes">
-                     <attribute name="attrs">{'readonly': ['|', ('dimension_ids','!=',[]), ('qty_delivered_method', '!=', 'manual')]}</attribute>
                     <attribute name="force_save">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="before">
