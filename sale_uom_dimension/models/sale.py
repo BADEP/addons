@@ -11,10 +11,6 @@ class SaleOrderLine(models.Model):
     def get_qty_field(self):
         return 'product_uom_qty'
 
-    @api.onchange('product_dimension_qty', 'dimension_ids')
-    def onchange_dimension_ids(self):
-        super().onchange_dimension_ids()
-
     @api.onchange('product_uom')
     def onchange_product_uom_set_dimensions(self):
         super().onchange_product_uom_set_dimensions()
