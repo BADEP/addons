@@ -28,7 +28,7 @@ class UomLine(models.AbstractModel):
 
     def onchange_product_uom_set_dimensions(self):
         product_uom = self[self.get_uom_field()]
-        if self.dimension_ids and product_uom and self.dimension_ids.mapped('dimension_id.id').sort() == product_uom.dimension_ids.ids.sort():
+        if self.dimension_ids and product_uom and sorted(self.dimension_ids.mapped('dimension_id.id')) == sorted(product_uom.dimension_ids.ids):
             return
         self.dimension_ids = [(5, 0, 0)]
         if product_uom:
