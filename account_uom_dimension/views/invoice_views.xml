@@ -3,7 +3,7 @@
         <record id="invoice_uom_dimension_form_view" model="ir.ui.view">
             <field name="name">invoice_uom_dimension_form_view</field>
             <field name="model">account.invoice</field>
-            <field name="inherit_id" ref="account.invoice_form" />
+            <field name="inherit_id" ref="account.invoice_form"/>
             <field eval="17" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -17,10 +17,11 @@
                 </data>
             </field>
         </record>
+
         <record id="invoice_line_uom_dimension_form_view" model="ir.ui.view">
             <field name="name">invoice_line_uom_dimension_form_view</field>
             <field name="model">account.invoice.line</field>
-            <field name="inherit_id" ref="account.view_invoice_line_form" />
+            <field name="inherit_id" ref="account.view_invoice_line_form"/>
             <field eval="17" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
@@ -30,11 +31,12 @@
                         <attribute name="force_save">1</attribute>
                     </xpath>
                     <xpath expr="//field[@name='quantity']" position="before">
+                        <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
                         <field name="dimension_ids" attrs="{'invisible': [('dimension_ids','=',[])]}">
                             <tree create="false" delete="false" editable="bottom">
                                 <field name="display_name" invisible="1"/>
                                 <field name="dimension_id" readonly="1" force_save="1"/>
-                                <field name="quantity" />
+                                <field name="quantity"/>
                             </tree>
                         </field>
                     </xpath>
