@@ -11,9 +11,10 @@
     'license': 'AGPL-3',
     'depends': ['account', 'uom_dimension', 'web_m2x_options'],
     'data': [
-             'views/invoice_views.xml',
-             'security/ir.model.access.csv',
-             ],
+        'report/invoice_report_templates.xml',
+        'views/invoice_views.xml',
+        'security/ir.model.access.csv',
+    ],
     'auto_install': True,
     'installable': True,
     'price': 29,
