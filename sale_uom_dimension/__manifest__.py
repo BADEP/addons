@@ -9,7 +9,7 @@
     'version': '12.0.1.0.1',
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
-    'depends': ['sale', 'uom_dimension', 'web_m2x_options'],
+    'depends': ['sale', 'uom_dimension'],
     'data': [
              'views/sale_views.xml',
              'report/sale_report_templates.xml',

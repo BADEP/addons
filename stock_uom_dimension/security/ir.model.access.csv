@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
 access_stock_move_dimension_stock_user,stock.move.dimension.stock_user,model_stock_move_dimension,stock.group_stock_user,1,1,1,1
 access_stock_move_dimension_base_user,stock.move.dimension.user,model_stock_move_dimension,base.group_user,1,0,0,0
+access_stock_move_line_dimension_stock_user,stock.move.line.dimension.stock_user,model_stock_move_line_dimension,stock.group_stock_user,1,1,1,1
+access_stock_move_line_dimension_base_user,stock.move.line.dimension.user,model_stock_move_line_dimension,base.group_user,1,0,0,0

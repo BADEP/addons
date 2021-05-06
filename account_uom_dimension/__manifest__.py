@@ -9,7 +9,7 @@
     'version': '12.0.1.0.1',
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
-    'depends': ['account', 'uom_dimension', 'web_m2x_options'],
+    'depends': ['account', 'uom_dimension'],
     'data': [
         'report/invoice_report_templates.xml',
         'views/invoice_views.xml',

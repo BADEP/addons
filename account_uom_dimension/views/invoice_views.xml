@@ -12,6 +12,26 @@
                         <attribute name="editable"/>
                     </xpath>
                     <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='quantity']" position="before">
+                        <field name="product_dimension_qty"/>
+                        <field name="dimension_ids" widget="many2many_tags"/>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+
+        <record id="invoice_uom_dimension_supplier_form_view" model="ir.ui.view">
+            <field name="name">invoice_uom_dimension_supplier_form_view</field>
+            <field name="model">account.invoice</field>
+            <field name="inherit_id" ref="account.invoice_supplier_form"/>
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//field[@name='invoice_line_ids']/tree" position="attributes">
+                        <attribute name="editable"/>
+                    </xpath>
+                    <xpath expr="//field[@name='invoice_line_ids']/tree//field[@name='quantity']" position="before">
+                        <field name="product_dimension_qty"/>
                         <field name="dimension_ids" widget="many2many_tags"/>
                     </xpath>
                 </data>
