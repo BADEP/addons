@@ -6,7 +6,7 @@
 {
     'name': 'Account Exception',
     'summary': 'Custom exceptions on Invoices',
-    'version': '13.0.1.1.1',
+    'version': '12.0.1.1.1',
     'category': 'Generic Modules/Sale',
     'author': "Akretion, "
               "Sodexis, "
@@ -20,5 +20,6 @@
         'data/account_exception_data.xml',
         'wizard/account_exception_confirm_view.xml',
         'views/invoice_view.xml',
-    ]
+    ],
+    'installable': False
 }
