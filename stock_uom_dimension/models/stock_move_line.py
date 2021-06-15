@@ -21,6 +21,14 @@ class StockMoveLine(models.Model):
         if self.dimension_ids and self.product_dimension_qty:
             self.qty_done = (self.product_dimension_qty_done * self.product_uom_qty) / self.product_dimension_qty
 
+    # @api.model_create_multi
+    # def create(self, vals_list):
+    #     return super().with_context(dimension_ids = vals_list.get('dimension_ids', False)).create(vals_list)
+    #
+    # def write(self, vals):
+    #     return super().with_context(dimension_ids = vals.get('dimension_ids', False)).write(vals)
+
+
 class StockMoveLineDimension(models.Model):
     _inherit = 'uom.line.dimension'
     _name = "stock.move.line.dimension"
