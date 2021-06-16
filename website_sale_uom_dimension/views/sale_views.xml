@@ -1,0 +1,24 @@
+<odoo>
+    <data>
+        <template id="product_quantity_dimensions" inherit_id="website_sale.product_quantity" name="Select Dimensions">
+            <input name="add_qty" position="attributes">
+                <attribute name="type">integer</attribute>
+            </input>
+            <a id="add_to_cart" position="before">
+                <table class="table">
+                    <tbody>
+                        <tr t-foreach="product.uom_id.dimension_ids" t-as="dimension">
+                            <td>
+                                <strong t-field="dimension.name"/>
+                            </td>
+                            <td>
+                                <input type="text" class="js_dimension" t-att-data-dimension_id="dimension.id"
+                                       t-att-name="'dimension-%s' % dimension.id"/>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+            </a>
+        </template>
+    </data>
+</odoo>
