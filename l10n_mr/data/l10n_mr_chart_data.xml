@@ -3123,6 +3123,7 @@
             <field name="property_account_expense_categ_id" ref="mrt_314"/>
             <field name="income_currency_exchange_account_id" ref="mrt_505"/>
             <field name="expense_currency_exchange_account_id" ref="mrt_453"/>
+            <field name="default_pos_receivable_account_id" ref="mrt_302" />
         </record>
         <!--
     #Etape 3: Definition des taxes
