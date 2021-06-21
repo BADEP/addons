@@ -1,5 +1,6 @@
 from odoo import models, fields, api
 
+
 class StockMove(models.Model):
     _inherit = ['stock.move', 'uom.line']
     _name = 'stock.move'
@@ -9,6 +10,7 @@ class StockMove(models.Model):
 
     def get_uom_field(self):
         return 'product_uom'
+
     def get_qty_field(self):
         return 'product_uom_qty'
 
@@ -25,15 +27,36 @@ class StockMove(models.Model):
         res = super()._prepare_procurement_values()
         res.update({
             'product_dimension_qty': self.product_dimension_qty,
-            'dimension_ids': [(0, 0, {'dimension_id':d.dimension_id.id, 'quantity':d.quantity}) for d in self.dimension_ids]
+            'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in self.dimension_ids]
         })
         return res
+
+    @api.one
+    def _action_assign(self):
+        return super(StockMove, self.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in self.dimension_ids},
+                                                  product_dimension_qty=self.product_dimension_qty))._action_assign()
+
+    @api.one
+    @api.depends('state', 'product_id', 'product_qty', 'location_id')
+    def _compute_product_availability(self):
+        return super(StockMove, self.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in self.dimension_ids},
+                                                  product_dimension_qty=self.product_dimension_qty))._compute_product_availability()
+
+    def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
+        vals = super()._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant)
+        vals.update({
+            'product_dimension_qty': self.product_dimension_qty,
+            'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in self.dimension_ids]
+        })
+        return vals
+
 
 class StockMoveDimension(models.Model):
     _inherit = 'uom.line.dimension'
     _name = "stock.move.dimension"
 
     line_id = fields.Many2one('stock.move', required=True, ondelete='cascade', oldname='stock_move_id')
+
 
 class StockRule(models.Model):
     _inherit = 'stock.rule'
