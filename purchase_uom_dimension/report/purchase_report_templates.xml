@@ -22,5 +22,27 @@
                 </t>
             </xpath>
         </template>
+        <template id="report_purchasequotation_document_inherit_uom_dimension" inherit_id="purchase.report_purchasequotation_document">
+            <xpath expr="//thead/tr/th[1]" position="after">
+                <t t-if="o.order_line.mapped('dimension_ids')">
+                    <th>Nombre</th>
+                    <th>Mesures</th>
+                </t>
+            </xpath>
+            <xpath expr="//tbody/tr/td[1]" position="after">
+                <t t-if="o.order_line.mapped('dimension_ids')">
+                    <td>
+                        <t t-if="order_line.dimension_ids">
+                            <span t-field="order_line.product_dimension_qty"/>
+                        </t>
+                    </td>
+                    <td>
+                        <t t-if="order_line.dimension_ids">
+                            <span t-esc="'x'.join([str(q) for q in order_line.dimension_ids.mapped('quantity')])"/>
+                        </t>
+                    </td>
+                </t>
+            </xpath>
+        </template>
     </data>
 </odoo>
