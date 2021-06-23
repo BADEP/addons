@@ -40,7 +40,8 @@ class StockMoveLine(models.Model):
         return super(StockMoveLine, self.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in self.dimension_ids},
                                                       product_dimension_qty=self.move_id.product_dimension_qty)).write(vals)
 
-    # todo: use product_dimension_qty in sstock.move.line
+    # todo: use product_dimension_qty in stock.move.line
+    @api.one
     def _action_done(self):
         return super(StockMoveLine, self.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in self.dimension_ids},
                                                       product_dimension_qty=self.move_id.product_dimension_qty))._action_done()
