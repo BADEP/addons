@@ -40,7 +40,7 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <field name="quantity" position="before">
-                    <field name="product_dimension_qty"/>
+                    <field name="product_dimension_qty" sum="total"/>
                     <field name="dimension_ids" widget="many2many_tags"/>
                 </field>
             </field>
