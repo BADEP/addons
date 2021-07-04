@@ -39,12 +39,12 @@ class UomLineDimension(models.AbstractModel):
 
     line_id = fields.Many2one('uom.line', copy=True)
     dimension_id = fields.Many2one('uom.dimension', required=True, ondelete='cascade')
-    quantity = fields.Float('Quantité', required=True, digits=dp.get_precision('Product Unit of Measure'))
+    quantity = fields.Float('Quantité', required=True, digits='Product Unit of Measure')
     name = fields.Char(compute='get_name', store=True)
     display_name = fields.Char(compute='get_name', store=True)
 
     @api.depends('dimension_id', 'quantity')
     def get_name(self):
         for rec in self.filtered(lambda d: d.dimension_id):
-            rec.display_name = rec.dimension_id.name + ': ' + str(rec.quantity)
-            rec.name = rec.dimension_id.name + ': ' + str(rec.quantity)
+            rec.display_name = rec.dimension_id.name + ': ' + str(round(rec.quantity, 3))
+            rec.name = rec.dimension_id.name + ': ' + str(round(rec.quantity, 3))
