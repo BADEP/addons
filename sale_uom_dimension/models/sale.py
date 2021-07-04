@@ -37,4 +37,4 @@ class SaleOrderLineDimension(models.Model):
     _inherit = 'uom.line.dimension'
     _name = 'sale.order.line.dimension'
 
-    line_id = fields.Many2one('sale.order.line', required=True, ondelete='cascade', oldname='sale_order_line_id')
+    line_id = fields.Many2one('sale.order.line', required=True, ondelete='cascade')
