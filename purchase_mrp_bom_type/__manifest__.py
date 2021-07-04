@@ -1,7 +1,7 @@
 {
     'name': 'Purchase MRP Separate BOM Type',
     'author': 'BADEP',
-    'version': '12.0.1',
+    'version': '13.0.1',
     'category': 'Hidden',
     'description': """
 Allow to define a bom type for purchases different than that of sales
