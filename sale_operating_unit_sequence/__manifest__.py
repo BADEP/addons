@@ -9,7 +9,7 @@
     'website': "https://badep.ma",
 
     'category': 'Sales',
-    'version': '12.0.1.0',
+    'version': '13.0.1.0',
 
     'depends': ['sale_operating_unit'],
     'images': ['static/src/img/banner.png'],
