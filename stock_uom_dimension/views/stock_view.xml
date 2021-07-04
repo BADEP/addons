@@ -2,35 +2,74 @@
 <odoo>
     <data>
 
+        <record id="product_template_dimension_form_view" model="ir.ui.view">
+            <field name="name">product.template.dimension.form.view</field>
+            <field name="model">product.template</field>
+            <field name="inherit_id" ref="product.product_template_form_view"/>
+            <field name="arch" type="xml">
+                <field name="uom_id" position="after">
+                    <field name="stock_dimensions_strict"/>
+                </field>
+            </field>
+        </record>
+
         <record id="stock_move_dimension_form_view" model="ir.ui.view">
             <field name="name">stock.move.dimension.form.view</field>
             <field name="model">stock.move</field>
-            <field name="inherit_id" ref="stock.view_move_form" />
+            <field name="inherit_id" ref="stock.view_move_form"/>
             <field eval="17" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
-					<field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','!=','draft')]}" />
-                	<field name="dimension_ids" widget="one2many_list">
-						<tree string="Dimensions" create="false" delete="false" editable="bottom">
-							<field name="dimension_id" readonly="True"/>
-							<field name="quantity" />
-						</tree>
-					</field>
+                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','!=','draft')]}"/>
+                    <field name="dimension_ids" widget="one2many_list">
+                        <tree string="Dimensions" create="false" delete="false" editable="bottom">
+                            <field name="dimension_id" readonly="True"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
                 </xpath>
+            </field>
+        </record>
+
+        <record id="view_stock_quant_dimension_tree" model="ir.ui.view">
+            <field name="name">stock.quant.dimension.tree</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref="stock.view_stock_quant_tree"/>
+            <field eval="17" name="priority"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <field name="quantity" position="before">
+                    <field name="product_dimension_qty" sum="total"/>
+                    <field name="dimension_ids" widget="many2many_tags"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="view_stock_quant_dimension_form" model="ir.ui.view">
+            <field name="name">stock.quant.dimension.form</field>
+            <field name="model">stock.quant</field>
+            <field name="inherit_id" ref="stock.view_stock_quant_form"/>
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <field name="quantity" position="before">
+                    <field name="product_dimension_qty" readonly="1"/>
+                    <field name="dimension_ids" widget="many2many_tags" readonly="1"/>
+                </field>
             </field>
         </record>
 
         <record id="stock_picking_dimension_form_view" model="ir.ui.view">
             <field name="name">stock.picking.dimension.form.view</field>
             <field name="model">stock.picking</field>
-            <field name="inherit_id" ref="stock.view_picking_form" />
+            <field name="inherit_id" ref="stock.view_picking_form"/>
             <field eval="17" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='move_ids_without_package']/tree//field[@name='quantity_done']" position="before">
-					<field name="product_dimension_qty" readonly="1"/>
-                	<field name="dimension_ids" widget="many2many_tags" readonly="1"/>
+                    <field name="product_dimension_qty" readonly="1"/>
+                    <field name="dimension_ids" widget="many2many_tags" readonly="1"/>
                     <field name="product_dimension_qty_done" attrs="{'readonly': [('dimension_ids', '=', [])]}"/>
                 </xpath>
                 <xpath expr="//field[@name='move_ids_without_package']/tree//field[@name='quantity_done']" position="attributes">
@@ -43,30 +82,38 @@
         <record id="stock_move_dimension_operation_view" model="ir.ui.view">
             <field name="name">stock.move.dimension.form.view</field>
             <field name="model">stock.move</field>
-            <field name="inherit_id" ref="stock.view_stock_move_operations" />
+            <field name="inherit_id" ref="stock.view_stock_move_operations"/>
             <field eval="17" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
-					<field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','!=','draft')]}" />
-                	<field name="dimension_ids" widget="one2many_list">
-						<tree string="Dimensions" create="false" delete="false" editable="bottom">
-							<field name="dimension_id" readonly="True"/>
-							<field name="quantity" />
-						</tree>
-					</field>
+                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','!=','draft')]}"/>
+                    <field name="dimension_ids" widget="one2many_list">
+                        <tree string="Dimensions" create="false" delete="false" editable="bottom">
+                            <field name="dimension_id" readonly="True"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
                 </xpath>
             </field>
         </record>
 
         <template id="report_delivery_document_dimensions" inherit_id="stock.report_delivery_document">
             <xpath expr='//table[@t-if="o.move_line_ids and o.state==&apos;done&apos;"]//thead//tr//th[1]' position="after">
-                <th><strong>Nombre</strong></th>
-                <th><strong>Mesures</strong></th>
+                <th>
+                    <strong>Nombre</strong>
+                </th>
+                <th>
+                    <strong>Mesures</strong>
+                </th>
             </xpath>
             <xpath expr='//table[@t-if="o.state!=&apos;done&apos;"]//thead//tr//th[1]' position="after">
-                <th><strong>Nombre</strong></th>
-                <th><strong>Mesures</strong></th>
+                <th>
+                    <strong>Nombre</strong>
+                </th>
+                <th>
+                    <strong>Mesures</strong>
+                </th>
             </xpath>
             <xpath expr="//tr[@t-foreach='lines']//td[1]" position="after">
                 <td>
