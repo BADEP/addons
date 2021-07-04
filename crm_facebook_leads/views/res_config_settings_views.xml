@@ -10,15 +10,17 @@
                 <div id="crm_facebook_settings">
                     <h2>Facebook Leads Settings</h2>
                     <div class="row mt16 o_settings_container">
-                        <div class="col-12 o_setting_box">
+                        <div class="col-6 o_setting_box">
                             <div class="o_setting_right_pane">
-                                <span class="o_form_label">Facebook App</span>
+                                <span class="o_form_label">Option 1 (Advanced): Use your own Facebook App</span>
                                 <div class="text-muted">
                                     Create a Facebook App <a href="https://developers.facebook.com/apps" target="_blank">
                                     here
-                                    </a> and get the <strong>App Id</strong> and <strong>App Secret</strong> in the settings
-                                    page. Your app must undergo <strong>App Review</strong> and be <strong>Live</strong>
-                                    (more info <a target="_blank" href="https://developers.facebook.com/docs/marketing-api/guides/lead-ads#limitations">here</a>).
+                                </a> and get the <strong>App Id</strong> and <strong>App Secret</strong> in the settings
+                                    page. Your app must undergo <strong>App Review</strong> and be
+                                    <strong>Live</strong>
+                                    (more info <a target="_blank"
+                                                  href="https://developers.facebook.com/docs/marketing-api/guides/lead-ads#limitations">here</a>).
                                 </div>
                                 <div class="content_group">
                                     <div class="row">
@@ -38,8 +40,22 @@
                                                 icon="fa-arrow-right" class="btn-link"/>
                                     </div>
                                 </div>
+                            </div>
+                        </div>
+                        <div class="col-6 o_setting_box">
+                            <div class="o_setting_right_pane">
+                                <span class="o_form_label">Option 2 (Easy): Use Our Facebook App</span>
                                 <div class="text-muted">
-                                    Use our <a target="_blank" href="https://www.facebook.com/dialog/oauth?response_type=token&amp;client_id=165653190816042&amp;redirect_uri=https%3A%2F%2Fbadep.ma%2Fauth_oauth%2Fsignin&amp;scope=public_profile%2Cemail%2Cleads_retrieval%2Cpages_manage_ads%2Cpages_read_engagement%2Cads_management&amp;state={%22d%22%3A+%22badep%22%2C+%22p%22%3A+2%2C+%22r%22%3A+%22http%253A%252F%252Fbadep.ma%252Fmy%252Faccount%22}">Odoo CRM Integration App</a> instead.
+                                    Use this option if you do not have a reviewed Facebook App or do not have the time or the technicity to create one
+                                    Create a Facebook App
+                                </div>
+                                <div class="content_group">
+                                    <div class="mt16">
+                                        <a target="_blank" class="oe_link"
+                                           href="https://www.facebook.com/dialog/oauth?response_type=token&amp;client_id=165653190816042&amp;redirect_uri=https%3A%2F%2Fbadep.ma%2Fauth_oauth%2Fsignin&amp;scope=public_profile%2Cemail%2Cleads_retrieval%2Cpages_manage_ads%2Cpages_read_engagement%2Cads_management&amp;state={%22d%22%3A+%22badep%22%2C+%22p%22%3A+2%2C+%22r%22%3A+%22http%253A%252F%252Fbadep.ma%252Fmy%252Faccount%22}">
+                                            <i class="fa fa-arrow-right"/> Use Odoo CRM Connector
+                                        </a>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -56,15 +72,15 @@
                                         <label for="crm_fb_access_token" class="col-md-3 o_light_label"/>
                                         <field name="crm_fb_access_token"/>
                                     </div>
-<!--                                    <div class="row">-->
-<!--                                        <label for="crm_fb_access_token_state" class="col-md-3 o_light_label"/>-->
-<!--                                        <field name="crm_fb_access_token_state"/>-->
-<!--                                    </div>-->
-<!--                                    <div class="row"-->
-<!--                                         attrs="{'invisible': [('crm_fb_access_token_state', '=', 'valid')]}">-->
-<!--                                        <label for="crm_fb_access_token_state_message" class="col-md-3 o_light_label"/>-->
-<!--                                        <field name="crm_fb_access_token_state_message"/>-->
-<!--                                    </div>-->
+                                    <!--                                    <div class="row">-->
+                                    <!--                                        <label for="crm_fb_access_token_state" class="col-md-3 o_light_label"/>-->
+                                    <!--                                        <field name="crm_fb_access_token_state"/>-->
+                                    <!--                                    </div>-->
+                                    <!--                                    <div class="row"-->
+                                    <!--                                         attrs="{'invisible': [('crm_fb_access_token_state', '=', 'valid')]}">-->
+                                    <!--                                        <label for="crm_fb_access_token_state_message" class="col-md-3 o_light_label"/>-->
+                                    <!--                                        <field name="crm_fb_access_token_state_message"/>-->
+                                    <!--                                    </div>-->
                                     <div attrs="{'invisible': [('crm_fb_access_token', 'in', ('', False))]}">
                                         <button type="object" name="action_get_facebook_pages" string="Get Pages"
                                                 icon="fa-arrow-right" class="btn-link"/>
