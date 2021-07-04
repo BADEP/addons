@@ -6,7 +6,7 @@
 {
     'name': 'Account Exception',
     'summary': 'Custom exceptions on Invoices',
-    'version': '12.0.1.1.1',
+    'version': '13.0.1.1.1',
     'category': 'Generic Modules/Sale',
     'author': "Akretion, "
               "Sodexis, "
