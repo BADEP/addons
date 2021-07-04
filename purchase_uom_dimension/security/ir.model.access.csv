@@ -1,0 +1,3 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_uom_dimension_purchase_manager,uom.dimension purchasemanager,uom_dimension.model_uom_dimension,purchase.group_purchase_manager,1,1,1,1
+access_purchase_order_line_dimension_purchase_user,purchase.order.line.dimension.purchase_user,model_purchase_order_line_dimension,purchase.group_purchase_user,1,1,1,1
