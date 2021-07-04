@@ -55,7 +55,7 @@ class StockMoveDimension(models.Model):
     _inherit = 'uom.line.dimension'
     _name = "stock.move.dimension"
 
-    line_id = fields.Many2one('stock.move', required=True, ondelete='cascade', oldname='stock_move_id')
+    line_id = fields.Many2one('stock.move', required=True, ondelete='cascade')
 
 
 class StockRule(models.Model):
