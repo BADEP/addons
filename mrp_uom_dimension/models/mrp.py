@@ -19,7 +19,7 @@ class MrpProductionDimension(models.Model):
     _inherit = 'uom.line.dimension'
     _name = 'mrp.production.dimension'
 
-    line_id = fields.Many2one('mrp.production', required=True, ondelete='cascade', oldname='mrp_production')
+    line_id = fields.Many2one('mrp.production', required=True, ondelete='cascade')
 
 class ChangeProductionQty(models.TransientModel):
     _inherit = ['change.production.qty', 'uom.line']
