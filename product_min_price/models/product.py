@@ -6,7 +6,7 @@ import odoo.addons.decimal_precision as dp
 class ProductTemplate(models.Model):
     _inherit = 'product.template'
     
-    purchase_min_price = fields.Float(string='Purchase price', compute='_get_min_purchase_price', digits=dp.get_precision('Product Price'))
+    purchase_min_price = fields.Float(string='Purchase price', compute='_get_min_purchase_price', digits='Product Price')
 
     @api.depends('seller_ids')
     def _get_min_purchase_price(self):
@@ -18,7 +18,7 @@ class ProductTemplate(models.Model):
 class ProductProduct(models.Model):
     _inherit = 'product.product'
 
-    purchase_min_price = fields.Float(string='Purchase price', compute='_get_min_purchase_price', digits=dp.get_precision('Product Price'))
+    purchase_min_price = fields.Float(string='Purchase price', compute='_get_min_purchase_price', digits='Product Price')
 
     @api.depends('seller_ids')
     def _get_min_purchase_price(self):
