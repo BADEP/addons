@@ -24,14 +24,13 @@ class SaleOrderLine(models.Model):
         })
         return values
 
-    def _prepare_invoice_line(self):
-        res = super()._prepare_invoice_line()
-        res.update({
+    def _prepare_invoice_line(self, **optional_values):
+        optional_values.update({
             'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in
                               self.dimension_ids],
             'product_dimension_qty': self.product_dimension_qty
         })
-        return res
+        return super()._prepare_invoice_line(**optional_values)
 
 class SaleOrderLineDimension(models.Model):
     _inherit = 'uom.line.dimension'
