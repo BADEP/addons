@@ -7,6 +7,9 @@
             <field eval="17" name="priority"/>
             <field name="type">form</field>
             <field name="arch" type="xml">
+                <div name="ordered_qty" position="attributes">
+                    <attribute name="class"/>
+                </div>
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="before">
                     <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
                     <field name="dimension_ids" attrs="{'invisible': [('dimension_ids','=',[])]}">
@@ -14,17 +17,10 @@
                             <field name="display_name" invisible="1"/>
                             <field name="dimension_id" readonly="1" force_save="1"/>
                             <field name="quantity"/>
-                            <field name="qty_delivered_method" invisible="1"/>
-                            <field name="quantity_delivered"
-                                   attrs="{'readonly': [('qty_delivered_method', '!=', 'manual')]}"/>
                         </tree>
                     </field>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_uom_qty']" position="attributes">
-                    <attribute name="attrs">{'readonly': [('dimension_ids','!=',[])]}</attribute>
-                    <attribute name="force_save">1</attribute>
-                </xpath>
-                <xpath expr="//field[@name='order_line']/form//field[@name='qty_delivered']" position="attributes">
                     <attribute name="attrs">{'readonly': [('dimension_ids','!=',[])]}</attribute>
                     <attribute name="force_save">1</attribute>
                 </xpath>
@@ -39,31 +35,31 @@
             </field>
         </record>
 
-        <template id="product_configurator_configure_dimensions" inherit_id="sale.product_configurator_configure"
-                  name="Configure">
-            <h2 position="before">
-                <table class="table">
-                    <tbody>
-                        <tr t-foreach="product.uom_id.dimension_ids" t-as="dimension">
-                            <td>
-                                <strong t-field="dimension.name"/>
-                            </td>
-                            <td>
-                                <input type="text" class="js_dimension" t-att-data-dimension_id="dimension.id"
-                                       t-att-name="'dimension-%s-%s' % (product.id, dimension.id)"/>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-            </h2>
-        </template>
+<!--        <template id="product_configurator_configure_dimensions" inherit_id="sale.product_configurator_configure"-->
+<!--                  name="Configure">-->
+<!--            <h2 position="before">-->
+<!--                <table class="table">-->
+<!--                    <tbody>-->
+<!--                        <tr t-foreach="product.uom_id.dimension_ids" t-as="dimension">-->
+<!--                            <td>-->
+<!--                                <strong t-field="dimension.name"/>-->
+<!--                            </td>-->
+<!--                            <td>-->
+<!--                                <input type="text" class="js_dimension" t-att-data-dimension_id="dimension.id"-->
+<!--                                       t-att-name="'dimension-%s-%s' % (product.id, dimension.id)"/>-->
+<!--                            </td>-->
+<!--                        </tr>-->
+<!--                    </tbody>-->
+<!--                </table>-->
+<!--            </h2>-->
+<!--        </template>-->
 
-        <template id="assets_backend_inherit_sale_uom_dimension" inherit_id="web.assets_backend" name="Sale backend assets">
-            <xpath expr="script[last()]" position="after">
-                <script type="text/javascript" src="/sale_uom_dimension/static/src/js/product_configurator_controller.js"></script>
-                <script type="text/javascript" src="/sale_uom_dimension/static/src/js/product_configurator_mixin.js"></script>
-                <script type="text/javascript" src="/sale_uom_dimension/static/src/js/section_and_note_fields_backend.js"></script>
-            </xpath>
-        </template>
+<!--        <template id="assets_backend_inherit_sale_uom_dimension" inherit_id="web.assets_backend" name="Sale backend assets">-->
+<!--            <xpath expr="script[last()]" position="after">-->
+<!--                <script type="text/javascript" src="/sale_uom_dimension/static/src/js/product_configurator_controller.js"></script>-->
+<!--                <script type="text/javascript" src="/sale_uom_dimension/static/src/js/product_configurator_mixin.js"></script>-->
+<!--                <script type="text/javascript" src="/sale_uom_dimension/static/src/js/section_and_note_fields_backend.js"></script>-->
+<!--            </xpath>-->
+<!--        </template>-->
     </data>
 </odoo>
