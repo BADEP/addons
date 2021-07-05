@@ -42,7 +42,7 @@ class ChangeProductionQty(models.TransientModel):
     def default_get(self, fields):
         res = super(ChangeProductionQty, self).default_get(fields)
         if res.get('mo_id'):
-            res['product_dimension_qty'] = self.env['mrp.production'].browse(res['mo_id']).product_qty
+            res['product_dimension_qty'] = self.env['mrp.production'].browse(res['mo_id']).product_dimension_qty
             res['dimension_ids'] = [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in
                                     self.env['mrp.production'].browse(res['mo_id']).dimension_ids]
         return res
