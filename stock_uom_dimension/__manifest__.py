@@ -4,6 +4,7 @@
     'name': 'Product dimensions in stock',
     'version': '1.0',
     'category': 'Sales Management',
+    'license': 'AGPL-3',
     'description': """
     This module allow to have multidimensional UoMs.
     """,
@@ -11,6 +12,7 @@
     'website': 'http://www.badep.ma',
     'depends': ['uom_dimension', 'stock'],
     'data': [
+             'report/stock_picking_report_view.xml',
              'views/stock_view.xml',
              'security/ir.model.access.csv',
              ],
