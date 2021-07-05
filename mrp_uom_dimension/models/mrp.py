@@ -27,6 +27,16 @@ class ChangeProductionQty(models.TransientModel):
 
     dimension_ids = fields.Many2many('mrp.production.dimension', 'change_production_qty_id')
     product_dimension_qty = fields.Integer('Nombre', required=True)
+    product_uom_id = fields.Many2one('uom.uom', related='mo_id.product_uom_id')
+
+    @api.onchange('product_uom_id')
+    def onchange_product_uom_set_dimensions(self):
+        super().onchange_product_uom_set_dimensions()
+
+    def get_uom_field(self):
+        return 'product_uom_id'
+    def get_qty_field(self):
+        return 'product_qty'
 
     @api.model
     def default_get(self, fields):
@@ -36,6 +46,14 @@ class ChangeProductionQty(models.TransientModel):
             res['dimension_ids'] = [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in
                                     self.env['mrp.production'].browse(res['mo_id']).dimension_ids]
         return res
+
+    @api.onchange('product_dimension_qty', 'dimension_ids')
+    def onchange_dimension_ids(self):
+        if self.dimension_ids:
+            qty = self.mo_id.product_uom_id.eval_values(
+                dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]), self.product_dimension_qty)
+            if qty != self.product_qty:
+                self.product_qty = qty
 
     def change_prod_qty(self):
         res = super().change_prod_qty()

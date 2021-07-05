@@ -33,6 +33,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_qty']" position="before">
+                    <field name="product_uom_id" invisible="1"/>
                     <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
                     <field name="dimension_ids" attrs="{'invisible': [('dimension_ids','=',[])]}">
                         <tree create="false" delete="false" editable="bottom">
@@ -42,7 +43,7 @@
                     </field>
                 </xpath>
                 <field name="product_qty" position="attributes">
-                    <attribute name="readonly">[('dimension_ids','!=',[])]</attribute>
+                    <attribute name="attrs">{'readonly': [('dimension_ids','!=',[])]}</attribute>
                     <attribute name="force_save">1</attribute>
                 </field>
             </field>
