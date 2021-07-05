@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- License AGPL-3.0 or later (http://www.gnu.org/licenses/agpl). -->
+<odoo>
+
+    <record id="action_invoice_test_tree" model="ir.actions.act_window">
+        <field name="name">Invoice Exception Rules</field>
+        <field name="res_model">exception.rule</field>
+        <field name="view_type">form</field>
+        <field name="view_mode">tree,form</field>
+        <field name="view_id" ref="base_exception.view_exception_rule_tree"/>
+        <field name="domain">[('model', 'in', ['account.invoice', 'account.invoice.line'])]</field>
+        <field name="context">{'active_test': False, 'default_model' : 'account.invoice'}</field>
+    </record>
+
+    <menuitem
+        action="action_invoice_test_tree"
+        id="menu_invoice_test"
+        sequence="90"
+        parent="account.menu_finance_configuration"
+        groups="base_exception.group_exception_rule_manager"
+    />
+
+    <record id="view_invoice_form" model="ir.ui.view">
+        <field name="name">account_exception.view_invoice_form</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_form"/>
+        <field name="arch" type="xml">
+            <sheet position="before">
+                <div class="alert alert-danger" role="alert" style="margin-bottom:0px;"
+                     attrs="{'invisible': [('exceptions_summary','=',False)]}">
+                    <p><strong>There are exceptions blocking the confirmation of this Invoice:</strong></p>
+                    <field name="exceptions_summary"/>
+                    <button name="action_ignore_exceptions" type="object" class="btn-danger"
+                            string="Ignore Exceptions" help="Click here to be able to confirm this Invoice regardless of the exceptions."
+                            groups="base_exception.group_exception_rule_manager"/>
+                </div>
+            </sheet>
+            <xpath expr="//field[@name='date_invoice']/.." position="inside">
+                <field name="ignore_exception" states="open" />
+            </xpath>
+        </field>
+    </record>
+
+    <record id="view_order_tree" model="ir.ui.view">
+        <field name="name">account_exception.view_invoice_tree</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.invoice_tree"/>
+        <field name="arch" type="xml">
+            <field name="state" position="after">
+                <field name="main_exception_id"/>
+            </field>
+        </field>
+    </record>
+
+    <record id="view_account_invoice_filter" model="ir.ui.view">
+        <field name="name">account_exception.view_invoice_filter</field>
+        <field name="model">account.invoice</field>
+        <field name="inherit_id" ref="account.view_account_invoice_filter" />
+        <field name="arch" type="xml">
+            <filter name="late" position="after">
+                <separator orientation="vertical"/>
+                <filter icon="terp-emblem-important" name="tofix" string="Blocked in draft" domain="[('main_exception_id','!=',False)]"/>
+            </filter>
+        </field>
+    </record>
+
+</odoo>
