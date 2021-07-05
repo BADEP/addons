@@ -1,6 +1,4 @@
-# -*- coding: utf-8 -*-
-
-from odoo import models, fields, api
+from odoo import models, fields, api, exceptions, _
 
 class FleetVehicle(models.Model):
     _inherit = 'fleet.vehicle'
@@ -8,6 +6,7 @@ class FleetVehicle(models.Model):
     pickings = fields.One2many('stock.picking', 'vehicle', string='Pickings')
     picking_count = fields.Integer(compute='get_picking_count', store=False)
     picking_ok = fields.Boolean(string='Available in Pickings',default=True)
+    stock_location_id = fields.Many2one('stock.location', string='Stock Location')
 
     @api.depends('pickings')
     def get_picking_count(self):
