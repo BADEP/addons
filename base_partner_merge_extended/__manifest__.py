@@ -15,7 +15,7 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Technical',
-    'version': '12.0.0.1',
+    'version': '14.0.0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['base'],
