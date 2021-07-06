@@ -6,7 +6,7 @@
     'author': "BADEP",
     'website': "https://badep.ma",
     'category': 'Inventory',
-    'version': '13.0.1.0.1',
+    'version': '14.0.1.0.1',
     'depends': ['uom'],
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
