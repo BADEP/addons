@@ -1,6 +1,6 @@
 {
     'name': 'Variable quantity in production',
-    'version': '13.0.3.0.0',
+    'version': '14.0.3.0.0',
     'license': 'AGPL-3',
     'author': "OCA, BADEP",
     'website': 'https://badep.ma',
@@ -10,5 +10,5 @@
         'views/mrp_bom_line_formula_view.xml',
         'views/mrp_bom_view.xml',
     ],
-    'installable': False,
+    'installable': True,
 }
