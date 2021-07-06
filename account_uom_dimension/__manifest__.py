@@ -6,7 +6,7 @@
     'author': "BADEP",
     'website': "https://badep.ma",
     'category': 'Invoicing Management',
-    'version': '13.0.1.0.1',
+    'version': '14.0.1.0.1',
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     'depends': ['account', 'uom_dimension'],
