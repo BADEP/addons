@@ -1,0 +1,99 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_stock_manual_launch
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-06 18:10+0000\n"
+"PO-Revision-Date: 2021-07-06 18:10+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order__launch_state
+msgid "Procurement State"
+msgstr "Statut d'approvisionnement"
+
+#. module: sale_stock_manual_launch
+#: model_terms:ir.ui.view,arch_db:sale_stock_manual_launch.view_launch_procurement_wizard_form
+msgid "Cancel"
+msgstr "Annuler"
+
+#. module: sale_stock_manual_launch
+#: model_terms:ir.ui.view,arch_db:sale_stock_manual_launch.view_launch_procurement_wizard_form
+msgid "Launch"
+msgstr "lancer"
+
+#. module: sale_stock_manual_launch
+#: model:ir.actions.act_window,name:sale_stock_manual_launch.act_launch_procurement_wizard
+msgid "Launch Procurement"
+msgstr "lancer l'approvisionnement"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model,name:sale_stock_manual_launch.model_launch_procurement_wizard
+msgid "Launch procurement wizard"
+msgstr "Assistant de lancement d'approvisionnement"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model,name:sale_stock_manual_launch.model_launch_procurement_wizard_line
+msgid "Launch procurement wizard line"
+msgstr "Ligne d'assistant de lancement d'approvisionnement"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order_line__procurement_qty
+#: model:ir.model.fields.selection,name:sale_stock_manual_launch.selection__sale_order__launch_state__done
+msgid "Launched"
+msgstr "Lancé"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard__line_ids
+msgid "Lines"
+msgstr "Lignes"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields.selection,name:sale_stock_manual_launch.selection__sale_order__launch_state__normal
+msgid "Partial"
+msgstr "Partiel"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields.selection,name:sale_stock_manual_launch.selection__sale_order__launch_state__blocked
+msgid "Pending"
+msgstr "En attente"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__quantity
+msgid "Quantity"
+msgstr "Quantité"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__sale_order_line_id
+msgid "Sale Order Line"
+msgstr "Ligne de commande"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order_line__to_launch
+msgid "To Launch Procurement"
+msgstr "A lancer"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__wizard_id
+msgid "Wizard"
+msgstr "Assistant"
+
+#. module: sale_stock_manual_launch
+#: code:addons/sale_stock_manual_launch/wizards/launch_procurement_wizard.py:0
+#, python-format
+msgid "You cannot launch procurement for more than one Sale Order."
+msgstr "Vous ne pouvez pas lancer plus que la quantité dans le bon de commande."
+
+#. module: sale_stock_manual_launch
+#: code:addons/sale_stock_manual_launch/wizards/launch_procurement_wizard.py:0
+#, python-format
+msgid "You cannot launch more than the remaining quantity: %s (%s)"
+msgstr "Vous ne pouvez pas lancer plus que la quantité restante: %s (%s)"
