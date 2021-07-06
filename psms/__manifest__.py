@@ -17,7 +17,7 @@
         'views/coupon_view.xml',
         'security/ir.model.access.csv'
     ],
-    'installable': True,
+    'installable': False,
     'application': True,
     'price': 300.00,
     'currency': 'EUR',
