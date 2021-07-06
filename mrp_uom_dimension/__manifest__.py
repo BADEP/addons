@@ -2,7 +2,7 @@
 
 {
     'name': 'Product dimensions',
-    'version': '1.0',
+    'version': '14.0',
     'category': 'Sales Management',
     'description': """
     This module allow to have multidimensional UoMs.
@@ -14,6 +14,7 @@
              'security/ir.model.access.csv',
              'views/mrp_view.xml'
              ],
+    'license': 'AGPL-3',
     'installable': True,
     'auto_install': False,
     'price': 50,
