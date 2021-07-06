@@ -6,7 +6,7 @@ from odoo.tools import float_compare
 class SaleOrder(models.Model):
     _inherit = 'sale.order'
 
-    launch_state = fields.Selection([('normal', 'En cours'), ('blocked', 'Pas encore lancé'), ('done', 'Lancé complètement')], string='Avancement',
+    launch_state = fields.Selection([('normal', 'Partial'), ('blocked', 'Pending'), ('done', 'Launched')], string='Procurement State',
                                     compute='_get_to_launch', store=False)
 
     @api.depends('order_line.to_launch')
@@ -19,7 +19,7 @@ class SaleOrder(models.Model):
 class SaleOrderLine(models.Model):
     _inherit = 'sale.order.line'
 
-    procurement_qty = fields.Float(string="Qté lancée", compute='_get_procurement_quantity', digits='Product Unit of Measure', store=False)
+    procurement_qty = fields.Float(string="Launched", compute='_get_procurement_quantity', digits='Product Unit of Measure', store=False)
     to_launch = fields.Boolean(string="To Launch Procurement", compute='_get_to_launch', store=False)
 
     def get_dummy_qty(self):

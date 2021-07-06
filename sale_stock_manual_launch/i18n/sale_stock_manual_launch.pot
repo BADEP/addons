@@ -1,0 +1,151 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+# 	* sale_stock_manual_launch
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 14.0\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2021-07-06 18:10+0000\n"
+"PO-Revision-Date: 2021-07-06 18:10+0000\n"
+"Last-Translator: \n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order__launch_state
+msgid "Procurement State"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model_terms:ir.ui.view,arch_db:sale_stock_manual_launch.view_launch_procurement_wizard_form
+msgid "Cancel"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard__create_uid
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard__create_date
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard__display_name
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__display_name
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order__display_name
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order_line__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard__id
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__id
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order__id
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order_line__id
+msgid "ID"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard____last_update
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line____last_update
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order____last_update
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order_line____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard__write_uid
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard__write_date
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model_terms:ir.ui.view,arch_db:sale_stock_manual_launch.view_launch_procurement_wizard_form
+msgid "Launch"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.actions.act_window,name:sale_stock_manual_launch.act_launch_procurement_wizard
+msgid "Launch Procurement"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model,name:sale_stock_manual_launch.model_launch_procurement_wizard
+msgid "Launch procurement wizard"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model,name:sale_stock_manual_launch.model_launch_procurement_wizard_line
+msgid "Launch procurement wizard line"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order_line__procurement_qty
+#: model:ir.model.fields.selection,name:sale_stock_manual_launch.selection__sale_order__launch_state__done
+msgid "Launched"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard__line_ids
+msgid "Lines"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields.selection,name:sale_stock_manual_launch.selection__sale_order__launch_state__normal
+msgid "Partial"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields.selection,name:sale_stock_manual_launch.selection__sale_order__launch_state__blocked
+msgid "Pending"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__quantity
+msgid "Quantity"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__sale_order_line_id
+msgid "Sale Order Line"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model,name:sale_stock_manual_launch.model_sale_order
+msgid "Sales Order"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model,name:sale_stock_manual_launch.model_sale_order_line
+msgid "Sales Order Line"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_sale_order_line__to_launch
+msgid "To Launch Procurement"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: model:ir.model.fields,field_description:sale_stock_manual_launch.field_launch_procurement_wizard_line__wizard_id
+msgid "Wizard"
+msgstr ""
+
+#. module: sale_stock_manual_launch
+#: code:addons/sale_stock_manual_launch/wizards/launch_procurement_wizard.py:0
+#, python-format
+msgid "You cannot launch procurement for more than one Sale Order."
+msgstr ""

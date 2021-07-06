@@ -28,7 +28,7 @@
                 </field>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="after">
                     <field name="procurement_qty"
-                           attrs="{'invisible': [('parent.state', '!=', 'sale')]}"/>
+                           attrs="{'column_invisible': [('parent.state', 'not in', ['sale', 'done'])]}"/>
                 </xpath>
 <!--                 <xpath expr="//field[@name='order_line']/tree//field[@name='state']" position="before">-->
 <!--                    <button name="action_launch_procurement" type="object" class="fa fa-sign-in"-->
