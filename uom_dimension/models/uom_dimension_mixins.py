@@ -1,5 +1,4 @@
 from odoo import models, fields, api
-from odoo.addons import decimal_precision as dp
 
 class UomLine(models.AbstractModel):
     _name = 'uom.line'
