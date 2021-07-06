@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Sale Order Maps',
-    'version': '13.0.1.0.0',
+    'version': '14.0.1.0.0',
     'author': 'Yopi Angi, BADEP',
     'license': 'AGPL-3',
     'maintainer': 'Yopi Angi <yopiangi@gmail.com>, Khalid Hazam <k.hazam@badep.ma>',
