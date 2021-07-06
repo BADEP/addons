@@ -19,7 +19,7 @@
     'version': '14.0.1.0',
 
     # any module necessary for this one to work correctly
-    'depends': ['sale_management', 'stock_fleet', 'sale_stock'],
+    'depends': ['sale', 'stock_fleet', 'sale_stock'],
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
 
