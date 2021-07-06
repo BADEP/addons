@@ -3,8 +3,7 @@
     <record id="action_sale_order_map" model="ir.actions.act_window">
         <field name="name">Map</field>
         <field name="res_model">sale.order</field>
-        <field name="view_type">form</field>
-        <field name="view_mode">map,form</field>
+        <field name="view_mode">google_map</field>
         <field name="domain">[('id', '=', active_id)]</field>
     </record>
     <record id="view_sale_order_form" model="ir.ui.view">
@@ -43,7 +42,7 @@
         <field name="name">view.sale.order.map</field>
         <field name="model">sale.order</field>
         <field name="arch" type="xml">
-            <map string="Maps" library="geometry" lat="shipping_latitude" lng="shipping_longitude" color="orange">
+            <google_map string="Maps" library="geometry" lat="shipping_latitude" lng="shipping_longitude" color="orange">
                 <field name="shipping_latitude"/>
                 <field name="shipping_longitude"/>
                 <field name="name"/>
@@ -82,13 +81,13 @@
                         </div>
                     </t>
                 </templates>
-            </map>
+            </google_map>
         </field>
     </record>
     <record id="sale.action_quotations_with_onboarding" model="ir.actions.act_window">
-        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity,map</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity,google_map</field>
     </record>
     <record id="sale.action_orders" model="ir.actions.act_window">
-        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity,map</field>
+        <field name="view_mode">tree,kanban,form,calendar,pivot,graph,activity,google_map</field>
     </record>
 </odoo>
