@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_launch_procurement_wizard_form" model="ir.ui.view">
+        <field name="name">Lancer l'approvisionnement</field>
+        <field name="model">launch.procurement.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="line_ids" nolabel="1">
+                        <tree editable="top" create="0">
+                            <field name="sale_order_line_id" readonly="1" force_save="1"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="launch_procurement" string="Lancer" type="object" class="btn-primary"/>
+                    <button string="Annuler" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window name="Lancer l'approvisionnement" id="act_launch_procurement_wizard"
+        res_model="launch.procurement.wizard"
+        view_mode="form" target="new"/>
+</odoo>
