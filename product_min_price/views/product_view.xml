@@ -28,10 +28,8 @@
             <field name="model">product.template</field>
             <field name="type">form</field>
             <field name="arch" type="xml">
-                <div name="product_lst_price" position="after">
-                    <div name="product_min_price" class="mt-1">
-                        Purchase Price: <field name="purchase_min_price" widget="monetary" options="{'currency_field': 'currency_id', 'field_digits': True}"/>
-                    </div>
+                <div name="product_lst_price" position="inside">
+                    <br/>Purchase Price: <field name="purchase_min_price" widget="monetary"/>
                 </div>
             </field>
         </record>
@@ -64,7 +62,7 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <ul position="inside">
-                    <li>Purchase Price: <field name="purchase_min_price" widget="monetary"/></li>
+                    <li><strong>Purchase Price: <field name="purchase_min_price" widget="monetary"/></strong></li>
                 </ul>
             </field>
         </record>
