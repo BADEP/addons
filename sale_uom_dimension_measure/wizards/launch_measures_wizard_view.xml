@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+
+    <record id="view_launch_measures_wizard_form" model="ir.ui.view">
+        <field name="name">Crée les mesures</field>
+        <field name="model">launch.measures.wizard</field>
+        <field name="arch" type="xml">
+            <form>
+                <group>
+                    <field name="measure_line_ids" nolabel="1">
+                        <tree editable="top" create="0">
+                            <field name="sale_order_line_id" readonly="1" force_save="1"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
+                </group>
+                <footer>
+                    <button name="create_measure" string="Crée les mesures" type="object" class="btn-primary"/>
+                    <button string="Cancel" class="btn-secondary" special="cancel" />
+                </footer>
+            </form>
+        </field>
+    </record>
+
+    <act_window name="Crée les mesures" id="act_launch_measures_wizard"
+        res_model="launch.measures.wizard"
+        view_mode="form" target="new"/>
+</odoo>
