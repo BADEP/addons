@@ -1,0 +1,27 @@
+<odoo>
+    <data>
+        <record id="responsable_mesures" model="res.groups">
+            <field name="name">Responsable mesures</field>
+        </record>
+        <record id="releveur" model="res.groups">
+            <field name="name">Releveur</field>
+        </record>
+
+        <record model="ir.rule" id="releveur_own_rule">
+            <field name="name">Releveur own rule</field>
+            <field name="model_id" ref="model_sale_measure"/>
+            <field name="groups" eval="[(6,0,[ref('releveur')])]"/>
+            <field name="domain_force">[('user_id','=', user.id)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+        </record>
+        <record model="ir.rule" id="responsable_all_rule">
+            <field name="name">Responsable all rule</field>
+            <field name="model_id" ref="model_sale_measure"/>
+            <field name="groups" eval="[(6,0,[ref('responsable_mesures')])]"/>
+            <field name="domain_force">[(1, '=', 1)]</field>
+            <field name="perm_read" eval="1"/>
+            <field name="perm_write" eval="1"/>
+        </record>
+    </data>
+</odoo>
