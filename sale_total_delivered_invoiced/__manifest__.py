@@ -19,7 +19,7 @@
     'version': '14.0.1',
 
     # any module necessary for this one to work correctly
-    'depends': ['sale_management'],
+    'depends': ['sale'],
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
 
@@ -28,7 +28,6 @@
         # 'security/ir.model.access.csv',
         'views/sale_view.xml',
     ],
-    'Installable': True,
     'price': 49.00,
     'currency': 'EUR',
 }
