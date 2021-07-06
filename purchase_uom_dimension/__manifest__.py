@@ -6,7 +6,7 @@
     'author': "BADEP",
     'website': "https://badep.ma",
     'category': 'purchases Management',
-    'version': '13.0.1.0.1',
+    'version': '14.0.1.0.1',
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     'depends': ['purchase', 'uom_dimension'],
@@ -15,7 +15,7 @@
              'report/purchase_report_templates.xml',
              'security/ir.model.access.csv',
              ],
-    'auto_install': True,
+    'auto_install': False,
     'installable': True,
     'price': 30,
     'currency': 'EUR'

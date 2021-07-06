@@ -10,7 +10,7 @@
                 <div class="o_row" position="attributes">
                     <attribute name="class"/>
                 </div>
-                <xpath expr="//field[@name='order_line']/form//field[@name='product_qty']" position="before">
+                <label for="product_qty" position="before">
                     <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
                     <field name="dimension_ids" attrs="{'invisible': [('dimension_ids','=',[])]}">
                         <tree create="false" delete="false" editable="bottom">
@@ -19,7 +19,7 @@
                             <field name="quantity"/>
                         </tree>
                     </field>
-                </xpath>
+                </label>
                 <xpath expr="//field[@name='order_line']/form//field[@name='product_qty']" position="attributes">
                     <attribute name="attrs">{'readonly': [('dimension_ids','!=',[])]}</attribute>
                     <attribute name="force_save">1</attribute>

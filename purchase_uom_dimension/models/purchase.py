@@ -1,6 +1,6 @@
 from odoo import models, fields, api
 
-class purchaseOrderLine(models.Model):
+class PurchaseOrderLine(models.Model):
     _inherit = ['purchase.order.line', 'uom.line']
     _name = 'purchase.order.line'
 
