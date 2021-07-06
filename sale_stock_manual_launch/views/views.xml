@@ -22,7 +22,7 @@
                 </field>
                 <field name="order_line" position="before">
                     <div class="float-right">
-                        <button name="%(act_launch_procurement_wizard)d" type="action" class="fa fa-sign-in"
+                        <button name="%(act_launch_procurement_wizard)d" type="action" class="fa fa-sign-in" title="Launch"
                                 attrs="{'invisible': ['|', ('state', '!=', 'sale'), ('launch_state', '=', 'done')]}"/>
                     </div>
                 </field>
