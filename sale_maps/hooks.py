@@ -5,14 +5,14 @@
 def uninstall_hook(cr, registry):
     query1 = """
     UPDATE ir_act_window
-    SET view_mode=replace(view_mode, ',map', '')
+    SET view_mode=replace(view_mode, ',google_map', '')
     WHERE view_mode LIKE '%,map%' and res_model = 'sale.order';
     """
     cr.execute(query1)
 
     query2 = """
     UPDATE ir_act_window
-    SET view_mode=replace(view_mode, 'map,', '')
+    SET view_mode=replace(view_mode, 'google_map,', '')
     WHERE view_mode LIKE '%map,%' and res_model = 'sale.order';
     """
     cr.execute(query2)
