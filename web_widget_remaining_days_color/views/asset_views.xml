@@ -1,13 +1,13 @@
 <odoo>
     <template
         id="assets_backend"
-        name="base_widget_remaining_days_color assets"
+        name="web_widget_remaining_days_color assets"
         inherit_id="web.assets_backend"
     >
         <xpath expr="." position="inside">
             <script
                 type="text/javascript"
-                src="/base_widget_remaining_days_color/static/src/js/remaining_days_widget.js"
+                src="/web_widget_remaining_days_color/static/src/js/remaining_days_widget.js"
             />
         </xpath>
     </template>

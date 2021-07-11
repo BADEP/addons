@@ -1,4 +1,4 @@
-odoo.define('base_widget_remaining_days_color.basic_fields', function (require) {
+odoo.define('web_widget_remaining_days_color.basic_fields', function (require) {
     "use strict";
     var session = require('web.session');
     const RemainingDays = require('web.basic_fields').RemainingDays;
