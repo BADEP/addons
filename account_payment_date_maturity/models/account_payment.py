@@ -13,11 +13,11 @@ class AccountPayment(models.Model):
             line.update({'date_maturity': self.date_maturity})
         return res
 
-    def write(self, vals):
-        if not vals.get('date'):
-            vals.update({'date': self.date})
-        res = super().write(vals)
-        return res
+    # def write(self, vals):
+    #     if not vals.get('date'):
+    #         vals.update({'date': self.date})
+    #     res = super().write(vals)
+    #     return res
 
 class AccountPaymentRegister(models.TransientModel):
     _inherit = 'account.payment.register'
