@@ -27,7 +27,7 @@
         'security/project_task_log_security.xml',
         'views/task_view.xml'
     ],
-    'Installable': False,
+    'Installable': True,
     'price': 19.00,
     'currency': 'EUR',
 }
