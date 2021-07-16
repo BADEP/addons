@@ -1,7 +1,1 @@
-#!/bin/bash
-for d in $(find -type d -name ".git"); do
-    ( cd $d/.. && git checkout -f $1 && git pull)
-done
-#for d in $1/*; do
-#  ( cd $d && git checkout -f $2 && git pull)
-#done
+/usr/local/bin/gitrecupdate
