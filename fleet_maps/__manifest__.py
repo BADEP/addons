@@ -6,13 +6,12 @@
     'license': 'AGPL-3',
     'website': 'https://badep.ma',
     'maintainer': 'Yopi Angi <yopiangi@gmail.com>, Khalid Hazam <k.hazam@badep.ma>',
-    'support': 'yopiangi@gmail.com',
     'category': 'Fleet',
     'description': """
 Fleet Maps
-========
+==========
 
-Show your leads and pipelines on map
+Show your fleet on map view
 """,
     'depends': [
         'fleet',
