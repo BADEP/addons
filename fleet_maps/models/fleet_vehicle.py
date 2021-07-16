@@ -1,8 +1,6 @@
 # -*- coding: utf-8 -*-
 # License AGPL-3
 from odoo import api, fields, models
-from odoo.addons.base_geolocalize.models.res_partner import (
-    geo_find, geo_query_address)
 
 
 class FleetVehicle(models.Model):
@@ -21,17 +19,33 @@ class FleetVehicle(models.Model):
             self.vehicle_latitude = self.driver_id.partner_latitude
             self.vehicle_longitude = self.driver_id.partner_longitude
 
+    @api.model
+    def _geo_localize(self, street='', zip='', city='', state='', country=''):
+        geo_obj = self.env['base.geocoder']
+        search = geo_obj.geo_query_address(
+            street=street, zip=zip, city=city, state=state, country=country
+        )
+        result = geo_obj.geo_find(search, force_country=country)
+        if result is None:
+            search = geo_obj.geo_query_address(
+                city=city, state=state, country=country
+            )
+            result = geo_obj.geo_find(search, force_country=country)
+        return result
+
+
     def geo_localize(self):
-        google_api_key = self.env['ir.config_parameter'].sudo().get_param(
-            'google.api_key_geocode', default='')
-        for vehicle in self.with_context(lang='en_US').filtered(lambda v: v.location):
-            result = geo_find(
-                addr=vehicle.location,
-                apikey=google_api_key)
+        for vehicle in self.with_context(lang='en_US'):
+            result = self._geo_localize(
+                    street=vehicle.driver_id.street,
+                    zip=vehicle.driver_id.zip,
+                    city=vehicle.driver_id.city,
+                    state=vehicle.driver_id.state_id.name,
+                    country=vehicle.driver_id.country_id.name)
 
             if result:
                 vehicle.write({
-                    'vehicle_latitude': result[0],
-                    'vehicle_longitude': result[1]
+                    'shipping_latitude': result[0],
+                    'shipping_longitude': result[1]
                 })
         return True
