@@ -5,7 +5,7 @@
     'summary': """
         Log Project Task changes: Assignation and stage""",
 
-    'description': """
+    'description': """ 
     """,
 
     'author': "BADEP",
