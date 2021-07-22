@@ -14,6 +14,7 @@
                             <td>
                                 <input type="text" class="js_dimension" t-att-data-dimension_id="dimension.id"
                                        t-att-name="'dimension-%s' % dimension.id"/>
+                                <span t-if="dimension.uom_id" t-field="dimension.uom_id"/>
                             </td>
                         </tr>
                     </tbody>
