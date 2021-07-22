@@ -244,7 +244,7 @@
                     </div>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='product_uom_qty']" position="after">
-                    <field name="measured_quantity"
+                    <field name="measured_quantity" optional="show"
                            attrs="{'invisible': ['|', ('dimension_ids', '=', []), ('parent.state', '!=', 'sale')]}"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='state']" position="before">
