@@ -1,8 +1,8 @@
 {
-    'name': "UoM Dimensions in Sales",
+    'name': "UoM Dimensions in Website",
 
     'summary': """
-        Allows the use of UoM dimensions in sales.""",
+        Allows the use of UoM dimensions in e-commerce.""",
     'author': "BADEP",
     'website': "https://badep.ma",
     'category': 'Sales Management',
