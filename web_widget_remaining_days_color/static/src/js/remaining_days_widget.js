@@ -6,6 +6,10 @@ odoo.define('web_widget_remaining_days_color.basic_fields', function (require) {
     RemainingDays.include({
         _render: function () {
             this._super();
+                if (this.value === false) {
+                this.$el.removeClass('text-bf text-danger text-warning text-success');
+                return;
+            }
             const nowUTC = moment().utc();
             const nowUserTZ = nowUTC.clone().add(session.getTZOffset(nowUTC), 'minutes');
             const valueUserTZ = this.value.clone().add(session.getTZOffset(this.value), 'minutes');
