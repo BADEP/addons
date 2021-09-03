@@ -228,7 +228,7 @@ C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/1
             <field name="condition_select">python</field>
             <field name="condition_python">result = inputs.INDMNTD.amount > 0</field>
             <field name="amount_select">code</field>
-            <field name="amount_python_compute">result = inputs.INDMNTD</field>
+            <field name="amount_python_compute">result = inputs.INDMNTD.amount</field>
             <field name="appears_on_payslip" eval="True"/>
         </record>
         <record id="hr_rule_INDMNT1" model="hr.salary.rule">
