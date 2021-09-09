@@ -12,6 +12,7 @@
     'depends': ['website_sale', 'sale_uom_dimension'],
     'data': [
              'views/sale_views.xml',
+             'security/ir.model.access.csv'
              ],
     'auto_install': True,
     'installable': True,
