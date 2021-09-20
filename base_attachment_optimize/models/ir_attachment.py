@@ -49,7 +49,7 @@ class IrAttachment(models.Model):
     @api.model
     def cron_compress(self):
         if self.env['ir.config_parameter'].sudo().get_param('base_attachment_optimize.optimize_pdf'):
-            attachments = self.search([('mimetype', '=', 'application/pdf'), ('type', '=', 'binary'), ('optimized', '=', False)],
+            attachments = self.with_context(active_test=False).search([('mimetype', '=', 'application/pdf'), ('type', '=', 'binary'), ('optimized', '=', False)],
                                        limit=int(self.env['ir.config_parameter'].sudo().get_param('base_attachment_optimize.batch_size')))
             attachments.optimize()
         return True
