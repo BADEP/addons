@@ -29,7 +29,8 @@ class StockMoveLine(models.Model):
         return res.with_context(dimension_ids=vals_list.get('dimension_ids', False))
 
     def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, ml_to_ignore=None):
-        return super(StockMoveLine, self.with_context(dimension_ids=self.dimension_ids))._free_reservation(product_id, location_id,
+        return super(StockMoveLine, self.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in self.dimension_ids},
+                                                      product_dimension_qty=self.move_id.product_dimension_qty))._free_reservation(product_id, location_id,
                                                                                                            quantity, lot_id=lot_id,
                                                                                                            package_id=package_id,
                                                                                                            owner_id=owner_id,
