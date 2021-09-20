@@ -1,2 +1,3 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_uom_dimension_public,uom.dimension.public,model_uom_dimension,base.group_public,1,1,1,1
+access_uom_dimension_public,uom.dimension.public,uom_dimension.model_uom_dimension,base.group_public,1,1,1,1
+access_uom_uom_public,uom.uom.public,uom.model_uom_uom,base.group_public,1,0,0,0
