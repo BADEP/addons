@@ -29,7 +29,10 @@ class SaleOrderLine(models.Model):
     @api.depends('qty_delivered_manual', 'move_ids.state', 'move_ids.scrapped', 'move_ids.product_uom_qty', 'move_ids.product_uom')
     def _get_procurement_quantity(self):
         for rec in self:
-            rec.procurement_qty = rec.qty_delivered_manual or super(SaleOrderLine, rec)._get_qty_procurement(0)
+            if rec.product_id:
+                rec.procurement_qty = rec.qty_delivered_manual or super(SaleOrderLine, rec)._get_qty_procurement(0)
+            else:
+                rec.procurement_qty = 0
 
     def action_launch_procurement(self):
         return self._action_launch_stock_rule()
