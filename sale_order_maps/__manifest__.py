@@ -21,6 +21,6 @@ Show your Sale orders  on map view in regards to delivery address
         'views/sale_views.xml'
     ],
     'demo': [],
-    'installable': False,
+    'installable': True,
     'uninstall_hook': 'uninstall_hook',
 }

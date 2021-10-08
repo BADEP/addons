@@ -45,6 +45,7 @@
                                     <field name="campaign_id"/>
                                     <field name="medium_id"/>
                                     <field name="source_id"/>
+                                    <field name="date_retrieval"/>
                                 </tree>
                             </field>
                         </group>
@@ -100,6 +101,7 @@
                             <group>
                                 <field name="page_id" readonly='1'/>
                                 <field name="facebook_form_id" readonly='1'/>
+                                <field name="date_retrieval"/>
                                 <field name="access_token" invisible="1"/>
                             </group>
                             <group string="Tracking Info">

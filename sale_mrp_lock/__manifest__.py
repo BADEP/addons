@@ -7,6 +7,5 @@
     'depends': ['mrp_sale_info'],
     'license': 'AGPL-3',
     'data': [
-    ],
-    'installable': False
+    ]
 }

@@ -20,8 +20,6 @@
     'data': [
         'views/assets.xml',
     ],
-    'Installable': False,
-
     'price': 199.00,
     'currency': 'EUR',
 }

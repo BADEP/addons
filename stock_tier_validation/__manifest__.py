@@ -10,7 +10,7 @@
     "author": "BADEP, Open Source Integrators, Odoo Community Association (OCA)",
     "license": "AGPL-3",
     "application": False,
-    "installable": False,
+    "installable": True,
     "depends": [
         "stock",
         "base_tier_validation",

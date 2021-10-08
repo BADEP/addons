@@ -27,8 +27,8 @@ class PurchaseOrderLine(models.Model):
     def _compute_amount_received_invoiced(self):
         for line in self:
             line.update({
-                'price_received': line.price_total * (line.qty_received / line.product_uom_qty) if line.product_uom_qty else 0,
-                'price_invoiced': line.price_total * (line.qty_invoiced / line.product_uom_qty) if line.product_uom_qty else 0,
+                'price_received': line.price_total * (line.qty_received / line.product_qty) if line.product_qty else 0,
+                'price_invoiced': line.price_total * (line.qty_invoiced / line.product_qty) if line.product_qty else 0,
             })
 
 

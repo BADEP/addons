@@ -66,6 +66,7 @@ class CrmFacebookForm(models.Model):
     campaign_id = fields.Many2one('utm.campaign')
     source_id = fields.Many2one('utm.source')
     medium_id = fields.Many2one('utm.medium')
+    date_retrieval = fields.Datetime(string='Fetch Leads After')
 
     def get_fields(self):
         self.mappings.unlink()
