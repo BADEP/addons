@@ -47,14 +47,6 @@ class ChangeProductionQty(models.TransientModel):
                                     self.env['mrp.production'].browse(res['mo_id']).dimension_ids]
         return res
 
-    @api.onchange('product_dimension_qty', 'dimension_ids')
-    def onchange_dimension_ids(self):
-        if self.dimension_ids:
-            qty = self.mo_id.product_uom_id.eval_values(
-                dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]), self.product_dimension_qty)
-            if qty != self.product_qty:
-                self.product_qty = qty
-
     def change_prod_qty(self):
         res = super().change_prod_qty()
         for wizard in self:
