@@ -7,5 +7,6 @@
     'depends': ['sale'],
     'license': 'AGPL-3',
     'data': [
-    ]
+    ],
+    'installable': False,
 }

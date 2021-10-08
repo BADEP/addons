@@ -23,10 +23,3 @@ class PurchaseOrder(models.Model):
             'driver': self.driver.id
         })
         return res
-
-    @api.multi
-    def _get_destination_location(self):
-        self.ensure_one()
-        if self.vehicle and self.vehicle.stock_location_id:
-            return self.vehicle.stock_location_id.id
-        return super()._get_destination_location()
