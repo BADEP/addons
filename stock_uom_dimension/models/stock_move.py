@@ -20,8 +20,16 @@ class StockMove(models.Model):
 
     @api.onchange('dimension_ids', 'product_dimension_qty_done')
     def onchange_dimensions(self):
-        if self.dimension_ids and self.product_dimension_qty:
+        if self.dimension_ids and self.product_dimension_qty > 0:
             self.quantity_done = (self.product_dimension_qty_done * self.product_uom_qty) / self.product_dimension_qty
+        elif self.dimension_ids and self.product_dimension_qty == 0:
+            self.quantity_done = 0
+
+    @api.one
+    def write(self, vals):
+        res = super().write(vals)
+        if vals.get('product_dimension_qty'):
+            self.onchange_dimensions()
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
