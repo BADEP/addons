@@ -8,6 +8,12 @@ class StockMove(models.Model):
     dimension_ids = fields.One2many('stock.move.dimension', 'line_id', string='Dimensions', copy=True)
     product_dimension_qty_done = fields.Integer('Nombre fait', required=True, default=0, copy=False)
 
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        distinct_fields = super(StockMove, self)._prepare_merge_moves_distinct_fields()
+        distinct_fields.append('dimension_ids')
+        return distinct_fields
+
     def get_uom_field(self):
         return 'product_uom'
 
