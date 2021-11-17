@@ -14,7 +14,7 @@ class StockMoveLine(models.Model):
     def get_qty_field(self):
         return 'product_uom_qty'
 
-    @api.onchange('product_uom')
+    @api.onchange('product_uom_id')
     def onchange_product_uom_set_dimensions(self):
         super().onchange_product_uom_set_dimensions()
 

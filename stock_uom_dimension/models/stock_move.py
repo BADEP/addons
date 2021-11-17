@@ -6,7 +6,7 @@ class StockMove(models.Model):
     _name = 'stock.move'
 
     dimension_ids = fields.One2many('stock.move.dimension', 'line_id', string='Dimensions', copy=True)
-    product_dimension_qty_done = fields.Integer('Nombre fait', required=True, default=0, copy=False)
+    product_dimension_qty_done = fields.Float('Nombre fait', required=True, default=0, copy=False)
 
     def get_uom_field(self):
         return 'product_uom'
