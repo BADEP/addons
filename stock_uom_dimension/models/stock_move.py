@@ -31,11 +31,12 @@ class StockMove(models.Model):
         })
         return res
 
-    def _split(self, qty, restrict_partner_id=False):
-        new_move = self.browse(super()._split(qty, restrict_partner_id))
-        new_move.write({'product_dimension_qty': self.product_dimension_qty - self.product_dimension_qty_done})
-        self.with_context(do_not_propagate=True, do_not_unreserve=True, rounding_method='HALF-UP').write({'product_dimension_qty': self.product_dimension_qty_done})
-        return new_move.id
+    #todo: fix me
+    # def _split(self, qty, restrict_partner_id=False):
+    #     new_move = self.browse(super()._split(qty, restrict_partner_id))
+    #     new_move.write({'product_dimension_qty': self.product_dimension_qty - self.product_dimension_qty_done})
+    #     self.with_context(do_not_propagate=True, do_not_unreserve=True, rounding_method='HALF-UP').write({'product_dimension_qty': self.product_dimension_qty_done})
+    #     return new_move.id
 
     def _action_assign(self):
         for rec in self:
