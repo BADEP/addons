@@ -185,6 +185,7 @@
                     <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','=','done')]}"/>
                     <field name="dimension_ids" widget="one2many_list">
                         <tree string="Dimensions" create="false" delete="false" editable="bottom">
+                            <field name="display_name" invisible="1"/>
                             <field name="dimension_id" readonly="True" force_save="1"/>
                             <field name="quantity"/>
                         </tree>
