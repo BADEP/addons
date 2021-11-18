@@ -1,0 +1,57 @@
+<odoo>
+    <data>
+        <record id="view_stock_move_line_operation_tree_dimension" model="ir.ui.view">
+            <field name="name">stock.move.line.operation.tree.view.dimension</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_stock_move_line_operation_tree"/>
+            <field eval="17" name="priority"/>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="product_dimension_qty"/>
+                    <field name="dimension_ids" widget="many2many_tags"/>
+                </xpath>
+                <tree position="attributes">
+                    <attribute name="editable"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="stock_move_line_dimension_tree_view" model="ir.ui.view">
+            <field name="name">stock.move.line.dimension.tree.view</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_tree"/>
+            <field eval="17" name="priority"/>
+            <field name="type">tree</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="product_dimension_qty"/>
+                    <field name="dimension_ids" widget="many2many_tags"/>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="stock_move_line_dimension_view" model="ir.ui.view">
+            <field name="name">stock.move.line.dimension.form.view</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock.view_move_line_form"/>
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='product_id']" position="after">
+                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','=','done')]}"/>
+                    <field name="dimension_ids" widget="one2many_list">
+                        <tree string="Dimensions" create="false" delete="false" editable="bottom">
+                            <field name="display_name" invisible="1"/>
+                            <field name="dimension_id" readonly="True" force_save="1"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
+                </xpath>
+                <field name="qty_done" position="attributes">
+                    <attribute name="attrs">{'readonly': [('dimension_ids','!=',[])]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

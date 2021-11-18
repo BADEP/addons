@@ -12,7 +12,7 @@ class StockMoveLine(models.Model):
         return 'product_uom_id'
 
     def get_qty_field(self):
-        return 'product_uom_qty'
+        return 'qty_done'
 
     @api.onchange('product_uom_id')
     def onchange_product_uom_set_dimensions(self):
@@ -20,9 +20,9 @@ class StockMoveLine(models.Model):
 
     @api.onchange('dimension_ids', 'product_dimension_qty_done')
     def onchange_dimensions(self):
-        if self.dimension_ids and self.product_dimension_qty:
-            self.qty_done = (self.product_dimension_qty_done * self.product_uom_qty) / self.product_dimension_qty
-
+        if self.dimension_ids and self.product_dimension_qty_done:
+            self.qty_done = self.product_uom_id.eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]),
+                                               self.product_dimension_qty_done)
     @api.model
     def create(self, vals_list):
         res = super().create(vals_list)
@@ -45,10 +45,10 @@ class StockMoveLine(models.Model):
         return res
 
     # todo: use product_dimension_qty in stock.move.line
-    # def _action_done(self):
-    #     for rec in self:
-    #         super(StockMoveLine, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids},
-    #                                               product_dimension_qty=rec.move_id.product_dimension_qty))._action_done()
+    def _action_done(self):
+        for rec in self:
+            super(StockMoveLine, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids},
+                                                  product_dimension_qty=rec.product_dimension_qty))._action_done()
 
 
 class StockMoveLineDimension(models.Model):

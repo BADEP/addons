@@ -20,8 +20,9 @@ class StockMove(models.Model):
 
     @api.onchange('dimension_ids', 'product_dimension_qty_done')
     def onchange_dimensions(self):
-        if self.dimension_ids and self.product_dimension_qty:
-            self.quantity_done = (self.product_dimension_qty_done * self.product_uom_qty) / self.product_dimension_qty
+        if self.dimension_ids and self.product_dimension_qty_done:
+            self.quantity_done = self.product_uom.eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]),
+                                               self.product_dimension_qty_done)
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
@@ -32,11 +33,11 @@ class StockMove(models.Model):
         return res
 
     #todo: fix me
-    # def _split(self, qty, restrict_partner_id=False):
-    #     new_move = self.browse(super()._split(qty, restrict_partner_id))
-    #     new_move.write({'product_dimension_qty': self.product_dimension_qty - self.product_dimension_qty_done})
-    #     self.with_context(do_not_propagate=True, do_not_unreserve=True, rounding_method='HALF-UP').write({'product_dimension_qty': self.product_dimension_qty_done})
-    #     return new_move.id
+    def _split(self, qty, restrict_partner_id=False):
+        new_move = self.browse(super()._split(qty, restrict_partner_id))
+        new_move.write({'product_dimension_qty': self.product_dimension_qty - self.product_dimension_qty_done})
+        self.with_context(do_not_propagate=True, do_not_unreserve=True, rounding_method='HALF-UP').write({'product_dimension_qty': self.product_dimension_qty_done})
+        return new_move.id
 
     def _action_assign(self):
         for rec in self:
