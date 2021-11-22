@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <record id="product_product_form_view_dimension" model="ir.ui.view">
+            <field name="name">product.product.form.view.dimension</field>
+            <field name="inherit_id" ref="product.product_normal_form_view"/>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <field name="uom_id" position="after">
+                    <field name="custom_uom_code" widget="ace" options="{'mode': 'python'}"/>
+                </field>
+            </field>
+        </record>
+        <record id="product_variant_easy_edit_view_dimension" model="ir.ui.view">
+            <field name="name">product.product.easy.form.view.dimension</field>
+            <field name="inherit_id" ref="product.product_variant_easy_edit_view"/>
+            <field name="model">product.product</field>
+            <field name="arch" type="xml">
+                <field name="type" position="after">
+                    <field name="uom_id" readonly="1"/>
+                    <field name="custom_uom_code" widget="ace" options="{'mode': 'python'}"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>

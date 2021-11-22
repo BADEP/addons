@@ -2,6 +2,11 @@ from odoo import models, fields, api
 
 class UomLine(models.AbstractModel):
     _name = 'uom.line'
+    _description = 'UoM Line Mixin'
+
+    _product_field = 'product_id'
+    _uom_field = 'uom_id'
+    _qty_field = 'product_uom_qty'
 
     dimension_ids = fields.One2many('uom.line.dimension', 'line_id', string='Dimensions', copy=True)
     product_dimension_qty = fields.Float('Nombre', required=True, default=0)
@@ -22,6 +27,8 @@ class UomLine(models.AbstractModel):
     @api.onchange('product_dimension_qty', 'dimension_ids')
     def onchange_dimension_ids(self):
         if self.dimension_ids:
+            if self._product_field in self:
+                custom_code = self[self._product_field].custom_uom_code and self[self._product_field].custom_uom_code or None
             self[self.get_qty_field()] = self[self.get_uom_field()].eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]),
                                                self.product_dimension_qty)
 

@@ -7,11 +7,12 @@
     'website': "https://badep.ma",
     'category': 'Inventory',
     'version': '14.0.1.0.1',
-    'depends': ['uom'],
+    'depends': ['uom', 'product'],
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     'data': [
         'security/ir.model.access.csv',
+        'views/product_views.xml',
         'views/uom_view.xml',
     ],
     'installable': True,
