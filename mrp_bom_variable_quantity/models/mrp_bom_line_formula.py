@@ -1,12 +1,20 @@
 from odoo import _, api, fields, models, exceptions
 from odoo.tools.safe_eval import safe_eval
-
+DEFAULT_PYTHON_CODE = """# Available variables:
+#  - env: Odoo Environment
+#  - context: Context
+#  - production_id: Production Order
+#  - quantity: Production Quantity
+#  - line: BoM Line
+#  - user: Connected user
+#  - result: return result
+result = quantity\n\n\n\n"""
 
 class MrpBomLineFormula(models.Model):
     _name = 'mrp.bom.line.formula'
 
     name = fields.Char(required=True, translate=True)
-    code = fields.Text(required=True, default="result = 0")
+    code = fields.Text(required=True, default=DEFAULT_PYTHON_CODE)
 
     @api.constrains('code')
     def _check_code(self):
