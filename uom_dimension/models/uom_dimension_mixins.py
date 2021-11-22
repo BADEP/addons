@@ -30,7 +30,7 @@ class UomLine(models.AbstractModel):
             if self._product_field in self:
                 custom_code = self[self._product_field].custom_uom_code and self[self._product_field].custom_uom_code or None
             self[self.get_qty_field()] = self[self.get_uom_field()].eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]),
-                                               self.product_dimension_qty)
+                                               self.product_dimension_qty, custom_code)
 
     def onchange_product_uom_set_dimensions(self):
         product_uom = self[self.get_uom_field()]
@@ -42,6 +42,7 @@ class UomLine(models.AbstractModel):
 
 class UomLineDimension(models.AbstractModel):
     _name = 'uom.line.dimension'
+    _description = 'UoM Dimension Line Mixin'
 
     line_id = fields.Many2one('uom.line', copy=True)
     dimension_id = fields.Many2one('uom.dimension', required=True, ondelete='cascade')

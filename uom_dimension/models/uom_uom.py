@@ -54,6 +54,8 @@ class UomUom(models.Model):
 
 class UomDimension(models.Model):
     _name = 'uom.dimension'
+    _description = 'UoM Dimension'
+
     name = fields.Char(required=True)
     uom_id = fields.Many2one('uom.uom', required=True)
     parent_uom_id = fields.Many2one('uom.uom', required=True)
