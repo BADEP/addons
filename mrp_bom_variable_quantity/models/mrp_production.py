@@ -4,9 +4,10 @@ class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
     def _generate_moves(self):
-        for production in self:
-            super(MrpProduction, self.with_context(active_model='mrp.production', active_id=production.id))._generate_moves()
-        return True
+        return super(MrpProduction, self.with_context(production_id=self))._generate_moves()
+
+    def _get_moves_raw_values(self):
+        return super(MrpProduction, self.with_context(production_id=self))._get_moves_raw_values()
 
     #Force move raw recalculation since formulas are not linear
     #Todo: compare _update_raw_moves and _onchange_move_raw and add diff as new raw moves
