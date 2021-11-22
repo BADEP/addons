@@ -21,9 +21,11 @@ class UomUom(models.Model):
     calculation_type = fields.Selection([('simple', 'Simple'), ('code', 'Code')], default='simple', required=True, string='Calculation Type')
     code = fields.Text(string='Python Code', default=DEFAULT_PYTHON_CODE)
 
-    def eval_values(self, dimension_values, product_dimension_qty=1):
+    def eval_values(self, dimension_values, product_dimension_qty=1, custom_code=None):
         for uom in self:
-            if uom.calculation_type == 'simple':
+            if custom_code:
+                code = custom_code
+            elif uom.calculation_type == 'simple':
                 code = 'result = product_dimension_qty * numpy.prod(list(dimension_values.values()))'
             else:
                 code = uom.code
@@ -39,6 +41,10 @@ class UomUom(models.Model):
                 'dimension_values': dimension_values,
                 'result': 0,
             }
+            for dimension_id in dimension_values:
+                eval_context.update({
+                    self.env['uom.dimension'].browse(dimension_id).name: dimension_values[dimension_id]
+                })
             # try:
             safe_eval.safe_eval(code, eval_context, mode="exec", nocopy=True)
             return float(eval_context['result'])
