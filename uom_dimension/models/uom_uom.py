@@ -47,7 +47,7 @@ class UomUom(models.Model):
                 })
             # try:
             safe_eval.safe_eval(code, eval_context, mode="exec", nocopy=True)
-            return float(eval_context['result'])
+            return product_dimension_qty * float(eval_context['result'])
             # except, e:
             #     raise exceptions.UserError(_('Wrong python code defined for uom %s.') % (uom.name))
 

@@ -23,6 +23,15 @@
                     <attribute name="attrs">{'readonly': [('dimension_ids','!=',[]), ('state', '!=', 'draft')]}</attribute>
                     <attribute name="force_save">1</attribute>
                 </field>
+                <xpath expr="//field[@name='move_finished_ids']//tree" position="inside">
+                    <field name="product_dimension_qty"/>
+                    <field name="dimension_ids">
+                        <tree>
+                            <field name="dimension_id"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
+                </xpath>
             </field>
         </record>
 

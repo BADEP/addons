@@ -5,24 +5,24 @@ class StockMove(models.Model):
     _inherit = ['stock.move', 'uom.line']
     _name = 'stock.move'
 
+    _uom_field = 'product_uom'
+    _qty_field = 'product_uom_qty'
+
     dimension_ids = fields.One2many('stock.move.dimension', 'line_id', string='Dimensions', copy=True)
     product_dimension_qty_done = fields.Float('Nombre fait', required=True, default=0, copy=False)
 
-    def get_uom_field(self):
-        return 'product_uom'
+    @api.depends(_qty_field)
+    def _get_product_dimension_qty(self):
+        super()._get_product_dimension_qty()
 
-    def get_qty_field(self):
-        return 'product_uom_qty'
-
-    @api.onchange('product_uom')
+    @api.onchange(_uom_field)
     def onchange_product_uom_set_dimensions(self):
         super().onchange_product_uom_set_dimensions()
 
     @api.onchange('dimension_ids', 'product_dimension_qty_done')
     def onchange_dimensions(self):
         if self.dimension_ids and self.product_dimension_qty_done:
-            self.quantity_done = self.product_uom.eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]),
-                                               self.product_dimension_qty_done)
+            self.quantity_done = self._compute_qty()
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()

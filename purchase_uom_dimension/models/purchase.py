@@ -4,14 +4,16 @@ class PurchaseOrderLine(models.Model):
     _inherit = ['purchase.order.line', 'uom.line']
     _name = 'purchase.order.line'
 
+    _uom_field = 'product_uom'
+    _qty_field = 'product_qty'
+
     dimension_ids = fields.One2many('purchase.order.line.dimension', 'line_id', string='Dimensions', copy=True)
 
-    def get_uom_field(self):
-        return 'product_uom'
-    def get_qty_field(self):
-        return 'product_qty'
+    @api.depends(_qty_field)
+    def _get_product_dimension_qty(self):
+        super()._get_product_dimension_qty()
 
-    @api.onchange('product_uom')
+    @api.onchange(_uom_field)
     def onchange_product_uom_set_dimensions(self):
         super().onchange_product_uom_set_dimensions()
 

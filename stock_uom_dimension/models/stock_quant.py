@@ -5,13 +5,14 @@ class StockQuant(models.Model):
     _inherit = ['stock.quant', 'uom.line']
     _name = 'stock.quant'
 
+    _uom_field = 'product_uom_id'
+    _qty_field = 'quantity'
+
     dimension_ids = fields.One2many('stock.quant.dimension', 'line_id', string='Dimensions', copy=True)
 
-    def get_uom_field(self):
-        return 'product_uom_id'
-
-    def get_qty_field(self):
-        return 'quantity'
+    @api.depends(_qty_field)
+    def _get_product_dimension_qty(self):
+        super()._get_product_dimension_qty()
 
     @api.model
     def create(self, vals):
