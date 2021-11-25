@@ -29,6 +29,8 @@ class UomLine(models.AbstractModel):
         if self.dimension_ids:
             if self._product_field in self:
                 custom_code = self[self._product_field].custom_uom_code and self[self._product_field].custom_uom_code or None
+            else:
+                custom_code = None
             self[self.get_qty_field()] = self[self.get_uom_field()].eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]),
                                                self.product_dimension_qty, custom_code)
 
