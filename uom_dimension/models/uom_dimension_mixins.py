@@ -21,12 +21,14 @@ class UomLine(models.AbstractModel):
 
     @api.onchange('product_dimension_qty', 'dimension_ids')
     def onchange_dimension_ids(self):
-        self[self._qty_field] = self._compute_qty()
+         for rec in self:
+            if rec.dimension_ids:
+                rec[rec._qty_field] = rec._compute_qty()
 
     def _get_product_dimension_qty(self):
         for rec in self:
             qty = rec._compute_qty(1)
-            rec.product_dimension_qty = round(rec[self._qty_field] / qty, 2) if qty else rec.product_dimension_qty
+            rec.product_dimension_qty = round(rec[self._qty_field] / qty, 0) if qty else rec.product_dimension_qty
 
     def _compute_qty(self, force_qty=None):
         self.ensure_one()
