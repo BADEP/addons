@@ -12,3 +12,4 @@ class StockRule(models.Model):
             'dimension_ids': values.get('dimension_ids', [])
         })
         return res
+

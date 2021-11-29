@@ -41,8 +41,11 @@ class StockMove(models.Model):
 
     def _action_assign(self):
         for rec in self:
-            super(StockMove, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids},
-                                              product_dimension_qty=rec.product_dimension_qty))._action_assign()
+            if rec.dimension_ids and not self.env.context.get('dimension_ids'):
+                super(StockMove, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids},
+                                                  product_dimension_qty=rec.product_dimension_qty))._action_assign()
+            else:
+                super()._action_assign()
 
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
     def _compute_product_availability(self):
