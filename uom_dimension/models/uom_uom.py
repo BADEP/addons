@@ -17,7 +17,7 @@ DEFAULT_PYTHON_CODE = """# Available variables:
 class UomUom(models.Model):
     _inherit = 'uom.uom'
 
-    dimension_ids = fields.One2many('uom.dimension', 'parent_uom_id', string='Dimensions', copy=True)
+    dimension_ids = fields.Many2many('uom.dimension', 'uom_dimensions_rel', 'uom_id', 'dimension_id', string='Dimensions', copy=True)
     calculation_type = fields.Selection([('simple', 'Simple'), ('code', 'Code')], default='simple', required=True, string='Calculation Type')
     code = fields.Text(string='Python Code', default=DEFAULT_PYTHON_CODE)
 
@@ -58,4 +58,3 @@ class UomDimension(models.Model):
 
     name = fields.Char(required=True)
     uom_id = fields.Many2one('uom.uom', required=True)
-    parent_uom_id = fields.Many2one('uom.uom', required=True)
