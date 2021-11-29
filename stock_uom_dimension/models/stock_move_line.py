@@ -23,7 +23,8 @@ class StockMoveLine(models.Model):
     def onchange_dimensions(self):
         if self.dimension_ids and self.product_dimension_qty_done:
             self.qty_done = self.product_uom_id.eval_values(dict([(d.dimension_id.id, d.quantity) for d in self.dimension_ids]),
-                                               self.product_dimension_qty_done)
+                                                            self.product_dimension_qty_done)
+
     @api.model
     def create(self, vals_list):
         res = super().create(vals_list)
@@ -31,11 +32,13 @@ class StockMoveLine(models.Model):
 
     def _free_reservation(self, product_id, location_id, quantity, lot_id=None, package_id=None, owner_id=None, ml_to_ignore=None):
         return super(StockMoveLine, self.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in self.dimension_ids},
-                                                      product_dimension_qty=self.move_id.product_dimension_qty))._free_reservation(product_id, location_id,
-                                                                                                           quantity, lot_id=lot_id,
-                                                                                                           package_id=package_id,
-                                                                                                           owner_id=owner_id,
-                                                                                                           ml_to_ignore=ml_to_ignore)
+                                                      product_dimension_qty=self.move_id.product_dimension_qty))._free_reservation(product_id,
+                                                                                                                                   location_id,
+                                                                                                                                   quantity,
+                                                                                                                                   lot_id=lot_id,
+                                                                                                                                   package_id=package_id,
+                                                                                                                                   owner_id=owner_id,
+                                                                                                                                   ml_to_ignore=ml_to_ignore)
 
     # todo: use product_dimension_qty in stock.move.line
     def write(self, vals):
@@ -48,11 +51,9 @@ class StockMoveLine(models.Model):
     # todo: use product_dimension_qty in stock.move.line
     def _action_done(self):
         for rec in self:
-            try:
-                super(StockMoveLine, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids},
+            super(StockMoveLine, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids},
                                                   product_dimension_qty=rec.product_dimension_qty))._action_done()
-            except Exception:
-                pass
+
 
 class StockMoveLineDimension(models.Model):
     _inherit = 'uom.line.dimension'
