@@ -7,11 +7,29 @@
             <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="before">
                 <field name="qty_type"/>
                 <field
-                    name="qty_formula_id"
-                    attrs="{'invisible': [('qty_type', '!=', 'variable')]}"
+                        name="qty_formula_id"
+                        attrs="{'invisible': [('qty_type', '!=', 'variable')]}"
                 />
             </xpath>
             <xpath expr="//field[@name='bom_line_ids']/tree/field[@name='product_qty']" position="attributes">
+                <attribute name="attrs">{'invisible': [('qty_type', '!=', 'fixed')]}</attribute>
+            </xpath>
+        </field>
+    </record>
+
+    <record id="mrp_bom_line_formula_form_view" model="ir.ui.view">
+        <field name="name">mrp.bom.line.formula.form.view</field>
+        <field name="model">mrp.bom.line</field>
+        <field name="inherit_id" ref="mrp.mrp_bom_line_view_form"/>
+        <field name="arch" type="xml">
+            <xpath expr="//field[@name='product_id']" position="after">
+                <field name="qty_type"/>
+                <field
+                        name="qty_formula_id"
+                        attrs="{'invisible': [('qty_type', '!=', 'variable')]}"
+                />
+            </xpath>
+            <xpath expr="//field[@name='product_qty']" position="attributes">
                 <attribute name="attrs">{'invisible': [('qty_type', '!=', 'fixed')]}</attribute>
             </xpath>
         </field>
