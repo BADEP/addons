@@ -12,7 +12,8 @@
     'depends': ['stock_uom_dimension', 'mrp'],
     'data': [
              'security/ir.model.access.csv',
-             'views/mrp_view.xml'
+             'views/mrp_bom_views.xml',
+             'views/mrp_view.xml',
              ],
     'license': 'AGPL-3',
     'installable': True,
