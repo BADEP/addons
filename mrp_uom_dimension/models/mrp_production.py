@@ -55,8 +55,10 @@ class MrpProduction(models.Model):
     def _get_move_raw_values(self, product_id, product_uom_qty, product_uom, operation_id=False, bom_line=False):
         data = super()._get_move_raw_values(product_id, product_uom_qty, product_uom, operation_id, bom_line)
         if bom_line.dimension_ids:
+            dimension_commands = [(5,)]
+            dimension_commands.extend([(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in bom_line.dimension_ids])
             data.update({
-                'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in bom_line.dimension_ids]
+                'dimension_ids': dimension_commands
             })
         return data
 
