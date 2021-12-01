@@ -29,8 +29,13 @@
                     </field>
                 </xpath>
                 <xpath expr="//field[@name='move_raw_ids']//tree//field[@name='product_id']" position="after">
-                    <field name="product_dimension_qty"/>
-                    <field name="dimension_ids" widget="many2many_tags"/>
+                    <field name="product_dimension_qty" force_save="1"/>
+                    <field name="dimension_ids" widget="many2many_tags" force_save="1">
+                        <tree>
+                        <field name="dimension_id" force_save="1"/>
+                        <field name="quantity" force_save="1"/>
+                        </tree>
+                    </field>
                 </xpath>
             </field>
         </record>
