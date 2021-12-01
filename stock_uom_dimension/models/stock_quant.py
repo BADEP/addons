@@ -18,7 +18,6 @@ class StockQuant(models.Model):
     def create(self, vals):
         if self.env.context.get('dimension_ids', False):
             vals.update({
-                'product_dimension_qty': self.env.context.get('product_dimension_qty'),
                 'dimension_ids': [(0, 0, {'dimension_id': k, 'quantity': v}) for k, v in self.env.context.get('dimension_ids').items()]
             })
         return super().create(vals)

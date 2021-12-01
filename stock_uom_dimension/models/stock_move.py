@@ -27,36 +27,26 @@ class StockMove(models.Model):
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()
         res.update({
-            'product_dimension_qty': self.product_dimension_qty - self.product_dimension_qty_done,
             'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in self.dimension_ids]
         })
         return res
 
-    #todo: fix me
-    # def _split(self, qty, restrict_partner_id=False):
-    #     new_move = self.browse(super()._split(qty, restrict_partner_id))
-    #     new_move.write({'product_dimension_qty': self.product_dimension_qty - self.product_dimension_qty_done})
-    #     self.with_context(do_not_propagate=True, do_not_unreserve=True, rounding_method='HALF-UP').write({'product_dimension_qty': self.product_dimension_qty_done})
-    #     return new_move.id
-
     def _action_assign(self):
         for rec in self:
             if rec.dimension_ids and not self.env.context.get('dimension_ids'):
-                super(StockMove, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids},
-                                                  product_dimension_qty=rec.product_dimension_qty))._action_assign()
+                super(StockMove, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids}))._action_assign()
             else:
                 super()._action_assign()
 
     @api.depends('state', 'product_id', 'product_qty', 'location_id')
     def _compute_product_availability(self):
         for rec in self:
-            super(StockMove, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids},
-                                              product_dimension_qty=rec.product_dimension_qty))._compute_product_availability()
+            super(StockMove,
+                  rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids}))._compute_product_availability()
 
     def _prepare_move_line_vals(self, quantity=None, reserved_quant=None):
         vals = super()._prepare_move_line_vals(quantity=quantity, reserved_quant=reserved_quant)
         vals.update({
-            'product_dimension_qty': self.product_dimension_qty,
             'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in self.dimension_ids]
         })
         return vals
@@ -74,5 +64,5 @@ class StockRule(models.Model):
 
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
-        fields += ['dimension_ids', 'product_dimension_qty']
+        fields += ['dimension_ids']
         return fields
