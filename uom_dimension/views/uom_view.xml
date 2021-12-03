@@ -15,6 +15,7 @@
                             <field name="uom_id"/>
                         </tree>
                     </field>
+                    <field name="number_rounding"/>
                     <field name="calculation_type" attrs="{'invisible': [('dimension_ids', '=', False)]}"/>
                     <field name="code" attrs="{'invisible': ['|', ('calculation_type', '!=', 'code'), ('dimension_ids', '=', False)]}" widget="ace" options="{'mode': 'python'}" />
                 </field>

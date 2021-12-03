@@ -1,4 +1,5 @@
 from odoo import models, fields, api
+from odoo.tools.float_utils import float_round
 
 class UomLine(models.AbstractModel):
     _name = 'uom.line'
@@ -27,7 +28,8 @@ class UomLine(models.AbstractModel):
     def _get_product_dimension_qty(self):
         for rec in self:
             qty = rec._compute_qty(1)
-            rec.product_dimension_qty = round(rec[self._qty_field] / qty, 0) if qty else rec.product_dimension_qty
+            # todo: add rounding as a parameter in uom
+            rec.product_dimension_qty = float_round(rec[self._qty_field] / qty, precision_rounding=rec[rec._uom_field].number_rounding) if qty else rec.product_dimension_qty
 
     def _compute_qty(self, force_qty=None):
         self.ensure_one()

@@ -20,6 +20,7 @@ class UomUom(models.Model):
     dimension_ids = fields.Many2many('uom.dimension', 'uom_dimensions_rel', 'uom_id', 'dimension_id', string='Dimensions', copy=True)
     calculation_type = fields.Selection([('simple', 'Simple'), ('code', 'Code')], default='simple', required=True, string='Calculation Type')
     code = fields.Text(string='Python Code', default=DEFAULT_PYTHON_CODE)
+    number_rounding = fields.Float(string='Précision des nombres', digits=(12, 6), default=1)
 
     def eval_values(self, dimension_values, product_dimension_qty=1, custom_code=None):
         for uom in self:
