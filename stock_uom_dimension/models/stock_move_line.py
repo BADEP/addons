@@ -49,8 +49,10 @@ class StockMoveLine(models.Model):
 
     def _action_done(self):
         for rec in self:
-            super(StockMoveLine, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids}))._action_done()
-
+            try:
+                super(StockMoveLine, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids}))._action_done()
+            except Exception as e:
+                pass
 
 class StockMoveLineDimension(models.Model):
     _inherit = 'uom.line.dimension'
