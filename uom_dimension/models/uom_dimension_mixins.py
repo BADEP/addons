@@ -28,8 +28,9 @@ class UomLine(models.AbstractModel):
     def _get_product_dimension_qty(self):
         for rec in self:
             qty = rec._compute_qty(1)
+            rounding = rec[rec._uom_field].number_rounding or 1
             # todo: add rounding as a parameter in uom
-            rec.product_dimension_qty = float_round(rec[self._qty_field] / qty, precision_rounding=rec[rec._uom_field].number_rounding) if qty else rec.product_dimension_qty
+            rec.product_dimension_qty = float_round(rec[self._qty_field] / qty, precision_rounding=rounding) if qty else rec.product_dimension_qty
 
     def _compute_qty(self, force_qty=None):
         self.ensure_one()
