@@ -20,11 +20,12 @@ class PurchaseOrderLine(models.Model):
     def _prepare_stock_moves(self, picking):
         self.ensure_one()
         values = super()._prepare_stock_moves(picking)
-        values[0].update({
-            'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in
-                              self.dimension_ids],
-            'product_dimension_qty': self.product_dimension_qty
-        })
+        if values:
+            values[0].update({
+                'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in
+                                  self.dimension_ids],
+                'product_dimension_qty': self.product_dimension_qty
+            })
         return values
 
     def _prepare_account_move_line(self, move):
