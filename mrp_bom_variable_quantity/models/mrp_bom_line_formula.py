@@ -45,3 +45,13 @@ class MrpBomLineFormula(models.Model):
             nocopy=True,
         )
         return eval_context.get('result', 0)
+
+    # get extra_data to be injected directly into the raw move
+    def execute_extra_data(self, eval_context):
+        safe_eval(
+            self.code.strip(),
+            eval_context,
+            mode="exec",
+            nocopy=True,
+        )
+        return eval_context.get('extra_data', 0)
