@@ -7,7 +7,7 @@ class ChangeProductionQty(models.TransientModel):
     _uom_field = 'product_uom_id'
     _qty_field = 'product_qty'
 
-    dimension_ids = fields.One2many('change.production.qty.dimension', 'line_id')
+    dimension_ids = fields.One2many('change.production.qty.dimension', 'line_id', readonly=True, store=True)
     product_uom_id = fields.Many2one('uom.uom', related='mo_id.product_uom_id')
     product_id = fields.Many2one('product.product', related='mo_id.product_id')
 

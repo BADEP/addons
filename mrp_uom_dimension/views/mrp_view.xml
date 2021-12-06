@@ -62,8 +62,8 @@
                 <xpath expr="//field[@name='product_qty']" position="before">
                     <field name="product_uom_id" invisible="1"/>
                     <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
-                    <field name="dimension_ids" attrs="{'invisible': [('dimension_ids','=',[])]}">
-                        <tree create="false" delete="false" editable="bottom">
+                    <field name="dimension_ids" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': True}">
+                        <tree create="false" delete="false">
                             <field name="dimension_id" readonly="1" force_save="1"/>
                             <field name="quantity"/>
                         </tree>
