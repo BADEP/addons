@@ -1,3 +1,5 @@
 id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
-access_documents_folder_base_group_user,documents_folder_base_group_user,model_documents_folder,base.group_user,1,1,1,1
-
+access_mrp_routing,mrp.routing,model_mrp_routing,mrp.group_mrp_user,1,0,0,0
+access_mrp_routing_manager,mrp.routing.manager,model_mrp_routing,mrp.group_mrp_manager,1,1,1,1
+access_mrp_routing_workcenter_template,mrp.routing.workcenter.template,model_mrp_routing_workcenter_template,mrp.group_mrp_user,1,0,0,0
+access_mrp_routing_workcenter_template_manager,mrp.routing.workcenter.template.manager,model_mrp_routing_workcenter_template,mrp.group_mrp_manager,1,1,1,1

@@ -49,7 +49,7 @@ class MrpRoutingWorkcenterTemplate(models.Model):
             operation.time_cycle = operation.time_cycle_manual
         for operation in self - manual_ops:
             data = self.env['mrp.workorder'].search([
-                ('operation_id', '=', operation.id),
+                ('operation_template_id', '=', operation.id),
                 ('qty_produced', '>', 0),
                 ('state', '=', 'done')],
                 limit=operation.time_mode_batch,
@@ -72,8 +72,8 @@ class MrpRoutingWorkcenterTemplate(models.Model):
     #todo: use child operation_ids
     def _compute_workorder_count(self):
         data = self.env['mrp.workorder'].read_group([
-            ('operation_id', 'in', self.ids),
-            ('state', '=', 'done')], ['operation_id'], ['operation_id'])
-        count_data = dict((item['operation_id'][0], item['operation_id_count']) for item in data)
+            ('operation_template_id', 'in', self.ids),
+            ('state', '=', 'done')], ['operation_template_id'], ['operation_template_id'])
+        count_data = dict((item['operation_template_id'][0], item['operation_template_id_count']) for item in data)
         for operation in self:
             operation.workorder_count = count_data.get(operation.id, 0)

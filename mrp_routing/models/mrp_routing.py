@@ -2,7 +2,6 @@ from odoo import api, fields, models, _
 
 
 class MrpRouting(models.Model):
-    """ Specifies routings of work centers """
     _name = 'mrp.routing'
     _description = 'Routings'
 

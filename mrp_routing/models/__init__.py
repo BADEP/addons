@@ -1,3 +1,1 @@
-# -*- coding: utf-8 -*-
-
-from . import ir_attachment
+from . import mrp_bom, mrp_routing, mrp_routing_workcenter, mrp_routing_workcenter_template, mrp_workorder
