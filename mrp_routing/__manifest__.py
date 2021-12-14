@@ -21,6 +21,7 @@
         'data/mrp_data.xml',
         'security/ir.model.access.csv',
         'views/mrp_bom_views.xml',
+        'views/mrp_production_views.xml',
         'views/mrp_routing_views.xml'
     ],
 
