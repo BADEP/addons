@@ -11,11 +11,11 @@ class ChangeProductionQty(models.TransientModel):
     product_uom_id = fields.Many2one('uom.uom', related='mo_id.product_uom_id')
     product_id = fields.Many2one('product.product', related='mo_id.product_id')
 
-    @api.depends(_qty_field)
+    @api.depends('product_qty')
     def _get_product_dimension_qty(self):
         super()._get_product_dimension_qty()
 
-    @api.onchange(_uom_field)
+    @api.onchange('product_uom_id')
     def onchange_product_uom_set_dimensions(self):
         super().onchange_product_uom_set_dimensions()
 
