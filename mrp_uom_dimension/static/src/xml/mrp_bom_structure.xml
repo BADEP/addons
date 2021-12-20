@@ -2,22 +2,18 @@
 <templates id="template" xml:space="preserve">
 
 	<t t-name="mrp.report_bom_search" t-inherit="mrp.report_bom_search" t-inherit-mode="extension" owl="1">
-
         <div t-if="is_variant_applied" position="before">
-            <div class="form-group col-lg-4">
+            <div t-if="dimensions" class="form-group col-lg-4">
                 <label>Dimensions:</label>
                 <div class="row">
                     <table class="table">
                         <tbody>
                             <tr t-foreach="dimensions" t-as="dimension">
                                 <td>
-<!--                                    <strong t-esc="dimension"/>-->
-<!--                                    <strong t-esc="dimensions"/>-->
                                     <strong t-esc="dimensions[dimension]"/>
                                 </td>
                                 <td>
                                     <input type="text" class="o_input o_mrp_bom_report_dimension" t-att-data-dimension_id="dimension"/>
-<!--                                    <span t-if="dimension.uom_id" t-field="dimension.uom_id"/>-->
                                 </td>
                             </tr>
                         </tbody>

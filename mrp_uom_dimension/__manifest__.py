@@ -9,9 +9,10 @@
     """,
     'author': 'BADEP',
     'website': 'http://www.badep.ma',
-    'depends': ['stock_uom_dimension', 'mrp'],
+    'depends': ['stock_uom_dimension', 'mrp_bom_variable_quantity'],
     'data': [
         'security/ir.model.access.csv',
+        'report/mrp_report_bom_structure.xml',
         'views/mrp_bom_views.xml',
         'views/mrp_uom_dimension_templates.xml',
         'views/mrp_view.xml',

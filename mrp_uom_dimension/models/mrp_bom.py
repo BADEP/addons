@@ -9,11 +9,11 @@ class MrpBomLine(models.Model):
 
     dimension_ids = fields.One2many('mrp.bom.line.dimension', 'line_id', string='Dimensions', copy=True)
 
-    @api.depends(_qty_field)
+    @api.depends('product_qty')
     def _get_product_dimension_qty(self):
         super()._get_product_dimension_qty()
 
-    @api.onchange(_uom_field)
+    @api.onchange('product_uom_id')
     def onchange_product_uom_set_dimensions(self):
         super().onchange_product_uom_set_dimensions()
 
