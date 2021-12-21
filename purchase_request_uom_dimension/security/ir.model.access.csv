@@ -1,0 +1,2 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_purchase_request_line_dimension_purchase_user,purchase.request.line.dimension.purchase_user,model_purchase_request_line_dimension,purchase_request.group_purchase_request_user,1,1,1,1

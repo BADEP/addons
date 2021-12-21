@@ -1,0 +1,31 @@
+<odoo>
+    <data>
+        <record id="purchase_uom_dimension_form_view" model="ir.ui.view">
+            <field name="name">purchase_uom_dimension_form_view</field>
+            <field name="model">purchase.request</field>
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <div class="o_row" position="attributes">
+                    <attribute name="class"/>
+                </div>
+                <label for="product_qty" position="before">
+                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
+                    <field name="dimension_ids" attrs="{'invisible': [('dimension_ids','=',[])]}">
+                        <tree create="false" delete="false" editable="bottom">
+                            <field name="display_name" invisible="1"/>
+                            <field name="dimension_id" readonly="1" force_save="1"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
+                </label>
+                <xpath expr="//field[@name='line_ids']/tree//field[@name='product_qty']" position="before">
+                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
+                    <field name="dimension_ids" widget="many2many_tags"
+                           attrs="{'invisible': [('dimension_ids','=',[])]}" force_save="1"/>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>
