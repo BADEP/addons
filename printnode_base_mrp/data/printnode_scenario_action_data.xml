@@ -1,0 +1,10 @@
+<odoo>
+    <data>
+        <record id="print_production_lot_label_on_generation" model="printnode.scenario.action">
+            <field name="name">Print Production lot label on Transfer (real time)</field>
+            <field name="code">print_production_lot_label_on_generation</field>
+            <field name="model_id" eval="ref('mrp.model_mrp_production')"/>
+            <field name="reports_model_id" eval="ref('stock.model_stock_production_lot')"/>
+        </record>
+    </data>
+</odoo>
