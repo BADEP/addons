@@ -10,7 +10,7 @@ class UomLine(models.AbstractModel):
     _qty_field = 'product_uom_qty'
 
     dimension_ids = fields.One2many('uom.line.dimension', 'line_id', string='Dimensions', copy=True)
-    product_dimension_qty = fields.Float('Nombre', required=True, default=0, compute='_get_product_dimension_qty', inverse='onchange_dimension_ids')
+    product_dimension_qty = fields.Float('Nombre', required=True, default=0, compute='_get_product_dimension_qty', inverse='onchange_dimension_ids', store=True)
 
     @api.model
     def default_get(self, fields_list):
@@ -29,8 +29,7 @@ class UomLine(models.AbstractModel):
         for rec in self:
             qty = rec._compute_qty(1)
             rounding = rec[rec._uom_field].number_rounding or 1
-            # todo: add rounding as a parameter in uom
-            rec.product_dimension_qty = float_round(rec[self._qty_field] / qty, precision_rounding=rounding) if qty else rec.product_dimension_qty
+            rec.product_dimension_qty = float_round(rec[self._qty_field] / qty, precision_rounding=rounding) if (qty != 0) else rec.product_dimension_qty
 
     def _compute_qty(self, force_qty=None):
         self.ensure_one()

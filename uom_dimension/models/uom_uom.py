@@ -27,7 +27,7 @@ class UomUom(models.Model):
             if custom_code:
                 code = custom_code
             elif uom.calculation_type == 'simple':
-                code = 'result = product_dimension_qty * numpy.prod(list(dimension_values.values()))'
+                code = 'result = numpy.prod(list(dimension_values.values()))'
             else:
                 code = uom.code
             eval_context = {
