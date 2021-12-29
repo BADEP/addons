@@ -38,14 +38,5 @@ class PurchaseReport(models.Model):
     price_received = fields.Float('Total livré', readonly=True)
     price_invoiced = fields.Float('Total facturé', readonly=True)
 
-    def init(self):
-        # self._table = sale_report
-        tools.drop_view_if_exists(self.env.cr, self._table)
-        self.env.cr.execute("""CREATE or REPLACE VIEW %s as (
-            %s
-            FROM ( %s )
-            %s
-            )""" % (self._table, self._select(), self._from(), self._group_by()))
-
     def _select(self):
         return super()._select() + ", sum(l.qty_received / line_uom.factor * product_uom.factor) as qty_received, sum(l.qty_invoiced / line_uom.factor * product_uom.factor) as qty_billed"
