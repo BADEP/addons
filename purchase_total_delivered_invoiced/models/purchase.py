@@ -10,7 +10,6 @@ class PurchaseOrder(models.Model):
     
     @api.depends('order_line.price_received', 'order_line.price_invoiced')
     def _amount_received_invoiced(self):
-        amount_received = amount_invoiced = 0
         for order in self:
             order.update({
                 'amount_received': sum(order.order_line.mapped('price_received')),
