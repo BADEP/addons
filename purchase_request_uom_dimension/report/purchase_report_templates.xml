@@ -1,26 +1,26 @@
 <odoo>
     <data>
-        <template id="report_purchase_request_inherit_uom_dimension" inherit_id="purchase_request.report_purchase_request">
-            <xpath expr="//thead/tr/th[1]" position="after">
-                <t t-if="o.line_ids.mapped('dimension_ids')">
-                    <th>Nombre</th>
-                    <th>Mesures</th>
-                </t>
-            </xpath>
-            <xpath expr="//tr[@t-foreach='o.line_ids']/td[1]" position="after">
-                <t t-if="o.line_ids.mapped('dimension_ids')">
-                    <td>
-                        <t t-if="line_ids.dimension_ids">
-                            <span t-field="line_ids.product_dimension_qty"/>
-                        </t>
-                    </td>
-                    <td>
-                        <t t-if="line_ids.dimension_ids">
-                            <span t-esc="'x'.join([str(q) for q in line_ids.dimension_ids.mapped('quantity')])"/>
-                        </t>
-                    </td>
-                </t>
-            </xpath>
-        </template>
+<!--        <template id="report_purchase_request_inherit_uom_dimension" inherit_id="purchase_request.report_purchase_request">-->
+<!--            <xpath expr="//thead/tr/th[1]" position="after">-->
+<!--                <t t-if="o.line_ids.mapped('dimension_ids')">-->
+<!--                    <th>Nombre</th>-->
+<!--                    <th>Mesures</th>-->
+<!--                </t>-->
+<!--            </xpath>-->
+<!--            <xpath expr="//tr[@t-foreach='o.line_ids']/td[1]" position="after">-->
+<!--                <t t-if="o.line_ids.mapped('dimension_ids')">-->
+<!--                    <td>-->
+<!--                        <t t-if="line_ids.dimension_ids">-->
+<!--                            <span t-field="line_ids.product_dimension_qty"/>-->
+<!--                        </t>-->
+<!--                    </td>-->
+<!--                    <td>-->
+<!--                        <t t-if="line_ids.dimension_ids">-->
+<!--                            <span t-esc="'x'.join([str(q) for q in line_ids.dimension_ids.mapped('quantity')])"/>-->
+<!--                        </t>-->
+<!--                    </td>-->
+<!--                </t>-->
+<!--            </xpath>-->
+<!--        </template>-->
     </data>
 </odoo>
