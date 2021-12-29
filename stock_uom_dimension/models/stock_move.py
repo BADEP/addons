@@ -22,7 +22,7 @@ class StockMove(models.Model):
     @api.onchange('dimension_ids', 'product_dimension_qty_done')
     def onchange_dimensions(self):
         if self.dimension_ids and self.product_dimension_qty_done:
-            self.quantity_done = self._compute_qty()
+            self.quantity_done = self._compute_dimension_qty()
 
     def _prepare_procurement_values(self):
         res = super()._prepare_procurement_values()

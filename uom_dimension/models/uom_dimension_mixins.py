@@ -23,15 +23,15 @@ class UomLine(models.AbstractModel):
     @api.onchange('product_dimension_qty', 'dimension_ids')
     def onchange_dimension_ids(self):
          for rec in self.filtered(lambda ul: ul.dimension_ids and ul.product_dimension_qty):
-            rec[rec._qty_field] = rec._compute_qty()
+            rec[rec._qty_field] = rec._compute_dimension_qty()
 
     def _get_product_dimension_qty(self):
         for rec in self:
-            qty = rec._compute_qty(1)
+            qty = rec._compute_dimension_qty(1)
             rounding = rec[rec._uom_field].number_rounding or 1
             rec.product_dimension_qty = float_round(rec[self._qty_field] / qty, precision_rounding=rounding) if (qty != 0) else rec.product_dimension_qty
 
-    def _compute_qty(self, force_qty=None):
+    def _compute_dimension_qty(self, force_qty=None):
         self.ensure_one()
         force_qty = force_qty or self.product_dimension_qty
         if self.dimension_ids:
