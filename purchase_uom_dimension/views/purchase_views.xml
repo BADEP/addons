@@ -20,10 +20,6 @@
                         </tree>
                     </field>
                 </label>
-                <xpath expr="//field[@name='order_line']/form//field[@name='product_qty']" position="attributes">
-                    <attribute name="attrs">{'readonly': [('dimension_ids','!=',[])]}</attribute>
-                    <attribute name="force_save">1</attribute>
-                </xpath>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='product_qty']" position="before">
                     <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
                     <field name="dimension_ids" widget="many2many_tags"

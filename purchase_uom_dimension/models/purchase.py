@@ -24,7 +24,6 @@ class PurchaseOrderLine(models.Model):
             values[0].update({
                 'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in
                                   self.dimension_ids],
-                'product_dimension_qty': self.product_dimension_qty
             })
         return values
 
@@ -33,7 +32,6 @@ class PurchaseOrderLine(models.Model):
         values.update({
             'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in
                               self.dimension_ids],
-            'product_dimension_qty': self.product_dimension_qty
         })
         return values
 
