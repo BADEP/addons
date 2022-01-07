@@ -10,7 +10,7 @@ class UomLine(models.AbstractModel):
     _qty_field = 'product_uom_qty'
 
     dimension_ids = fields.One2many('uom.line.dimension', 'line_id', string='Dimensions', copy=True)
-    product_dimension_qty = fields.Float('Nombre', required=True, default=0, compute='_get_product_dimension_qty', inverse='onchange_dimension_ids', store=True)
+    product_dimension_qty = fields.Float('Nombre', required=True, default=0, compute='_get_product_dimension_qty', inverse='onchange_dimension_ids', store=False)
 
     @api.model
     def default_get(self, fields_list):
