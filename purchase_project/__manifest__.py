@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 {
     'name': "Purchase Project",
 
@@ -18,10 +17,11 @@
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     'data': [
-        'views/project_view.xml',
-        'views/purchase_view.xml',
+        'views/project_project_views.xml',
+        'views/project_task_views.xml',
+        'views/purchase_views.xml',
     ],
     'installable': True,
-    'price': 49.00,
+    #'price': 49.00,
     'currency': 'EUR',
 }

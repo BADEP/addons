@@ -6,19 +6,15 @@ class PurchaseOrder(models.Model):
     task_id = fields.Many2one(
         'project.task',
         string='Tâche',
+        domain='[("project_id", "=", project_id)]'
     )
-    project_id = fields.Many2one('project.project', string='Projet', required=True)
+    project_id = fields.Many2one('project.project', string='Projet', required=False)
     analytic_account_id = fields.Many2one('account.analytic.account', string='Compte analytique', related='project_id.analytic_account_id', readonly=True)
 
     @api.onchange('project_id')
     def onchange_project_id(self):
         for rec in self.filtered(lambda r: r.project_id):
             rec.task_id = False
-
-    @api.onchange('task_id')
-    def onchange_task_id(self):
-        for rec in self.filtered(lambda r: r.task_id):
-            rec.project_id = rec.task_id.project_id
 
     @api.onchange('analytic_account_id')
     def onchange_analytic_account_id(self):
