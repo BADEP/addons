@@ -2,7 +2,7 @@
     <data>
         <record id="project_project_kanban" model="ir.ui.view">
             <field name="name">project_project_kanban</field>
-            <field name="inherit_id" ref="hr_timesheet.view_project_kanban_inherited"/>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
             <field name="model">project.project</field>
             <field eval="5" name="priority"/>
             <field name="arch" type="xml">
