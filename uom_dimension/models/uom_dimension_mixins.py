@@ -49,7 +49,7 @@ class UomLine(models.AbstractModel):
             return
         self.dimension_ids = [(5, 0, 0)]
         if product_uom:
-            self.dimension_ids = [(0, 0, {'dimension_id': d.id}) for d in product_uom.dimension_ids]
+            self.dimension_ids = [(0, 0, {'dimension_id': d.id, 'quantity': 0}) for d in product_uom.dimension_ids]
 
 class UomLineDimension(models.AbstractModel):
     _name = 'uom.line.dimension'
