@@ -1,0 +1,159 @@
+<odoo>
+    <template id="report_mrp_batch_order">
+        <t t-call="web.html_container">
+            <t t-foreach="docs" t-as="o">
+                <t t-call="web.internal_layout">
+                    <div class="page">
+                        <div class="oe_structure"/>
+                        <div class="row">
+                            <div class="col-7">
+                                <h2>
+                                    <span t-field="o.name"/>
+                                </h2>
+                            </div>
+                            <div class="col-5">
+                                <span class="text-right">
+                                    <img t-att-src="'/report/barcode/?type=%s&amp;value=%s&amp;width=%s&amp;height=%s' % ('Code128', o.name, 600, 100)"
+                                         style="width:350px;height:60px"/>
+                                </span>
+                            </div>
+                        </div>
+                        <div class="row mt32 mb32">
+<!--                            <div class="col-3" t-if="o.routing_id">-->
+<!--                                <strong>Routing:</strong>-->
+<!--                                <br/>-->
+<!--                                <span t-field="o.routing_id"/>-->
+<!--                            </div>-->
+                            <div class="col-3" t-if="o.origin">
+                                <strong>Source Document:</strong>
+                                <br/>
+                                <span t-field="o.origin"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Responsible:</strong>
+                                <br/>
+                                <span t-field="o.user_id"/>
+                            </div>
+                            <div class="col-3">
+                                <strong>Scheduled Date:</strong>
+                                <br/>
+                                <span t-field="o.date_planned_start"/>
+                                <span t-if="o.date_planned_finished">-
+                                    <span t-field="o.date_planned_finished"/>
+                                </span>
+                            </div>
+                        </div>
+
+                        <div t-if="o.production_ids">
+                            <h3>
+                                <t t-if="o.state == 'done'">Production Orders Done</t>
+                                <t t-else="">Production Orders Planned</t>
+                            </h3>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>
+                                        <strong>Order N°</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Product</strong>
+                                    </th>
+                                    <th>
+                                        <strong>Quantity</strong>
+                                    </th>
+                                </tr>
+                                <tr t-foreach="o.production_ids" t-as="production">
+                                    <td>
+                                        <span t-field="production.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="production.product_id"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="production.product_uom_qty"/> <span t-field="production.product_uom_id"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <div t-if="o.workorder_batch_ids and o.state == 'done'">
+                            <h3>
+                                <t t-if="o.state == 'done'">Batch Operations Done</t>
+                                <t t-else="">Batch Operations Planned</t>
+                            </h3>
+                            <table class="table table-sm">
+                                <tr>
+                                    <th>
+                                        <strong>Operation</strong>
+                                    </th>
+                                    <th>
+                                        <strong>WorkCenter</strong>
+                                    </th>
+                                    <th>
+                                        <strong>No. Of Minutes</strong>
+                                    </th>
+                                </tr>
+                                <tr t-foreach="o.workorder_batch_ids" t-as="line2">
+                                    <td>
+                                        <span t-field="line2.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-field="line2.workcenter_id.name"/>
+                                    </td>
+                                    <td>
+                                        <span t-if="o.state != 'done'" t-field="line2.duration_expected"/>
+                                        <span t-if="o.state == 'done'" t-field="line2.duration"/>
+                                    </td>
+                                </tr>
+                            </table>
+                        </div>
+
+                        <h3 t-if="o.move_batch_ids">
+                            <t t-if="o.state == 'done'">
+                                Consumed Products
+                            </t>
+                            <t t-else="">
+                                Products to Consume
+                            </t>
+                        </h3>
+
+                        <table class="table table-sm table-bordered" t-if="o.move_batch_ids">
+                            <thead>
+                                <tr t-if="o.move_batch_ids">
+                                    <th>Product</th>
+                                    <th>Real Quantity</th>
+                                    <th>Change</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <t t-set="lines" t-value="o.move_batch_ids"/>
+                                <t t-foreach="lines" t-as="line">
+                                    <tr>
+                                        <td>
+                                            <span t-field="line.product_id"/>
+                                        </td>
+                                        <td>
+                                            <span t-field="line.product_uom_qty"/>
+                                        </td>
+                                        <td>
+                                            <span>&amp;nbsp;</span>
+                                        </td>
+                                    </tr>
+                                </t>
+                            </tbody>
+                        </table>
+                        <div class="oe_structure"/>
+                    </div>
+                </t>
+            </t>
+        </t>
+    </template>
+    <report
+            string="Production Batch"
+            id="action_report_production_batch"
+            model="mrp.production.batch"
+            name="mrp_production_batch.report_mrp_batch_order"
+            file="mrp_production_batch.report.mrp_production_batch_templates"
+            report_type="qweb-pdf"
+            print_report_name="'Production Batch - %s' % object.name"
+    />
+</odoo>

@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <record id="mrp_workcenter_kanban_view" model="ir.ui.view">
+            <field name="name">mrp.workcenter.kaban</field>
+            <field name="model">mrp.workcenter</field>
+            <field name="inherit_id" ref="mrp.mrp_workcenter_kanban"/>
+            <field name="arch" type="xml">
+                <data></data>
+<!--                <button name="%(mrp.action_work_orders)d" position="attributes">-->
+<!--                    <attribute name="name">%(mrp_workcenter_workorder_batch_action)d</attribute>-->
+<!--                </button>-->
+<!--                <xpath expr="//a[@name='%(mrp.action_work_orders)d']" position="attributes">-->
+<!--                    <attribute name="name">%(mrp_workcenter_workorder_batch_action)d</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//a[@name='%(mrp.action_work_orders)d']" position="attributes">-->
+<!--                    <attribute name="name">%(mrp_workcenter_workorder_batch_action)d</attribute>-->
+<!--                </xpath>-->
+<!--                <xpath expr="//a[@name='%(mrp.action_work_orders)d']" position="attributes">-->
+<!--                    <attribute name="name">%(mrp_workcenter_workorder_batch_action)d</attribute>-->
+<!--                </xpath>-->
+
+            </field>
+        </record>
+    </data>
+</odoo>

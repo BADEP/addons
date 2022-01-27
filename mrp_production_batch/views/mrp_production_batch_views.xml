@@ -1,0 +1,210 @@
+<odoo>
+    <data>
+        <record id="mrp_production_batch_tree_view" model="ir.ui.view">
+            <field name="name">mrp.production.batch.tree</field>
+            <field name="model">mrp.production.batch</field>
+            <field name="arch" type="xml">
+                <tree decoration-bf="message_needaction==True" default_order="date_deadline desc"
+                      decoration-info="state=='draft'"
+                      decoration-danger="date_deadline&lt;current_date and state not in ('done','cancel')"
+                      decoration-muted="state in ('done','cancel')" string="Manufacturing Orders">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="name"/>
+                    <field name="origin"/>
+                    <field name="user_id"/>
+                    <field name="routing_id"/>
+                    <field name="date_deadline"/>
+                    <field name="state"/>
+                </tree>
+            </field>
+        </record>
+
+        <record id="mrp_production_batch_form_view" model="ir.ui.view">
+            <field name="name">mrp.production.batch.form</field>
+            <field name="model">mrp.production.batch</field>
+            <field name="arch" type="xml">
+                <form string="Manufacturing Orders">
+                    <header>
+                        <field name="confirm_cancel" invisible="1"/>
+                        <field name="show_lock" invisible="1"/>
+                        <button name="button_mark_done"
+                                attrs="{'invisible': ['|', ('state', 'in', ('draft', 'cancel', 'done', 'to_close')), ('qty_producing', '=', 0)]}"
+                                string="Validate" type="object" class="oe_highlight"/>
+                        <button name="button_mark_done" attrs="{'invisible': [
+                            '&amp;',
+                            '|',
+                            ('state', 'not in', ('confirmed', 'progress')),
+                            ('qty_producing', '!=', 0),
+                            ('state', '!=', 'to_close')]}" string="Mark as Done" type="object" class="oe_highlight"/>
+                        <button name="action_update_move_data" type="object" string="Calculer la MP"/>
+                        <button name="action_confirm" attrs="{'invisible': [('state', '!=', 'draft')]}" string="Confirm" type="object"
+                                class="oe_highlight"/>
+                        <button name="button_plan" type="object" string="Plan" class="oe_highlight"/>
+                        <button name="button_unplan" type="object" string="Unplan" attrs="{'invisible': [('is_planned', '=', False)]}"/>
+                        <button name="action_assign"
+                                attrs="{'invisible': ['|', ('state', 'in', ('draft', 'done', 'cancel')), ('reserve_visible', '=', False)]}"
+                                string="Check availability" type="object"/>
+                        <button name="button_unreserve" type="object" string="Unreserve" attrs="{'invisible': [('unreserve_visible', '=', False)]}"/>
+                        <button name="button_scrap" type="object" string="Scrap" attrs="{'invisible': [('state', 'in', ('cancel', 'draft'))]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="draft,confirmed,progress,done"/>
+                        <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', False)]}"
+                                string="Unlock" groups="mrp.group_mrp_manager" type="object"
+                                help="Unlock the manufacturing order to adjust what has been consumed or produced."/>
+                        <button name="action_toggle_is_locked" attrs="{'invisible': ['|', ('show_lock', '=', False), ('is_locked', '=', True)]}"
+                                string="Lock" groups="mrp.group_mrp_manager" type="object"
+                                help="Lock the manufacturing order to prevent changes to what has been consumed or produced."/>/>
+                        <button name="action_cancel" type="object" string="Cancel"
+                                attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel')), ('confirm_cancel', '=', True)]}"/>
+                        <button name="action_cancel" type="object" string="Cancel"
+                                attrs="{'invisible': ['|', '|', ('id', '=', False), ('state', 'in', ('done', 'cancel')), ('confirm_cancel', '=', False)]}"
+                                confirm="Some product moves have already been confirmed, this manufacturing order can't be completely cancelled. Are you still sure you want to process ?"/>
+                        <!--                        <button name="button_unbuild" type="object" string="Unbuild" attrs="{'invisible': [('state', '!=', 'done')]}"/>-->
+                    </header>
+                    <sheet>
+                        <!--                        <field name="reservation_state" invisible="1"/>-->
+                        <field name="date_planned_finished" invisible="1"/>
+                        <field name="is_locked" invisible="1"/>
+                        <field name="qty_produced" invisible="1"/>
+                        <field name="qty_producing" invisible="1"/>
+                        <field name="unreserve_visible" invisible="1"/>
+                        <field name="reserve_visible" invisible="1"/>
+                        <!--                        <field name="consumption" invisible="1"/>-->
+                        <field name="is_planned" invisible="1"/>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="act_show_workorder_batchs" type="object"
+                                    attrs="{'invisible': [('workorder_batch_count', '=', 0)]}" class="oe_stat_button"
+                                    icon="fa-play-circle-o">
+                                <div class="o_field_widget o_stat_info">
+                                    <span class="o_stat_value">
+                                        <field name="workorder_batch_done_count" widget="statinfo" nolabel="1"/>
+                                        /
+                                        <field name="workorder_batch_count" widget="statinfo" nolabel="1"/>
+                                    </span>
+                                    <span class="o_stat_text">Workorder Lots</span>
+                                </div>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="name" placeholder="Manufacturing Reference" nolabel="1"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="date_planned_start" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="date_planned_finished" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                <field name="date_deadline" attrs="{'readonly': [('state', '=', 'done')]}"/>
+                                <field name="user_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                                <field name="company_id" groups="base.group_multi_company"
+                                       options="{'no_create': True}"/>
+                            </group>
+                            <group>
+                                <!--                                <field name="has_moves" invisible="1"/>-->
+                                <field name="picking_type_id" domain="[('code', '=', 'mrp_operation')]" force_save="1"/>
+                                <field name="location_src_id" domain="[('usage','=','internal')]" force_save="1"/>
+                                <field name="location_dest_id" domain="[('usage','=','internal')]" attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                       force_save="1"/>
+                                <!--                                <field name="routing_id" attrs="{'readonly': [('state', '!=', 'draft')]}"/>-->
+                                <field name="procurement_group_id" invisible="1"/>
+                                <field name="attribute_value_ids" widget="many2many_tags"/>
+                                <field name="origin" attrs="{'readonly': [('state', '!=', 'draft')]}"/>
+                            </group>
+                        </group>
+                        <group>
+                            <field name="workorder_batch_ids"
+                                   attrs="{'invisible': [('workorder_batch_ids', '=', [])]}"/>
+                        </group>
+                        <notebook>
+                            <page string="Ordres de production">
+                                <field name="generate_serial_visible" invisible="1"/>
+                                <div class="float-right">
+                                    <button name="action_generate_serial" type="object" class="btn btn-primary fa fa-plus-square-o" title="Creates a new serial/lot number"
+                                            attrs="{'invisible': [('generate_serial_visible', '=', False)]}"/>
+                                </div>
+                                <field name="production_ids" widget="many2many"
+                                       context="{'tree_view_ref': 'mrp.mrp_production_tree_view'}"
+                                       attrs="{'readonly': [('state', '!=', 'draft')]}"
+                                       domain="[('procurement_group_id','=', False), ('picking_type_id', '=', picking_type_id), ('state', '=', 'draft')]"/>
+                            </page>
+                            <page string="Articles à consommer">
+                                <field name="move_batch_ids" attrs="{'readonly': [('state', '=', 'done')]}">
+                                    <tree editable="bottom" create="0" delete="0">
+                                        <field name="move_raw_ids" invisible="1"/>
+                                        <field name="product_id" domain="[('uom_id', '=', uom_id)]"/>
+                                        <field name="uom_id" readonly="1" groups="uom.group_uom"/>
+                                        <field name="net_quantity"/>
+                                        <field name="product_uom_qty"/>
+                                        <field name="quantity_done"/>
+                                        <field name="scrap_qty"/>
+                                        <field name="scrap_percentage"/>
+                                        <field name="reserved_availability"/>
+                                        <!--                                        <field name="quantity_done"/>-->
+                                    </tree>
+                                </field>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="view_mrp_production_batch_filter" model="ir.ui.view">
+            <field name="name">view_mrp_production_batch_filter</field>
+            <field name="model">mrp.production.batch</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="name" string="Batch Order"/>
+                    <!--                    <field name="routing_id" string="Routing"/>-->
+                    <filter string="My Orders" name="my_production_batch" domain="[('user_id', '=', uid)]"/>
+                    <separator/>
+                    <filter string="Confirmed" name="confirmed" domain="[('state', '=', 'confirmed')]"/>
+                    <filter string="Planned" name="planned" domain="[('state', '=', 'planned')]"/>
+                </search>
+            </field>
+        </record>
+
+        <record id="mrp_production_batch_action" model="ir.actions.act_window">
+            <field name="name">Lots de fabrication</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.production.batch</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_mrp_production_batch_filter"/>
+            <field name="context">{'search_default_my_production_batch': True, 'search_default_confirmed': True,
+                'search_default_planned': True}
+            </field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new manufacturing batch
+                </p>
+            </field>
+        </record>
+        <record id="mrp_move_batch_action" model="ir.actions.act_window">
+            <field name="name">Pertes</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">stock.move.batch</field>
+            <field name="view_mode">graph,pivot</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Analyse des pertes
+                </p>
+            </field>
+        </record>
+
+
+        <menuitem action="mrp_production_batch_action"
+                  id="menu_mrp_production_batch_action"
+                  parent="mrp.menu_mrp_manufacturing"
+                  sequence="0"/>
+        <menuitem action="mrp_move_batch_action"
+                  id="menu_mrp_move_batch_action"
+                  parent="mrp.menu_mrp_reporting"
+                  sequence="0"/>
+
+    </data>
+</odoo>

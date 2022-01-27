@@ -1,0 +1,16 @@
+<odoo>
+    <data>
+        <record id="view_product_attribute_batch" model="ir.ui.view">
+            <field name="name">view_product_attribute_batch</field>
+            <field name="model">product.attribute</field>
+            <field name="inherit_id" ref="product.product_attribute_view_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <field name="create_variant" position="after">
+                        <field name="group_in_mrp_batch"/>
+                    </field>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

@@ -1,0 +1,7 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+access_mrp_production_batch,mrp.production.batch user,model_mrp_production_batch,mrp.group_mrp_user,1,1,1,1
+access_mrp_production_batch_stock_worker,mrp.production.batch stock_worker,model_mrp_production_batch,stock.group_stock_user,1,0,0,0
+access_stock_move_batch,stock.move.batch user,model_stock_move_batch,mrp.group_mrp_user,1,1,1,1
+access_stock_move_batch_stock_worker,stock.move.batch stock_worker,model_stock_move_batch,stock.group_stock_user,1,0,0,0
+access_mrp_workorder_batch,mrp.workorder.batch user,model_mrp_workorder_batch,mrp.group_mrp_user,1,1,1,1
+access_mrp_workorder_batch_stock_worker,mrp.workorder.batch stock_worker,model_mrp_workorder_batch,stock.group_stock_user,1,0,0,0

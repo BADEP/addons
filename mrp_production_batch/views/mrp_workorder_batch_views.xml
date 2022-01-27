@@ -1,0 +1,244 @@
+<odoo>
+    <data>
+        <record id="view_mrp_production_work_order_batch_search" model="ir.ui.view">
+            <field name="name">mrp.production.work.order.batch.search</field>
+            <field name="model">mrp.workorder.batch</field>
+            <field name="arch" type="xml">
+                <search>
+                    <field name="workcenter_id"/>
+                    <filter string="Ready" name="ready" domain="[('state','=','ready')]"/>
+                    <filter string="Pending" name="pending" domain="[('state','=','pending')]"/>
+                    <filter string="In Progress" name="progress" domain="[('state','=','progress')]"/>
+                    <filter string="Done" name="done" domain="[('state','=', 'done')]"/>
+                    <filter string="Late" name="late"
+                            domain="[('date_planned_start','&lt;=',time.strftime('%%Y-%%m-%%d'))]"/>
+                    <separator/>
+                    <filter string="Start Date" name="date_start_filter" date="date_start"/>
+                    <separator/>
+                </search>
+            </field>
+        </record>
+        <record id="mrp_workorder_batch_tree_view" model="ir.ui.view">
+            <field name="name">mrp.workorder.batch.tree</field>
+            <field name="model">mrp.workorder.batch</field>
+            <field name="arch" type="xml">
+                <tree decoration-bf="message_needaction==True" delete="0" create="0"
+                      decoration-success="date_planned_start&gt;=current_date and state == 'ready'"
+                      decoration-muted="state in ('done','cancel')"
+                      decoration-danger="date_planned_start&lt;current_date and state in ('ready')">
+                    <field name="message_needaction" invisible="1"/>
+                    <field name="workcenter_id" widget="selection"/>
+                    <field name="date_planned_start"/>
+                    <field name="name"/>
+                    <field name="mrp_production_batch_id"/>
+                    <field name="state"/>
+                    <field name="is_produced" invisible="1"/>
+                    <field name="is_user_working" invisible="1"/>
+                    <field name="production_state" invisible="1"/>
+                    <field name="working_state" invisible="1"/>
+                    <button name="button_finish" type="object" string="Finish Order"
+                            attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('is_produced', '=', False)]}"
+                            icon="fa-check text-info"
+                            class="btn-info"/>
+                    <button name="button_start" type="object" string="Start Working"
+                            icon="fa-arrow-right"
+                            attrs="{'invisible': ['|', ('working_state', '=', 'blocked'), ('state', '!=', 'pending')]}"/>
+                    <button name="button_start" type="object" string="Start Working"
+                            icon="fa-play text-success"
+                            attrs="{'invisible': ['|', ('working_state', '=', 'blocked'), ('state', '!=', 'ready')]}"
+                            class="btn-success"/>
+                    <button name="record_production" type="object" string="Done" class="btn-success"
+                            icon="fa-check text-success"
+                            attrs="{'invisible': ['|', '|', '|', ('is_produced', '=', True), ('working_state', '=', 'blocked'), ('state', '!=', 'progress'), ('is_user_working', '=', False)]}"/>
+                    <button name="button_pending" type="object" string="Pause" class="btn-warning"
+                            icon="fa-pause text-warning"
+                            attrs="{'invisible': ['|', '|', ('working_state', '=', 'blocked'), ('state', 'in', ('done', 'pending', 'ready', 'cancel')), ('is_user_working', '=', False)]}"/>
+                    <button name="%(mrp.act_mrp_block_workcenter_wo)d" type="action"
+                            context="{'default_workcenter_id': workcenter_id}" string="Block" class="btn-danger"
+                            icon="fa-ban text-danger"
+                            attrs="{'invisible': ['|', '|', ('working_state', '=', 'blocked'), ('state', 'in', ('done', 'pending', 'ready', 'cancel')), ('is_user_working', '=', False)]}"/>
+                    <button name="button_unblock" type="object" string="Unblock" class="btn-danger"
+                            icon="fa-unlock text-warning"
+                            attrs="{'invisible': [('working_state', '!=', 'blocked')]}"/>
+                    <button name="button_start" type="object" string="Continue Production" class="btn-warning"
+                            icon="fa-play text-warning"
+                            attrs="{'invisible': ['|', '|', ('working_state', '=', 'blocked'), ('is_user_working', '=', True), ('state', 'in', ('done', 'pending', 'ready', 'cancel'))]}"></button>
+<!--                    <button name="button_start" type="object" string="Continue Production"-->
+<!--                            icon="fa-play text-muted"-->
+<!--                            attrs="{'invisible': ['|', '|', ('production_state', '=', 'done'), ('working_state', '=', 'blocked'), ('state', '!=', 'done')]}"/>-->
+                </tree>
+            </field>
+        </record>
+
+
+        <record model="ir.ui.view" id="mrp_workorder_batch_form_view_inherit">
+            <field name="name">mrp.work.order.batch.form</field>
+            <field name="model">mrp.workorder.batch</field>
+            <field name="arch" type="xml">
+                <form string="Production Workcenter" delete="0" create="0">
+                    <field name="is_user_working" invisible="1"/>
+                    <field name="working_state" invisible="1"/>
+                    <field name="production_state" invisible="1"/>
+                    <header>
+                        <button name="button_finish" type="object" string="Finish Order"
+                                attrs="{'invisible': ['|', ('state', '!=', 'progress'), ('is_produced', '=', False)]}"
+                                class="btn-info"/>
+                        <button name="button_start" type="object" string="Start Working"
+                                attrs="{'invisible': ['|', ('working_state', '=', 'blocked'), ('state', '!=', 'pending')]}"/>
+                        <button name="button_start" type="object" string="Start Working"
+                                attrs="{'invisible': ['|', ('working_state', '=', 'blocked'), ('state', '!=', 'ready')]}"
+                                class="btn-success"/>
+                        <button name="record_production" type="object" string="Done" class="btn-success"
+                                attrs="{'invisible': ['|', '|', '|', ('is_produced', '=', True), ('working_state', '=', 'blocked'), ('state', '!=', 'progress'), ('is_user_working', '=', False)]}"/>
+                        <button name="button_pending" type="object" string="Pause" class="btn-warning"
+                                attrs="{'invisible': ['|', '|', ('working_state', '=', 'blocked'), ('state', 'in', ('done', 'pending', 'ready', 'cancel')), ('is_user_working', '=', False)]}"/>
+                        <button name="%(mrp.act_mrp_block_workcenter_wo)d" type="action"
+                                context="{'default_workcenter_id': workcenter_id}" string="Block" class="btn-danger"
+                                attrs="{'invisible': ['|', '|', ('working_state', '=', 'blocked'), ('state', 'in', ('done', 'pending', 'ready', 'cancel')), ('is_user_working', '=', False)]}"/>
+                        <button name="button_unblock" type="object" string="Unblock" class="btn-danger"
+                                attrs="{'invisible': [('working_state', '!=', 'blocked')]}"/>
+                        <button name="button_start" type="object" string="Continue Production" class="btn-warning"
+                                attrs="{'invisible': ['|', '|', ('working_state', '=', 'blocked'), ('is_user_working', '=', True), ('state', 'in', ('done', 'pending', 'ready', 'cancel'))]}"></button>
+                        <button name="button_start" type="object" string="Continue Production"
+                                attrs="{'invisible': ['|', '|', ('production_state', '=', 'done'), ('working_state', '=', 'blocked'), ('state', '!=', 'done')]}"/>
+                        <field name="state" widget="statusbar" statusbar_visible="pending,ready,progress,done"/>
+                    </header>
+                    <sheet>
+                        <notebook>
+                            <page string="Current Production">
+                                <field name="is_produced" invisible="0"/>
+
+                                <field name="workorder_ids"
+                                       attrs="{'invisible': [('workorder_ids', '=', [])]}">
+                                    <tree editable="bottom" create="0" delete="0">
+                                        <field name="name"/>
+                                        <field name="product_id"/>
+                                        <field name="qty_production" readonly="1"/>
+                                        <field name="state"/>
+                                    </tree>
+                                </field>
+                            </page>
+                            <page string="Time Tracking" groups="mrp.group_mrp_manager">
+                                <group>
+                                    <group>
+                                        <label for="date_planned_start" string="Planned Date"/>
+                                        <div class="o_row">
+                                            <field name="date_planned_start" class="mr8"/>
+                                            <div attrs="{'invisible': [('date_planned_start', '=', False)]}"
+                                                 class="o_row">
+                                                <strong attrs="{'invisible': [('date_planned_finished', '=', False)]}"
+                                                        class="mr8">to
+                                                </strong>
+                                                <strong class="oe_edit_only mr8"
+                                                        attrs="{'invisible': [('date_planned_finished', '!=', False)]}">
+                                                    to
+                                                </strong>
+                                                <field name="date_planned_finished"/>
+                                            </div>
+                                        </div>
+                                        <label for="date_start" string="Effective Date"/>
+                                        <div class="o_row">
+                                            <field name="date_start" readonly="1"/>
+                                            <div attrs="{'invisible': [('date_finished', '=', False)]}">
+                                                <strong class="mr8">to</strong>
+                                                <field name="date_finished" readonly="1"/>
+                                            </div>
+                                        </div>
+                                    </group>
+                                    <group>
+                                        <label for="duration_expected"/>
+                                        <div>
+                                            <field name="duration_expected" widget="float_time" class="oe_inline"/>
+                                            minutes
+                                        </div>
+                                        <label for="duration"/>
+                                        <div>
+                                            <button style="pointer-events: none;"
+                                                    class="oe_inline badge badge-secondary">
+                                                <field name="duration" widget="mrp_time_counter"
+                                                       help="Time the currently logged user spent on this workorder."/>
+                                            </button>
+                                        </div>
+                                    </group>
+                                </group>
+                                <!--                    <group>-->
+                                <!--                        <field name="time_ids" nolabel="1" context="{'default_workcenter_id': workcenter_id}">-->
+                                <!--                            <tree>-->
+                                <!--                                <field name="date_start"/>-->
+                                <!--                                <field name="date_end"/>-->
+                                <!--                                <field name="duration" widget="float_time" sum="Total duration"/>-->
+                                <!--                                <field name="user_id"/>-->
+                                <!--                                <field name="workcenter_id" invisible="1"/>-->
+                                <!--                                <field name="loss_id" string="Productivity"/>-->
+                                <!--                            </tree>-->
+                                <!--                            <form>-->
+                                <!--                                <group>-->
+                                <!--                                    <group>-->
+                                <!--                                        <field name="date_start"/>-->
+                                <!--                                        <field name="date_end"/>-->
+                                <!--                                        <field name="duration" widget="float_time"/>-->
+                                <!--                                    </group>-->
+                                <!--                                    <group>-->
+                                <!--                                        <field name="user_id"/>-->
+                                <!--                                        <field name="workcenter_id"/>-->
+                                <!--                                        <field name="loss_id"/>-->
+                                <!--                                    </group>-->
+                                <!--                                </group>-->
+                                <!--                            </form>-->
+                                <!--                        </field>-->
+                                <!--                    </group>-->
+                            </page>
+                            <page string="Miscellaneous" groups="mrp.group_mrp_manager">
+                                <group>
+                                    <group>
+                                        <field name="name"/>
+                                        <field name="workcenter_id" readonly="1"/>
+                                        <field name="mrp_production_batch_id" readonly="1"/>
+                                    </group>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter" groups="mrp.group_mrp_manager">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+
+        <record id="mrp_workorder_batch_action" model="ir.actions.act_window">
+            <field name="name">Lots de travail</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.workorder.batch</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="search_view_id" ref="view_mrp_production_work_order_batch_search"/>
+            <field name="context">{'search_default_todo': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new manufacturing batch
+                </p>
+            </field>
+        </record>
+        <record id="mrp_workcenter_workorder_batch_action" model="ir.actions.act_window">
+            <field name="name">Lots de travail</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="res_model">mrp.workorder.batch</field>
+            <field name="view_mode">tree,form</field>
+            <field name="view_id" eval="False"/>
+            <field name="domain">[('workcenter_id', '=', active_id), ('state', '!=', 'done')]</field>
+            <field name="search_view_id" ref="view_mrp_production_work_order_batch_search"/>
+            <field name="context">{'search_default_todo': True}</field>
+            <field name="help" type="html">
+                <p class="o_view_nocontent_smiling_face">
+                    Create a new manufacturing batch
+                </p>
+            </field>
+        </record>
+        <menuitem action="mrp_workorder_batch_action"
+                  id="menu_mrp_workorder_batch_action"
+                  parent="mrp.menu_mrp_manufacturing"
+                  sequence="0"/>
+    </data>
+</odoo>

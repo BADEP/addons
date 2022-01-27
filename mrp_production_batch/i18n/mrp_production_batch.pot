@@ -1,0 +1,874 @@
+# Translation of Odoo Server.
+# This file contains the translation of the following modules:
+#	* mrp_production_batch
+#
+msgid ""
+msgstr ""
+"Project-Id-Version: Odoo Server 12.0-20201124\n"
+"Report-Msgid-Bugs-To: \n"
+"POT-Creation-Date: 2020-12-16 19:56+0000\n"
+"PO-Revision-Date: 2020-12-16 19:56+0000\n"
+"Last-Translator: <>\n"
+"Language-Team: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: \n"
+"Plural-Forms: \n"
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "&amp;nbsp;"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_production_batch_form_view
+msgid "<span class=\"o_stat_text\">Workorder Lots</span>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+msgid "<strong attrs=\"{'invisible': [('date_planned_finished', '=', False)]}\" class=\"mr8\">to\n"
+"                                                </strong>\n"
+"                                                <strong class=\"oe_edit_only mr8\" attrs=\"{'invisible': [('date_planned_finished', '!=', False)]}\">\n"
+"                                                    to\n"
+"                                                </strong>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+msgid "<strong class=\"mr8\">to</strong>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "<strong>No. Of Minutes</strong>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "<strong>Operation</strong>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "<strong>Order N°</strong>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "<strong>Product</strong>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "<strong>Quantity</strong>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "<strong>Responsible:</strong>\n"
+"                                <br/>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "<strong>Routing:</strong>\n"
+"                                <br/>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "<strong>Scheduled Date:</strong>\n"
+"                                <br/>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "<strong>Source Document:</strong>\n"
+"                                <br/>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "<strong>WorkCenter</strong>"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_needaction
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_needaction
+msgid "Action Needed"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__activity_ids
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__activity_ids
+msgid "Activities"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__activity_state
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__activity_state
+msgid "Activity State"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_production_batch_form_view
+msgid "Annuler"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_production_batch_form_view
+msgid "Articles à consommer"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_attachment_count
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_attachment_count
+msgid "Attachment Count"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "Batch Operations Done"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "Batch Operations Planned"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workcenter__batch_order_ids
+msgid "Batch Orders"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__workorder_batch_count
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__workorder_batch_done_count
+msgid "Batch count"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_tree_view
+msgid "Block"
+msgstr ""
+
+#. module: mrp_production_batch
+#: selection:mrp.production.batch,state:0
+#: selection:mrp.workorder.batch,state:0
+msgid "Cancelled"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__check_to_done
+msgid "Check Produced Qty"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__company_id
+msgid "Company"
+msgstr ""
+
+#. module: mrp_production_batch
+#: selection:mrp.production.batch,state:0
+msgid "Confirmed"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "Consumed Products"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__quantity_done
+msgid "Consumed Qty"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_tree_view
+msgid "Continue Production"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.actions.act_window,help:mrp_production_batch.mrp_production_batch_action
+#: model_terms:ir.actions.act_window,help:mrp_production_batch.mrp_workcenter_workorder_batch_action
+#: model_terms:ir.actions.act_window,help:mrp_production_batch.mrp_workorder_batch_action
+msgid "Create a new manufacturing batch"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__create_uid
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__create_uid
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__create_uid
+msgid "Created by"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__create_date
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__create_date
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__create_date
+msgid "Created on"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_production_batch_form_view
+msgid "Créer les ordres de travail"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+msgid "Current Production"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__date_finished
+msgid "Date Finished"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__date_start
+msgid "Date Start"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__display_name
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__display_name
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__display_name
+msgid "Display Name"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_tree_view
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.view_mrp_production_work_order_batch_search
+#: selection:mrp.production.batch,state:0
+msgid "Done"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__duration_percent
+msgid "Duration Deviation (%)"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__duration_unit
+msgid "Duration Per Unit"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+msgid "Effective Date"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__date_finished
+msgid "Effective End Date"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__date_start
+msgid "Effective Start Date"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__duration_expected
+msgid "Expected Duration"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__duration_expected
+msgid "Expected duration (in minutes)"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__failed_message_ids
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__failed_message_ids
+msgid "Failed Messages"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_tree_view
+msgid "Finish Order"
+msgstr ""
+
+#. module: mrp_production_batch
+#: selection:mrp.workorder.batch,state:0
+msgid "Finished"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_follower_ids
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_follower_ids
+msgid "Followers"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_channel_ids
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_channel_ids
+msgid "Followers (Channels)"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_partner_ids
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_partner_ids
+msgid "Followers (Partners)"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__routing_id
+msgid "Routing"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__is_produced
+msgid "Has Been Produced"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__id
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__id
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__id
+msgid "ID"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_production_batch__message_unread
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__message_unread
+msgid "If checked new messages require your attention."
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_production_batch__message_needaction
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__message_needaction
+msgid "If checked, new messages require your attention."
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_production_batch__message_has_error
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__message_has_error
+msgid "If checked, some messages have a delivery error."
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.view_mrp_production_work_order_batch_search
+#: selection:mrp.production.batch,state:0
+#: selection:mrp.workorder.batch,state:0
+msgid "In Progress"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_is_follower
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_is_follower
+msgid "Is Follower"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__is_user_working
+msgid "Is the Current User Working"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__is_first_wob
+msgid "Is the first WOB to produce"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch____last_update
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch____last_update
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch____last_update
+msgid "Last Modified on"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__write_uid
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__write_uid
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__write_uid
+msgid "Last Updated by"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__write_date
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__write_date
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__write_date
+msgid "Last Updated on"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.view_mrp_production_work_order_batch_search
+msgid "Late"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__scrap_qty
+msgid "Losses"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__scrap_percentage
+msgid "Losses (%)"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder__mrp_workorder_batch_id
+msgid "Lot de travail"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.actions.act_window,name:mrp_production_batch.mrp_production_batch_action
+#: model:ir.ui.menu,name:mrp_production_batch.menu_mrp_production_batch_action
+msgid "Lots de fabrication"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.actions.act_window,name:mrp_production_batch.mrp_workcenter_workorder_batch_action
+#: model:ir.actions.act_window,name:mrp_production_batch.mrp_workorder_batch_action
+#: model:ir.ui.menu,name:mrp_production_batch.menu_mrp_workorder_batch_action
+msgid "Lots de travail"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_main_attachment_id
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_main_attachment_id
+msgid "Main Attachment"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_production_batch_form_view
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_production_batch_tree_view
+msgid "Manufacturing Orders"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_production_batch_form_view
+msgid "Manufacturing Reference"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_production_batch_form_view
+msgid "Marquer comme fait"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_content
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_content
+msgid "Message Content"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_has_error
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_has_error
+msgid "Message Delivery error"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_production_batch__message_content
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__message_content
+msgid "Message content, to be used only in searches"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_ids
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_ids
+msgid "Messages"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+msgid "Miscellaneous"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__move_batch_ids
+msgid "Move Batch"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__move_raw_ids
+msgid "Move Raw"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production__mrp_production_batch_id
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__mrp_production_batch_id
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__mrp_production_batch_id
+msgid "Mrp Production Batch"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__name
+msgid "Name"
+msgstr ""
+
+#. module: mrp_production_batch
+#: code:addons/mrp_production_batch/models/mrp_production_batch.py:9
+#: code:addons/mrp_production_batch/models/mrp_production_batch.py:90
+#: code:addons/mrp_production_batch/models/mrp_production_batch.py:91
+#, python-format
+msgid "New"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__activity_date_deadline
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__activity_date_deadline
+msgid "Next Activity Deadline"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__activity_summary
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__activity_summary
+msgid "Next Activity Summary"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__activity_type_id
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__activity_type_id
+msgid "Next Activity Type"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__next_work_order_batch_id
+msgid "Next Work Order"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_needaction_counter
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_needaction_counter
+msgid "Number of Actions"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_has_error_counter
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_has_error_counter
+msgid "Number of error"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_production_batch__message_needaction_counter
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__message_needaction_counter
+msgid "Number of messages which requires an action"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_production_batch__message_has_error_counter
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__message_has_error_counter
+msgid "Number of messages with delivery error"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_production_batch__message_unread_counter
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__message_unread_counter
+msgid "Number of unread messages"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__operation_id
+msgid "Operation"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__picking_type_id
+msgid "Operation Type"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_production_batch_form_view
+msgid "Ordres de production"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__origin
+msgid "Origin"
+msgstr ""
+
+#. module: mrp_production_batch
+#: selection:mrp.production.batch,activity_state:0
+#: selection:mrp.workorder.batch,activity_state:0
+msgid "Overdue"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_tree_view
+msgid "Pause"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.view_mrp_production_work_order_batch_search
+#: selection:mrp.workorder.batch,state:0
+msgid "Pending"
+msgstr ""
+
+#. module: mrp_production_batch
+#: selection:mrp.production.batch,activity_state:0
+#: selection:mrp.production.batch,state:0
+#: selection:mrp.workorder.batch,activity_state:0
+msgid "Planned"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+msgid "Planned Date"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__product_id
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "Product"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__production_ids
+msgid "Production"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.actions.report,name:mrp_production_batch.action_report_production_batch
+#: model:ir.model,name:mrp_production_batch.model_mrp_production_batch
+msgid "Production Batch"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model,name:mrp_production_batch.model_mrp_production
+msgid "Production Order"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "Production Orders Done"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "Production Orders Planned"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+msgid "Production Workcenter"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "Products to Consume"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__product_uom_qty
+msgid "Qté brute"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__net_quantity
+msgid "Qté nette"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.view_mrp_production_work_order_batch_search
+#: selection:mrp.workorder.batch,state:0
+msgid "Ready"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__duration
+msgid "Real Duration"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "Real Quantity"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__name
+msgid "Reference"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_production_batch__origin
+msgid "Reference of the document that generated this production order request."
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__reserved_availability
+msgid "Reserved Qty"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__user_id
+msgid "Responsible"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__activity_user_id
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__activity_user_id
+msgid "Responsible User"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__date_planned_finished
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__date_planned_finished
+msgid "Scheduled Date Finished"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__date_planned_start
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__date_planned_start
+msgid "Scheduled Date Start"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.view_mrp_production_work_order_batch_search
+msgid "Start Date"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_tree_view
+msgid "Start Working"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__state
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__production_state
+msgid "State"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__state
+msgid "Status"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_production_batch__activity_state
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__activity_state
+msgid "Status based on activities\n"
+"Overdue: Due date is already passed\n"
+"Today: Activity date is today\n"
+"Planned: Future activities."
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__is_user_working
+msgid "Technical field indicating whether the current user is working. "
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__working_state
+msgid "Technical: used in views only"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__production_state
+msgid "Technical: used in views only."
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.report_mrp_batch_order
+msgid "Theoretical Quantity"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__time_ids
+msgid "Time"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+msgid "Time Tracking"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+msgid "Time the currently logged user spent on this workorder."
+msgstr ""
+
+#. module: mrp_production_batch
+#: selection:mrp.production.batch,activity_state:0
+#: selection:mrp.workorder.batch,activity_state:0
+msgid "Today"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_tree_view
+msgid "Unblock"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_stock_move_batch__uom_id
+msgid "Unitof Measure"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_unread
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_unread
+msgid "Unread Messages"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__message_unread_counter
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__message_unread_counter
+msgid "Unread Messages Counter"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__website_message_ids
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__website_message_ids
+msgid "Website Messages"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_production_batch__website_message_ids
+#: model:ir.model.fields,help:mrp_production_batch.field_mrp_workorder_batch__website_message_ids
+msgid "Website communication history"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model,name:mrp_production_batch.model_mrp_workcenter
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__workcenter_id
+msgid "Work Center"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model,name:mrp_production_batch.model_mrp_workorder
+msgid "Work Order"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__working_state
+msgid "Workcenter Status"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__working_user_ids
+msgid "Working user on this work order."
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_workorder_batch__workorder_ids
+msgid "Workorder"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model.fields,field_description:mrp_production_batch.field_mrp_production_batch__workorder_batch_ids
+msgid "Workorder Batch"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model_terms:ir.ui.view,arch_db:mrp_production_batch.mrp_workorder_batch_form_view_inherit
+msgid "minutes"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model,name:mrp_production_batch.model_mrp_workorder_batch
+msgid "mrp.workorder.batch"
+msgstr ""
+
+#. module: mrp_production_batch
+#: model:ir.model,name:mrp_production_batch.model_stock_move_batch
+msgid "stock.move.batch"
+msgstr ""
+
