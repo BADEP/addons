@@ -1,0 +1,29 @@
+<odoo>
+    <data>
+        <record id="stock_move_line_dimension_product_selector" model="ir.ui.view">
+            <field name="name">stock.move.line.dimension.product.selector</field>
+            <field name="model">stock.move.line</field>
+            <field name="inherit_id" ref="stock_barcode.stock_move_line_product_selector"/>
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <div class="col-6 my-2 d-flex align-items-baseline" position="before">
+                    <div class="col-12 my-2 d-flex align-items-baseline">
+                        <i class="fa fa-fw fa-lg fa-calculator mr-3" title="Quantity"/>
+                        <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','=','done')]}"/>
+                    </div>
+                    <div class="col-12 my-2 d-flex align-items-baseline">
+                        <i class="fa mr-3" title="Quantity"/>
+                        <field name="dimension_ids" widget="one2many_list">
+                            <tree string="Dimensions" create="false" delete="false" editable="bottom">
+                                <field name="display_name" invisible="1"/>
+                                <field name="dimension_id" readonly="True" force_save="1"/>
+                                <field name="quantity"/>
+                            </tree>
+                        </field>
+                    </div>
+                </div>
+            </field>
+        </record>
+    </data>
+</odoo>
