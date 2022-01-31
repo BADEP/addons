@@ -6,7 +6,7 @@ class StockMoveLine(models.Model):
     _name = 'stock.move.line'
 
     _uom_field = 'product_uom_id'
-    _qty_field = 'qty_done'
+    _qty_field = 'product_uom_qty'
 
     dimension_ids = fields.One2many('stock.move.line.dimension', 'line_id', string='Dimensions', copy=True)
     product_dimension_qty_done = fields.Integer('Nombre fait', required=True, default=0, copy=False)
