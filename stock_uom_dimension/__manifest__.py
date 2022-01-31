@@ -2,8 +2,8 @@
 
 {
     'name': 'Product dimensions in stock',
-    'version': '1.0',
-    'category': 'Sales Management',
+    'version': '14.0',
+    'category': 'Inventory',
     'license': 'AGPL-3',
     'description': """
     This module allow to have multidimensional UoMs.
