@@ -1,13 +1,13 @@
 # -*- coding: utf-8 -*-
 from odoo import fields, models, api
-import odoo.addons.decimal_precision as dp
+
 
 class purchase_order_line(models.Model):
     _inherit = 'purchase.order.line'
     
-    cost_subtotal = fields.Float(required=True, digits_compute=dp.get_precision('Account'), default=0, compute='get_cost_subtotal', string='Total DT')
-    cost_unit = fields.Float(required=True, digits_compute=dp.get_precision('Account'), default=0, string='DT unitaire')
-    price_base = fields.Float(required=True, digits_compute=dp.get_precision('Account'), default=0, string='Prix de base')
+    cost_subtotal = fields.Float(required=True, digits='Account', default=0, compute='get_cost_subtotal', string='Total DT')
+    cost_unit = fields.Float(required=True, digits='Account', default=0, string='DT unitaire')
+    price_base = fields.Float(required=True, digits='Account', default=0, string='Prix de base')
 
     @api.depends('cost_unit', 'product_qty')
     def get_cost_subtotal(self):
@@ -28,7 +28,7 @@ class purchase_order_line(models.Model):
 
 class purchase_order(models.Model):
     _inherit = 'purchase.order'
-    delivery_cost = fields.Float(digits_compute=dp.get_precision('Account'), compute='get_delivery_cost', string='Total DT')
+    delivery_cost = fields.Float(digits='Account', compute='get_delivery_cost', string='Total DT')
     
     @api.depends('order_line')
     def get_delivery_cost(self):
