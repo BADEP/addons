@@ -1,6 +1,6 @@
 from odoo import models, fields, api, _
 from odoo.exceptions import UserError, ValidationError
-from odoo.addons import decimal_precision as dp
+
 
 
 class LaunchProcurementWizard(models.TransientModel):

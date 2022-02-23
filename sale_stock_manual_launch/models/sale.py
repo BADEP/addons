@@ -1,5 +1,5 @@
 from odoo import models, fields, api, _
-from odoo.addons import decimal_precision as dp
+
 from odoo.tools import float_compare
 
 
