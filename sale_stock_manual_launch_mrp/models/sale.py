@@ -6,8 +6,8 @@ class SaleOrderLine(models.Model):
 
     procurement_qty_manual = fields.Float(string="Qté lancée", digits='Product Unit of Measure', store=False)
 
-    @api.one
     def get_dummy_qty(self):
+        self.ensure_one()
         return self.product_uom_qty - self.procurement_qty
 
     def action_launch_procurement(self):
