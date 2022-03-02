@@ -5,11 +5,10 @@
     <record id="action_invoice_test_tree" model="ir.actions.act_window">
         <field name="name">Invoice Exception Rules</field>
         <field name="res_model">exception.rule</field>
-        <field name="view_type">form</field>
         <field name="view_mode">tree,form</field>
         <field name="view_id" ref="base_exception.view_exception_rule_tree"/>
-        <field name="domain">[('model', 'in', ['account.invoice', 'account.invoice.line'])]</field>
-        <field name="context">{'active_test': False, 'default_model' : 'account.invoice'}</field>
+        <field name="domain">[('model', 'in', ['account.move', 'account.move.line'])]</field>
+        <field name="context">{'active_test': False, 'default_model' : 'account.move'}</field>
     </record>
 
     <menuitem
@@ -22,7 +21,7 @@
 
     <record id="view_invoice_form" model="ir.ui.view">
         <field name="name">account_exception.view_invoice_form</field>
-        <field name="model">account.invoice</field>
+        <field name="model">account.move</field>
         <field name="inherit_id" ref="account.invoice_form"/>
         <field name="arch" type="xml">
             <sheet position="before">
@@ -43,7 +42,7 @@
 
     <record id="view_order_tree" model="ir.ui.view">
         <field name="name">account_exception.view_invoice_tree</field>
-        <field name="model">account.invoice</field>
+        <field name="model">account.move</field>
         <field name="inherit_id" ref="account.invoice_tree"/>
         <field name="arch" type="xml">
             <field name="state" position="after">
@@ -54,7 +53,7 @@
 
     <record id="view_account_invoice_filter" model="ir.ui.view">
         <field name="name">account_exception.view_invoice_filter</field>
-        <field name="model">account.invoice</field>
+        <field name="model">account.move</field>
         <field name="inherit_id" ref="account.view_account_invoice_filter" />
         <field name="arch" type="xml">
             <filter name="late" position="after">

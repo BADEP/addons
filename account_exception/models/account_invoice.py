@@ -12,18 +12,18 @@ class ExceptionRule(models.Model):
 
     model = fields.Selection(
         selection_add=[
-            ('account.invoice', 'Invoice'),
-            ('account.invoice.line', 'Invoice Line'),
+            ('account.move', 'Invoice'),
+            ('account.move.line', 'Invoice Line'),
         ]
     )
-    invoice_ids = fields.Many2many(
-        'account.invoice',
+    move_ids = fields.Many2many(
+        'account.move',
         string="Invoices")
 
 
 class AccountInvoice(models.Model):
-    _inherit = ['account.invoice', 'base.exception']
-    _name = 'account.invoice'
+    _inherit = ['account.move', 'base.exception']
+    _name = 'account.move'
 
     @api.model
     def _exception_rule_eval_context(self, rec):
@@ -33,7 +33,7 @@ class AccountInvoice(models.Model):
 
     @api.model
     def _reverse_field(self):
-        return 'invoice_ids'
+        return 'move_ids'
 
     def detect_exceptions(self):
         all_exceptions = super(AccountInvoice, self).detect_exceptions()

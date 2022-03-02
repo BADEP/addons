@@ -10,7 +10,7 @@ class AccountExceptionConfirm(models.TransientModel):
     _name = 'account.exception.confirm'
     _inherit = ['exception.rule.confirm']
 
-    related_model_id = fields.Many2one('account.invoice', 'Invoice')
+    related_model_id = fields.Many2one('account.move', 'Invoice')
 
     def action_confirm(self):
         self.ensure_one()

@@ -6,24 +6,24 @@ from odoo import api, fields, models
 
 
 class AccountInvoiceLine(models.Model):
-    _inherit = ['account.invoice.line', 'base.exception.method']
-    _name = 'account.invoice.line'
+    _inherit = ['account.move.line', 'base.exception.method']
+    _name = 'account.move.line'
 
     ignore_exception = fields.Boolean(
-        related='invoice_id.ignore_exception',
+        related='move_id.ignore_exception',
         store=True,
         string="Ignore Exceptions")
 
     def _get_main_records(self):
-        return self.mapped('invoice_id')
+        return self.mapped('move_id')
 
     @api.model
     def _reverse_field(self):
-        return 'invoice_ids'
+        return 'move_ids'
 
     def _detect_exceptions(self, rule):
         records = super(AccountInvoiceLine, self)._detect_exceptions(rule)
-        return records.mapped('invoice_id')
+        return records.mapped('move_id')
 
     @api.model
     def _exception_rule_eval_context(self, rec):
