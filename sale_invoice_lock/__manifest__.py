@@ -8,5 +8,5 @@
     'license': 'AGPL-3',
     'data': [
     ],
-    'installable': False,
+    'installable': True,
 }

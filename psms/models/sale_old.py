@@ -28,10 +28,10 @@ class sale_order_voucher(models.Model):
     sale_order_taken = fields.Many2one('sale.order', string="Bon de commande de consommation")
     name = fields.Char('Code', required=True)
     product = fields.Many2one('product.product', required=True, string="Article")
-    quantity = fields.Float(digits_compute=dp.get_precision('Product UoS'), required=True, string="Quantité")
+    quantity = fields.Float(digits='Product Unit of Measure', required=True, string="Quantité")
     uom = fields.Many2one('uom.uom', required=True, string="Unité de mesure")
-    price_unit = fields.Float(digits_compute=dp.get_precision('Product Price'), required=True, string="Prix unitaire")
-    price_total = fields.Float(digits_compute=dp.get_precision('Product Price'), compute='get_price_total',
+    price_unit = fields.Float(digits='Product Price', required=True, string="Prix unitaire")
+    price_total = fields.Float(digits='Product Price', compute='get_price_total',
                                string="Prix total")
     state = fields.Selection(
         [('draft', 'draft'), ('delivered', 'Delivered'), ('collected', 'Collected'), ('done', 'Done')], 'Etat',
