@@ -8,7 +8,6 @@ class FleetVehicle(models.Model):
     picking_ok = fields.Boolean(string='Available in Pickings',default=True)
     stock_location_id = fields.Many2one('stock.location', string='Stock Location')
 
-    @api.one
     @api.depends('pickings')
     def get_picking_count(self):
         for rec in self:
