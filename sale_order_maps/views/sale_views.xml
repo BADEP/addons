@@ -3,7 +3,6 @@
     <record id="action_sale_order_map" model="ir.actions.act_window">
         <field name="name">Map</field>
         <field name="res_model">sale.order</field>
-        <field name="view_type">form</field>
         <field name="view_mode">map,form</field>
         <field name="domain">[('id', '=', active_id)]</field>
     </record>
