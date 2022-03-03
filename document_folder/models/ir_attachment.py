@@ -6,7 +6,7 @@ from odoo import models, fields, api
 class IrAttachment(models.Model):
     _inherit = 'ir.attachment'
 
-    folder_id = fields.Many2one('documents.folder', ondelete="restrict", track_visibility="onchange", index=True)
+    folder_id = fields.Many2one('documents.folder', ondelete="restrict", index=True)
 
     def write(self, vals):
         if vals.get('folder_id'):

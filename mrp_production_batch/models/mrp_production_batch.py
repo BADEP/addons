@@ -87,8 +87,7 @@ class MrpProductionBatch(models.Model):
             ('progress', 'In Progress'),
             ('to_close', 'To Close'),
             ('done', 'Done'),
-            ('cancel', 'Cancelled')], default='draft', string='State', compute='get_related_fields', store=True,
-        track_visibility='onchange')
+            ('cancel', 'Cancelled')], default='draft', string='State', compute='get_related_fields', store=True)
     user_id = fields.Many2one('res.users', 'Responsible', default=lambda self: self._uid)
     company_id = fields.Many2one('res.company', 'Company',
                                  default=lambda self: self.env['res.company']._company_default_get('mrp.production'),
