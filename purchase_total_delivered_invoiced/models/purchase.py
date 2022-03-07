@@ -5,8 +5,8 @@ from odoo import models, fields, api, tools
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
 
-    amount_received = fields.Monetary(string=u'Total Delivered', store=True, readonly=True, compute='_amount_received_invoiced', track_visibility='always')
-    amount_invoiced = fields.Monetary(string=u'Total Invoiced', store=True, readonly=True, compute='_amount_received_invoiced', track_visibility='always')
+    amount_received = fields.Monetary(string=u'Total Delivered', store=True, readonly=True, compute='_amount_received_invoiced')
+    amount_invoiced = fields.Monetary(string=u'Total Invoiced', store=True, readonly=True, compute='_amount_received_invoiced')
     
     @api.depends('order_line.price_received', 'order_line.price_invoiced')
     def _amount_received_invoiced(self):
