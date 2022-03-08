@@ -22,7 +22,7 @@ class SaleOrder(models.Model):
             "name": _("Mesures"),
             "res_model": "sale.measure",
             "domain": [('id', 'in', self.measure_ids.ids)],
-            "view_mode": "tree,form", #,google_map
+            "view_mode": "tree,form",
             "context": self.env.context,
         }
 
