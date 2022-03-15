@@ -16,9 +16,9 @@
                     </div>
                     <field name="amount_invoiced" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                     <div class="oe_subtotal_footer_separator oe_inline o_td_label">
-                        <label for="amount_to_invoice"/>
+                        <label for="amount_uninvoiced" string="Total à facturer"/>
                     </div>
-                    <field name="amount_to_invoice" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
+                    <field name="amount_uninvoiced" nolabel="1" class="oe_subtotal_footer_separator" widget="monetary" options="{'currency_field': 'currency_id'}"/>
                 </field>
             </field>
         </record>
