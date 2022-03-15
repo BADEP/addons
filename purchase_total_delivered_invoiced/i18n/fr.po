@@ -26,6 +26,11 @@ msgid "Amount Invoiced"
 msgstr "Montant facturé"
 
 #. module: purchase_total_delivered_invoiced
+#: model:ir.model.fields,field_description:purchase_total_delivered_invoiced.field_purchase_order_line__price_uninvoiced
+msgid "Amount Uninvoiced"
+msgstr "Montant à facturer"
+
+#. module: purchase_total_delivered_invoiced
 #: model:ir.model,name:purchase_total_delivered_invoiced.model_purchase_order
 msgid "Sale Order"
 msgstr "Bon de commande"
@@ -49,4 +54,9 @@ msgstr "Total livré"
 #: model:ir.model.fields,field_description:purchase_total_delivered_invoiced.field_purchase_order__amount_invoiced
 msgid "Total Invoiced"
 msgstr "Total facturé"
+
+#. module: purchase_total_delivered_invoiced
+#: model:ir.model.fields,field_description:purchase_total_delivered_invoiced.field_purchase_order__amount_uninvoiced
+msgid "Total Uninvoiced"
+msgstr "Total à facturer"
 
