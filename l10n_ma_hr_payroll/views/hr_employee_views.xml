@@ -16,11 +16,6 @@
                                 <field name="matricule_cimr"/>
                                 <field name="matricule_mut"/>
                             </group>
-                            <!--<group string=" Heures Supplémentaires">
-                                <field name="hs25"/>
-                                <field name="hs50"/>
-                                <field name="hs100"/>
-                            </group>-->
                         </page>
                     </xpath>
                 </data>
