@@ -11,7 +11,7 @@ class ResPartnerPart(models.Model):
 
     partner_id = fields.Many2one('res.partner', string='Shareholder', required=True, ondelete='cascade')
     parent_partner_id = fields.Many2one('res.partner', string='Company', required=True, ondelete='cascade')
-    part = fields.Float(string='Parts', required=True)
+    part = fields.Float(string='Parts', required=True, digits=(16, 5))
     part_amount = fields.Float(string='Part Amount', compute = '_part_amount')
     type = fields.Selection([('internal', 'Interne'), ('external', 'Externe')])
 
