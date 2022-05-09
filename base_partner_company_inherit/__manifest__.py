@@ -1,8 +1,8 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Partner Shareholders",
+    'name': "Partner Company Inherit",
 
-    'summary': """Add shareholders info in partners and companies
+    'summary': """!!Experimental!! Technical module to let all fields in partner available in company.
         """,
 
     'description': """
@@ -21,11 +21,5 @@
     'depends': [
         'base'
     ],
-    'external_dependencies': {
-        'python': [
-            'boto3',
-        ],
-    },
     'installable': True,
-    'auto_install': True,
 }
