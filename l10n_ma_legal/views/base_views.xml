@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+<odoo>
+    <data>
+       <record id="l10n_ma_legal.partner_legal_form" model="ir.ui.view">
+            <field name="model">res.partner</field>
+            <field name="name">l10n_ma_legal.partner_legal_form</field>
+            <field name="inherit_id" ref="base.view_partner_form" />
+            <field name="arch" type="xml">
+				<field name="vat" position="after">
+					<field name="company_registry" attrs="{'invisible': [('is_company','=', False)]}"/>
+					<field name="idf" attrs="{'invisible': [('is_company','=', False)]}"/>
+					<field name="pat" attrs="{'invisible': [('is_company','=', False)]}"/>
+					<field name="cnss" attrs="{'invisible': [('is_company','=', False)]}"/>
+				</field>
+            </field>
+        </record>
+
+        <record id="l10n_ma_legal.company_legal_form" model="ir.ui.view">
+            <field name="model">res.company</field>
+            <field name="name">l10n_ma_legal.company_legal_form</field>
+            <field name="inherit_id" ref="base.view_company_form" />
+            <field name="arch" type="xml">
+				<field name="company_registry" position="after">
+					<field name="idf"/>
+					<field name="pat"/>
+					<field name="cnss"/>
+				</field>
+            </field>
+        </record>
+    </data>
+</odoo>
