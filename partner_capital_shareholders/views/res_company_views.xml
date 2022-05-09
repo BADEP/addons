@@ -17,7 +17,9 @@
                                 <field name="part_ids">
                                     <tree editable="bottom">
                                         <field name="partner_id"/>
+                                        <field name="type"/>
                                         <field name="part"/>
+                                        <field name="part_amount"/>
                                     </tree>
                                 </field>
                             </group>
