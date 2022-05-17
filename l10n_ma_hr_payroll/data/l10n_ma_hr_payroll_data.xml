@@ -193,12 +193,19 @@ contract.wage * 0.05 if years >=2 else 0
             <field name="category_id" ref="O_TOTAL"/>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-C_IMPAN = C_IMP * 12
-result = -(C_IMPAN*0.38 - 24400 if (C_IMPAN &gt;= 180000) else \
-C_IMPAN*0.34-17200 if ((C_IMPAN &gt;= 80000) and (C_IMPAN &lt;= 179999)) else \
-C_IMPAN*0.30-14000 if ((C_IMPAN &gt;= 60000) and (C_IMPAN &lt;= 79999)) else \
-C_IMPAN*0.20-8000 if ((C_IMPAN &gt;= 50000) and (C_IMPAN &lt;= 59999)) else \
-C_IMPAN*0.10-3000 if ((C_IMPAN &gt;= 30000) and (C_IMPAN &lt;= 49999)) else 0)/12
+try:
+  payslip = payslip.dict
+except Exception:
+  pass
+year_payrolls = payslip.search([('contract_id', '=', contract.id), ('date_from', '>=', str(payslip.date_from.year) + '-01-01'), ('id', '!=', payslip.id)])
+prev_C_IMP = year_payrolls.mapped('line_ids').filtered(lambda l: l.code == 'C_IMP').mapped('total')
+TRANCHE= (C_IMP + sum(prev_C_IMP)) / (1 + len(prev_C_IMP)) * 12
+C_IMPAN = C_IMP*12
+result = -(C_IMPAN*0.38 - 24400 if (TRANCHE >= 180000) else \
+C_IMPAN*0.34-17200 if ((TRANCHE &gt;= 80000) and (TRANCHE &lt;= 179999)) else \
+C_IMPAN*0.30-14000 if ((TRANCHE &gt;= 60000) and (TRANCHE &lt;= 79999)) else \
+C_IMPAN*0.20-8000 if ((TRANCHE &gt;= 50000) and (TRANCHE &lt;= 59999)) else \
+C_IMPAN*0.10-3000 if ((TRANCHE &gt;= 30000) and (TRANCHE &lt;= 49999)) else 0)/12
             </field>
             <field name="appears_on_payslip" eval="False"/>
         </record>
