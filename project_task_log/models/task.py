@@ -33,6 +33,7 @@ class ProjectTask(models.Model):
 
 class ProjectTaskLog(models.Model):
     _name = 'project.task.log'
+    _description = 'Task Log'
 
     task_id = fields.Many2one('project.task', required=True, ondelete='cascade')
     old_user_id = fields.Many2one('res.users', string='Old user')

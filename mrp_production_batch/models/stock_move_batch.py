@@ -3,6 +3,7 @@ from odoo import models, fields, api
 
 class StockMoveBatch(models.Model):
     _name = 'stock.move.batch'
+    _description = 'Move Batch'
 
     product_id = fields.Many2one('product.product', 'Product', required=True)
     uom_id = fields.Many2one('uom.uom', 'Unit of Measure', required=True)

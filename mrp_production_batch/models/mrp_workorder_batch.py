@@ -5,6 +5,7 @@ from odoo import models, fields, api, _
 
 class MrpWorkorderBatch(models.Model):
     _name = 'mrp.workorder.batch'
+    _description = 'Workorder Batch'
     _inherit = ['mail.thread', 'mail.activity.mixin']
 
     workcenter_id = fields.Many2one(

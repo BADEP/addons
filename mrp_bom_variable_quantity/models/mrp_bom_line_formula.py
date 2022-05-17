@@ -12,6 +12,7 @@ result = quantity\n\n\n\n"""
 
 class MrpBomLineFormula(models.Model):
     _name = 'mrp.bom.line.formula'
+    _description = 'BoM Line Formula'
 
     name = fields.Char(required=True, translate=True)
     code = fields.Text(required=True, default=DEFAULT_PYTHON_CODE)
