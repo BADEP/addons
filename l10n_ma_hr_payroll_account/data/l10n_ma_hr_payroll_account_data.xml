@@ -1,22 +1,25 @@
 <?xml version="1.0" encoding="utf-8"?>
 <odoo>
 <!-- HR SALARY RULES-->
-    <record id="l10n_be_hr_payroll.hr_payroll_rules_onss_rule" model="hr.salary.rule">
-        <field name="account_debit" search="[('code', 'like', '4540%')]"/>
+    <record id="hr_payroll_community.hr_rule_taxable" model="hr.salary.rule">
+        <field name="account_debit" search="[('code', 'like', '61711%')]"/>
    </record>
-    <record id="hr_payroll.hr_rule_basic" model="hr.salary.rule">
-        <field name="account_debit" search="[('code', 'like', '6202%')]"/>
+    <record id="l10n_ma_hr_payroll.hr_payroll_rules_CNSS_employee" model="hr.salary.rule">
+        <field name="account_debit" search="[('code', 'like', '4441%')]"/>
    </record>
-    <record id="hr_payroll.hr_rule_net" model="hr.salary.rule">
-        <field name="account_credit" search="[('code', 'like', '4552%')]"/>
+    <record id="l10n_ma_hr_payroll.hr_payroll_rules_AMO_employee" model="hr.salary.rule">
+        <field name="account_debit" search="[('code', 'like', '4445%')]"/>
    </record>
-    <record id="l10n_be_hr_payroll.hr_payroll_rules_ch_worker" model="hr.salary.rule">
-        <field name="account_debit" search="[('code', 'like', '4597%')]"/>
-    </record>
-    <record id="l10n_be_hr_payroll.hr_payroll_rules_suppl_net" model="hr.salary.rule">
-        <field name="account_debit" search="[('code', 'like', '4552%')]"/>
-    </record>
-    <record id="l10n_be_hr_payroll.hr_payroll_rules_retained_net" model="hr.salary.rule">
-        <field name="account_debit" search="[('code', 'like', '4552%')]"/>
+    <record id="l10n_ma_hr_payroll.hr_payroll_rules_AMO_employee" model="hr.salary.rule">
+        <field name="account_debit" search="[('code', 'like', '4445%')]"/>
+   </record>
+    <record id="l10n_ma_hr_payroll.hr_rule_IRPP" model="hr.salary.rule">
+        <field name="account_debit" search="[('code', 'like', '44525%')]"/>
+   </record>
+
+
+
+    <record id="hr_payroll_community.hr_rule_net" model="hr.salary.rule">
+        <field name="account_credit" search="[('code', 'like', '4432%')]"/>
     </record>
 </odoo>
