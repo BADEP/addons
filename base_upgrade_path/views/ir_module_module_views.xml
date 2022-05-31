@@ -7,7 +7,6 @@
             <field name="arch" type="xml">
                 <tree position="attributes">
                     <attribute name="decoration-success">upgrade_available==True</attribute>
-                    <attribute name="editable">bottom</attribute>
                 </tree>
                 <field name="name" position="after">
                     <field name="target"/>
@@ -16,7 +15,6 @@
                 </field>
             </field>
         </record>
-
 
         <record id="ir_module_repo_tree" model="ir.ui.view">
             <field name="name">ir_module_repo_tree</field>

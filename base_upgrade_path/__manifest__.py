@@ -22,6 +22,7 @@
         'base'
     ],
     'data': [
+        'data/ir_cron.xml',
         'views/ir_module_module_views.xml',
         'security/ir.model.access.csv'
      ],

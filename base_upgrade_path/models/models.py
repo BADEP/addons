@@ -7,11 +7,8 @@ class IrModuleModule(models.Model):
     upgrade_available = fields.Boolean(string='Upgradable', compute='_upgrade_available', store=True)
     #todo: this should not be per module. Probably ir.config_parameter
     target = fields.Selection([
-        ('12.0', '12.0'),
-        ('13.0', '13.0'),
-        ('14.0', '14.0'),
         ('15.0', '15.0'),
-    ], default='14.0', required=False)
+    ], default='15.0', required=False)
     alternative_name = fields.Char(string='Alternative name')
     module_path = fields.Char(compute='get_module_path')
 
@@ -21,9 +18,11 @@ class IrModuleModule(models.Model):
 
     @api.depends('target', 'alternative_name', 'state')
     def _upgrade_available(self):
-        for rec in self.filtered(lambda m: m.state == 'installed'):
+        records = self if self.ids else self.search([('upgrade_available', '=', False)])
+        for rec in records:
+            rec.upgrade_available = False
             if not rec.target:
-                rec.target = '14.0'
+                rec.target = '15.0'
             if rec.author == 'Odoo S.A.':
                 rec.upgrade_available = True
             else:
@@ -32,7 +31,7 @@ class IrModuleModule(models.Model):
                     if r.status_code == 200:
                         rec.upgrade_available = True
                         return
-                    r = requests.head("https://pypi.org/project/odoo%s-addon-%s/" % (rec.target.replace('.0', ''),
+                    r = requests.head("https://pypi.org/project/odoo%s-addon-%s/" % ('' if rec.target == '15.0' else rec.target.replace('.0', ''),
                                                                                (rec.alternative_name if rec.alternative_name else rec.name).replace('_', '-')))
                     if r.status_code == 200:
                         rec.upgrade_available = True
@@ -50,15 +49,15 @@ class IrModuleModule(models.Model):
                         if data.status_code == 200:
                             rec.upgrade_available = True
                             return
-                    rec.upgrade_available = False
                 except requests.ConnectionError:
-                    rec.upgrade_available = False
+                    return
 
     def action_force_compute_upgrade(self):
         self._upgrade_available()
 
 class IrModuleRepo(models.Model):
     _name = 'ir.module.repo'
+    _description = 'Modules GIT repository'
 
     name = fields.Char(required=True)
     subpath = fields.Char()
