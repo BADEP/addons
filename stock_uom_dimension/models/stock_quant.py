@@ -30,6 +30,9 @@ class StockQuant(models.Model):
                                    all(d.quantity == self.env.context['dimension_ids'].get(d.dimension_id.id, 0) for d in q.dimension_ids))
         return quants
 
+    @api.model
+    def _get_inventory_fields_create(self):
+        return super()._get_inventory_fields_create() + ['dimension_ids', 'product_dimension_qty']
 
 class StockMoveDimension(models.Model):
     _inherit = 'uom.line.dimension'
