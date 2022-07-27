@@ -48,11 +48,14 @@ class StockMoveLine(models.Model):
         return res
 
     def _action_done(self):
+        dim_list = []
         for rec in self:
-            try:
-                super(StockMoveLine, rec.with_context(dimension_ids={d.dimension_id.id: d.quantity for d in rec.dimension_ids}))._action_done()
-            except Exception as e:
-                pass
+            dim_dict = {d.dimension_id.id: d.quantity for d in rec.dimension_ids}
+            if dim_dict not in dim_list:
+                dim_list.append(dim_dict)
+        for dim_dict in dim_list:
+            recs = self.filtered(lambda rec: dim_dict == {d.dimension_id.id: d.quantity for d in rec.dimension_ids})
+            super(StockMoveLine, recs.with_context(dimension_ids=dim_dict))._action_done()
 
 class StockMoveLineDimension(models.Model):
     _inherit = 'uom.line.dimension'
