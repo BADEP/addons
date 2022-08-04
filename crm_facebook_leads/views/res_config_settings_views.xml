@@ -35,10 +35,6 @@
                                         <button type="object" name="action_get_access_token" string="Get Access Token"
                                                 icon="fa-arrow-right" class="btn-link"/>
                                     </div>
-                                    <div attrs="{'invisible': ['|', ('crm_fb_app_id', 'in', ('', False)), ('crm_fb_app_secret', 'in', ('', False))]}">
-                                        <button type="object" name="action_get_access_token" string="Get Access Token"
-                                                icon="fa-arrow-right" class="btn-link"/>
-                                    </div>
                                 </div>
                             </div>
                         </div>
