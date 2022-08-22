@@ -51,6 +51,11 @@ class StockMove(models.Model):
         })
         return vals
 
+    @api.model
+    def _prepare_merge_moves_distinct_fields(self):
+        res = super()._prepare_merge_moves_distinct_fields()
+        res.append('dimension_ids')
+        return res
 
 class StockMoveDimension(models.Model):
     _inherit = 'uom.line.dimension'
