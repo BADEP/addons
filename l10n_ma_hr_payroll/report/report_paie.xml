@@ -22,9 +22,6 @@
                   <td><strong>Nombre d'enfant</strong></td>
                   <td><span t-field="o.employee_id.children"/></td>
               </tr>
-              <tr>
-
-              </tr>
           </xpath>
       </template>
   </data>
