@@ -11,7 +11,6 @@
                     <attribute name="class"/>
                 </div>
                 <label for="product_qty" position="before">
-                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
                     <field name="dimension_ids" attrs="{'invisible': [('dimension_ids','=',[])]}">
                         <tree create="false" delete="false" editable="bottom">
                             <field name="display_name" invisible="1"/>
@@ -19,11 +18,12 @@
                             <field name="quantity"/>
                         </tree>
                     </field>
+                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
                 </label>
                 <xpath expr="//field[@name='order_line']/tree//field[@name='product_qty']" position="before">
-                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
                     <field name="dimension_ids" widget="many2many_tags"
                            attrs="{'invisible': [('dimension_ids','=',[])]}" force_save="1"/>
+                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
                 </xpath>
                 <xpath expr="//field[@name='order_line']/tree" position="attributes">
                     <attribute name="editable"/>

@@ -8,13 +8,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
-                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','!=','draft')]}"/>
                     <field name="dimension_ids" widget="one2many_list">
                         <tree string="Dimensions" create="false" delete="false" editable="bottom">
                             <field name="dimension_id" readonly="1" force_save="1"/>
                             <field name="quantity"/>
                         </tree>
                     </field>
+                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','!=','draft')]}"/>
                 </xpath>
             </field>
         </record>
@@ -27,8 +27,8 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
-                    <field name="product_dimension_qty"/>
                     <field name="dimension_ids" widget="many2many_tags"/>
+                    <field name="product_dimension_qty"/>
                 </xpath>
             </field>
         </record>
@@ -41,13 +41,13 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
-                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','!=','draft')]}"/>
                     <field name="dimension_ids" widget="one2many_list" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','!=','done')]}">
                         <tree string="Dimensions" create="false" delete="false" editable="bottom">
                             <field name="dimension_id" readonly="1" force_save="1"/>
                             <field name="quantity"/>
                         </tree>
                     </field>
+                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','!=','draft')]}"/>
                 </xpath>
             </field>
         </record>

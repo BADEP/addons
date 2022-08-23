@@ -7,8 +7,8 @@
             <field eval="17" name="priority"/>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
-                    <field name="product_dimension_qty"/>
                     <field name="dimension_ids" widget="many2many_tags"/>
+                    <field name="product_dimension_qty"/>
                 </xpath>
                 <tree position="attributes">
                     <attribute name="editable"/>
@@ -24,8 +24,8 @@
             <field name="type">tree</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
-                    <field name="product_dimension_qty"/>
                     <field name="dimension_ids" widget="many2many_tags"/>
+                    <field name="product_dimension_qty"/>
                 </xpath>
             </field>
         </record>
@@ -38,7 +38,6 @@
             <field name="type">form</field>
             <field name="arch" type="xml">
                 <xpath expr="//field[@name='product_id']" position="after">
-                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','=','done')]}"/>
                     <field name="dimension_ids" widget="one2many_list">
                         <tree string="Dimensions" create="false" delete="false" editable="bottom">
                             <field name="display_name" invisible="1"/>
@@ -46,6 +45,7 @@
                             <field name="quantity"/>
                         </tree>
                     </field>
+                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])], 'readonly': [('state','=','done')]}"/>
                 </xpath>
                 <field name="qty_done" position="attributes">
                     <attribute name="attrs">{'readonly': [('dimension_ids','!=',[])]}</attribute>
