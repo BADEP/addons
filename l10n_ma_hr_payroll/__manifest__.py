@@ -27,6 +27,7 @@
         'views/hr_employee_views.xml',
         'views/hr_payslip_views.xml',
         'views/res_company_views.xml',
+        'report/report_paie.xml',
     ],
      'installable': True,
      "images":['static/description/Banner.png'],
