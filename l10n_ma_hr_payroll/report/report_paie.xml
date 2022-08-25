@@ -11,13 +11,15 @@
                   <td><span t-field="o.employee_id.matricule_cnss"/></td>
               </tr>
               <tr>
-                  <td><strong>situation de congé</strong></td>
-                  <td><span t-field="o.employee_id.current_leave_state"/></td>
+                  <td><strong>Situation de congé</strong></td>
+                  <td><strong><span t-field="o.employee_id.allocation_used_display"/></strong> jours restants sur
+                      <strong><span t-field="o.employee_id.allocation_display"/></strong>
+                  </td>
                   <td><strong>Date de naissance</strong></td>
                   <td><span t-field="o.employee_id.birthday"/></td>
               </tr>
               <tr>
-                  <td><strong>La situation familiale</strong></td>
+                  <td><strong>Situation familiale</strong></td>
                   <td><span t-field="o.employee_id.marital"/></td>
                   <td><strong>Nombre d'enfant</strong></td>
                   <td><span t-field="o.employee_id.children"/></td>
