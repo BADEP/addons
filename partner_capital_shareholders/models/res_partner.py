@@ -9,7 +9,7 @@ class ResPartner(models.Model):
 class ResPartnerPart(models.Model):
     _name = 'res.partner.part'
     _description = 'Partner Part'
-    _order = 'parent_partner_id,part'
+    _order = 'parent_partner_id asc, part desc'
 
     partner_id = fields.Many2one('res.partner', string='Shareholder', required=True, ondelete='cascade')
     parent_partner_id = fields.Many2one('res.partner', string='Company', required=True, ondelete='cascade')
