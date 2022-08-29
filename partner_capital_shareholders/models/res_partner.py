@@ -22,7 +22,7 @@ class ResPartnerPart(models.Model):
     @api.depends('partner_id', 'part_percent')
     def _display_name(self):
         for rec in self:
-            rec.display_name = '%s%%: %s' % (round(rec.part_percent, 2), rec.partner_id.name)
+            rec.display_name = '%s%%: %s' % (round(rec.part_percent, 2), rec.parent_partner_id.name if rec.env.context.get('display_company') else rec.partner_id.name)
 
     @api.depends('part', 'parent_partner_id.capital_amount', 'parent_partner_id.part_ids', 'parent_partner_id.part_ids.part')
     def _part_amount(self):
