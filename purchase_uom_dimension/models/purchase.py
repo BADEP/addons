@@ -27,7 +27,7 @@ class PurchaseOrderLine(models.Model):
             })
         return values
 
-    def _prepare_account_move_line(self, move):
+    def _prepare_account_move_line(self, move=False):
         values = super()._prepare_account_move_line(move)
         values.update({
             'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in
