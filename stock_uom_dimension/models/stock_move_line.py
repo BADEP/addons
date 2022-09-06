@@ -54,7 +54,8 @@ class StockMoveLine(models.Model):
             if dim_dict not in dim_list:
                 dim_list.append(dim_dict)
         for dim_dict in dim_list:
-            recs = self.filtered(lambda rec: dim_dict == {d.dimension_id.id: d.quantity for d in rec.dimension_ids})
+            recs = self.filtered(lambda rec: rec.exists())
+            recs = recs.filtered(lambda rec: dim_dict == {d.dimension_id.id: d.quantity for d in rec.dimension_ids})
             super(StockMoveLine, recs.with_context(dimension_ids=dim_dict))._action_done()
 
 class StockMoveLineDimension(models.Model):
