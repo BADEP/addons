@@ -30,7 +30,7 @@ class SaleOrderLine(models.Model):
         optional_values.update({
             'dimension_ids': [(0, 0, {'dimension_id': d.dimension_id.id, 'quantity': d.quantity}) for d in
                               self.dimension_ids],
-            'product_dimension_qty': self.product_dimension_qty
+            #'product_dimension_qty': self.product_dimension_qty
         })
         return super()._prepare_invoice_line(**optional_values)
 
