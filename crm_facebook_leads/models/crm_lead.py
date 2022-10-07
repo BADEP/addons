@@ -76,7 +76,7 @@ class CrmLead(models.Model):
             'name': self.get_opportunity_name(vals, lead, form),
             'description': "\n".join(notes),
             'team_id': form.team_id and form.team_id.id,
-            'company_id': form.team_id and form.team_id.company_id or False,
+            'company_id': form.team_id and form.team_id.company_id and form.team_id.company_id.id or False,
             'campaign_id': form.campaign_id and form.campaign_id.id or
                            self.get_campaign(lead),
             'source_id': form.source_id and form.source_id.id,
