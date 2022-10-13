@@ -20,6 +20,7 @@
     'data': [
         'views/res_users_view.xml'
     ],
+    'installable': False,
     'price': 9.00,
     'currency': 'EUR',
 }
