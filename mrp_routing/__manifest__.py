@@ -25,7 +25,7 @@
         'views/mrp_routing_views.xml'
     ],
 
-    'installable': False,
+    'installable': True,
     'auto_install': True,
     'price': 99.00,
     'currency': 'EUR',
