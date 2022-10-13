@@ -27,5 +27,5 @@
         'security/ir.model.access.csv',
         'security/mrp_security.xml'
     ],
-    'installable': False,
+    'installable': True,
 }

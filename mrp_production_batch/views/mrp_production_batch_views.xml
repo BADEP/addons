@@ -132,6 +132,7 @@
                                         <field name="move_raw_ids" invisible="1"/>
                                         <field name="product_id" domain="[('uom_id', '=', uom_id)]"/>
                                         <field name="uom_id" readonly="1" groups="uom.group_uom"/>
+                                        <field name="uom_id" invisible="1"/>
                                         <field name="net_quantity"/>
                                         <field name="product_uom_qty"/>
                                         <field name="quantity_done"/>
