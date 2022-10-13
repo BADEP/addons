@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<templates id="template" xml:space="preserve">
+
+	<t t-name="mrp.report_bom_search" t-inherit="mrp.report_bom_search" t-inherit-mode="extension" owl="1">
+        <div t-if="is_variant_applied" position="before">
+            <div t-if="dimensions" class="form-group col-lg-4">
+                <label>Dimensions:</label>
+                <div class="row">
+                    <table class="table">
+                        <tbody>
+                            <tr t-foreach="dimensions" t-as="dimension">
+                                <td>
+                                    <strong t-esc="dimensions[dimension]"/>
+                                </td>
+                                <td>
+                                    <input type="text" class="o_input o_mrp_bom_report_dimension" t-att-data-dimension_id="dimension"/>
+                                </td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+		</div>
+	</t>
+</templates>

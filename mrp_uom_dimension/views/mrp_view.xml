@@ -19,12 +19,39 @@
                         </tree>
                     </field>
                 </xpath>
-                <field name="product_qty" position="attributes">
-                    <attribute name="attrs">{'readonly': [('dimension_ids','!=',[]), ('state', '!=', 'draft')]}</attribute>
-                    <attribute name="force_save">1</attribute>
+                <xpath expr="//field[@name='move_finished_ids']//tree" position="inside">
+                    <field name="product_dimension_qty"/>
+                    <field name="dimension_ids">
+                        <tree>
+                            <field name="dimension_id"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
+                </xpath>
+                <xpath expr="//field[@name='move_raw_ids']//tree//field[@name='product_id']" position="after">
+                    <field name="product_dimension_qty" force_save="1"/>
+                    <field name="dimension_ids" widget="many2many_tags" force_save="1">
+                        <tree>
+                        <field name="dimension_id" force_save="1"/>
+                        <field name="quantity" force_save="1"/>
+                        </tree>
+                    </field>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="mrp_production_tree_view_inherit_dimension" model="ir.ui.view">
+            <field name="name">mrp.production.dimension.tree.view</field>
+            <field name="model">mrp.production</field>
+            <field name="inherit_id" ref="mrp.mrp_production_tree_view"/>
+            <field name="arch" type="xml">
+                <field name="product_qty" position="before">
+                    <field name="product_dimension_qty" sum="Total"/>
+                    <field name="dimension_ids" widget="many2many_tags"/>
                 </field>
             </field>
         </record>
+
         <record id="view_change_production_qty_wizard_dimension" model="ir.ui.view">
             <field name="name">Change Quantity To Produce</field>
             <field name="model">change.production.qty</field>
@@ -35,12 +62,7 @@
                 <xpath expr="//field[@name='product_qty']" position="before">
                     <field name="product_uom_id" invisible="1"/>
                     <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
-                    <field name="dimension_ids" attrs="{'invisible': [('dimension_ids','=',[])]}">
-                        <tree create="false" delete="false" editable="bottom">
-                            <field name="dimension_id" readonly="1" force_save="1"/>
-                            <field name="quantity"/>
-                        </tree>
-                    </field>
+                    <field name="dimension_ids" widget="many2many_tags" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
                 </xpath>
                 <field name="product_qty" position="attributes">
                     <attribute name="attrs">{'readonly': [('dimension_ids','!=',[])]}</attribute>

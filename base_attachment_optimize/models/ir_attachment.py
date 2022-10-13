@@ -25,7 +25,7 @@ class IrAttachment(models.Model):
         for att in self:
             try:
                 path = att._full_path(att.store_fname)
-                cmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/" + pdfquality + " -dNOPAUSE -dQUIET -dBATCH -sOutputFile=/tmp/output.pdf " + path
+                cmd = "gs -sDEVICE=pdfwrite -dCompatibilityLevel=1.4 -dPDFSETTINGS=/%s -dNOPAUSE -dQUIET -dBATCH -sOutputFile=/tmp/%s %s" % (pdfquality, att.checksum, path)
                 os.system(cmd)
                 # args = [
                 #     "-dNOPAUSE", "-dBATCH", "-dQUIET",
@@ -38,9 +38,10 @@ class IrAttachment(models.Model):
                 # encoding = locale.getpreferredencoding()
                 # args = [a.encode(encoding) for a in args]
                 # ghostscript.Ghostscript(*args)
-                bin_datas = open('/tmp/output.pdf', 'rb').read()
+                bin_datas = open('/tmp/%s' % att.checksum, 'rb').read()
                 if att.file_size > len(bin_datas):
                     att.write({'datas': base64.b64encode(bin_datas)})
+                    os.system("rm %" % path)
             except Exception:
                 pass
         self.write({'optimized': True})
@@ -48,7 +49,7 @@ class IrAttachment(models.Model):
     @api.model
     def cron_compress(self):
         if self.env['ir.config_parameter'].sudo().get_param('base_attachment_optimize.optimize_pdf'):
-            attachments = self.search([('mimetype', '=', 'application/pdf'), ('type', '=', 'binary'), ('optimized', '=', False)],
+            attachments = self.with_context(active_test=False).search([('mimetype', '=', 'application/pdf'), ('type', '=', 'binary'), ('optimized', '=', False)],
                                        limit=int(self.env['ir.config_parameter'].sudo().get_param('base_attachment_optimize.batch_size')))
             attachments.optimize()
         return True

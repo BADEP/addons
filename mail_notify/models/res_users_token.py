@@ -3,6 +3,7 @@ from pyfcm import FCMNotification
 
 class ResUsersToken(models.Model):
     _name = 'res.users.token'
+    _description = 'Push Notification User Access Token'
 
     user_id = fields.Many2one('res.users', ondelete='cascade')
     token = fields.Char(required=True)

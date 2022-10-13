@@ -1,5 +1,5 @@
 from odoo import fields, models
-from odoo.addons import decimal_precision as dp
+
 
 class HrContract(models.Model):
     _inherit = 'hr.contract'

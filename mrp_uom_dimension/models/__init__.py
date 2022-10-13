@@ -1,1 +1,1 @@
-from . import stock, mrp
+from . import stock, mrp_production, stock_move, mrp_bom

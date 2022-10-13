@@ -1,0 +1,44 @@
+<odoo>
+    <data>
+        <record id="ir_module_module_upgrade_tree" model="ir.ui.view">
+            <field name="name">ir_module_module_upgrade_tree</field>
+            <field name="model">ir.module.module</field>
+            <field name="inherit_id" ref="base.module_tree"/>
+            <field name="arch" type="xml">
+                <tree position="attributes">
+                    <attribute name="decoration-success">upgrade_available==True</attribute>
+                </tree>
+                <field name="name" position="after">
+                    <field name="target"/>
+                    <field name="alternative_name"/>
+                    <field name="upgrade_available"/>
+                </field>
+            </field>
+        </record>
+
+        <record id="ir_module_repo_tree" model="ir.ui.view">
+            <field name="name">ir_module_repo_tree</field>
+            <field name="model">ir.module.repo</field>
+            <field name="arch" type="xml">
+                <tree editable="bottom">
+                    <field name="name"/>
+                    <field name="subpath"/>
+                    <field name="username"/>
+                    <field name="token"/>
+                </tree>
+            </field>
+        </record>
+
+        <record model="ir.actions.act_window" id="action_repos">
+            <field name="name">Github Repos</field>
+            <field name="res_model">ir.module.repo</field>
+            <field name="type">ir.actions.act_window</field>
+            <field name="view_mode">tree</field>
+        </record>
+
+        <menuitem id="menu_ir_module_repo"
+                  groups="base.group_no_one"
+                  parent="base.menu_management"
+                  action="action_repos"/>
+    </data>
+</odoo>

@@ -7,6 +7,5 @@
     'depends': ['sale_stock'],
     'license': 'AGPL-3',
     'data': [
-    ],
-    'installable': False
+    ]
 }

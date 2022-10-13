@@ -5,6 +5,7 @@ class SaleMeasure(models.Model):
     _name = "sale.measure"
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _rec_name = 'sale_order_id'
+    _description = 'OPM'
 
     sale_order_id = fields.Many2one('sale.order', string='Bon de commande')
     user_id = fields.Many2one('res.users', string="Responsable mesures")
@@ -47,6 +48,7 @@ class SaleMeasureLine(models.Model):
     _name = "sale.measure.line"
     _inherit = ['portal.mixin', 'mail.thread', 'mail.activity.mixin']
     _rec_name = 'sale_order_line_id'
+    _description = 'OPM Line'
 
     code = fields.Char(string="Repère")
     piece = fields.Char(string="Pièce")
@@ -143,6 +145,7 @@ class SaleMeasureLine(models.Model):
 
 class SaleMeasureLineDimension(models.Model):
     _name = 'sale.measure.line.dimension'
+    _description = 'Measure Line Dimension'
 
     dimension_id = fields.Many2one('uom.dimension', readonly=True, required=True, ondelete='cascade')
     quantity = fields.Float('Relevé', required=True)

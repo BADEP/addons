@@ -17,14 +17,17 @@ DEFAULT_PYTHON_CODE = """# Available variables:
 class UomUom(models.Model):
     _inherit = 'uom.uom'
 
-    dimension_ids = fields.One2many('uom.dimension', 'parent_uom_id', string='Dimensions', copy=True)
+    dimension_ids = fields.Many2many('uom.dimension', 'uom_dimensions_rel', 'uom_id', 'dimension_id', string='Dimensions', copy=True)
     calculation_type = fields.Selection([('simple', 'Simple'), ('code', 'Code')], default='simple', required=True, string='Calculation Type')
     code = fields.Text(string='Python Code', default=DEFAULT_PYTHON_CODE)
+    number_rounding = fields.Float(string='Précision des nombres', digits=(12, 6), default=1)
 
-    def eval_values(self, dimension_values, product_dimension_qty=1):
+    def eval_values(self, dimension_values, product_dimension_qty=1, custom_code=None):
         for uom in self:
-            if uom.calculation_type == 'simple':
-                code = 'result = product_dimension_qty * numpy.prod(list(dimension_values.values()))'
+            if custom_code:
+                code = custom_code
+            elif uom.calculation_type == 'simple':
+                code = 'result = numpy.prod(list(dimension_values.values()))'
             else:
                 code = uom.code
             eval_context = {
@@ -39,15 +42,21 @@ class UomUom(models.Model):
                 'dimension_values': dimension_values,
                 'result': 0,
             }
+            for dimension_id in dimension_values:
+                eval_context.update({
+                    self.env['uom.dimension'].browse(dimension_id).name: dimension_values[dimension_id]
+                })
             # try:
             safe_eval.safe_eval(code, eval_context, mode="exec", nocopy=True)
-            return float(eval_context['result'])
+            return product_dimension_qty * float(eval_context['result'])
             # except, e:
             #     raise exceptions.UserError(_('Wrong python code defined for uom %s.') % (uom.name))
 
 
 class UomDimension(models.Model):
     _name = 'uom.dimension'
+    _description = 'UoM Dimension'
+
     name = fields.Char(required=True)
     uom_id = fields.Many2one('uom.uom', required=True)
-    parent_uom_id = fields.Many2one('uom.uom', required=True)
+    uom_ids = fields.Many2many('uom.uom', 'uom_dimensions_rel', 'dimension_id', 'uom_id')

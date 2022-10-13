@@ -45,7 +45,7 @@ class OAuthController(http.Controller):
             r = requests.get("https://graph.facebook.com/v7.0/oauth/access_token?grant_type=fb_exchange_token",
                              params=params).json()
             if r.get('error'):
-                _logger.log(r.get('error').get('message'))
+                _logger.error(r.get('error').get('message'))
             request.env['ir.config_parameter'].set_param("crm_facebook_leads.crm_fb_access_token",
                                                          r.get('access_token', ''))
         config_action = request.env.ref('crm.crm_config_settings_action')

@@ -1,0 +1,40 @@
+<odoo>
+    <data>
+        <record id="stock_picking_dimension_form_view" model="ir.ui.view">
+            <field name="name">stock.picking.dimension.form.view</field>
+            <field name="model">stock.picking</field>
+            <field name="inherit_id" ref="stock.view_picking_form"/>
+            <field eval="17" name="priority"/>
+            <field name="type">form</field>
+            <field name="arch" type="xml">
+                <xpath expr="//field[@name='move_ids_without_package']/tree//field[@name='quantity_done']" position="before">
+                    <field name="dimension_ids" widget="many2many_tags" readonly="1"/>
+                    <field name="product_dimension_qty" readonly="1"/>
+                    <field name="product_dimension_qty_done" attrs="{'readonly': [('dimension_ids', '=', [])]}"/>
+                </xpath>
+                <xpath expr="//field[@name='move_ids_without_package']/tree" position="attributes">
+                    <attribute name="editable"/>
+                </xpath>
+                <xpath expr="//field[@name='move_ids_without_package']/form//field[@name='product_uom_qty']" position="before">
+                    <field name="dimension_ids" attrs="{'invisible': [('dimension_ids','=',[])]}">
+                        <tree create="false" delete="false" editable="bottom">
+                            <field name="display_name" invisible="1"/>
+                            <field name="dimension_id" readonly="1" force_save="1"/>
+                            <field name="quantity"/>
+                        </tree>
+                    </field>
+                    <field name="product_dimension_qty" attrs="{'invisible': [('dimension_ids','=',[])]}"/>
+                    <field name="product_dimension_qty_done" attrs="{'readonly': [('dimension_ids', '=', [])]}"/>
+                </xpath>
+                <xpath expr="//field[@name='move_ids_without_package']/form//field[@name='product_uom_qty']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('dimension_ids','!=',[])]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='move_ids_without_package']/form//field[@name='quantity_done']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('dimension_ids', '!=', [])]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

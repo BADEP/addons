@@ -11,6 +11,6 @@
     'data': [
         'wizards/launch_procurement_wizard_view.xml'
     ],
-    'installable' : False,
+    'installable' : True,
     'auto_install': True
 }

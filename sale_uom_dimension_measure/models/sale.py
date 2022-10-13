@@ -1,6 +1,6 @@
 from odoo import models, fields, api, exceptions, _
 from datetime import datetime
-from odoo.addons import decimal_precision as dp
+
 from odoo.tools import DEFAULT_SERVER_DATETIME_FORMAT, float_compare, float_round
 
 class SaleOrder(models.Model):
@@ -22,7 +22,7 @@ class SaleOrder(models.Model):
             "name": _("Mesures"),
             "res_model": "sale.measure",
             "domain": [('id', 'in', self.measure_ids.ids)],
-            "view_mode": "tree,form,google_map",
+            "view_mode": "tree,form",
             "context": self.env.context,
         }
 
@@ -42,7 +42,7 @@ class SaleOrderLine(models.Model):
     is_measured = fields.Boolean(string="Mesures faites", compute='_get_is_measured')
     measure_line_count = fields.Integer(string="Mesures", compute='_get_measure_line_count')
     measured_line_count = fields.Integer(string="Qté mesurée", compute='_get_measure_line_count')
-    measured_quantity = fields.Float(string="Qté mesurée", compute='_get_measured_quantity', digits=dp.get_precision('Product Unit of Measure'))
+    measured_quantity = fields.Float(string="Qté mesurée", compute='_get_measured_quantity', digits='Product Unit of Measure')
     price_to_update = fields.Boolean(default=False, copy=False)
     to_launch = fields.Boolean(string="To Launch Procurement", compute='_get_to_launch')
 

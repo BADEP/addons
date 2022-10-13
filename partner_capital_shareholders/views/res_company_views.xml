@@ -1,0 +1,32 @@
+<odoo>
+    <data>
+        <record id="res_company_form_capital_shareholders" model="ir.ui.view">
+            <field name="name">res_company_form_capital_shareholders</field>
+            <field name="model">res.company</field>
+            <field name="inherit_id" ref="base.view_company_form"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//notebook" position="inside">
+                        <page name="capital" string="Capital">
+                            <group>
+                                <field name="capital_amount"/>
+                                <field name="capital_currency_id"/>
+                                <field name="capital_country_id"/>
+                            </group>
+                            <group colspan="2" name="parts" string="Repartition">
+                                <field name="part_ids">
+                                    <tree editable="bottom">
+                                        <field name="partner_id"/>
+                                        <field name="type"/>
+                                        <field name="part"/>
+                                        <field name="part_amount"/>
+                                    </tree>
+                                </field>
+                            </group>
+                        </page>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

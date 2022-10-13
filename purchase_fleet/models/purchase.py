@@ -4,9 +4,10 @@ from odoo import models, fields, api
 
 class PurchaseOrder(models.Model):
     _inherit = 'purchase.order'
+
     vehicle = fields.Many2one('fleet.vehicle', domain=[('purchase_ok','=',True)], readonly=True, states={'draft': [('readonly', False)]})
     driver = fields.Many2one('res.partner', readonly=True, states={'draft': [('readonly', False)]})
-    
+
     @api.onchange('vehicle')
     def set_driver(self):
         if self.vehicle and self.vehicle.driver_id:

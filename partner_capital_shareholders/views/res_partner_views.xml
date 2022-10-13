@@ -1,0 +1,26 @@
+<odoo>
+    <data>
+        <record id="view_partners_form_parts" model="ir.ui.view">
+            <field name="name">view_partners_form_parts</field>
+            <field name="model">res.partner</field>
+            <field name="inherit_id" ref="partner_capital.view_partner_form_capital"/>
+            <field eval="1" name="priority"/>
+            <field name="arch" type="xml">
+                <data>
+                    <xpath expr="//page[@name='sales_purchases']/group" position="inside">
+                        <group colspan="2" name="parts" string="Repartition" attrs="{'invisible': [('is_company', '=', False)]}">
+                            <field name="part_ids">
+                                <tree editable="bottom">
+                                    <field name="partner_id"/>
+                                    <field name="type"/>
+                                    <field name="part"/>
+                                    <field name="part_amount"/>
+                                </tree>
+                            </field>
+                        </group>
+                    </xpath>
+                </data>
+            </field>
+        </record>
+    </data>
+</odoo>

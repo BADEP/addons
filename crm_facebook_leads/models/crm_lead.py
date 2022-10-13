@@ -6,6 +6,7 @@ from odoo.exceptions import UserError
 
 _logger = logging.getLogger(__name__)
 
+
 class CrmLead(models.Model):
     _inherit = 'crm.lead'
 
@@ -75,6 +76,7 @@ class CrmLead(models.Model):
             'name': self.get_opportunity_name(vals, lead, form),
             'description': "\n".join(notes),
             'team_id': form.team_id and form.team_id.id,
+            'company_id': form.team_id and form.team_id.company_id and form.team_id.company_id.id or False,
             'campaign_id': form.campaign_id and form.campaign_id.id or
                            self.get_campaign(lead),
             'source_id': form.source_id and form.source_id.id,
@@ -163,8 +165,14 @@ class CrmLead(models.Model):
         for form in self.env['crm.facebook.form'].search([]):
             # /!\ NOTE: We have to try lead creation if it fails we just log it into the Lead Form?
             _logger.info('Starting to fetch leads from Form: %s' % form.name)
-            r = requests.get(fb_api + form.facebook_form_id + "/leads", params={'access_token': form.access_token,
-                                                                                'fields': 'created_time,field_data,ad_id,ad_name,adset_id,adset_name,campaign_id,campaign_name,is_organic'}).json()
+            params = {'access_token': form.access_token,
+                      'fields': 'created_time,field_data,ad_id,ad_name,adset_id,adset_name,campaign_id,campaign_name,is_organic'
+                      }
+            if form.date_retrieval:
+                params.update({
+                    'filtering': "[{'field': 'time_created', 'operator': 'GREATER_THAN', 'value': %s}]" % (int(form.date_retrieval.timestamp())),
+                })
+            r = requests.get(fb_api + form.facebook_form_id + "/leads", params=params).json()
             if r.get('error'):
                 raise UserError(r['error']['message'])
             self.lead_processing(r, form)

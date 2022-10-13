@@ -1,0 +1,53 @@
+<odoo>
+    <template id="report_mrp_bom_inherit_mrp_uom_dimension" inherit_id="mrp.report_mrp_bom">
+        <xpath expr="//th[@name='th_mrp_bom_h']" position="after">
+            <th class="o_mrp_bom_ver">Nombre</th>
+            <th class="o_mrp_ecos">Dimensions</th>
+        </xpath>
+        <xpath expr="//td[@name='td_mrp_bom']" position="after">
+            <td class="o_mrp_product_dimension_qty">
+                <span t-if="data.get('product_dimension_qty')"><t t-esc="data['product_dimension_qty']"/></span>
+            </td>
+            <td class="o_mrp_dimension_ids">
+                <span t-if="data.get('dimension_ids')"><t t-esc="'x'.join([str(data['dimension_ids'][q]) for q in data['dimension_ids'].keys()])"/></span>
+            </td>
+        </xpath>
+        <xpath expr="//td[@name='td_mrp_bom_f']" position="after">
+            <td class="o_mrp_product_dimension_qty"/>
+            <td class="o_mrp_dimension_ids"/>
+        </xpath>
+    </template>
+
+    <template id="report_mrp_bom_line_inherit_mrp_uom_dimension" inherit_id="mrp.report_mrp_bom_line">
+        <xpath expr="//td[@name='td_mrp_bom']" position="after">
+            <td class="o_mrp_product_dimension_qty">
+                <span t-if="l.get('product_dimension_qty')"><t t-esc="l['product_dimension_qty']"/></span>
+            </td>
+            <td class="o_mrp_dimension_ids">
+                <span t-if="l.get('dimension_ids')"><t t-esc="'x'.join([str(l['dimension_ids'][q]) for q in l['dimension_ids'].keys()])"/></span>
+            </td>
+        </xpath>
+        <xpath expr="//td[@name='td_opr']" position="after">
+            <td class="o_mrp_product_dimension_qty"/>
+            <td class="o_mrp_dimension_ids"/>
+        </xpath>
+    </template>
+
+    <template id="report_mrp_operation_line_inherit_mrp_uom_dimension" inherit_id="mrp.report_mrp_operation_line">
+        <xpath expr="//td[@name='td_opr_line']" position="after">
+            <td class="o_mrp_product_dimension_qty"/>
+            <td class="o_mrp_dimension_ids"/>
+        </xpath>
+    </template>
+
+    <template id="report_mrp_bom_pdf_line_inherit_mrp_uom_dimension" inherit_id="mrp.report_mrp_bom_pdf_line">
+        <xpath expr="//td[@name='td_mrp_code']" position="after">
+            <td class="o_mrp_product_dimension_qty">
+                <span t-if="l.get('product_dimension_qty')"><t t-esc="l['product_dimension_qty']"/></span>
+            </td>
+            <td class="o_mrp_dimension_ids">
+                <span t-if="l.get('dimension_ids')"><t t-esc="'x'.join([str(l['dimension_ids'][q]) for q in l['dimension_ids'].keys()])"/></span>
+            </td>
+        </xpath>
+    </template>
+</odoo>

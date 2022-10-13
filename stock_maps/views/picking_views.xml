@@ -3,7 +3,7 @@
     <record id="action_stock_picking_map" model="ir.actions.act_window">
         <field name="name">Map</field>
         <field name="res_model">stock.picking</field>
-        <field name="view_type">form</field>
+
         <field name="view_mode">map,form</field>
         <field name="domain">[('id', '=', active_id)]</field>
     </record>

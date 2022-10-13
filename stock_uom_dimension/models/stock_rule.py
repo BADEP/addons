@@ -5,5 +5,5 @@ class StockRule(models.Model):
 
     def _get_custom_move_fields(self):
         fields = super(StockRule, self)._get_custom_move_fields()
-        fields += ['dimension_ids', 'product_dimension_qty']
+        fields += ['dimension_ids']
         return fields

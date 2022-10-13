@@ -3,7 +3,7 @@ from odoo.exceptions import UserError
 
 
 class AccountInvoice(models.Model):
-    _inherit = 'account.invoice'
+    _inherit = 'account.move'
 
     def write(self, vals):
         for rec in self.filtered(lambda i: any(s.state == 'done' for s in i.invoice_line_ids.mapped('sale_line_ids.order_id'))):

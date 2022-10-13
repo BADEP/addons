@@ -1,0 +1,30 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<odoo>
+  <data>
+<!-- Inherit Form View to Modify it -->
+      <template id="paie_report_inherit_template" inherit_id="hr_payroll_community.report_payslip">
+          <xpath expr="//table[hasclass('table-sm')]" position="inside">
+              <tr>
+                  <td><strong>Date d'embauche</strong></td>
+                  <td><span t-field="o.contract_id.date_start"/></td>
+                   <td><strong>CNSS</strong></td>
+                  <td><span t-field="o.employee_id.matricule_cnss"/></td>
+              </tr>
+              <tr>
+                  <td><strong>Situation de congé</strong></td>
+                  <td><strong><span t-field="o.employee_id.allocation_used_display"/></strong> jours restants sur
+                      <strong><span t-field="o.employee_id.allocation_display"/></strong>
+                  </td>
+                  <td><strong>Date de naissance</strong></td>
+                  <td><span t-field="o.employee_id.birthday"/></td>
+              </tr>
+              <tr>
+                  <td><strong>Situation familiale</strong></td>
+                  <td><span t-field="o.employee_id.marital"/></td>
+                  <td><strong>Nombre d'enfant</strong></td>
+                  <td><span t-field="o.employee_id.children"/></td>
+              </tr>
+          </xpath>
+      </template>
+  </data>
+</odoo>

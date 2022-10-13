@@ -22,14 +22,16 @@ class AccountMoveLine(models.Model):
     _inherit = ["account.move.line", "uom.line"]
     _name = 'account.move.line'
 
+    _uom_field = 'product_uom_id'
+    _qty_field = 'quantity'
+
     dimension_ids = fields.One2many('account.move.line.dimension', 'line_id', string='Dimensions', copy=True)
 
-    def get_uom_field(self):
-        return 'product_uom_id'
-    def get_qty_field(self):
-        return 'quantity'
+    @api.depends(_qty_field)
+    def _get_product_dimension_qty(self):
+        super()._get_product_dimension_qty()
 
-    @api.onchange('product_uom_id')
+    @api.onchange(_uom_field)
     def onchange_product_uom_set_dimensions(self):
         super().onchange_product_uom_set_dimensions()
 
