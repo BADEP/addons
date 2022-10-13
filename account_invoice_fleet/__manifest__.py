@@ -13,7 +13,7 @@
     'website': "https://badep.ma",
 
     'category': 'Invoicing &amp; Payments',
-    'version': '14.0.2.0',
+    'version': '16.0.2.0',
 
     'depends': ['account', 'fleet'],
     'images': ['static/src/img/banner.png'],
@@ -22,7 +22,7 @@
         'views/account_view.xml',
         'views/fleet_view.xml',
     ],
-    'installable': True,
+    'installable': False,
     'price': 49.00,
     'currency': 'EUR',
 }

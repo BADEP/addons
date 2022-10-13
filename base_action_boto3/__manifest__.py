@@ -11,7 +11,7 @@
     'website': "https://badep.ma",
 
     'category': 'Technical Settings',
-    'version': '14.0.1',
+    'version': '16.0.1',
 
     'depends': [
         'base'
@@ -22,5 +22,4 @@
         ],
     },
     'installable': False,
-    'auto_install': True,
 }

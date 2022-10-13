@@ -6,7 +6,7 @@
     'author': "BADEP",
     'website': "https://badep.ma",
     'category': 'Technical',
-    'version': '14.0.0.0.1',
+    'version': '16.0.0.0.1',
 
     'depends': ['base'],
     'images': ['static/src/img/banner.png'],
@@ -15,6 +15,7 @@
     'data': [
         'views/asset_views.xml',
     ],
+    'installable': False,
     'price': 9.00,
     'currency': 'EUR',
 }

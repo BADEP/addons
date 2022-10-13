@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Fleet Maps',
-    'version': '14.0.1.0.2',
+    'version': '16.0.1.0.2',
     'author': 'Yopi Angi, BADEP',
     'license': 'AGPL-3',
     'website': 'https://badep.ma',
@@ -21,7 +21,7 @@ Show your fleet on map view
         'views/fleet_vehicle.xml'
     ],
     'demo': [],
-    'installable': True,
+    'installable': False,
     'price': 9.00,
     'currency': 'EUR',
     'uninstall_hook': 'uninstall_hook',

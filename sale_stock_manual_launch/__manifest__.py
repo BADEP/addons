@@ -2,7 +2,7 @@
     'name' : 'Sale Stock Manual Lauch Procurement',
     'summary': 'Manually specify quantity to send to procurement in sales',
     'description': 'Manually specify quantity to send to procurement in sales',
-    'version': '14.0.1.1',
+    'version': '16.0.1.1',
     'category': 'Sales',
     'author': 'BADEP',
     'website': "https://badep.ma",
@@ -15,7 +15,7 @@
              'wizards/launch_procurement_wizard_view.xml',
              'views/views.xml',
     ],
-
+    'installable': False,
     'price': 99.00,
     'currency': 'EUR',
 }

@@ -2,7 +2,7 @@
 
 {
     'name': 'Product dimensions in stock',
-    'version': '14.0',
+    'version': '16.0',
     'category': 'Inventory',
     'license': 'AGPL-3',
     'description': """
@@ -20,7 +20,7 @@
              'views/stock_quant_views.xml',
              'security/ir.model.access.csv',
              ],
-    'installable': True,
+    'installable': False,
     'auto_install': True,
     'price': 100,
     'currency': 'EUR'

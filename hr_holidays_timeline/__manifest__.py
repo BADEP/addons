@@ -6,7 +6,7 @@
 {
     "name": "Leaves timeline",
     "summary": "Timeline view for Leaves",
-    "version": "14.0.1.0.0",
+    "version": "16.0.1.0.0",
     "category": "Project Management",
     "website": "https://github.com/BADEP/addons",
     "author": "Tecnativa, Onestein, BADEP, Odoo Community Association (OCA)",
@@ -15,4 +15,5 @@
     "data": [
         "views/hr_leave_view.xml",
     ],
+    'installable': False,
 }

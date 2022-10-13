@@ -14,14 +14,14 @@
     'website': "https://badep.ma",
 
     'category': 'Hidden',
-    'version': '14.0.2.0',
+    'version': '16.0.2.0',
 
     'depends': ['sale_project'],
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     'data': [
     ],
-    'installable': True,
+    'installable': False,
     'price': 49.00,
     'currency': 'EUR',
 }

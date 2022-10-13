@@ -13,7 +13,7 @@
     'website': "https://badep.ma",
 
     'category': 'Discuss',
-    'version': '14.0.0.1',
+    'version': '16.0.0.1',
 
     'depends': ['mail'],
 

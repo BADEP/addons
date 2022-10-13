@@ -6,7 +6,7 @@
     'author': "BADEP",
     'website': "https://badep.ma",
     'category': 'Invoicing Management',
-    'version': '14.0.1.0.1',
+    'version': '16.0.1.0.1',
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     'depends': ['account', 'uom_dimension'],
@@ -16,7 +16,7 @@
         'security/ir.model.access.csv',
     ],
     'auto_install': True,
-    'installable': True,
+    'installable': False,
     'price': 29,
     'currency': 'EUR'
 }

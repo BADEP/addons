@@ -11,5 +11,5 @@
     'website': 'http://www.badep.ma',
     'depends': ['sale_stock', 'purchase'],
     'data': ['views.xml','security/ir.model.access.csv'],
-    'installable': True,
+    'installable': False,
 }

@@ -13,7 +13,7 @@
     'website': "https://badep.ma",
 
     'category': 'Invoicing &amp; Payments',
-    'version': '14.0.1.0',
+    'version': '16.0.1.0',
 
     'depends': ['account'],
     'images': ['static/src/img/banner.png'],
@@ -21,7 +21,7 @@
     'data': [
         'views/account_bank_statement_line_views.xml',
     ],
-    'installable': True,
+    'installable': False,
     'price': 49.00,
     'currency': 'EUR',
 }

@@ -10,7 +10,7 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Discuss',
-    'version': '14.0.0.1',
+    'version': '16.0.0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['mail_notify'],
@@ -20,6 +20,7 @@
     'data': [
         'views/assets.xml',
     ],
+    'installable': False,
     'price': 199.00,
     'currency': 'EUR',
 }

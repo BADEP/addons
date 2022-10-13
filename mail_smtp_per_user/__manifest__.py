@@ -6,7 +6,7 @@
     'author': 'TKOPEN, BADEP',
     'license': 'AGPL-3',
     'website': 'https://tkopen.com',
-    'version': '14.0.2',
+    'version': '16.0.2',
     'sequence': 10,
     'depends': [
         'base',
@@ -21,7 +21,7 @@
     'update': [],
     "images": ['static/description/thumbnail.png'],
     'test': [],  # YAML files with tests
-    'installable': True,
+    'installable': False,
     'application': False,
     'auto_install': False,
     'certificate': '',

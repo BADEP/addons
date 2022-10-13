@@ -4,7 +4,7 @@
 
 {
     'name': 'Partner Statement Fix',
-    'version': '14.0.1.0.1',
+    'version': '16.0.1.0.1',
     'category': 'Accounting & Finance',
     'summary': 'OCA Financial Reports',
     'author': "BADEP",
@@ -13,7 +13,7 @@
     'depends': [
         'partner_statement',
     ],
-    'installable': True,
+    'installable': False,
     'auto_install': False,
     'application': False,
 }
