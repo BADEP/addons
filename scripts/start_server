@@ -1,2 +1,2 @@
 #!/bin/bash
-sudo service odoo start
+sudo service odoo restart
