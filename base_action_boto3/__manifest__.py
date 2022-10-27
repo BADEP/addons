@@ -21,6 +21,5 @@
             'boto3',
         ],
     },
-    'installable': False,
-    'auto_install': True,
+    'installable': True,
 }
