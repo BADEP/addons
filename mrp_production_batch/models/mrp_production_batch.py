@@ -68,6 +68,8 @@ class MrpProductionBatch(models.Model):
     workorder_batch_ids = fields.One2many('mrp.workorder.batch', 'mrp_production_batch_id')
     workorder_batch_done_count = fields.Integer('Batch count', compute='get_workorder_batch_count')
     workorder_batch_count = fields.Integer('Batch count', compute='get_workorder_batch_count')
+    move_finished_ids = fields.Many2many('stock.move', compute='_move_finished_ids', string='Produits finis')
+    move_byproduct_ids = fields.Many2many('stock.move', compute='_move_byproduct_ids', string='Sous-produits')
     move_batch_ids = fields.One2many('stock.move.batch', 'mrp_production_batch_id')
     date_planned_start = fields.Datetime(
         'Scheduled Date Start', copy=False, store=True, compute='_compute_date_planned_start', inverse='_set_date_planned_start',
@@ -110,6 +112,16 @@ class MrpProductionBatch(models.Model):
     generate_serial_visible = fields.Boolean(compute='_compute_generate_serial_visible')
     # check_to_done = fields.Boolean(compute="get_related_fields", string="Check Produced Qty")
     # procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
+
+    @api.depends('production_ids.move_byproduct_ids')
+    def _move_byproduct_ids(self):
+        for rec in self:
+            rec.move_byproduct_ids = rec.production_ids.move_byproduct_ids
+
+    @api.depends('production_ids.move_finished_ids')
+    def _move_finished_ids(self):
+        for rec in self:
+            rec.move_finished_ids = rec.production_ids.mapped('move_finished_ids').filtered(lambda x: x.product_id == x.production_id.product_id)
 
     @api.depends('production_ids.lot_producing_id', 'production_ids.product_tracking')
     def _compute_generate_serial_visible(self):
