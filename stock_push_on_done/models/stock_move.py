@@ -10,4 +10,6 @@ class StockMove(models.Model):
         for rec in self:
             rec.location_dest_id = rec.move_line_ids[0].location_dest_id if len(rec.mapped('move_line_ids.location_dest_id')) == 1 else rec.location_dest_id
         self._push_apply()
+        self.mapped('move_dest_ids')._action_confirm()
+        self.mapped('move_dest_ids')._action_assign()
         return res
