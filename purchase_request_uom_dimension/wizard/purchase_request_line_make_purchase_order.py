@@ -15,6 +15,6 @@ class PurchaseRequestLineMakePurchaseOrder(models.TransientModel):
     @api.model
     def _get_order_line_search_domain(self, order, item):
         res = super()._get_order_line_search_domain(order, item)
-        if item.dimension_ids:
-            res.append((1, "=", 0))
+        if item.line_id.dimension_ids:
+            res.append(("purchase_request_lines", "in", [item.line_id.id]))
         return res
