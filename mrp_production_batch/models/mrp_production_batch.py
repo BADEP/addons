@@ -40,6 +40,9 @@ class MrpProductionBatch(models.Model):
                 location = self.env['stock.warehouse'].search([('company_id', '=', self.env.user.company_id.id)], limit=1).lot_stock_id
         return location and location.id or False
 
+    has_packages = fields.Boolean(
+        'Has Packages', compute='_compute_has_packages',
+        help='Check the existence of destination packages on move lines')
     is_locked = fields.Boolean('Is Locked', compute='_compute_is_locked', copy=False)
     reserve_visible = fields.Boolean(
         'Allowed to Reserve Production', compute='_compute_unreserve_visible',
@@ -112,6 +115,13 @@ class MrpProductionBatch(models.Model):
     generate_serial_visible = fields.Boolean(compute='_compute_generate_serial_visible')
     # check_to_done = fields.Boolean(compute="get_related_fields", string="Check Produced Qty")
     # procurement_group_id = fields.Many2one('procurement.group', 'Procurement Group', copy=False)
+    def action_see_packages(self):
+        self.ensure_one()
+        action = self.env["ir.actions.actions"]._for_xml_id("stock.action_package_view")
+        packages = self.move_finished_ids.mapped('move_line_ids.result_package_id')
+        action['domain'] = [('id', 'in', packages.ids)]
+        action['context'] = {'picking_id': self.id}
+        return action
 
     @api.depends('production_ids.move_byproduct_ids')
     def _move_byproduct_ids(self):
@@ -122,6 +132,10 @@ class MrpProductionBatch(models.Model):
     def _move_finished_ids(self):
         for rec in self:
             rec.move_finished_ids = rec.production_ids.mapped('move_finished_ids').filtered(lambda x: x.product_id == x.production_id.product_id)
+
+    def _compute_has_packages(self):
+        for rec in self:
+            rec.has_packages = any(p.has_packages for p in rec.production_ids)
 
     @api.depends('production_ids.lot_producing_id', 'production_ids.product_tracking')
     def _compute_generate_serial_visible(self):

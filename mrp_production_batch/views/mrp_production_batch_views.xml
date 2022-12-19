@@ -90,6 +90,9 @@
                                     <span class="o_stat_text">Workorder Lots</span>
                                 </div>
                             </button>
+                            <field name="has_packages" invisible="1"/>
+                            <button name="action_see_packages" string="Colis" type="object" class="oe_stat_button"
+                                    icon="fa-cubes" attrs="{'invisible': [('has_packages', '=', False)]}"/>
                         </div>
                         <div class="oe_title">
                             <h1>
