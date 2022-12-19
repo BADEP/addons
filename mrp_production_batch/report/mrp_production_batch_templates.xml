@@ -19,11 +19,11 @@
                             </div>
                         </div>
                         <div class="row mt32 mb32">
-<!--                            <div class="col-3" t-if="o.routing_id">-->
-<!--                                <strong>Routing:</strong>-->
-<!--                                <br/>-->
-<!--                                <span t-field="o.routing_id"/>-->
-<!--                            </div>-->
+                            <!--                            <div class="col-3" t-if="o.routing_id">-->
+                            <!--                                <strong>Routing:</strong>-->
+                            <!--                                <br/>-->
+                            <!--                                <span t-field="o.routing_id"/>-->
+                            <!--                            </div>-->
                             <div class="col-3" t-if="o.origin">
                                 <strong>Source Document:</strong>
                                 <br/>
@@ -69,7 +69,8 @@
                                         <span t-field="production.product_id"/>
                                     </td>
                                     <td>
-                                        <span t-field="production.product_uom_qty"/> <span t-field="production.product_uom_id"/>
+                                        <span t-field="production.product_uom_qty"/>
+                                        <span t-field="production.product_uom_id"/>
                                     </td>
                                 </tr>
                             </table>
@@ -156,4 +157,19 @@
             report_type="qweb-pdf"
             print_report_name="'Production Batch - %s' % object.name"
     />
+    <template id="report_production_packages">
+        <t t-set="docs" t-value="docs.move_finished_ids.mapped('move_line_ids.result_package_id')"/>
+        <t t-call="stock.report_package_barcode"/>
+    </template>
+    <record id="action_report_picking_packages" model="ir.actions.report">
+        <field name="name">Colis</field>
+        <field name="model">mrp.production.batch</field>
+        <field name="report_type">qweb-pdf</field>
+        <field name="report_name">mrp_production_batch.report_production_packages</field>
+        <field name="report_file">mrp_production_batch.report_production_packages</field>
+        <field name="print_report_name">'Packages - %s' % (object.name)</field>
+        <field name="binding_model_id" ref="model_mrp_production_batch"/>
+        <field name="binding_type">report</field>
+        <field name="groups_id" eval="[Command.link(ref('stock.group_tracking_lot'))]"/>
+    </record>
 </odoo>
