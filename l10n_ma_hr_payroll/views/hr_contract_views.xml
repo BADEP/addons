@@ -5,7 +5,7 @@
             <field name="name">hr.contract.view.form.l10n.ma_payroll</field>
             <field name="model">hr.contract</field>
             <field name="priority">20</field>
-            <field name="inherit_id" ref="hr_payroll_community.hr_contract_form_inherit"/>
+            <field name="inherit_id" ref="hr_payroll.hr_contract_form_inherit"/>
             <field name="arch" type="xml">
                 <data>
                     <xpath expr="//notebook" position="inside">

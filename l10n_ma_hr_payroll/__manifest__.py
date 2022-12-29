@@ -6,7 +6,7 @@
     'website': 'https://badep.ma, http://rhfree.com',
     "license": "AGPL-3",
     "version": "16.0.2",
-    'depends': ['hr_payroll_community'],
+    'depends': ['hr_payroll'],
 
     'description': """Moroccan Payroll Rules Basic Version.
 ======================
@@ -29,6 +29,6 @@
         'views/res_company_views.xml',
         'report/report_paie.xml',
     ],
-     'installable': False,
+     'installable': True,
      "images":['static/description/Banner.png'],
 }

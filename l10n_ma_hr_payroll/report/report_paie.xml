@@ -2,7 +2,7 @@
 <odoo>
   <data>
 <!-- Inherit Form View to Modify it -->
-      <template id="paie_report_inherit_template" inherit_id="hr_payroll_community.report_payslip">
+      <template id="paie_report_inherit_template" inherit_id="hr_payroll.report_payslip">
           <xpath expr="//table[hasclass('table-sm')]" position="inside">
               <tr>
                   <td><strong>Date d'embauche</strong></td>
