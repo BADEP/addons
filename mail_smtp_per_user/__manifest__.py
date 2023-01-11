@@ -21,7 +21,7 @@
     'update': [],
     "images": ['static/description/thumbnail.png'],
     'test': [],  # YAML files with tests
-    'installable': False,
+    'installable': True,
     'application': False,
     'auto_install': False,
     'certificate': '',
