@@ -12,9 +12,11 @@
                 </field>
                 <xpath expr="//field[@name='order_line']//tree//field[@name='account_analytic_id']" position="attributes">
                     <attribute name="attrs">{'readonly': [('parent.analytic_account_id', '!=', False)]}</attribute>
+                    <attribute name="force_save">1</attribute>
                 </xpath>
                 <xpath expr="//field[@name='order_line']//form//field[@name='account_analytic_id']" position="attributes">
                     <attribute name="attrs">{'readonly': [('parent.analytic_account_id', '!=', False)]}</attribute>
+                    <attribute name="force_save">1</attribute>
                 </xpath>
             </field>
         </record>
