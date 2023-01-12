@@ -1,0 +1,27 @@
+{
+    'name': "Purchase Request Project",
+
+    'summary': """
+        Link Purchase Requests with Project""",
+
+    'description': """
+    """,
+
+    'author': "BADEP",
+    'website': "https://badep.ma",
+
+    'category': 'Project',
+    'version': '14.0.1.0',
+
+    'depends': ['purchase_project'],
+    'images': ['static/src/img/banner.png'],
+    'license': 'AGPL-3',
+    'data': [
+        'views/project_project_views.xml',
+        'views/project_task_views.xml',
+        'views/purchase_request_views.xml',
+    ],
+    'installable': True,
+    #'price': 49.00,
+    'currency': 'EUR',
+}
