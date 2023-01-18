@@ -367,13 +367,35 @@ C_IMPAN*0.10-3000 if ((TRANCHE &gt;= 30000) and (TRANCHE &lt;= 49999)) else 0)/1
             <field name="register_id" ref="hr_CNSS_register"/>
             <field name="appears_on_payslip" eval="False"/>
         </record>
+<!--        <record id="hr_payroll_rules_frais_pro" model="hr.salary.rule">-->
+<!--            <field name="category_id" ref="hr_payroll_community.COMP"/>-->
+<!--            <field name="name">Frais Formation professionnelle</field>-->
+<!--            <field name="code">FPRO</field>-->
+<!--            <field name="sequence">10004</field>-->
+<!--            <field name="amount_select">percentage</field>-->
+<!--            <field name="amount_percentage">1.6</field>-->
+<!--            <field name="amount_percentage_base">categories.GROSS</field>-->
+<!--            <field name="appears_on_payslip" eval="False"/>-->
+<!--            <field name="register_id" ref="hr_CNSS_register"/>-->
+<!--        </record>-->
         <record id="hr_payroll_rules_frais_pro" model="hr.salary.rule">
             <field name="category_id" ref="hr_payroll_community.COMP"/>
             <field name="name">Frais Formation professionnelle</field>
             <field name="code">FPRO</field>
             <field name="sequence">10004</field>
-            <field name="amount_select">percentage</field>
-            <field name="amount_percentage">1.6</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">
+try:
+  payslip = payslip.dict
+except Exception:
+  pass
+year_payrolls = payslip.search([('contract_id', '=', contract.id), ('date_from', '>=', str(payslip.date_from.year) + '-01-01'), ('id', '!=', payslip.id)])
+prev_C_IMP = year_payrolls.mapped('line_ids').filtered(lambda l: l.code == 'C_IMP').mapped('total')
+TRANCHE= (C_IMP + sum(prev_C_IMP)) / (1 + len(prev_C_IMP)) * 12
+C_IMPAN = C_IMP*12
+result = -(C_IMPAN*0.35  if (TRANCHE &lt;= 78000) else \
+C_IMPAN*0.25)/12
+			</field>
             <field name="amount_percentage_base">categories.GROSS</field>
             <field name="appears_on_payslip" eval="False"/>
             <field name="register_id" ref="hr_CNSS_register"/>
