@@ -166,37 +166,27 @@ categories.BASIC * 0.05 if years >=2 else 0
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = categories.SALC</field>
             <field name="note">Cette valeur représente la somme de toutes les charges salariales.</field>
-        </record>
-        <!--
-		<record id="hr_payroll_rules_frpro" model="hr.salary.rule">
+        </record>    
+<!--		<record id="hr_payroll_rules_frpro" model="hr.salary.rule">-->
+<!--		    <field name="category_id" ref="O_TOTAL"/>-->
+<!--		    <field name="name">FRPRO</field>-->
+<!--		    <field name="code">FR2</field>-->
+<!--		    <field name="sequence">200</field>-->
+<!--		    <field name="amount_select">percentage</field>-->
+<!--		    <field name="amount_percentage">20</field>-->
+<!--		    <field name="amount_percentage_base">-min(categories.GROSS,12500)</field>-->
+<!--		    <field name="appears_on_payslip" eval="False"/>-->
+<!--		</record>-->
+        <record id="hr_payroll_rules_frpro" model="hr.salary.rule">
 		    <field name="category_id" ref="O_TOTAL"/>
 		    <field name="name">FRPRO</field>
 		    <field name="code">FR2</field>
 		    <field name="sequence">200</field>
-		    <field name="amount_select">percentage</field>
-		    <field name="amount_percentage">20</field>
-		    <field name="amount_percentage_base">-min(categories.GROSS,12500)</field>
-		    <field name="appears_on_payslip" eval="False"/>
-		</record>
-        -->        
-	<record id="hr_payroll_rules_frpro" model="hr.salary.rule">
-            <field name="category_id" ref="O_TOTAL"/>
-            <field name="name">FRPRO</field>
-            <field name="code">FR2</field>
-            <field name="sequence">200</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">
-try:
-  payslip = payslip.dict
-except Exception:
-  pass
-year_payrolls = payslip.search([('contract_id', '=', contract.id), ('date_from', '>=', str(payslip.date_from.year) + '-01-01'), ('id', '!=', payslip.id)])
-prev_C_IMP = year_payrolls.mapped('line_ids').filtered(lambda l: l.code == 'C_IMP').mapped('total')
-TRANCHE= (C_IMP + sum(prev_C_IMP)) / (1 + len(prev_C_IMP)) * 12
-C_IMPAN = C_IMP*12
-result = -(min(C_IMPAN*0.35 , 27300)  if (TRANCHE &lt;= 78000) else min(C_IMPAN*0.25 , 35000))/12
-			</field>
-            <field name="amount_percentage_base">categories.GROSS</field>
+C_IMPAN = categories.GROSS * 12
+result = (-1)*(min(C_IMPAN*0.35 , 27300)  if (C_IMPAN &lt;= 78000) else min(C_IMPAN*0.25 , 35000))/12
+            </field>
             <field name="appears_on_payslip" eval="False"/>
         </record>
         <record id="hr_rule_cumul_imposable" model="hr.salary.rule">
