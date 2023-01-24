@@ -166,7 +166,7 @@ categories.BASIC * 0.05 if years >=2 else 0
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = categories.SALC</field>
             <field name="note">Cette valeur représente la somme de toutes les charges salariales.</field>
-        </record>    
+        </record>
 <!--		<record id="hr_payroll_rules_frpro" model="hr.salary.rule">-->
 <!--		    <field name="category_id" ref="O_TOTAL"/>-->
 <!--		    <field name="name">FRPRO</field>-->
@@ -221,7 +221,7 @@ C_IMPAN*0.10-3000 if ((TRANCHE &gt;= 30000) and (TRANCHE &lt;= 49999)) else 0)/1
             </field>
             <field name="appears_on_payslip" eval="False"/>
         </record>
-        <record id="hr_payroll_rules_MARIE" model="hr.salary.rule">
+        <!-- <record id="hr_payroll_rules_MARIE" model="hr.salary.rule">
             <field name="category_id" ref="DEDIRPP"/>
             <field name="name">Déduction pour conjoint</field>
             <field name="code">MARIE</field>
@@ -231,7 +231,7 @@ C_IMPAN*0.10-3000 if ((TRANCHE &gt;= 30000) and (TRANCHE &lt;= 49999)) else 0)/1
             <field name="amount_select">fix</field>
             <field name="amount_fix">30</field>
             <field name="appears_on_payslip" eval="False"/>
-        </record>
+        </record> 
         <record id="hr_payroll_rules_ENF1" model="hr.salary.rule">
             <field name="category_id" ref="DEDIRPP"/>
             <field name="name">Déduction pour Enfants</field>
@@ -241,6 +241,16 @@ C_IMPAN*0.10-3000 if ((TRANCHE &gt;= 30000) and (TRANCHE &lt;= 49999)) else 0)/1
             <field name="condition_python">result = employee.children &gt;= 1</field>
             <field name="amount_select">code</field>
             <field name="amount_python_compute">result = min((employee.children*30),2160)</field>
+        </record>-->
+        <record id="hr_payroll_rules_nbr_ded" model="hr.salary.rule">
+            <field name="category_id" ref="DEDIRPP"/>
+            <field name="name">Nbr déductions</field>
+            <field name="code">F1</field>
+            <field name="sequence">2002</field>
+            <field name="condition_select">python</field>
+            <field name="condition_python">result = employee.nbr_deduction &gt;= 1</field>
+            <field name="amount_select">code</field>
+            <field name="amount_python_compute">result = min((employee.nbr_deduction*30),180)</field>
         </record>
         <record id="hr_rule_IRPP" model="hr.salary.rule">
             <field name="name">Impôt sur le Revenue Prélévé</field>
@@ -464,9 +474,8 @@ C_IMPAN*0.10-3000 if ((TRANCHE &gt;= 30000) and (TRANCHE &lt;= 49999)) else 0)/1
                 ref('hr_payroll_rules_AMO_employer'),
                 ref('hr_payroll_rules_frpro'),
                 ref('hr_payroll_rules_IR'),
-                ref('hr_payroll_rules_MARIE'),
                 ref('hr_payroll_community.hr_rule_taxable'),
-                ref('hr_payroll_rules_ENF1'),
+                ref('hr_payroll_rules_nbr_ded'),
                 ref('hr_payroll_rules_frais_pro'),
                 ref('hr_payroll_rules_alloc_fam'),
                 ref('hr_payroll_community.hr_rule_net'),
