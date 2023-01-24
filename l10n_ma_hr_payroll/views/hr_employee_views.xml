@@ -8,6 +8,9 @@
             <field name="inherit_id" ref="hr.view_employee_form"/>
             <field name="arch" type="xml">
                 <data>
+                    <field name="children" position="after">
+                        <field name="nbr_deduction"/>
+                    </field>
                     <xpath expr="//notebook" position="inside">
                         <page name="maroc_payroll" string="Paramètres Maroc ">
                             <group string="Numéros d'affiliation">
