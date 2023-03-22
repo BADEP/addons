@@ -7,8 +7,8 @@ class IrModuleModule(models.Model):
     upgrade_available = fields.Boolean(string='Upgradable', compute='_upgrade_available', store=True)
     #todo: this should not be per module. Probably ir.config_parameter
     target = fields.Selection([
-        ('15.0', '15.0'),
-    ], default='15.0', required=False)
+        ('16.0', '16.0'),
+    ], default='16.0', required=False)
     alternative_name = fields.Char(string='Alternative name')
     module_path = fields.Char(compute='get_module_path')
 
