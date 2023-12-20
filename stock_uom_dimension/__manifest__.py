@@ -22,8 +22,6 @@
              ],
     'installable': False,
     'auto_install': True,
-    'price': 100,
-    'currency': 'EUR'
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

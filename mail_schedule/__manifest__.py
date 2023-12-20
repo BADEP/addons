@@ -22,6 +22,4 @@
         'views/mail_views.xml'
     ],
     'installable': False,
-    'price': 29.00,
-    'currency': 'EUR',
 }

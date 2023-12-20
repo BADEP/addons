@@ -16,6 +16,4 @@
         'views/uom_view.xml',
     ],
     'installable': False,
-    'price': 20,
-    'currency': 'EUR'
 }

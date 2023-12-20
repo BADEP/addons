@@ -21,6 +21,4 @@
         'views/assets.xml',
     ],
     'installable': False,
-    'price': 199.00,
-    'currency': 'EUR',
 }

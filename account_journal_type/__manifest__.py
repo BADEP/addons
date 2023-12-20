@@ -24,6 +24,4 @@
         'views/account_journal_type_views.xml',
     ],
     'installable': False,
-    'price': 49.00,
-    'currency': 'EUR',
 }

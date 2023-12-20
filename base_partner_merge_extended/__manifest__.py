@@ -27,6 +27,4 @@
         'wizard/base_partner_merge_views.xml',
     ],
     'installable': False,
-    'price': 19.00,
-    'currency': 'EUR',
 }

@@ -29,6 +29,4 @@
         'views/sale_view.xml',
     ],
     'installable': False,
-    'price': 49.00,
-    'currency': 'EUR',
 }

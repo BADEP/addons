@@ -29,6 +29,4 @@
         'views/account_payment.xml',
     ],
     'installable': False,
-    'price': 19.00,
-    'currency': 'EUR',
 }
