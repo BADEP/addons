@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Legal fields for Moroccan companies',
-    'version': '14.0.1',
+    'version': '16.0.1',
     'category': 'Localization',
     'description': """
     Ajout RC, Patente, IF, CNSS & ICE à la fiche client. 
@@ -13,7 +13,7 @@
     'images': ['static/scr/img/banner.png'],
     'license': 'AGPL-3',
     'demo_xml': [],
-    'installable': True,
+    'installable': False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

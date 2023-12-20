@@ -16,7 +16,7 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Purchases',
-    'version': '14.0.0.1',
+    'version': '16.0.0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['purchase', 'stock_fleet'],
@@ -29,6 +29,5 @@
         'views/purchase_view.xml',
         'views/fleet_view.xml',
     ],
-    'price': 29.00,
-    'currency': 'EUR',
+    'installable': False,
 }

@@ -7,9 +7,8 @@ class IrModuleModule(models.Model):
     upgrade_available = fields.Boolean(string='Upgradable', compute='_upgrade_available', store=True)
     #todo: this should not be per module. Probably ir.config_parameter
     target = fields.Selection([
-        ('15.0', '15.0'),
-        ('16.0', '16.0'),
-    ], default='16.0', required=False)
+        ('17.0', '17.0'),
+    ], default='17.0', required=False)
     alternative_name = fields.Char(string='Alternative name')
     module_path = fields.Char(compute='get_module_path')
 
@@ -23,7 +22,7 @@ class IrModuleModule(models.Model):
         for rec in records:
             rec.upgrade_available = False
             if not rec.target:
-                rec.target = '16.0'
+                rec.target = '17.0'
             if rec.author == 'Odoo S.A.':
                 rec.upgrade_available = True
             else:

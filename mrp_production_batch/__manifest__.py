@@ -12,7 +12,7 @@
     'website': "https://badep.ma",
 
     'category': 'Manufacturing/Manufacturing',
-    'version': '14.0.2.0',
+    'version': '16.0.2.0',
 
     'depends': ['mrp_routing'],
     'images': ['static/src/img/banner.png'],
@@ -27,5 +27,5 @@
         'security/ir.model.access.csv',
         'security/mrp_security.xml'
     ],
-    'installable' : True,
+    'installable': True,
 }

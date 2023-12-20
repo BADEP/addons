@@ -10,4 +10,13 @@
             <field name="company_id" eval="False"/>
         </record>
     </data>
+    <data>
+        <record id="mrp.mrp_production_action_picking_deshboard" model="ir.actions.act_window">
+            <field name="name">Lots de production</field>
+            <field name="res_model">mrp.production.batch</field>
+            <field name="search_view_id" ref="view_mrp_production_batch_filter"/>
+            <field name="domain">[('picking_type_id', '=', active_id)]</field>
+            <field name="context">{'default_picking_type_id': active_id}</field>
+        </record>
+    </data>
 </odoo>

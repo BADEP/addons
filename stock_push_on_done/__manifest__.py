@@ -1,13 +1,10 @@
 # -*- coding: utf-8 -*-
 {
-    'name': "Stock Fleet",
+    'name': "Stock Push On done moves",
 
-    'summary': """
-        Link Stock with Fleet""",
+    'summary': """""",
 
-    'description': """
-        Add vehicles and drivers assignation on Picking Orders and waves. These Statistics can also be accessed directly from the vehicle view.
-    """,
+    'description': """""",
 
     'author': "BADEP",
     'website': "https://badep.ma",
@@ -16,12 +13,13 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Inventory',
-    'version': '14.0.0.1',
+    'version': '16.0.0.1',
 
     # any module necessary for this one to work correctly
     'depends': ['stock'],
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
+     'installable': True,
 
     # always loaded
     'data': [

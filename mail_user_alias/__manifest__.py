@@ -13,13 +13,12 @@
     'website': "https://badep.ma",
 
     'category': 'Discuss',
-    'version': '14.0.0.1',
+    'version': '16.0.0.1',
 
     'depends': ['mail'],
 
     'data': [
         'views/res_users_view.xml'
     ],
-    'price': 9.00,
-    'currency': 'EUR',
+    'installable': False,
 }

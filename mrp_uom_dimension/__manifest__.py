@@ -2,7 +2,7 @@
 
 {
     'name': 'Product dimensions',
-    'version': '14.0',
+    'version': '16.0',
     'category': 'Sales Management',
     'description': """
     This module allow to have multidimensional UoMs.
@@ -19,10 +19,8 @@
     ],
     'qweb': ['static/src/xml/*.xml'],
     'license': 'AGPL-3',
-    'installable': True,
+    'installable': False,
     'auto_install': False,
-    'price': 50,
-    'currency': 'EUR',
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

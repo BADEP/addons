@@ -15,7 +15,7 @@
     # Check https://github.com/odoo/odoo/blob/master/odoo/addons/base/module/module_data.xml
     # for the full list
     'category': 'Technical Settings',
-    'version': '14.0.1',
+    'version': '16.0.1',
 
     # any module necessary for this one to work correctly
     'depends': [
@@ -27,7 +27,5 @@
         'views/res_partner_views.xml',
         'security/ir.model.access.csv'
     ],
-    'installable': True,
-    'price': 49.00,
-    'currency': 'EUR',
+    'installable': False,
 }

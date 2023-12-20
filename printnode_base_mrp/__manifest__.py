@@ -9,4 +9,5 @@
         'mrp',
         'printnode_base'
     ],
+    'installable': False,
 }

@@ -7,6 +7,14 @@ class MrpProduction(models.Model):
     _inherit = 'mrp.production'
 
     mrp_production_batch_id = fields.Many2one('mrp.production.batch')
+    has_packages = fields.Boolean(
+        'Has Packages', compute='_compute_has_packages',
+        help='Check the existence of destination packages on move lines')
+
+    @api.depends('move_finished_ids.move_line_ids.result_package_id')
+    def _compute_has_packages(self):
+        for rec in self:
+            rec.has_packages = any(x.result_package_id for x in rec.move_finished_ids.mapped('move_line_ids'))
 
     def get_suitable_batches(self, vals):
         batches = self.env['mrp.production.batch'].search([

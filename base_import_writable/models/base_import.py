@@ -14,7 +14,7 @@ class Import(models.TransientModel):
     _inherit = 'base_import.import'
 
     @api.model
-    def get_fields(self, model, depth=FIELDS_RECURSION_LIMIT):
+    def get_fields_tree(self, model, depth=FIELDS_RECURSION_LIMIT):
         Model = self.env[model]
         importable_fields = [{
             'id': 'id',
@@ -50,6 +50,7 @@ class Import(models.TransientModel):
                 'required': bool(field.get('required')),
                 'fields': [],
                 'type': field['type'],
+                'model_name': model
             }
 
             if field['type'] in ('many2many', 'many2one'):
@@ -57,10 +58,12 @@ class Import(models.TransientModel):
                     dict(field_value, name='id', string=_("External ID"), type='id'),
                     dict(field_value, name='.id', string=_("Database ID"), type='id'),
                 ]
+                field_value['comodel_name'] = field['relation']
             elif field['type'] == 'one2many':
-                field_value['fields'] = self.get_fields(field['relation'], depth=depth-1)
+                field_value['fields'] = self.get_fields_tree(field['relation'], depth=depth-1)
                 if self.user_has_groups('base.group_no_one'):
                     field_value['fields'].append({'id': '.id', 'name': '.id', 'string': _("Database ID"), 'required': False, 'fields': [], 'type': 'id'})
+                field_value['comodel_name'] = field['relation']
 
             importable_fields.append(field_value)
 

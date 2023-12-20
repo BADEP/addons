@@ -124,7 +124,7 @@
                         <group>
                             <group name="description">
                                 <field name="name"/>
-                                <field name="workcenter_id" context="{'default_company_id': company_id}"/>
+                                <field name="workcenter_id"/>
                                 <field name="sequence" groups="base.group_no_one"/>
                             </group>
                             <group name="workorder">
@@ -141,6 +141,7 @@
                                     <field name="time_cycle_manual" widget="float_time" class="oe_inline"/> minutes
                                 </div>
                                 <field name="time_cycle" invisible="1"/>
+                                <field name="company_id" invisible="1" />
                                 <field name="company_id" groups="base.group_multi_company" />
                             </group>
                         </group>

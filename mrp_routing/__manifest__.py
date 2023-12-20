@@ -11,7 +11,7 @@
     'author': "BADEP",
     'website': "https://badep.ma",
     'category': 'Manufacturing',
-    'version': '14.0.1',
+    'version': '16.0.1',
 
     'depends': [
         'mrp'
@@ -27,6 +27,4 @@
 
     'installable': True,
     'auto_install': True,
-    'price': 99.00,
-    'currency': 'EUR',
 }

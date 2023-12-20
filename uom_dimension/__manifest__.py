@@ -6,7 +6,7 @@
     'author': "BADEP",
     'website': "https://badep.ma",
     'category': 'Inventory',
-    'version': '14.0.1.0.2',
+    'version': '16.0.1.0.2',
     'depends': ['uom', 'product'],
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
@@ -15,7 +15,5 @@
         'views/product_views.xml',
         'views/uom_view.xml',
     ],
-    'installable': True,
-    'price': 20,
-    'currency': 'EUR'
+    'installable': False,
 }

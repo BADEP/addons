@@ -2,7 +2,7 @@
 
 {
     'name' : 'Sale UoM Dimension Measure',
-    'version': '14.0',
+    'version': '16.0',
     'category': 'Sale',
     'summary':  """Sale lines measures""",
     'author': 'BADEP',
@@ -17,5 +17,5 @@
              'views/views.xml',
              'views/product_views.xml',
     ],
-    'installable' : True,
+    'installable': False,
 }

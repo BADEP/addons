@@ -6,7 +6,7 @@
     'author': "BADEP",
     'website': "https://badep.ma",
     'category': 'Sales Management',
-    'version': '14.0.1.0.1',
+    'version': '16.0.1.0.1',
     'images': ['static/src/img/banner.png'],
     'license': 'AGPL-3',
     'depends': ['website_sale_stock'],
@@ -15,6 +15,4 @@
              ],
     'auto_install': True,
     'installable': False,
-    'price': 30,
-    'currency': 'EUR'
 }

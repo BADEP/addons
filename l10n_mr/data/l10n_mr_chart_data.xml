@@ -12,194 +12,194 @@
     #
     #
     -->
-        <record id="pcm_chart_template" model="account.chart.template">
-            <field name="name">Plan de compte - PCM</field>
-            <field name="bank_account_code_prefix">550</field>
-            <field name="cash_account_code_prefix">555</field>
-            <field name="transfer_account_code_prefix">580</field>
-            <field name="currency_id" ref="base.MRU"/>
-            <field name="code_digits">6</field>
-        </record>
-        <!-- Account Type Templates -->
-        <record id="type_imm_corp" model="account.account.type">
-            <field name="name">Immobilisations corporelles</field>
-            <field name="type">other</field>
-            <field name="internal_group">asset</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_a_incorp" model="account.account.type">
-            <field name="name">Actifs incorporels</field>
-            <field name="type">other</field>
-            <field name="internal_group">asset</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_aut_a_fin" model="account.account.type">
-            <field name="name">Autres actifs financiers</field>
-            <field name="type">other</field>
-            <field name="internal_group">asset</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_stk_e_cour" model="account.account.type">
-            <field name="name">Stocks et en-cours</field>
-            <field name="type">other</field>
-            <field name="internal_group">asset</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_clt" model="account.account.type">
-            <field name="name">Clients et comptes rattachés</field>
-            <field name="type">receivable</field>
-            <field name="internal_group">asset</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_aut_deb" model="account.account.type">
-            <field name="name">Autres débiteurs</field>
-            <field name="type">other</field>
-            <field name="internal_group">asset</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_tres" model="account.account.type">
-            <field name="name">Trésorerie et équivalents de trésorerie</field>
-            <field name="type">liquidity</field>
-            <field name="internal_group">asset</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_cap_rsve" model="account.account.type">
-            <field name="name">Capital et réserves</field>
-            <field name="internal_group">equity</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_cap_em" model="account.account.type">
-            <field name="name">Capital émis</field>
-            <field name="internal_group">equity</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_pri_em" model="account.account.type">
-            <field name="name">Primes d’émission</field>
-            <field name="internal_group">equity</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_gain_lat" model="account.account.type">
-            <field name="name">Gains nets latents sur contrats à terme</field>
-            <field name="internal_group">equity</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_res_n_dist" model="account.account.type">
-            <field name="name">Résultats accumulés non distribués</field>
-            <field name="internal_group">equity</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_emp" model="account.account.type">
-            <field name="name">Emprunts portant intérêts</field>
-            <field name="internal_group">equity</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_prov" model="account.account.type">
-            <field name="name">Provisions</field>
-            <field name="internal_group">equity</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_p_cour" model="account.account.type">
-            <field name="name">Passifs courants</field>
-            <field name="type">other</field>
-            <field name="internal_group">liability</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_fsr" model="account.account.type">
-            <field name="name">Fournisseurs et comptes rattachés</field>
-            <field name="type">payable</field>
-            <field name="internal_group">liability</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_imp" model="account.account.type">
-            <field name="name">Impôts</field>
-            <field name="type">other</field>
-            <field name="internal_group">liability</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_aut_tax" model="account.account.type">
-            <field name="name">Autres taxes</field>
-            <field name="type">other</field>
-            <field name="internal_group">liability</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_aut_cred" model="account.account.type">
-            <field name="name">Autres créditeurs</field>
-            <field name="type">other</field>
-            <field name="internal_group">liability</field>
-            <field name="include_initial_balance" eval="True"/>
-        </record>
-        <record id="type_ca_prod" model="account.account.type">
-            <field name="name">Chiffre d'affaires</field>
-            <field name="internal_group">income</field>
-        </record>
-        <record id="type_prod_anex" model="account.account.type">
-            <field name="name">Produits des activités annexes</field>
-            <field name="type">other</field>
-            <field name="internal_group">income</field>
-        </record>
-        <record id="type_aut_prod_op" model="account.account.type">
-            <field name="name">Autres produits opérationnels</field>
-            <field name="type">other</field>
-            <field name="internal_group">income</field>
-        </record>
-        <record id="type_prod_imm" model="account.account.type">
-            <field name="name">Production immobilisée</field>
-            <field name="type">other</field>
-            <field name="internal_group">income</field>
-        </record>
-        <record id="type_march" model="account.account.type">
-            <field name="name">Marchandises et matières consommées</field>
-            <field name="internal_group">expense</field>
-        </record>
-        <record id="type_fr_perso" model="account.account.type">
-            <field name="name">Frais de personnel</field>
-            <field name="internal_group">expense</field>
-        </record>
-        <record id="type_dot_amort_prov" model="account.account.type">
-            <field name="name">Dotations aux amortissements et provisions</field>
-            <field name="internal_group">expense</field>
-        </record>
-        <record id="type_rep_amort_prov" model="account.account.type">
-            <field name="name">Reprises des amortissements et provisions</field>
-            <field name="type">other</field>
-            <field name="internal_group">income</field>
-        </record>
-        <record id="type_imp_tax" model="account.account.type">
-            <field name="name">Impôts et taxes</field>
-            <field name="internal_group">expense</field>
-        </record>
-        <record id="type_aut_chg_op" model="account.account.type">
-            <field name="name">Autres charges opérationnelles</field>
-            <field name="internal_group">expense</field>
-        </record>
-        <record id="type_pdt_fin" model="account.account.type">
-            <field name="name">Produits financiers</field>
-            <field name="type">other</field>
-            <field name="internal_group">income</field>
-        </record>
-        <record id="type_chg_fin" model="account.account.type">
-            <field name="name">Charges financières</field>
-            <field name="type">other</field>
-            <field name="internal_group">expense</field>
-        </record>
-        <record id="type_tax_ca_prod" model="account.account.type">
-            <field name="name">Taxe unique sur le chiffre d'affaires</field>
-            <field name="type">other</field>
-            <field name="internal_group">expense</field>
-        </record>
-        <record id="type_amort" model="account.account.type">
-            <field name="name">Amortissements</field>
-            <field name="type">other</field>
-            <field name="internal_group">expense</field>
-        </record>
-        <record id="type_res_cr" model="account.account.type">
-            <field name="name">Resultat</field>
-            <field name="internal_group">off_balance</field>
-        </record>
-        <record id="type_cpte_analy" model="account.account.type">
-            <field name="name">Comptes analytique et autres</field>
-            <field name="internal_group">off_balance</field>
-        </record>
+<!--        <record id="pcm_chart_template" model="account.chart.template">-->
+<!--            <field name="name">Plan de compte - PCM</field>-->
+<!--            <field name="bank_account_code_prefix">550</field>-->
+<!--            <field name="cash_account_code_prefix">555</field>-->
+<!--            <field name="transfer_account_code_prefix">580</field>-->
+<!--            <field name="currency_id" ref="base.MRU"/>-->
+<!--            <field name="code_digits">6</field>-->
+<!--        </record>-->
+<!--        &lt;!&ndash; Account Type Templates &ndash;&gt;-->
+<!--        <record id="type_imm_corp" model="account.account.type">-->
+<!--            <field name="name">Immobilisations corporelles</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">asset</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_a_incorp" model="account.account.type">-->
+<!--            <field name="name">Actifs incorporels</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">asset</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_aut_a_fin" model="account.account.type">-->
+<!--            <field name="name">Autres actifs financiers</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">asset</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_stk_e_cour" model="account.account.type">-->
+<!--            <field name="name">Stocks et en-cours</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">asset</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_clt" model="account.account.type">-->
+<!--            <field name="name">Clients et comptes rattachés</field>-->
+<!--            <field name="type">receivable</field>-->
+<!--            <field name="internal_group">asset</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_aut_deb" model="account.account.type">-->
+<!--            <field name="name">Autres débiteurs</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">asset</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_tres" model="account.account.type">-->
+<!--            <field name="name">Trésorerie et équivalents de trésorerie</field>-->
+<!--            <field name="type">liquidity</field>-->
+<!--            <field name="internal_group">asset</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_cap_rsve" model="account.account.type">-->
+<!--            <field name="name">Capital et réserves</field>-->
+<!--            <field name="internal_group">equity</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_cap_em" model="account.account.type">-->
+<!--            <field name="name">Capital émis</field>-->
+<!--            <field name="internal_group">equity</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_pri_em" model="account.account.type">-->
+<!--            <field name="name">Primes d’émission</field>-->
+<!--            <field name="internal_group">equity</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_gain_lat" model="account.account.type">-->
+<!--            <field name="name">Gains nets latents sur contrats à terme</field>-->
+<!--            <field name="internal_group">equity</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_res_n_dist" model="account.account.type">-->
+<!--            <field name="name">Résultats accumulés non distribués</field>-->
+<!--            <field name="internal_group">equity</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_emp" model="account.account.type">-->
+<!--            <field name="name">Emprunts portant intérêts</field>-->
+<!--            <field name="internal_group">equity</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_prov" model="account.account.type">-->
+<!--            <field name="name">Provisions</field>-->
+<!--            <field name="internal_group">equity</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_p_cour" model="account.account.type">-->
+<!--            <field name="name">Passifs courants</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">liability</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_fsr" model="account.account.type">-->
+<!--            <field name="name">Fournisseurs et comptes rattachés</field>-->
+<!--            <field name="type">payable</field>-->
+<!--            <field name="internal_group">liability</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_imp" model="account.account.type">-->
+<!--            <field name="name">Impôts</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">liability</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_aut_tax" model="account.account.type">-->
+<!--            <field name="name">Autres taxes</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">liability</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_aut_cred" model="account.account.type">-->
+<!--            <field name="name">Autres créditeurs</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">liability</field>-->
+<!--            <field name="include_initial_balance" eval="True"/>-->
+<!--        </record>-->
+<!--        <record id="type_ca_prod" model="account.account.type">-->
+<!--            <field name="name">Chiffre d'affaires</field>-->
+<!--            <field name="internal_group">income</field>-->
+<!--        </record>-->
+<!--        <record id="type_prod_anex" model="account.account.type">-->
+<!--            <field name="name">Produits des activités annexes</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">income</field>-->
+<!--        </record>-->
+<!--        <record id="type_aut_prod_op" model="account.account.type">-->
+<!--            <field name="name">Autres produits opérationnels</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">income</field>-->
+<!--        </record>-->
+<!--        <record id="type_prod_imm" model="account.account.type">-->
+<!--            <field name="name">Production immobilisée</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">income</field>-->
+<!--        </record>-->
+<!--        <record id="type_march" model="account.account.type">-->
+<!--            <field name="name">Marchandises et matières consommées</field>-->
+<!--            <field name="internal_group">expense</field>-->
+<!--        </record>-->
+<!--        <record id="type_fr_perso" model="account.account.type">-->
+<!--            <field name="name">Frais de personnel</field>-->
+<!--            <field name="internal_group">expense</field>-->
+<!--        </record>-->
+<!--        <record id="type_dot_amort_prov" model="account.account.type">-->
+<!--            <field name="name">Dotations aux amortissements et provisions</field>-->
+<!--            <field name="internal_group">expense</field>-->
+<!--        </record>-->
+<!--        <record id="type_rep_amort_prov" model="account.account.type">-->
+<!--            <field name="name">Reprises des amortissements et provisions</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">income</field>-->
+<!--        </record>-->
+<!--        <record id="type_imp_tax" model="account.account.type">-->
+<!--            <field name="name">Impôts et taxes</field>-->
+<!--            <field name="internal_group">expense</field>-->
+<!--        </record>-->
+<!--        <record id="type_aut_chg_op" model="account.account.type">-->
+<!--            <field name="name">Autres charges opérationnelles</field>-->
+<!--            <field name="internal_group">expense</field>-->
+<!--        </record>-->
+<!--        <record id="type_pdt_fin" model="account.account.type">-->
+<!--            <field name="name">Produits financiers</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">income</field>-->
+<!--        </record>-->
+<!--        <record id="type_chg_fin" model="account.account.type">-->
+<!--            <field name="name">Charges financières</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">expense</field>-->
+<!--        </record>-->
+<!--        <record id="type_tax_ca_prod" model="account.account.type">-->
+<!--            <field name="name">Taxe unique sur le chiffre d'affaires</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">expense</field>-->
+<!--        </record>-->
+<!--        <record id="type_amort" model="account.account.type">-->
+<!--            <field name="name">Amortissements</field>-->
+<!--            <field name="type">other</field>-->
+<!--            <field name="internal_group">expense</field>-->
+<!--        </record>-->
+<!--        <record id="type_res_cr" model="account.account.type">-->
+<!--            <field name="name">Resultat</field>-->
+<!--            <field name="internal_group">off_balance</field>-->
+<!--        </record>-->
+<!--        <record id="type_cpte_analy" model="account.account.type">-->
+<!--            <field name="name">Comptes analytique et autres</field>-->
+<!--            <field name="internal_group">off_balance</field>-->
+<!--        </record>-->
         <!--
             #Etape 2: Definition des comptes financicers
             #Ils s'appuyent sur les types de comptes precedents

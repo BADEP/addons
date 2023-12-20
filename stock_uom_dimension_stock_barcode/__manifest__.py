@@ -2,7 +2,7 @@
 
 {
     'name': 'Product dimensions in stock_barcode Entreprise module',
-    'version': '14.0',
+    'version': '16.0',
     'category': 'Inventory',
     'license': 'AGPL-3',
     'description': """
@@ -14,10 +14,7 @@
     'data': [
              'views/stock_move_line_views.xml',
              ],
-    'installable': True,
-    'auto_install': True,
-    'price': 50,
-    'currency': 'EUR'
+    'installable': False,
 }
 
 # vim:expandtab:smartindent:tabstop=4:softtabstop=4:shiftwidth=4:

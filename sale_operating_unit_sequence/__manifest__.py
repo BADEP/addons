@@ -9,7 +9,7 @@
     'website': "https://badep.ma",
 
     'category': 'Sales',
-    'version': '14.0.1.0',
+    'version': '16.0.1.0',
 
     'depends': ['sale_operating_unit'],
     'images': ['static/src/img/banner.png'],
@@ -18,6 +18,4 @@
         'views/sequence_view.xml',
     ],
     'installable': False,
-    'price': 49.00,
-    'currency': 'EUR',
 }

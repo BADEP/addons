@@ -1,7 +1,7 @@
 # -*- coding: utf-8 -*-
 {
     'name': 'Stock Picking Maps',
-    'version': '14.0.1.0.0',
+    'version': '16.0.1.0.0',
     'author': 'Yopi Angi, BADEP',
     'license': 'AGPL-3',
     'maintainer': 'Yopi Angi <yopiangi@gmail.com>, Khalid Hazam <k.hazam@badep.ma>',

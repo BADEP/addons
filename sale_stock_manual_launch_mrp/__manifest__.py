@@ -2,7 +2,7 @@
 
 {
     'name' : 'Sale Stock Manual Lauch Procurement - Kits compatibility',
-    'version': '14.0',
+    'version': '16.0',
     'category': 'Sale',
     'author': 'BADEP',
     'description': """
@@ -11,6 +11,6 @@
     'data': [
         'wizards/launch_procurement_wizard_view.xml'
     ],
-    'installable' : True,
+    'installable': False,
     'auto_install': True
 }
