@@ -14,8 +14,6 @@
     ],
     'data': [
     ],
-    "price": 9,
-    "currency": 'EUR',
     'init': [],
     'demo': [],
     'update': [],
