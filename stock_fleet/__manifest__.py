@@ -29,6 +29,4 @@
         'views/stock_view.xml',
         'views/fleet_view.xml',
     ],
-    'price': 29.00,
-    'currency': 'EUR',
 }

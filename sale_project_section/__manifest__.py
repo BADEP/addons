@@ -22,6 +22,4 @@
     'data': [
     ],
     'installable': True,
-    'price': 49.00,
-    'currency': 'EUR',
 }

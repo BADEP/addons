@@ -15,7 +15,4 @@
              'wizards/launch_procurement_wizard_view.xml',
              'views/views.xml',
     ],
-
-    'price': 99.00,
-    'currency': 'EUR',
 }

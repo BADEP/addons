@@ -15,6 +15,4 @@
     'data': [
         'views/asset_views.xml',
     ],
-    'price': 9.00,
-    'currency': 'EUR',
 }

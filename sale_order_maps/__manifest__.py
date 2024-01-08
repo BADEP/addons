@@ -27,6 +27,4 @@ Show your Sale orders  on map view in regards to delivery address
     ],
     'demo': [],
     'uninstall_hook': 'uninstall_hook',
-    'price': 29.00,
-    'currency': 'EUR',
 }

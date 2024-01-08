@@ -22,7 +22,5 @@ Show your fleet on map view
     ],
     'demo': [],
     'installable': True,
-    'price': 9.00,
-    'currency': 'EUR',
     'uninstall_hook': 'uninstall_hook',
 }

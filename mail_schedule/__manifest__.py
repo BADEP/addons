@@ -21,6 +21,4 @@
     'data': [
         'views/mail_views.xml'
     ],
-    'price': 29.00,
-    'currency': 'EUR',
 }
