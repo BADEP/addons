@@ -16,7 +16,7 @@
 <!--                </t>-->
 <!--            </xpath>-->
         </template>
-        <template id="stock_report_delivery_has_serial_move_line_dimensions" inherit_id="stock.stock_report_delivery_has_serial_move_line">
+        <!-- <template id="stock_report_delivery_has_serial_move_line_dimensions" inherit_id="stock.stock_report_delivery_has_serial_move_line">
             <xpath expr="//td[1]" position="after">
                 <t t-if="any(m.dimension_ids for m in move_line.picking_id.move_ids)">
                     <td>
@@ -85,6 +85,6 @@
                     </t>
                 </td>
             </xpath>
-        </template>
+        </template> -->
     </data>
 </odoo>

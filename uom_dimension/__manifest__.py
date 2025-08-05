@@ -15,5 +15,5 @@
         'views/product_views.xml',
         'views/uom_view.xml',
     ],
-    'installable': False,
+    'installable': True,
 }
