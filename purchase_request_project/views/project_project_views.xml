@@ -1,0 +1,25 @@
+<odoo>
+    <data>
+        <record id="project_project_kanban" model="ir.ui.view">
+            <field name="name">project_project_kanban</field>
+            <field name="inherit_id" ref="project.view_project_kanban"/>
+            <field name="model">project.project</field>
+            <field eval="5" name="priority"/>
+            <field name="arch" type="xml">
+                <field name="task_count" position="after">
+                    <field name="purchase_request_count"/>
+                </field>
+                <xpath expr="//div[hasclass('o_project_kanban_boxes')]" position="after">
+                    <div class="o_project_kanban_boxes" groups="purchase_request.group_purchase_request_user" name="purchase_kanban_box">
+                        <a name="button_open_purchase_request" class="o_project_kanban_box" type="object">
+                            <span class="o_value">
+                                <t t-esc="record.purchase_request_count.value"/>
+                            </span>
+                            <span class="o_label">DA</span>
+                        </a>
+                    </div>
+                </xpath>
+            </field>
+        </record>
+    </data>
+</odoo>

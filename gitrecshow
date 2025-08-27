@@ -1,1 +1,5 @@
-/usr/local/bin/gitrecshow
+#!/bin/bash
+for d in $(find -type d -name ".git"); do
+    ( cd $d/.. && pwd && git branch -l)
+done
+find . -name *.pyc -delete && find . -type d -empty -delete

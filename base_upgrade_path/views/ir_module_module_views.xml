@@ -8,10 +8,18 @@
                 <tree position="attributes">
                     <attribute name="decoration-success">upgrade_available==True</attribute>
                 </tree>
+                <tree position="inside">
+                    <header>
+                        <button name="action_check_upgrade" type="object" string="Check for upgrades"/>
+                    </header>
+                </tree>
                 <field name="name" position="after">
                     <field name="target"/>
                     <field name="alternative_name"/>
                     <field name="upgrade_available"/>
+                    <field name="module_path" optional="hide"/>
+                    <field name="python_lines" optional="hide"/>
+                    <field name="xml_lines" optional="hide"/>
                 </field>
             </field>
         </record>
