@@ -17,3 +17,10 @@ class StockPicking(models.Model):
 
     def _notify_accepted_reviews(self):
         return super(StockPicking, self.sudo())._notify_accepted_reviews()
+
+    def button_validate(self):
+        if not self.validated and self.need_validation and not self.review_ids:
+            self.request_validation()
+        else:
+            # return super(StockPicking, self).button_validate()
+            return super(StockPicking, self.with_context(needs_validation=True)).button_validate()

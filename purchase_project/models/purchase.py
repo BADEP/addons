@@ -26,8 +26,7 @@ class PurchaseOrderLine(models.Model):
 
     @api.depends('product_id', 'date_order', 'order_id.analytic_account_id')
     def _compute_account_analytic_id(self):
+        super()._compute_account_analytic_id()
         for rec in self:
             if rec.order_id.analytic_account_id:
                 rec.account_analytic_id = rec.order_id.analytic_account_id
-        super()._compute_account_analytic_id()
-

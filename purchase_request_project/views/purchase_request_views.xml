@@ -1,0 +1,35 @@
+<odoo>
+    <data>
+        <record id="purchase_request_form_inherit_purchase_request_project" model="ir.ui.view">
+            <field name="name">purchase.request.form</field>
+            <field name="model">purchase.request</field>
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_form"/>
+            <field name="arch" type="xml">
+                <field name="origin" position="after">
+                    <field name="project_id"/>
+                    <field name="analytic_account_id" invisible="1"/>
+                    <field name="task_id"/>
+                </field>
+                <xpath expr="//field[@name='line_ids']//tree//field[@name='analytic_account_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('parent.analytic_account_id', '!=', False)]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+                <xpath expr="//field[@name='line_ids']//form//field[@name='analytic_account_id']" position="attributes">
+                    <attribute name="attrs">{'readonly': [('parent.analytic_account_id', '!=', False)]}</attribute>
+                    <attribute name="force_save">1</attribute>
+                </xpath>
+            </field>
+        </record>
+
+        <record id="purchase_request_tree_inherit_purchase_project" model="ir.ui.view">
+            <field name="name">purchase.request.tree</field>
+            <field name="model">purchase.request</field>
+            <field name="inherit_id" ref="purchase_request.view_purchase_request_tree"/>
+            <field name="arch" type="xml">
+                <field name="name" position="after">
+                    <field name="project_id"/>
+                </field>
+            </field>
+        </record>
+    </data>
+</odoo>
