@@ -69,7 +69,17 @@ data, and link it to the owning module where there is one.
       `post-remove-modules.txt`, and stubs for `pre-migrate.py` /
       `post-migrate.py`.
 
-### 6. Export and versions
+### 6. Test environments for the client
+- [ ] Schedule: each migration project has a run schedule, nightly by
+      default or weekly, that produces a fresh migrated test environment from
+      the latest production data.
+- [ ] On demand: a client can request a new test environment from the portal
+      (button on the migration project). The request queues a run; the client
+      is notified when the environment is ready, with its URL.
+- [ ] Keep a short history per run: date, duration (to refine the cut-over
+      downtime estimate, pre-estimated at 8 hours), errors, fixes included.
+
+### 7. Export and versions
 - [ ] Export the full inventory to Excel (same layout as the template) and as
       JSON, for import into the BADEP database.
 - [ ] Port forward to 15.0 → 19.0 (and 20.0), so the module can be installed on
